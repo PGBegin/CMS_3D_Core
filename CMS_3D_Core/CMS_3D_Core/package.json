@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "name": "asp.net",
+  "private": true,
+  "devDependencies": {},
+  "dependencies": {
+    "@types/three": "^0.130.1",
+    "three": "^0.131.3"
+  }
+}
