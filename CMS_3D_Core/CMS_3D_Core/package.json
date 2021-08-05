@@ -5,6 +5,7 @@
   "devDependencies": {},
   "dependencies": {
     "@types/three": "^0.130.1",
+    "bootstrap": "^5.0.2",
     "three": "^0.131.3"
   }
 }
