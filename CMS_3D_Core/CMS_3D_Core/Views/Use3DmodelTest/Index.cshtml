@@ -1,0 +1,53 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<ul>
+    <li>@Html.ActionLink("show_test4", "show_test4")</li>
+    <li>@Html.ActionLink("show_test5", "show_test5")</li>
+    <li>@Html.ActionLink("show_test6", "show_test6")</li>
+</ul>
+@*
+    <script src="~/Scripts/threejs/three.min.js"></script>
+    <script src="~/Scripts/appends/dropdown.js"></script>
+
+    <script type="text/javascript">
+
+
+        window.onload = function () {
+
+            var t_task_p_id_drop = document.getElementById("t_task_p_id");
+            t_task_p_id_drop.addEventListener('change', click_01, false);
+
+            var t_task_id_tf_drop = document.getElementById("t_task_id_tf");
+            t_task_id_tf_drop.addEventListener('change', click_02, false);
+        }
+
+        function click_01() {
+
+            var qs = new URLSearchParams({ p_id: this.value });
+            var api_url = "/tk_op_t_task/Get_ps_idList?" + qs.toString();
+            set_optionlist(api_url, 't_task_ps_id');
+        }
+
+        function click_02() {
+
+            var qs = new URLSearchParams({ id_tf: this.value });
+            var api_url = "/tk_op_t_task/Get_id_tf_subList?" + qs.toString();
+            set_optionlist(api_url, 't_task_id_tf_sub');
+        }
+
+
+
+    </script>
+
+*@
