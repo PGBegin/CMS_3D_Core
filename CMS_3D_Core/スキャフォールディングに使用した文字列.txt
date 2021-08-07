@@ -9,7 +9,13 @@ dotnet ef dbcontext scaffold "Data Source=(localdb)\MSSQLLocalDB;Initial Catalog
 
 
 vs2019
-Scaffold-DbContext           'Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=db_data_core' Microsoft.EntityFrameworkCore.SqlServer -ContextDir "Models\EDM" -OutputDir "Models\EDM" -UseDatabaseNames
+Scaffold-DbContext           'Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=db_data_core' Microsoft.EntityFrameworkCore.SqlServer -ContextDir "Models\EDM" -OutputDir "Models\EDM" -UseDatabaseNames -Force
+
+
+↓強制上書き
+ -Force
+
+-Tables
 
 
 

@@ -63,6 +63,14 @@ namespace CMS_3D_Core.Controllers
             return File(t_part.file_data, "application/object", t_part.part_number);
         }
 
+        // 選択されたオブジェクトファイルを返す関数
+        public ActionResult GetPartTextureFile(long id_part)
+        {
+            t_part t_part = db.t_parts.Find(id_part);
+
+            return File(t_part.file_texture, "application/object", t_part.part_number);
+        }
+
 
         // GET: Use3DmodelTest
         public ActionResult Index()
@@ -94,6 +102,10 @@ namespace CMS_3D_Core.Controllers
             return View();
         }
         public ActionResult show_test6()
+        {
+            return View();
+        }
+        public ActionResult show_test7()
         {
             return View();
         }

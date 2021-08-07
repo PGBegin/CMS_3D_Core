@@ -201,6 +201,10 @@ namespace CMS_3D_Core.Models.EDM
                 entity.Property(e => e.part_number)
                     .IsRequired()
                     .HasMaxLength(50);
+
+                entity.Property(e => e.type_data).HasMaxLength(128);
+
+                entity.Property(e => e.type_texture).HasMaxLength(128);
             });
 
             modelBuilder.Entity<t_part_display>(entity =>
