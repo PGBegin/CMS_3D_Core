@@ -87,7 +87,8 @@ namespace CMS_3D_Core.Controllers
         // GET: Use3DmodelTest
         public ActionResult Index()
         {
-            return View();
+            var assys = db.t_assemblies;
+            return View(assys.ToList());
         }
 
 
@@ -103,6 +104,21 @@ namespace CMS_3D_Core.Controllers
         {
             return View();
         }
+        public ActionResult DetailProductInstruction(int id_assy)
+        {
+            return View(id_assy);
+        }
+
+        public async Task<IActionResult> EditProductInstruction(int id_assy)
+        {
+            if (id_assy == null)
+            {
+                return NotFound();
+            }
+
+            return View(id_assy);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

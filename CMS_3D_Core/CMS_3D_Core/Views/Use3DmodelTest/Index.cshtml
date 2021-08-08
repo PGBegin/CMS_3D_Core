@@ -1,9 +1,8 @@
-﻿@*
+﻿@model IEnumerable<CMS_3D_Core.Models.EDM.t_assembly>
+
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@{
-}
-
 
 @{
     ViewBag.Title = "Index";
@@ -11,9 +10,44 @@
 
 <h2>Index</h2>
 
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.id_assy)
+        </th>
+        <th>
+            Link
+        </th>
+    </tr>
+    @{
+        foreach (var item in Model)
+        {
+
+        <tr>
+            <td>
+                Assy: @Html.DisplayFor(modelItem => item.id_assy)
+            </td>
+            <td>
+                @Html.ActionLink("View Detail", "DetailProductInstruction", new { id_assy = item.id_assy })
+            </td>
+            <td>
+                @Html.ActionLink("Edit Detail", "EditProductInstruction", new { id_assy = item.id_assy })
+            </td>
+        </tr>
+        }
+    }
+
+</table>
+
+
+
+
+<h2>Old Items</h2>
+
+
 <ul>
-    <li>@Html.ActionLink("show_test4", "show_test4")</li>
-    <li>@Html.ActionLink("show_test5", "show_test5")</li>
     <li>@Html.ActionLink("show_test6", "show_test6")</li>
     <li>@Html.ActionLink("show_test7", "show_test7")</li>
     <li>@Html.ActionLink("show_test8", "show_test8")</li>

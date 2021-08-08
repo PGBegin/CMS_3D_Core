@@ -1,14 +1,10 @@
-﻿
+﻿@model int
 
 @{
-    ViewData["Title"] = "show_test8";
+    ViewData["Title"] = "DetailProductInstruction";
 }
 
-<h1>show_test8</h1>
-
-
-
-
+<h1>DetailProductInstruction</h1>
 
 
 
@@ -93,7 +89,7 @@
     window.onload = function () {
         'use strict';
 
-        var qs = new URLSearchParams({ id_assy: 1 });
+        var qs = new URLSearchParams({ id_assy: @Model });
         var api_url = "/Use3DmodelTest/GetAssemblyObjectList?" + qs.toString();
 
 
