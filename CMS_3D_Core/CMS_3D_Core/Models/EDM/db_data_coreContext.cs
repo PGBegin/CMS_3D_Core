@@ -177,6 +177,10 @@ namespace CMS_3D_Core.Models.EDM
 
                 entity.ToTable("t_instruction");
 
+                entity.Property(e => e.short_description).HasMaxLength(256);
+
+                entity.Property(e => e.title).HasMaxLength(128);
+
                 entity.HasOne(d => d.id_assyNavigation)
                     .WithMany(p => p.t_instructions)
                     .HasForeignKey(d => d.id_assy)

@@ -1,0 +1,43 @@
+
+
+
+
+
+・article:記事全体
+
+・description:説明
+
+
+3Dモデルそのものを定義するテーブル
+------------------------------------------
+・product (アセンブリ・説明の集合体) ms_description
+  -id_product
+  -製品の情報を格納
+
+●Assembly(組み立て関連を定義するテーブル)
+・アセンブリ(部品の組み立て)
+　・t_assemblyテーブル(id_assy)
+    - 各種基本情報を格納する
+
+　・t_instance_partsテーブル(部品の位置情報を格納 id_assy・id_sub )
+    - 部品の実体を格納する
+
+　・t_partテーブル(partid)
+    - 部品の情報を格納する
+
+
+
+
+●instructor(部品製造・組み立て説明を定義するテーブル)
+・カメラ、移動図
+　・t_instruction
+    id_ruct
+
+　・t_view
+　・t_part_display(id_ruct,id_assy,id_sub)
+
+
+
+
+
+　・assembly_instanceテーブル←いらない。

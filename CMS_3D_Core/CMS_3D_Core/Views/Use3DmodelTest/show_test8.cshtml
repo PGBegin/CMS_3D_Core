@@ -1,9 +1,11 @@
 ﻿
 @{
-    ViewData["Title"] = "show_test7";
+    ViewData["Title"] = "show_test8";
 }
 
-<h1>show_test7</h1>
+<h1>show_test8</h1>
+
+
 
 
 
@@ -90,8 +92,8 @@
     window.onload = function () {
         'use strict';
 
-        var qs = new URLSearchParams({ dummyid: 3 });
-        var api_url = "/Use3DmodelTest/get_sample_list?" + qs.toString();
+        var qs = new URLSearchParams({ id_assy: 1 });
+        var api_url = "/Use3DmodelTest/GetAssemblyObjectList?" + qs.toString();
 
 
         var param_idpart = "";

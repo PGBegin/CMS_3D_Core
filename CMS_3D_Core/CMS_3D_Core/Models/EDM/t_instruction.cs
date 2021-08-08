@@ -15,6 +15,8 @@ namespace CMS_3D_Core.Models.EDM
         public long id_assy { get; set; }
         public long id_ruct { get; set; }
         public int id_view { get; set; }
+        public string title { get; set; }
+        public string short_description { get; set; }
 
         public virtual t_view id_ { get; set; }
         public virtual t_assembly id_assyNavigation { get; set; }
