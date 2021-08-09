@@ -1,4 +1,4 @@
-﻿@model int
+﻿@model long
 
 @{
     ViewData["Title"] = "EditProductInstruction";
@@ -16,12 +16,24 @@
 <div id="control_panel_zone">
     @*インストラクションの切り替えボタン表示領域*@
 </div>
-<div id="instruction_data">
-    @*インストラクションの文書表示領域*@
-    <h4 id="instruction_title"></h4>
-    <p id="instruction_short_description"></p>
 
-</div>
+<form asp-action="EditProductInstruction">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div id="instruction_data">
+        @*インストラクションの文書表示領域*@
+        @Html.Hidden("id_assy", 0, new { id = "instruction_id_assy" })
+        @Html.Hidden("id_rust", 0, new { id = "instruction_id_rust" })
+        @Html.TextBox("title", "value", new { id = "instruction_title" })
+        @Html.TextArea("short_description", null, new { id = "instruction_short_description", @class = "form-control" })
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Edit" class="btn btn-primary"  onclick="return confirm('更新しますか？')" />
+    </div>
+</form>
+
+
+
 
 <script src="~/lib/three/three.js"></script>
 <script src="~/lib/three/Loader/OBJLoader.js"></script>
@@ -186,11 +198,20 @@
 
         var node_temp;
         node_temp = document.getElementById('instruction_title');
-        node_temp.textContent = instruction_gp[id_ruct].title;
+        node_temp.value = instruction_gp[id_ruct].title;
 
 
         node_temp = document.getElementById('instruction_short_description');
         node_temp.textContent = instruction_gp[id_ruct].short_description;
+
+
+        node_temp = document.getElementById('instruction_id_assy');
+        node_temp.value = instruction_gp[id_ruct].id_assy;
+
+        node_temp = document.getElementById('instruction_id_rust');
+        node_temp.value = instruction_gp[id_ruct].id_ruct;
+
+
 
 
     }
