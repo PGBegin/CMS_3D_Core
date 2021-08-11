@@ -24,6 +24,7 @@
 </div>
 
 <script src="~/lib/three/three.js"></script>
+<script src="~/lib/three/Loader/GLTFLoader.js"></script>
 <script src="~/lib/three/Loader/OBJLoader.js"></script>
 <script src="~/lib/three/Loader/MTLLoader.js"></script>
 <script src="~/lib/three/OrbitControls.js"></script>
@@ -101,8 +102,9 @@
         var pn;
         var temp_bt;
 
-        const objLoader = new THREE.OBJLoader();
-        const mtlLoader = new THREE.MTLLoader();
+        const glfLoader = new THREE.GLTFLoader();
+        //const objLoader = new THREE.OBJLoader();
+        //const mtlLoader = new THREE.MTLLoader();
 
         // scene
         scene = new THREE.Scene();
@@ -150,6 +152,17 @@
                         url_txapi = "/Use3DmodelTest/GetPartTextureFile?" + param_idpart.toString();
 
 
+                        glfLoader.load(url_partapi, function (gltf) {
+
+                            scene.add(gltf.scene);
+
+                        }, undefined, function (error) {
+
+                            console.error(error);
+
+                        });
+
+                        /*
                         mtlLoader.load(url_txapi, (mtl) => {
                             mtl.preload();
                             objLoader.setMaterials(mtl);
@@ -159,7 +172,7 @@
                                 scene.add(instance_part[data[i].id_inst].objectdata);
                             });
 
-                        });
+                        });   */
 
                     }
                 }

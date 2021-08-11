@@ -17,6 +17,7 @@ namespace CMS_3D_Core.Models.EDM
         public int version { get; set; }
         public byte[] file_data { get; set; }
         public string type_data { get; set; }
+        public string format_data { get; set; }
         public byte[] file_texture { get; set; }
         public string type_texture { get; set; }
 

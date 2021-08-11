@@ -28,9 +28,59 @@
         @Html.TextArea("short_description", null, new { id = "instruction_short_description", @class = "form-control" })
     </div>
     <div class="form-group">
-        <input type="submit" value="Edit" class="btn btn-primary"  onclick="return confirm('更新しますか？')" />
+        <input type="submit" value="Edit" class="btn btn-primary" onclick="return confirm('更新しますか？')" />
     </div>
 </form>
+
+<hr />
+<h3>View </h3>
+
+<div id="main_view_camera_data">
+    <table class="table">
+        <tr>
+            <th>
+                Object
+            </th>
+            <th>
+                X
+            </th>
+            <th>
+                Y
+            </th>
+            <th>
+                Z
+            </th>
+        </tr>
+        <tr>
+            <td>
+                Camera Position
+            </td>
+            <td>
+                <input id="editview_cx" name="cx" type="text" value="" class="form-control" />
+            </td>
+            <td>
+                <input id="editview_cy" name="cy" type="text" value="" class="form-control" />
+            </td>
+            <td>
+                <input id="editview_cz" name="cz" type="text" value="" class="form-control" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Look At
+            </td>
+            <td>
+                <input id="editview_tx" name="tx" type="text" value="" class="form-control" />
+            </td>
+            <td>
+                <input id="editview_ty" name="ty" type="text" value="" class="form-control" />
+            </td>
+            <td>
+                <input id="editview_tz" name="tz" type="text" value="" class="form-control" />
+            </td>
+        </tr>
+    </table>
+</div>
 
 
 
@@ -81,7 +131,7 @@
     }
 
     var camera_main;
-    var scene;
+    var scene = new THREE.Scene();
     var controls;
 
     var gridHelper;
@@ -117,8 +167,7 @@
         const mtlLoader = new THREE.MTLLoader();
 
         // scene
-        scene = new THREE.Scene();
-
+        //scene = new THREE.Scene();
 
 
         //指定urlからデータを取得
@@ -156,11 +205,11 @@
 
                     if (data[i].type == "instance_part") {
 
-
                         param_idpart = new URLSearchParams({ id_part: data[i].id_part });
                         url_partapi = "/Use3DmodelTest/GetPartObjectFile?" + param_idpart.toString();
                         url_txapi = "/Use3DmodelTest/GetPartTextureFile?" + param_idpart.toString();
 
+                        console.log('data' + i + ':' + 'inst' + data[i].id_inst + 'part' + data[i].id_part);
 
                         mtlLoader.load(url_txapi, (mtl) => {
                             mtl.preload();
@@ -257,6 +306,44 @@
 
             controls.update();
             renderer.render(scene, camera_main);
+
+
+
+            var posinfo;
+
+            posinfo = document.getElementById('editview_cx');
+            posinfo.value = camera_main.position.x;
+
+            posinfo = document.getElementById('editview_cy');
+            posinfo.value = camera_main.position.y;
+
+            posinfo = document.getElementById('editview_cz');
+            posinfo.value = camera_main.position.z;
+
+
+
+
+            //カメラは内部の負のZ軸を見下ろしています。したがって、負のz軸を指すベクトルを作成します。
+            var vector = new THREE.Vector3(0, 0, - 1);
+
+
+            //次に、カメラに適用されているベクトルに同じ回転を適用します。
+            vector.applyQuaternion(camera_main.quaternion);
+
+
+            //次のように、ターゲットに対するラジアンの角度を取得できます。
+            //angle = vector.angleTo(target.position);
+
+
+            posinfo = document.getElementById('editview_tx');
+            posinfo.value = vector.x;
+
+            posinfo = document.getElementById('editview_ty');
+            posinfo.value = vector.y;
+
+            posinfo = document.getElementById('editview_tz');
+            posinfo.value = vector.z;
+
         }
         render();
 
