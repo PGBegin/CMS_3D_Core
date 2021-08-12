@@ -19,18 +19,27 @@
 <div id="instruction_data">
     @*インストラクションの文書表示領域*@
     <h4 id="instruction_title"></h4>
-    <p id="instruction_short_description"></p>
+    @*<p id="instruction_short_description"></p>*@
+    <div id="instruction_short_description">
 
+    </div>
 </div>
 
-<script src="~/lib/three/three.js"></script>
-<script src="~/lib/three/Loader/GLTFLoader.js"></script>
-<script src="~/lib/three/Loader/OBJLoader.js"></script>
-<script src="~/lib/three/Loader/MTLLoader.js"></script>
-<script src="~/lib/three/OrbitControls.js"></script>
 
+    @*<div id="content"></div>*@
 
-<script type="text/javascript">
+    <script src="~/lib/three/three.js"></script>
+    <script src="~/lib/three/Loader/GLTFLoader.js"></script>
+    <script src="~/lib/three/Loader/OBJLoader.js"></script>
+    <script src="~/lib/three/Loader/MTLLoader.js"></script>
+    <script src="~/lib/three/OrbitControls.js"></script>
+    <script src="~/lib/marked/marked.js"></script>
+
+    @*
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    *@
+
+    <script type="text/javascript">
 
     //var THREE = require('three');
 
@@ -171,6 +180,8 @@
 
             });
 
+
+
     }
 
     //指定されたIDのインストラクションを表示する
@@ -189,7 +200,10 @@
 
 
         node_temp = document.getElementById('instruction_short_description');
-        node_temp.textContent = instruction_gp[id_ruct].short_description;
+        //node_temp.textContent = instruction_gp[id_ruct].short_description;
+
+        //テキスト内容をマークダウン方式に変更
+        node_temp.innerHTML = marked(instruction_gp[id_ruct].short_description);
 
 
     }
@@ -261,4 +275,4 @@
         //scene.add(lightHelper);
     };
 
-</script>
+    </script>
