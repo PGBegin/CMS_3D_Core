@@ -79,7 +79,7 @@
     }
 
     var camera_main;
-    var scene;
+    var scene = new THREE.Scene();;
     var controls;
 
     var gridHelper;
@@ -114,8 +114,8 @@
         const glfLoader = new THREE.GLTFLoader();
 
         // scene
-        scene = new THREE.Scene();
-
+        //scene = new THREE.Scene();
+        console.log("pos:" + scene.position.x + ":" + scene.position.y + ":" + scene.position.z + "\n");
 
 
         //指定urlからデータを取得
@@ -191,6 +191,7 @@
         //カメラ位置の変更
         //---------------------
         var i = instruction_gp[id_ruct].id_view;
+        controls.reset();
         set_camera(camera_main, view_object[i].cx, view_object[i].cy, view_object[i].cz, new THREE.Vector3(view_object[i].tx, view_object[i].ty, view_object[i].tz));
         //---------------------
 
