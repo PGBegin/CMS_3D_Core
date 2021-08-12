@@ -1,0 +1,37 @@
+﻿@model IEnumerable<CMS_3D_Core.Models.EDM.t_assembly>
+
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.id_assy)
+        </th>
+        <th>
+            Link
+        </th>
+    </tr>
+    @{
+        foreach (var item in Model)
+        {
+
+            <tr>
+                <td>
+                    Assy: @Html.DisplayFor(modelItem => item.id_assy)
+                </td>
+                <td>
+                    @Html.ActionLink("View Detail", "DetailProductInstruction", new { id_assy = item.id_assy })
+                </td>
+            </tr>
+        }
+    }
+
+</table>
+
