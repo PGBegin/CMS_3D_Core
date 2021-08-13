@@ -23,113 +23,137 @@
     </div>
 *@
 
-<form asp-action="EditProductInstruction">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<hr />
+<h4> Instruction Edit</h4>
+<div id="instruction_data">
 
-    <div id="instruction_data">
+    <form asp-action="EditProductInstruction">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
         @*インストラクションの文書表示領域*@
         @Html.Hidden("id_assy", 0, new { id = "instruction_id_assy" })
         @Html.Hidden("id_rust", 0, new { id = "instruction_id_rust" })
         @Html.TextBox("title", "value", new { id = "instruction_title" })
         @Html.TextArea("short_description", null, new { id = "instruction_short_description", @class = "form-control" })
-    </div>
-    <div class="form-group">
-        <input type="submit" value="Edit" class="btn btn-primary" onclick="return confirm('更新しますか？')" />
-    </div>
-</form>
+
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" onclick="return confirm('説明文を更新しますか？')" />
+        </div>
+    </form>
+</div>
+
+
+<hr />
+
+<h4> View Info and Edit</h4>
+
+<div id="view_data">
+
+
+    
+    <form asp-action="EditProductView">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 
 
-<div>
+        @Html.Hidden("id_assy", 0, new { id = "view_id_assy" })
+        @Html.Hidden("id_view", 0, new { id = "view_id_view" })
+        <table class="table">
+            <tr>
+                <th>
+                    Elementname
+                </th>
+                <th>
+                    X
+                </th>
+                <th>
+                    Y
+                </th>
+                <th>
+                    Z
+                </th>
+                <th>
+                    W
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    Camera Position
+                </td>
+                <td>
+                    <input id="cam_pos_x" name="cam_pos_x" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    <input id="cam_pos_y" name="cam_pos_y" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    <input id="cam_pos_z" name="cam_pos_z" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    --
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Camera Look At
+                </td>
+                <td>
+                    <input id="cam_lookat_x" name="cam_lookat_x" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    <input id="cam_lookat_y" name="cam_lookat_y" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    <input id="cam_lookat_z" name="cam_lookat_z" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    --
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Camera Quaternion
+                </td>
+                <td>
+                    <input id="cam_quat_x" name="cam_quat_x" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    <input id="cam_quat_y" name="cam_quat_y" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    <input id="cam_quat_z" name="cam_quat_z" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    <input id="cam_quat_w" name="cam_quat_w" type="text" value="" class="form-control" />
+                </td>
+            </tr>
+            <tr>
+            <tr>
+                <td>
+                    Orbit Control Target
+                </td>
+                <td>
+                    <input id="obt_target_x" name="obt_target_x" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    <input id="obt_target_y" name="obt_target_y" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    <input id="obt_target_z" name="obt_target_z" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    --
+                </td>
+            </tr>
+        </table>
 
-    <table class="table">
-        <tr>
-            <th>
-                Elementname
-            </th>
-            <th>
-                X
-            </th>
-            <th>
-                Y
-            </th>
-            <th>
-                Z
-            </th>
-            <th>
-                W
-            </th>
-        </tr>
-        <tr>
-            <td>
-                Camera Position
-            </td>
-            <td>
-                <input id="cam_pos_x" name="cam_pos_x" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="cam_pos_y" name="cam_pos_y" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="cam_pos_z" name="cam_pos_z" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                --
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Camera Look At
-            </td>
-            <td>
-                <input id="cam_lookat_x" name="cam_lookat_x" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="cam_lookat_y" name="cam_lookat_y" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="cam_lookat_z" name="cam_lookat_z" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                --
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Camera Quaternion
-            </td>
-            <td>
-                <input id="cam_quat_x" name="cam_quat_x" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="cam_quat_y" name="cam_quat_y" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="cam_quat_z" name="cam_quat_z" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="cam_quat_w" name="cam_quat_w" type="text" value="" class="form-control" />
-            </td>
-        </tr>
-        <tr>
-        <tr>
-            <td>
-                Orbit Control Target
-            </td>
-            <td>
-                <input id="obt_target_x" name="obt_target_x" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="obt_target_y" name="obt_target_y" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="obt_target_z" name="obt_target_z" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                --
-            </td>
-        </tr>
-    </table>
+
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" onclick="return confirm('視点情報を更新しますか？')" />
+        </div>
+    </form>
+
+
 
 </div>
 
@@ -234,12 +258,31 @@
         //タイトルの表示
         var node_temp;
         node_temp = document.getElementById('instruction_title');
-        node_temp.textContent = instruction_gp[id_ruct].title;
+        node_temp.value = instruction_gp[id_ruct].title;
 
 
         //テキスト内容をマークダウン方式に変更して表示
         node_temp = document.getElementById('instruction_short_description');
         node_temp.textContent = instruction_gp[id_ruct].short_description;
+
+
+
+        node_temp = document.getElementById('instruction_id_assy');
+        node_temp.value = instruction_gp[id_ruct].id_assy;
+
+        node_temp = document.getElementById('instruction_id_rust');
+        node_temp.value = instruction_gp[id_ruct].id_ruct;
+
+
+
+
+        //ビュー情報を更新
+        node_temp = document.getElementById('view_id_assy');
+        node_temp.value = view_object[i].id_assy;
+
+        node_temp = document.getElementById('view_id_view');
+        node_temp.value = view_object[i].id_view;              
+
     }
 
 

@@ -17,71 +17,12 @@ namespace CMS_3D_Core.Controllers
     {
         private db_data_coreContext db = new db_data_coreContext();
 
-        /*
-
-        // GET: サンプルデータをJSONで返す(idは練習用のダミー)
-        [HttpGet]
-        public JsonResult GetAssemblyObjectList(int id_assy)
-        {
-            var t = db.t_assemblies
-                        .Include(x => x.t_instructions)
-                        .Include(x => x.t_views)
-                        .Include(x => x.t_instance_parts)
-                        .FirstOrDefault(x => x.id_assy == id_assy);
-
-            IList<object> objCollection = new List<object>();
-
-            foreach (var item in t.t_instance_parts)
-            {
-                objCollection.Add(new { type = "instance_part", id_assy = item.id_assy, id_inst = item.id_inst, id_part = item.id_part });
-            }
-
-            foreach (var item in t.t_instructions)
-            {
-                objCollection.Add(new { type = "instruction", id_assy = item.id_assy, id_ruct = item.id_ruct, id_view = item.id_view, title = item.title, short_description = item.short_description });
-            }
-
-            foreach (var item in t.t_views)
-            {
-                objCollection.Add(new { type = "view", id_assy = item.id_assy, id_view = item.id_view, cx = item.cx, cy = item.cy, cz = item.cz, tx = item.tx, ty = item.ty, tz = item.tz });
-            }
-
-            return Json(objCollection);
-        }
-
-        // 選択されたオブジェクトファイルを返す関数
-        public ActionResult GetPartObjectFile(long id_part)
-        {
-            t_part t_part = db.t_parts.Find(id_part);
-
-
-
-            return File(t_part.file_data, t_part.type_data, t_part.part_number);
-        }
-
-        // 選択されたオブジェクトファイルを返す関数
-        public ActionResult GetPartTextureFile(long id_part)
-        {
-            t_part t_part = db.t_parts.Find(id_part);
-
-            return File(t_part.file_texture, t_part.type_texture, t_part.part_number);
-        }
-        */
-
         // GET: Use3DmodelTest
         public ActionResult Index()
         {
             var assys = db.t_assemblies;
             return View(assys.ToList());
         }
-
-        /*
-        [HttpGet]
-        public ActionResult DetailProductInstruction(long id_assy)
-        {
-            return View(id_assy);
-        }
-        */
 
         [HttpGet]
         public async Task<IActionResult> EditProductInstruction(long id_assy)
@@ -94,14 +35,11 @@ namespace CMS_3D_Core.Controllers
             return View(id_assy);
         }
 
-
         // POST: Role/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProductInstruction(long id_assy, long id_rust, string title, string short_description)
         {
-
-
             if (id_assy == null | id_rust == null)
             {
                 return NotFound();
@@ -126,7 +64,7 @@ namespace CMS_3D_Core.Controllers
 
 
                     TempData["ResultMsg"] = "Update Success";
-                    return RedirectToAction("EditProductInstruction", new { id_assy = id_assy, id_rust = id_rust });
+                    return RedirectToAction("EditProductInstruction", new { id_assy = id_assy});
 
                 }
                 catch
@@ -138,6 +76,83 @@ namespace CMS_3D_Core.Controllers
             // 更新に失敗した場合、編集画面を再描画
             return View(id_assy);
         }
+
+        // POST: Role/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditProductView(
+            long id_assy, 
+            int id_view, 
+
+            float cam_pos_x,
+            float cam_pos_y,
+            float cam_pos_z,
+
+            float cam_lookat_x,
+            float cam_lookat_y,
+            float cam_lookat_z,
+
+            float cam_quat_x,
+            float cam_quat_y,
+            float cam_quat_z,
+            float cam_quat_w,
+
+            float obt_target_x,
+            float obt_target_y,
+            float obt_target_z
+            )
+        {
+            if (id_assy == null | id_view == null)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var target = await db.t_views.FindAsync(id_assy, id_view);
+                    if (target == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // データ更新
+                    target.cam_pos_x = cam_pos_x;
+                    target.cam_pos_y = cam_pos_y;
+                    target.cam_pos_z = cam_pos_z;
+
+                    target.cam_lookat_x = cam_lookat_x;
+                    target.cam_lookat_y = cam_lookat_y;
+                    target.cam_lookat_z = cam_lookat_z;
+
+                    target.cam_quat_x = cam_quat_x;
+                    target.cam_quat_y = cam_quat_y;
+                    target.cam_quat_z = cam_quat_z;
+                    target.cam_quat_w = cam_quat_w;
+
+                    target.obt_target_x = obt_target_x;
+                    target.obt_target_y = obt_target_y;
+                    target.obt_target_z = obt_target_z;
+
+                    // DBに更新を反映
+                    await db.SaveChangesAsync();
+
+
+                    TempData["ResultMsg"] = "Update Success";
+                    return RedirectToAction("EditProductInstruction", new { id_assy = id_assy});
+
+                }
+                catch
+                {
+                    TempData["ResultMsg"] = "Update Failed";
+                }
+            }
+
+            // 更新に失敗した場合、編集画面を再描画
+            return View(id_assy);
+        }
+
 
         protected override void Dispose(bool disposing)
         {
