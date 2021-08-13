@@ -81,25 +81,11 @@ namespace CMS_3D_Core.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProductView(
-            long id_assy, 
-            int id_view, 
-
-            float cam_pos_x,
-            float cam_pos_y,
-            float cam_pos_z,
-
-            float cam_lookat_x,
-            float cam_lookat_y,
-            float cam_lookat_z,
-
-            float cam_quat_x,
-            float cam_quat_y,
-            float cam_quat_z,
-            float cam_quat_w,
-
-            float obt_target_x,
-            float obt_target_y,
-            float obt_target_z
+                                                        long id_assy,int id_view,
+                                                        float cam_pos_x,float cam_pos_y,float cam_pos_z,
+                                                        float cam_lookat_x,float cam_lookat_y,float cam_lookat_z,
+                                                        float cam_quat_x,float cam_quat_y,float cam_quat_z,float cam_quat_w,
+                                                        float obt_target_x,float obt_target_y,float obt_target_z
             )
         {
             if (id_assy == null | id_view == null)
@@ -118,19 +104,23 @@ namespace CMS_3D_Core.Controllers
                     }
 
                     // データ更新
+                    //カメラ位置
                     target.cam_pos_x = cam_pos_x;
                     target.cam_pos_y = cam_pos_y;
                     target.cam_pos_z = cam_pos_z;
 
+                    //Lookat(現状まともに動いていない)
                     target.cam_lookat_x = cam_lookat_x;
                     target.cam_lookat_y = cam_lookat_y;
                     target.cam_lookat_z = cam_lookat_z;
 
+                    //カメラのクオータニオン
                     target.cam_quat_x = cam_quat_x;
                     target.cam_quat_y = cam_quat_y;
                     target.cam_quat_z = cam_quat_z;
                     target.cam_quat_w = cam_quat_w;
 
+                    //OrbitControlのターゲット
                     target.obt_target_x = obt_target_x;
                     target.obt_target_y = obt_target_y;
                     target.obt_target_z = obt_target_z;

@@ -1,33 +1,12 @@
-﻿/*
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-namespace CMS_3D_Core.Controllers
-{
-    public class RoleController : Controller
-    {
-        public IActionResult Index()
-        {
-            return View();
-        }
-    }
-}
-*/
-
-
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using CMS_3D_Core.Models;
+
 
 namespace CMS_3D_Core.Controllers
 {
