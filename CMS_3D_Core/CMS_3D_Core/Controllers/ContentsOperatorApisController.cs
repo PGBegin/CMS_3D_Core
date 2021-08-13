@@ -44,7 +44,13 @@ namespace CMS_3D_Core.Controllers
 
             foreach (var item in t.t_views)
             {
-                objCollection.Add(new { type = "view", id_assy = item.id_assy, id_view = item.id_view, cx = item.cx, cy = item.cy, cz = item.cz, tx = item.tx, ty = item.ty, tz = item.tz });
+                objCollection.Add(new { type = "view", 
+                    id_assy = item.id_assy, id_view = item.id_view,
+                    cam_pos_x = item.cam_pos_x, cam_pos_y = item.cam_pos_y, cam_pos_z = item.cam_pos_z,
+                    cam_lookat_x = item.cam_lookat_x, cam_lookat_y = item.cam_lookat_y,cam_lookat_z = item.cam_lookat_z,
+                    cam_quat_x = item.cam_quat_x, cam_quat_y = item.cam_quat_y,cam_quat_z = item.cam_quat_z,cam_quat_w = item.cam_quat_w,
+                    obt_target_x = item.obt_target_x, obt_target_y = item.obt_target_y,obt_target_z = item.obt_target_z
+                });
             }
 
             return Json(objCollection);

@@ -8,14 +8,20 @@
 
 
 
-
 <div id="model_screen">
     @*モデルの表示領域*@
 </div>
-
 <div id="control_panel_zone">
-    @*インストラクションの切り替えボタン表示領域*@
 </div>
+@* 表示専用ビューならこうなってる
+
+    <div id="instruction_data">
+        <h4 id="instruction_title"></h4>
+        <div id="instruction_short_description">
+
+        </div>
+    </div>
+*@
 
 <form asp-action="EditProductInstruction">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -32,162 +38,14 @@
     </div>
 </form>
 
-<hr />
-<h3>View </h3>
 
-<div id="main_view_camera_data">
+
+<div>
+
     <table class="table">
         <tr>
             <th>
-                Object
-            </th>
-            <th>
-                X
-            </th>
-            <th>
-                Y
-            </th>
-            <th>
-                Z
-            </th>
-            <th>
-                X
-            </th>
-            <th>
-                Y
-            </th>
-            <th>
-                Z
-            </th>
-        </tr>
-        <tr>
-            <td>
-                Camera Position
-            </td>
-            <td>
-                <input id="editview_cx" name="cx" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="editview_cy" name="cy" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="editview_cz" name="cz" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="editview_cgx" name="cgx" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="editview_cgy" name="cgy" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="editview_cgz" name="cgz" type="text" value="" class="form-control" />
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Look At
-            </td>
-            <td>
-                <input id="editview_tx" name="tx" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="editview_ty" name="ty" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="editview_tz" name="tz" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                --
-            </td>
-            <td>
-                --
-            </td>
-            <td>
-                --
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Scene
-            </td>
-            <td>
-                <input id="scene_x" name="spx" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="scene_y" name="spy" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="scene_z" name="spz" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="scene_gx" name="spgx" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="scene_gy" name="spgy" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="scene_gz" name="spgz" type="text" value="" class="form-control" />
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Glid Helper
-            </td>
-            <td>
-                <input id="gh_x" name="ghx" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="gh_y" name="ghy" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="gh_z" name="ghz" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="gh_gx" name="ghgx" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="gh_gy" name="ghgy" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="gh_gz" name="ghgz" type="text" value="" class="form-control" />
-            </td>
-        </tr>
-    </table>
-</div>
-
-
-<div id="sub_view_camera_data">
-    <table class="table">
-        <tr>
-            <th>
-                Object
-            </th>
-            <th>
-                X
-            </th>
-            <th>
-                Y
-            </th>
-            <th>
-                Z
-            </th>
-        </tr>
-        <tr>
-            <td>
-                Camera Position
-            </td>
-            <td id="info_maincamera_pos_x">
-            </td>
-            <td id="info_maincamera_pos_y">
-            </td>
-            <td id="info_maincamera_pos_z">
-            </td>
-        </tr>
-    </table>
-    <table class="table">
-        <tr>
-            <th>
-                Object
+                Elementname
             </th>
             <th>
                 X
@@ -206,65 +64,89 @@
             <td>
                 Camera Position
             </td>
-            <td id="info_maincamera_qout_x">
+            <td>
+                <input id="cam_pos_x" name="cam_pos_x" type="text" value="" class="form-control" />
             </td>
-            <td id="info_maincamera_qout_y">
+            <td>
+                <input id="cam_pos_y" name="cam_pos_y" type="text" value="" class="form-control" />
             </td>
-            <td id="info_maincamera_qout_z">
+            <td>
+                <input id="cam_pos_z" name="cam_pos_z" type="text" value="" class="form-control" />
             </td>
-            <td id="info_maincamera_qout_w">
+            <td>
+                --
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Camera Look At
+            </td>
+            <td>
+                <input id="cam_lookat_x" name="cam_lookat_x" type="text" value="" class="form-control" />
+            </td>
+            <td>
+                <input id="cam_lookat_y" name="cam_lookat_y" type="text" value="" class="form-control" />
+            </td>
+            <td>
+                <input id="cam_lookat_z" name="cam_lookat_z" type="text" value="" class="form-control" />
+            </td>
+            <td>
+                --
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Camera Quaternion
+            </td>
+            <td>
+                <input id="cam_quat_x" name="cam_quat_x" type="text" value="" class="form-control" />
+            </td>
+            <td>
+                <input id="cam_quat_y" name="cam_quat_y" type="text" value="" class="form-control" />
+            </td>
+            <td>
+                <input id="cam_quat_z" name="cam_quat_z" type="text" value="" class="form-control" />
+            </td>
+            <td>
+                <input id="cam_quat_w" name="cam_quat_w" type="text" value="" class="form-control" />
+            </td>
+        </tr>
+        <tr>
+        <tr>
+            <td>
+                Orbit Control Target
+            </td>
+            <td>
+                <input id="obt_target_x" name="obt_target_x" type="text" value="" class="form-control" />
+            </td>
+            <td>
+                <input id="obt_target_y" name="obt_target_y" type="text" value="" class="form-control" />
+            </td>
+            <td>
+                <input id="obt_target_z" name="obt_target_z" type="text" value="" class="form-control" />
+            </td>
+            <td>
+                --
             </td>
         </tr>
     </table>
+
 </div>
 
 
+@*<div id="content"></div>*@
 
 <script src="~/lib/three/three.js"></script>
 <script src="~/lib/three/Loader/GLTFLoader.js"></script>
 <script src="~/lib/three/Loader/OBJLoader.js"></script>
 <script src="~/lib/three/Loader/MTLLoader.js"></script>
 <script src="~/lib/three/OrbitControls.js"></script>
+<script src="~/lib/marked/marked.js"></script>
+<script src="~/js/operation_3d_instructor.js"></script>
 
 
 <script type="text/javascript">
 
-    //var THREE = require('three');
-
-    class Instruction {
-        constructor(id_assy, id_ruct, id_view, title, short_description) {
-            this.id_assy = id_assy;
-            this.id_ruct = id_ruct;
-            this.id_view = id_view;
-            this.title = title;
-            this.short_description = short_description;
-        }
-    }
-
-    class ViewObject {
-        constructor(id_assy, id_view, cx, cy, cz, tx, ty, tz) {
-            this.id_assy = id_assy;
-            this.id_view = id_view;
-
-            this.cx = cx;
-            this.cy = cy;
-            this.cz = cz;
-
-            this.tx = tx;
-            this.ty = ty;
-            this.tz = tz;
-        }
-    }
-
-
-    class InstancePart {
-        constructor(id_assy, id_ruct, id_part, objectdata) {
-            this.id_assy = id_assy;
-            this.id_ruct = id_ruct;
-            this.id_part = id_part;
-            this.objectdata = objectdata;
-        }
-    }
 
     var camera_main;
     var scene = new THREE.Scene();
@@ -284,31 +166,22 @@
     var instruction_gp = [];
     var instance_part = [];
 
+
+
+    // ロード後に実行される処理
     window.onload = function () {
         'use strict';
 
-        var qs = new URLSearchParams({ id_assy: @Model });
-        var api_url = "/ContentsOperatorApis/GetAssemblyObjectList?" + qs.toString();
+        var str_url_prodobjectapi_base = "/ContentsOperatorApis/GetAssemblyObjectList?";
+        var str_url_prodobjectapi = str_url_prodobjectapi_base + new URLSearchParams({ id_assy: @Model }).toString();
 
-
-        var param_idpart = "";
-        var url_partapi = "";
-        var url_txapi = "";
-
-
-        var pn;
-        var temp_bt;
-
-        const objLoader = new THREE.OBJLoader();
-        const mtlLoader = new THREE.MTLLoader();
+        var str_url_partapi_base = "/ContentsOperatorApis/GetPartObjectFile?";
 
         const glfLoader = new THREE.GLTFLoader();
-        // scene
-        //scene = new THREE.Scene();
 
 
         //指定urlからデータを取得
-        fetch(api_url)
+        fetch(str_url_prodobjectapi)
             .then(response => {
 
                 return response.json();
@@ -316,50 +189,21 @@
             })
             .then(data => { // 処理が成功した場合に取得されるJSONデータ
 
-                pn = document.getElementById('control_panel_zone');
-                for (var i in data) {
-                    if (data[i].type == "view") {
-                        view_object[data[i].id_view] = new ViewObject(data[i].id_assy, data[i].id_view, data[i].cx, data[i].cy, data[i].cz, data[i].tx, data[i].ty, data[i].tz);
+                //JSONのデータを各オブジェクトに詰め替える
+                data_inmprt(data, view_object, instruction_gp, instance_part);
 
-                    }
-
-
-                    if (data[i].type == "instruction") {
-
-                        instruction_gp[data[i].id_ruct] = new Instruction(data[i].id_assy, data[i].id_ruct, data[i].id_view, data[i].title, data[i].short_description);
-
-                        temp_bt = document.createElement('button');
-                        temp_bt.type = 'button';
-                        temp_bt.onclick = transition_instruction.bind(null, data[i].id_ruct);
-                        temp_bt.id = "btn_inst" + data[i].id_ruct;
-                        temp_bt.classList.add('btn-primary');
-                        temp_bt.textContent = 'Instruct' + data[i].id_ruct;
-
-                        pn.appendChild(temp_bt);
-
-                    }
+                //コントロールパネル領域を生成する
+                setup_control_panel_zone("control_panel_zone", instruction_gp);
 
 
-                    if (data[i].type == "instance_part") {
-
-                        param_idpart = new URLSearchParams({ id_part: data[i].id_part });
-                        url_partapi = "/ContentsOperatorApis/GetPartObjectFile?" + param_idpart.toString();
+                //データモデルを取得する
+                setup_instance_part_model(str_url_partapi_base, instance_part, glfLoader, scene);
 
 
-                        glfLoader.load(url_partapi, function (gltf) {
-
-                            scene.add(gltf.scene);
-
-                        }, undefined, function (error) {
-
-                            console.error(error);
-
-                        });
-
-                    }
-                }
                 initial_optional01();
                 initial_setup_and_render();
+                //initial_setup_and_render2(scene, camera_main, controls, light, ambient, renderer, width, height);
+
             })
             .catch(error => { // エラーの場合の処理
 
@@ -373,51 +217,31 @@
     function transition_instruction(id_ruct) {
         'use strict';
 
+
+
         //カメラ位置の変更
         //---------------------
         var i = instruction_gp[id_ruct].id_view;
         controls.reset();
-        set_camera(camera_main, view_object[i].cx, view_object[i].cy, view_object[i].cz, new THREE.Vector3(view_object[i].tx, view_object[i].ty, view_object[i].tz));
+
+        set_camera(camera_main, view_object[i].cam_pos_x, view_object[i].cam_pos_y, view_object[i].cam_pos_z,
+            new THREE.Quaternion(view_object[i].cam_quat_x, view_object[i].cam_quat_y, view_object[i].cam_quat_z, view_object[i].cam_quat_w));
+
+        controls.target.set(view_object[i].obt_target_x, view_object[i].obt_target_y, view_object[i].obt_target_z);
+        controls.update();
         //---------------------
 
+        //タイトルの表示
         var node_temp;
         node_temp = document.getElementById('instruction_title');
-        node_temp.value = instruction_gp[id_ruct].title;
+        node_temp.textContent = instruction_gp[id_ruct].title;
 
 
+        //テキスト内容をマークダウン方式に変更して表示
         node_temp = document.getElementById('instruction_short_description');
         node_temp.textContent = instruction_gp[id_ruct].short_description;
-
-
-        node_temp = document.getElementById('instruction_id_assy');
-        node_temp.value = instruction_gp[id_ruct].id_assy;
-
-        node_temp = document.getElementById('instruction_id_rust');
-        node_temp.value = instruction_gp[id_ruct].id_ruct;
-
-        //var zz = new THREE.OrbitControls(camera_main, renderer.domElement);
-        //zz.
-
-        //controls = new THREE.OrbitControls(camera_main, renderer.domElement);
-
-
     }
 
-    //カメラを設定する
-    function set_camera(objcom, p1, p2, p3, look) {
-        'use strict';
-        objcom.position.set(p1, p2, p3);
-        //objcom.lookAt(look);
-        //objcom.lookAt(new THREE.Vector3(0, 0, 0));
-
-        const qt = new THREE.Quaternion(0.017, 0.168, -0.003, 0.985);
-        qt.normalize();
-
-        objcom.setRotationFromQuaternion(qt);
-
-        console.log("x:" + look.x + "y:" + look.y + "z:" + look.z);
-
-    }
 
     //表示関連を初期化する
     function initial_setup_and_render() {
@@ -425,7 +249,7 @@
 
         // light
         light = new THREE.DirectionalLight(0xffffff, 1);
-        light.position.set(0, -100, 30);
+        light.position.set(0, 100, 30);
         scene.add(light);
 
 
@@ -434,8 +258,7 @@
 
         // main camara
         camera_main = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
-        set_camera(camera_main, 30, 30, 30, scene.position);
-
+        set_camera(camera_main, 30, 30, 30, new THREE.Quaternion(0.017, 0.168, -0.003, 0.985));
 
         // renderer
         renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -447,165 +270,14 @@
 
         controls = new THREE.OrbitControls(camera_main, renderer.domElement);
 
-        //let camera_main2 = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
-
-        //camera_main2.applyMatrix4()
 
         function render() {
             requestAnimationFrame(render);
 
+            update_viewinfo();
+
             controls.update();
             renderer.render(scene, camera_main);
-
-
-
-            var posinfo;
-
-            posinfo = document.getElementById('editview_cx');
-            posinfo.value = camera_main.position.x;
-
-            posinfo = document.getElementById('editview_cy');
-            posinfo.value = camera_main.position.y;
-
-            posinfo = document.getElementById('editview_cz');
-            posinfo.value = camera_main.position.z;
-
-            //camera golobal
-            const camera_world = camera_main.getWorldPosition(new THREE.Vector3());
-
-            posinfo = document.getElementById('editview_cgx');
-            posinfo.value = camera_world.x;
-
-            posinfo = document.getElementById('editview_cgy');
-            posinfo.value = camera_world.y;
-
-            posinfo = document.getElementById('editview_cgz');
-            posinfo.value = camera_world.z;
-
-
-
-            //カメラは内部の負のZ軸を見下ろしています。したがって、負のz軸を指すベクトルを作成します。
-            var vector = new THREE.Vector3(0, 0, - 1);
-
-
-            //次に、カメラに適用されているベクトルに同じ回転を適用します。
-            vector.applyQuaternion(camera_main.quaternion);
-
-
-            //次のように、ターゲットに対するラジアンの角度を取得できます。
-            //angle = vector.angleTo(target.position);
-
-
-            posinfo = document.getElementById('editview_tx');
-            posinfo.value = vector.x;
-
-            posinfo = document.getElementById('editview_ty');
-            posinfo.value = vector.y;
-
-            posinfo = document.getElementById('editview_tz');
-            posinfo.value = vector.z;
-
-
-
-            //次のように、ターゲットに対するラジアンの角度を取得できます。
-            //angle = vector.angleTo(target.position);
-            //<input id="scene_x" name="spx" type="text" value="" class="form-control" />
-
-            //camera_main.position
-            posinfo = document.getElementById('gh_x');
-            posinfo.value = gridHelper.position.x;
-
-            posinfo = document.getElementById('gh_y');
-            posinfo.value = gridHelper.position.y;
-
-            posinfo = document.getElementById('gh_z');
-            posinfo.value = gridHelper.position.z;
-
-
-            const scene_glidhlper = gridHelper.getWorldPosition(new THREE.Vector3());
-            //camera_main.position
-            posinfo = document.getElementById('gh_gx');
-            posinfo.value = scene_glidhlper.x;
-
-            posinfo = document.getElementById('gh_gy');
-            posinfo.value = scene_glidhlper.y;
-
-            posinfo = document.getElementById('gh_gz');
-            posinfo.value = scene_glidhlper.z;
-
-            //----------------------------------------------------------------
-
-            //camera_main.position
-            posinfo = document.getElementById('scene_x');
-            posinfo.value = scene.position.x;
-
-            posinfo = document.getElementById('scene_y');
-            posinfo.value = scene.position.y;
-
-            posinfo = document.getElementById('scene_z');
-            posinfo.value = scene.position.z;
-
-
-            const scene_world = scene.getWorldPosition(new THREE.Vector3());
-
-            //camera_main.position
-            posinfo = document.getElementById('scene_gx');
-            posinfo.value = scene_world.x;
-
-            posinfo = document.getElementById('scene_gy');
-            posinfo.value = scene_world.y;
-
-            posinfo = document.getElementById('scene_gz');
-            posinfo.value = scene_world.z;
-
-            /*
-            // Sub View 
-            posinfo = document.getElementById('info_maincamera_pos_x');
-            posinfo.textContent = Math.floor(camera_main.position.x * 100) / 100;
-
-
-            posinfo = document.getElementById('info_maincamera_pos_y');
-            posinfo.textContent = Math.floor(camera_main.position.y * 100) / 100;
-
-            posinfo = document.getElementById('info_maincamera_pos_z');
-            posinfo.textContent = Math.floor(camera_main.position.z * 100) / 100;
-
-            */
-
-            // Sub View 
-            posinfo = document.getElementById('info_maincamera_qout_x');
-            posinfo.textContent = Math.floor(camera_main.quaternion.x * 1000) / 1000;
-
-
-            posinfo = document.getElementById('info_maincamera_qout_y');
-            posinfo.textContent = Math.floor(camera_main.quaternion.y * 1000) / 1000;
-
-            posinfo = document.getElementById('info_maincamera_qout_z');
-            posinfo.textContent = Math.floor(camera_main.quaternion.z * 1000) / 1000;
-
-            posinfo = document.getElementById('info_maincamera_qout_w');
-            posinfo.textContent = Math.floor(camera_main.quaternion.w * 1000) / 1000;
-
-
-            // Orbit Controls
-            posinfo = document.getElementById('info_maincamera_pos_x');
-            posinfo.textContent = Math.floor(controls.target.x * 100) / 100;
-
-
-            
-
-            posinfo = document.getElementById('info_maincamera_pos_y');
-            posinfo.textContent = Math.floor(controls.target.y * 100) / 100;
-
-            posinfo = document.getElementById('info_maincamera_pos_z');
-            posinfo.textContent = Math.floor(controls.target.z * 100) / 100;
-
-            /*
-            debugger;
-            var zzzz = camera_main.quaternion;
-            debugger;
-            */
-
         }
         render();
 
@@ -619,18 +291,40 @@
 
 
         //helper
+        /*
         gridHelper = new THREE.GridHelper(200, 50);
         scene.add(gridHelper);
 
 
         axisHelper = new THREE.AxisHelper(1000);
         scene.add(axisHelper);
-
+        */
 
         //lightHelper = new THREE.DirectionalLightHelper(light, 20);
         //scene.add(lightHelper);
-
-
     };
+
+    function update_viewinfo() {
+
+
+        document.getElementById('cam_pos_x').value = Math.floor(camera_main.position.x * 100) / 100;
+        document.getElementById('cam_pos_y').value = Math.floor(camera_main.position.y * 100) / 100;
+        document.getElementById('cam_pos_z').value = Math.floor(camera_main.position.z * 100) / 100;
+
+        document.getElementById('cam_lookat_x').value = 0;
+        document.getElementById('cam_lookat_y').value = 0;
+        document.getElementById('cam_lookat_z').value = 0;
+
+        document.getElementById('cam_quat_x').value = Math.floor(camera_main.quaternion.x * 1000) / 1000;
+        document.getElementById('cam_quat_y').value = Math.floor(camera_main.quaternion.y * 1000) / 1000;
+        document.getElementById('cam_quat_z').value = Math.floor(camera_main.quaternion.z * 1000) / 1000;
+        document.getElementById('cam_quat_w').value = Math.floor(camera_main.quaternion.w * 1000) / 1000;
+
+        document.getElementById('obt_target_x').value = Math.floor(controls.target.x * 100) / 100;
+        document.getElementById('obt_target_y').value = Math.floor(controls.target.y * 100) / 100;
+        document.getElementById('obt_target_z').value = Math.floor(controls.target.z * 100) / 100;
+
+    }
+
 
 </script>

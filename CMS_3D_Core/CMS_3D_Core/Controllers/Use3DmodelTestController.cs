@@ -36,7 +36,7 @@ namespace CMS_3D_Core.Controllers
             return Json(objCollection);
         }
 
-        
+        /*
         // GET: サンプルデータをJSONで返す(idは練習用のダミー)
         [HttpGet]
         public JsonResult GetAssemblyObjectList(int id_assy=1)
@@ -66,7 +66,7 @@ namespace CMS_3D_Core.Controllers
 
             return Json(objCollection);
         }
-        
+        */
         // 選択されたオブジェクトファイルを返す関数
         public ActionResult GetPartObjectFile(long id_part)
         {
