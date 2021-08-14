@@ -32,7 +32,14 @@ namespace CMS_3D_Core.Controllers
                 return NotFound();
             }
 
-            return View(id_assy);
+
+
+            var t = db.t_assemblies.Find(id_assy);
+
+
+            return View(t);
+            //return View(id_assy);
+
         }
 
         // POST: Role/Edit/5

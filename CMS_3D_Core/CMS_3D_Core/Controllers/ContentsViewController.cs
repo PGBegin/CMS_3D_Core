@@ -36,7 +36,11 @@ namespace CMS_3D_Core.Controllers
         [HttpGet]
         public ActionResult DetailProductInstruction(long id_assy)
         {
-            return View(id_assy);
+            var t = db.t_assemblies.Find(id_assy);
+
+
+            return View(t);
+            //return View(id_assy);
         }
 
         protected override void Dispose(bool disposing)

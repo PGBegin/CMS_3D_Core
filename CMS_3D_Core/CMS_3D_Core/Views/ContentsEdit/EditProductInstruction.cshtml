@@ -1,17 +1,15 @@
-﻿@model long
+﻿@model CMS_3D_Core.Models.EDM.t_assembly
 
 @{
     ViewData["Title"] = "EditProductInstruction";
 }
 
-<h1>EditProductInstruction</h1>
+<h1>@Model.assy_name</h1>
 
 
 
 <div id="model_screen">
     @*モデルの表示領域*@
-</div>
-<div id="control_panel_zone">
 </div>
 @* 表示専用ビューならこうなってる
 
@@ -24,6 +22,8 @@
 *@
 
 <hr />
+<div id="control_panel_zone">
+</div>
 <h4> Instruction Edit</h4>
 <div id="instruction_data">
 
@@ -50,7 +50,7 @@
 <div id="view_data">
 
 
-    
+
     <form asp-action="EditProductView">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -197,7 +197,8 @@
         'use strict';
 
         var str_url_prodobjectapi_base = "/ContentsOperatorApis/GetAssemblyObjectList?";
-        var str_url_prodobjectapi = str_url_prodobjectapi_base + new URLSearchParams({ id_assy: @Model }).toString();
+//        var str_url_prodobjectapi = str_url_prodobjectapi_base + new URLSearchParams({ id_assy: @Model }).toString();
+        var str_url_prodobjectapi = str_url_prodobjectapi_base + new URLSearchParams({ id_assy: @Model.id_assy }).toString();
 
         var str_url_partapi_base = "/ContentsOperatorApis/GetPartObjectFile?";
 
@@ -281,7 +282,7 @@
         node_temp.value = view_object[i].id_assy;
 
         node_temp = document.getElementById('view_id_view');
-        node_temp.value = view_object[i].id_view;              
+        node_temp.value = view_object[i].id_view;
 
     }
 

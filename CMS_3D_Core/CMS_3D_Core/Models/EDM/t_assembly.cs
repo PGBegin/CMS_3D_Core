@@ -16,6 +16,7 @@ namespace CMS_3D_Core.Models.EDM
         }
 
         public long id_assy { get; set; }
+        public string assy_name { get; set; }
 
         public virtual ICollection<t_instance_part> t_instance_parts { get; set; }
         public virtual ICollection<t_instruction> t_instructions { get; set; }

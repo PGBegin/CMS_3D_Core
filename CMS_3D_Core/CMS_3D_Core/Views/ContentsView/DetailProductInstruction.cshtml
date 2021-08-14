@@ -1,122 +1,41 @@
-﻿@model long
+﻿@model CMS_3D_Core.Models.EDM.t_assembly
+
+@*  @model CMS_3D_Core.Models.EDM.t_assembly*@
 
 @{
     ViewData["Title"] = "DetailProductInstruction";
 }
 
-<h1>DetailProductInstruction</h1>
+<h1>@Model.assy_name</h1>
 
 
+<div class="container">
 
+    <div class="row">
+        <div>
+            <div id="model_screen">
+                @*モデルの表示領域*@
+            </div>
+        </div>
+        <hr />
+        @*<div class="col-md-8 order-md-1">*@
+        <div>
+            <div id="instruction_data">
+                <div id="control_panel_zone">
+                    @*インストラクションの切り替えボタン表示領域*@
+                </div>
+                @*インストラクションの文書表示領域*@
+                <h4 id="instruction_title"></h4>
+                <div id="instruction_short_description">
 
-<div id="model_screen">
-    @*モデルの表示領域*@
-</div>
-
-<div id="control_panel_zone">
-    @*インストラクションの切り替えボタン表示領域*@
-</div>
-<div id="instruction_data">
-    @*インストラクションの文書表示領域*@
-    <h4 id="instruction_title"></h4>
-    @*<p id="instruction_short_description"></p>*@
-    <div id="instruction_short_description">
-
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-
-<div>
-
-    <table class="table">
-        <tr>
-            <th>
-                Elementname
-            </th>
-            <th>
-                X
-            </th>
-            <th>
-                Y
-            </th>
-            <th>
-                Z
-            </th>
-            <th>
-                W
-            </th>
-        </tr>
-        <tr>
-            <td>
-                Camera Position
-            </td>
-            <td>
-                <input id="cam_pos_x" name="cam_pos_x" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="cam_pos_y" name="cam_pos_y" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="cam_pos_z" name="cam_pos_z" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                --
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Camera Look At
-            </td>
-            <td>
-                <input id="cam_lookat_x" name="cam_lookat_x" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="cam_lookat_y" name="cam_lookat_y" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="cam_lookat_z" name="cam_lookat_z" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                --
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Camera Quaternion
-            </td>
-            <td>
-                <input id="cam_quat_x" name="cam_quat_x" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="cam_quat_y" name="cam_quat_y" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="cam_quat_z" name="cam_quat_z" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="cam_quat_w" name="cam_quat_w" type="text" value="" class="form-control" />
-            </td>
-        </tr>
-        <tr>
-        <tr>
-            <td>
-                Orbit Control Target
-            </td>
-            <td>
-                <input id="obt_target_x" name="obt_target_x" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="obt_target_y" name="obt_target_y" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                <input id="obt_target_z" name="obt_target_z" type="text" value="" class="form-control" />
-            </td>
-            <td>
-                --
-            </td>
-        </tr>
-    </table>
 
 </div>
+
+
 
 
 @*<div id="content"></div>*@
@@ -158,7 +77,7 @@
         'use strict';
 
         var str_url_prodobjectapi_base = "/ContentsOperatorApis/GetAssemblyObjectList?";
-        var str_url_prodobjectapi = str_url_prodobjectapi_base + new URLSearchParams({ id_assy: @Model }).toString();
+        var str_url_prodobjectapi = str_url_prodobjectapi_base + new URLSearchParams({ id_assy: @Model.id_assy }).toString();
 
         var str_url_partapi_base = "/ContentsOperatorApis/GetPartObjectFile?";
 
@@ -176,6 +95,7 @@
 
                 //JSONのデータを各オブジェクトに詰め替える
                 data_inmprt(data, view_object, instruction_gp, instance_part);
+
 
                 //コントロールパネル領域を生成する
                 setup_control_panel_zone("control_panel_zone", instruction_gp);
@@ -218,8 +138,8 @@
 
         //タイトルの表示
         var node_temp;
-        node_temp = document.getElementById('instruction_title');
-        node_temp.textContent = instruction_gp[id_ruct].title;
+        //node_temp = document.getElementById('instruction_title');
+        //node_temp.textContent = instruction_gp[id_ruct].title;
 
 
         //テキスト内容をマークダウン方式に変更して表示
@@ -259,7 +179,7 @@
         function render() {
             requestAnimationFrame(render);
 
-            update_viewinfo();
+            //update_viewinfo();
 
             controls.update();
             renderer.render(scene, camera_main);

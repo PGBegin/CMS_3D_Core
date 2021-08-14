@@ -149,6 +149,8 @@ namespace CMS_3D_Core.Models.EDM
                 entity.HasComment("組み立てに関わる基本情報を格納する");
 
                 entity.Property(e => e.id_assy).ValueGeneratedNever();
+
+                entity.Property(e => e.assy_name).HasMaxLength(250);
             });
 
             modelBuilder.Entity<t_instance_part>(entity =>

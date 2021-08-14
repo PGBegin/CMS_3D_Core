@@ -134,7 +134,7 @@ function setup_control_panel_zone(elementid, instruction_gp) {
         temp_bt.onclick = transition_instruction.bind(null, element.id_ruct);
         temp_bt.id = "btn_inst" + element.id_ruct;
         temp_bt.classList.add('btn-primary');
-        temp_bt.textContent = 'Instruct' + element.id_ruct;
+        temp_bt.textContent = element.title;
 
         pn.appendChild(temp_bt);
     });
