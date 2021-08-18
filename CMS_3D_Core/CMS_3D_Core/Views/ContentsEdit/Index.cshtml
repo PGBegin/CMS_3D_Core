@@ -14,6 +14,12 @@
             @Html.DisplayNameFor(model => model.id_assy)
         </th>
         <th>
+            View
+        </th>
+        <th>
+            Add Instance
+        </th>
+        <th>
             Link
         </th>
     </tr>
@@ -21,17 +27,20 @@
         foreach (var item in Model)
         {
 
-            <tr>
-                <td>
-                    Assy: @Html.DisplayFor(modelItem => item.id_assy)
-                </td>
-                <td>
-                    @Html.ActionLink("View Detail", "DetailProductInstruction", "ContentsView", new { id_assy = item.id_assy })
-                </td>
-                <td>
-                    @Html.ActionLink("Edit Detail", "EditProductInstruction", "ContentsEdit", new { id_assy = item.id_assy })
-                </td>
-            </tr>
+        <tr>
+            <td>
+                Assy: @Html.DisplayFor(modelItem => item.id_assy)
+            </td>
+            <td>
+                @Html.ActionLink("View Detail", "DetailProductInstruction", "ContentsView", new { id_assy = item.id_assy })
+            </td>
+            <td>
+                @Html.ActionLink("Add Instance", "CreateInstancePart", "ContentsEdit", new { id_assy = item.id_assy })
+            </td>
+            <td>
+                @Html.ActionLink("Edit Detail", "EditProductInstruction", "ContentsEdit", new { id_assy = item.id_assy })
+            </td>
+        </tr>
         }
     }
 

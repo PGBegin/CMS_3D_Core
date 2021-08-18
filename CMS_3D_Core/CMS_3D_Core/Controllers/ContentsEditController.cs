@@ -10,7 +10,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using CMS_3D_Core.Models.EDM;
+
+
 
 
 
@@ -154,6 +157,39 @@ namespace CMS_3D_Core.Controllers
             return View(id_assy);
         }
 
+        //-------------------------------------------------------------------
+        //アイテム追加
+        // GET: t_assembly/Create
+        public ActionResult CreateAssembly()
+        {
+            return View();
+        }
+
+        // POST: t_assembly/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateAssembly([Bind("id_assy,assy_name")] t_assembly t_assembly)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Add(t_assembly);
+                db.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(t_assembly);
+        }
+
+        public ActionResult CreateInstancePart(long? id_assy)
+        {
+            t_instance_part t_instance_part = new t_instance_part();
+            t_instance_part.id_assy = id_assy.Value;
+
+            ViewData["id_assy"] = new SelectList(db.t_assemblies, "id_assy", "assy_name");
+            ViewData["id_part"] = new SelectList(db.t_parts, "id_part", "part_number");
+            return View(t_instance_part);
+        }
 
         protected override void Dispose(bool disposing)
         {
