@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Net;
 using System.Web;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CMS_3D_Core.Models.EDM;
 
@@ -13,6 +14,7 @@ using CMS_3D_Core.Models.EDM;
 
 namespace CMS_3D_Core.Controllers
 {
+    [Authorize]
     public class ContentsEditController : Controller
     {
         private db_data_coreContext db = new db_data_coreContext();

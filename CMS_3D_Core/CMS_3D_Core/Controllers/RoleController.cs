@@ -5,11 +5,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using CMS_3D_Core.Models;
 
 
 namespace CMS_3D_Core.Controllers
 {
+    [Authorize]
     public class RoleController : Controller
     {
         // コントローラーを呼び出すと DI により自動的にコンストラクタに
