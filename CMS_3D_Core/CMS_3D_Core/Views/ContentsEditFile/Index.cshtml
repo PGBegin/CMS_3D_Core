@@ -1,0 +1,71 @@
+﻿@model IEnumerable<CMS_3D_Core.Models.EDM.t_part>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+<p>
+    <a asp-action="AttachFile">Upload New File</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.id_part)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.part_number)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.version)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.type_data)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.format_data)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.file_name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.file_length)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.id_part)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.part_number)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.version)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.type_data)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.format_data)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.file_name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.file_length)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.id_part">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.id_part">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.id_part">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

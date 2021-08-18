@@ -204,6 +204,8 @@ namespace CMS_3D_Core.Models.EDM
 
                 entity.Property(e => e.id_part).ValueGeneratedNever();
 
+                entity.Property(e => e.file_name).HasMaxLength(255);
+
                 entity.Property(e => e.format_data).HasMaxLength(50);
 
                 entity.Property(e => e.part_number)

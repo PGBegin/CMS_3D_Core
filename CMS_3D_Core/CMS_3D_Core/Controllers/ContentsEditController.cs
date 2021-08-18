@@ -8,6 +8,8 @@ using System.Net;
 using System.Web;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Http;
 using CMS_3D_Core.Models.EDM;
 
 
