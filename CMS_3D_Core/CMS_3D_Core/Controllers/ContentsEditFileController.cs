@@ -33,7 +33,7 @@ namespace CMS_3D_Core.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AttachFile(long id_part, string part_number, int version, [FromForm] IFormFile formFile)
+        public ActionResult AttachFile(long id_part, string part_number, int version, string format_data, [FromForm] IFormFile formFile)
         {
             var parameter_id_part = new SqlParameter
             {
@@ -73,6 +73,7 @@ namespace CMS_3D_Core.Controllers
             {
                 ParameterName = "format_data",
                 SqlDbType = System.Data.SqlDbType.NVarChar,
+                Value = format_data,
             };
 
             var parameter_file_name = new SqlParameter
@@ -89,7 +90,7 @@ namespace CMS_3D_Core.Controllers
 
 
             parameter_file_data.Value = formFile.OpenReadStream();
-            parameter_format_data.Value = "dummy";
+//            parameter_format_data.Value = "dummy";
             parameter_type_data.Value = formFile.ContentType;
             parameter_file_name.Value = formFile.FileName;
             parameter_file_length.Value = formFile.Length;
@@ -117,7 +118,56 @@ namespace CMS_3D_Core.Controllers
             return View();
         }
 
+        // GET: ContentsEditFile/Edit/5
+        public async Task<IActionResult> Edit(long? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
+            var t_part = await db.t_parts.FindAsync(id);
+            if (t_part == null)
+            {
+                return NotFound();
+            }
+            return View(t_part);
+        }
+
+        // POST: ContentsEditFile/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(long id, [Bind("id_part,part_number,version,file_data,type_data,format_data,file_texture,type_texture,file_name,file_length")] t_part t_part)
+        {
+            if (id != t_part.id_part)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    db.Update(t_part);
+                    await db.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!t_partExists(t_part.id_part))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(t_part);
+        }
         // GET: ContentsEditFile/Delete/5
         public ActionResult Delete(long? id)
         {
@@ -147,6 +197,10 @@ namespace CMS_3D_Core.Controllers
             return RedirectToAction("Index");
         }
 
+        private bool t_partExists(long id)
+        {
+            return db.t_parts.Any(e => e.id_part == id);
+        }
 
         /*
         // GET: ContentsEditFile/Details/5

@@ -22,22 +22,59 @@
 *@
 
 <hr />
+
+
 <div id="control_panel_zone">
 </div>
+
+
+<hr />
 <h4> Instruction Edit</h4>
 <div id="instruction_data">
 
     <form asp-action="EditProductInstruction">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group row ">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-        @*インストラクションの文書表示領域*@
-        @Html.Hidden("id_assy", 0, new { id = "instruction_id_assy" })
-        @Html.Hidden("id_rust", 0, new { id = "instruction_id_rust" })
-        @Html.TextBox("title", "value", new { id = "instruction_title" })
-        @Html.TextArea("short_description", null, new { id = "instruction_short_description", @class = "form-control" })
+            @*インストラクションの文書表示領域*@
+            @Html.Hidden("id_assy", 0, new { id = "instruction_id_assy" })
 
-        <div class="form-group">
-            <input type="submit" value="Save" class="btn btn-primary" onclick="return confirm('説明文を更新しますか？')" />
+
+            <div class="col-sm-2">
+                @Html.Label("id_rust", "Indstuction Id(id_rust)", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <div class="px-3">
+                    @Html.TextBox("id_rust", "", new { id = "instruction_id_rust", @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                @Html.Label("title", "移行ボタン名(title)", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <div class="px-3">
+                    @Html.TextBox("title", "", new { id = "instruction_title", @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="col-sm-2">
+                @Html.Label("id_view", "ビューID(id_view)", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <div class="px-3">
+                    @Html.TextBox("id_view", "", new { id = "instruction_id_view", @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="col-sm-8">
+                @Html.Label("short_description", "説明文書(short_description)", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <div class="px-3">
+                    @Html.TextArea("short_description", null, new { id = "instruction_short_description", rows = "10", @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="col-sm-8">
+                @Html.Label("", "", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <div class="px-3">
+                    <input type="submit" value="Save" class="btn btn-primary" onclick="return confirm('説明文を更新しますか？')" />
+                </div>
+            </div>
+
         </div>
     </form>
 </div>
@@ -57,7 +94,9 @@
 
 
         @Html.Hidden("id_assy", 0, new { id = "view_id_assy" })
-        @Html.Hidden("id_view", 0, new { id = "view_id_view" })
+        @*@Html.Hidden("id_view", 0, new { id = "view_id_view" })*@
+
+        <input id="view_id_view" name="id_view" type="text" value="" class="form-control" />
         <table class="table">
             <tr>
                 <th>
@@ -197,7 +236,6 @@
         'use strict';
 
         var str_url_prodobjectapi_base = "/ContentsOperatorApis/GetAssemblyObjectList?";
-//        var str_url_prodobjectapi = str_url_prodobjectapi_base + new URLSearchParams({ id_assy: @Model }).toString();
         var str_url_prodobjectapi = str_url_prodobjectapi_base + new URLSearchParams({ id_assy: @Model.id_assy }).toString();
 
         var str_url_partapi_base = "/ContentsOperatorApis/GetPartObjectFile?";
@@ -258,31 +296,19 @@
 
         //タイトルの表示
         var node_temp;
-        node_temp = document.getElementById('instruction_title');
-        node_temp.value = instruction_gp[id_ruct].title;
 
-
-        //テキスト内容をマークダウン方式に変更して表示
-        node_temp = document.getElementById('instruction_short_description');
-        node_temp.textContent = instruction_gp[id_ruct].short_description;
-
-
-
-        node_temp = document.getElementById('instruction_id_assy');
-        node_temp.value = instruction_gp[id_ruct].id_assy;
-
-        node_temp = document.getElementById('instruction_id_rust');
-        node_temp.value = instruction_gp[id_ruct].id_ruct;
-
-
+        //
+        //インストラクション関連の標記
+        document.getElementById('instruction_title').value = instruction_gp[id_ruct].title;
+        document.getElementById('instruction_id_view').value = instruction_gp[id_ruct].id_view;
+        document.getElementById('instruction_short_description').textContent = instruction_gp[id_ruct].short_description;
+        document.getElementById('instruction_id_assy').value = instruction_gp[id_ruct].id_assy;
+        document.getElementById('instruction_id_rust').value = instruction_gp[id_ruct].id_ruct;
 
 
         //ビュー情報を更新
-        node_temp = document.getElementById('view_id_assy');
-        node_temp.value = view_object[i].id_assy;
-
-        node_temp = document.getElementById('view_id_view');
-        node_temp.value = view_object[i].id_view;
+        document.getElementById('view_id_assy').value = view_object[i].id_assy;
+        document.getElementById('view_id_view').value = view_object[i].id_view;
 
     }
 

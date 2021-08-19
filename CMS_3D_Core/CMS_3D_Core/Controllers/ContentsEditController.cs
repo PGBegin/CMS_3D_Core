@@ -52,7 +52,7 @@ namespace CMS_3D_Core.Controllers
         // POST: Role/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditProductInstruction(long id_assy, long id_rust, string title, string short_description)
+        public async Task<IActionResult> EditProductInstruction(long id_assy, long id_rust, int id_view, string title, string short_description)
         {
             if (id_assy == null | id_rust == null)
             {
@@ -66,19 +66,33 @@ namespace CMS_3D_Core.Controllers
                     var target = await db.t_instructions.FindAsync(id_assy, id_rust);
                     if (target == null)
                     {
-                        return NotFound();
+                        t_instruction t_instruction = new t_instruction();
+                        t_instruction.id_assy = id_assy;
+                        t_instruction.id_ruct = id_rust;
+                        t_instruction.id_view = id_view;
+                        t_instruction.title = title;
+                        t_instruction.short_description = short_description;
+
+                        db.Add(t_instruction);
+                        db.SaveChanges();
+
+                        TempData["ResultMsg"] = "AddNew Success";
+                        return RedirectToAction("EditProductInstruction", new { id_assy = id_assy });
+                    } else
+                    {
+                        // データ更新
+                        target.id_view = id_view;
+                        target.title = title;
+                        target.short_description = short_description;
+
+                        // DBに更新を反映
+                        await db.SaveChangesAsync();
+
+
+                        TempData["ResultMsg"] = "Update Success";
+                        return RedirectToAction("EditProductInstruction", new { id_assy = id_assy });
                     }
 
-                    // データ更新
-                    target.title = title;
-                    target.short_description = short_description;
-
-                    // DBに更新を反映
-                    await db.SaveChangesAsync();
-
-
-                    TempData["ResultMsg"] = "Update Success";
-                    return RedirectToAction("EditProductInstruction", new { id_assy = id_assy});
 
                 }
                 catch
@@ -90,7 +104,11 @@ namespace CMS_3D_Core.Controllers
             // 更新に失敗した場合、編集画面を再描画
             return View(id_assy);
         }
-
+        /*
+        private bool t_instance_partExists(long id_assy, long id_ruct)
+        {
+            return db.t_instructions.Any(e => e.id_assy == id_assy & e.id_ruct == id_ruct);
+        } */
         // POST: Role/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -188,6 +206,22 @@ namespace CMS_3D_Core.Controllers
 
             ViewData["id_assy"] = new SelectList(db.t_assemblies, "id_assy", "assy_name");
             ViewData["id_part"] = new SelectList(db.t_parts, "id_part", "part_number");
+            return View(t_instance_part);
+        }
+
+        // POST: t_assembly/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateInstancePart([Bind("id_assy,id_inst,id_part")] t_instance_part t_instance_part)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Add(t_instance_part);
+                db.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
             return View(t_instance_part);
         }
 

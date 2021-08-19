@@ -5,13 +5,18 @@
 }
 
 <h2>Index</h2>
-
+<p>
+    <a asp-action="CreateAssembly">Create New Assembly</a>
+</p>
 
 
 <table class="table">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.id_assy)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.assy_name)
         </th>
         <th>
             View
@@ -29,7 +34,10 @@
 
         <tr>
             <td>
-                Assy: @Html.DisplayFor(modelItem => item.id_assy)
+                @Html.DisplayFor(modelItem => item.id_assy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.assy_name)
             </td>
             <td>
                 @Html.ActionLink("View Detail", "DetailProductInstruction", "ContentsView", new { id_assy = item.id_assy })
