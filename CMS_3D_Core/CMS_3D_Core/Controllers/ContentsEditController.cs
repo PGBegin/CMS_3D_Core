@@ -52,7 +52,7 @@ namespace CMS_3D_Core.Controllers
         // POST: Role/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditProductInstruction(long id_assy, long id_rust, int id_view, string title, string short_description)
+        public async Task<IActionResult> EditProductInstruction(long id_assy, long id_rust, int id_view, string title, string short_description, long display_order)
         {
             if (id_assy == null | id_rust == null)
             {
@@ -72,6 +72,7 @@ namespace CMS_3D_Core.Controllers
                         t_instruction.id_view = id_view;
                         t_instruction.title = title;
                         t_instruction.short_description = short_description;
+                        t_instruction.display_order = display_order;
 
                         db.Add(t_instruction);
                         db.SaveChanges();
@@ -84,6 +85,7 @@ namespace CMS_3D_Core.Controllers
                         target.id_view = id_view;
                         target.title = title;
                         target.short_description = short_description;
+                        target.display_order = display_order;
 
                         // DBに更新を反映
                         await db.SaveChangesAsync();
@@ -104,16 +106,12 @@ namespace CMS_3D_Core.Controllers
             // 更新に失敗した場合、編集画面を再描画
             return View(id_assy);
         }
-        /*
-        private bool t_instance_partExists(long id_assy, long id_ruct)
-        {
-            return db.t_instructions.Any(e => e.id_assy == id_assy & e.id_ruct == id_ruct);
-        } */
+
         // POST: Role/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProductView(
-                                                        long id_assy,int id_view,
+                                                        long id_assy, int id_view, string title,
                                                         float cam_pos_x,float cam_pos_y,float cam_pos_z,
                                                         float cam_lookat_x,float cam_lookat_y,float cam_lookat_z,
                                                         float cam_quat_x,float cam_quat_y,float cam_quat_z,float cam_quat_w,
@@ -132,10 +130,42 @@ namespace CMS_3D_Core.Controllers
                     var target = await db.t_views.FindAsync(id_assy, id_view);
                     if (target == null)
                     {
-                        return NotFound();
+
+                        t_view t_view = new t_view();
+                        // データ更新
+                        t_view.title = title;
+                        //カメラ位置
+                        t_view.cam_pos_x = cam_pos_x;
+                        t_view.cam_pos_y = cam_pos_y;
+                        t_view.cam_pos_z = cam_pos_z;
+
+                        //Lookat(現状まともに動いていない)
+                        t_view.cam_lookat_x = cam_lookat_x;
+                        t_view.cam_lookat_y = cam_lookat_y;
+                        t_view.cam_lookat_z = cam_lookat_z;
+
+                        //カメラのクオータニオン
+                        t_view.cam_quat_x = cam_quat_x;
+                        t_view.cam_quat_y = cam_quat_y;
+                        t_view.cam_quat_z = cam_quat_z;
+                        t_view.cam_quat_w = cam_quat_w;
+
+                        //OrbitControlのターゲット
+                        t_view.obt_target_x = obt_target_x;
+                        t_view.obt_target_y = obt_target_y;
+                        t_view.obt_target_z = obt_target_z;
+
+                        // DBに更新を反映
+
+                        await db.AddAsync(t_view);
+                        await db.SaveChangesAsync();
+
+                        TempData["ResultMsg"] = "AddNew Success";
+                        return RedirectToAction("EditProductInstruction", new { id_assy = id_assy });
                     }
 
                     // データ更新
+                    target.title = title;
                     //カメラ位置
                     target.cam_pos_x = cam_pos_x;
                     target.cam_pos_y = cam_pos_y;

@@ -34,22 +34,54 @@ namespace CMS_3D_Core.Controllers
 
             foreach (var item in t.t_instance_parts)
             {
-                objCollection.Add(new { type = "instance_part", id_assy = item.id_assy, id_inst = item.id_inst, id_part = item.id_part });
+                objCollection.Add(
+                    new { 
+                        type = "instance_part",
+                        id_assy = item.id_assy, 
+                        id_inst = item.id_inst, 
+                        id_part = item.id_part
+                    });
             }
 
-            foreach (var item in t.t_instructions)
+            foreach (var item in t.t_instructions.OrderBy(x => x.display_order))
             {
-                objCollection.Add(new { type = "instruction", id_assy = item.id_assy, id_ruct = item.id_ruct, id_view = item.id_view, title = item.title, short_description = item.short_description });
+                objCollection.Add(
+                    new { 
+                        type = "instruction", 
+                        id_assy = item.id_assy, 
+                        id_ruct = item.id_ruct, 
+                        id_view = item.id_view, 
+                        title = item.title, 
+                        short_description = item.short_description,
+                        display_order = item.display_order
+                    });
             }
 
             foreach (var item in t.t_views)
             {
-                objCollection.Add(new { type = "view", 
-                    id_assy = item.id_assy, id_view = item.id_view,
-                    cam_pos_x = item.cam_pos_x, cam_pos_y = item.cam_pos_y, cam_pos_z = item.cam_pos_z,
-                    cam_lookat_x = item.cam_lookat_x, cam_lookat_y = item.cam_lookat_y,cam_lookat_z = item.cam_lookat_z,
-                    cam_quat_x = item.cam_quat_x, cam_quat_y = item.cam_quat_y,cam_quat_z = item.cam_quat_z,cam_quat_w = item.cam_quat_w,
-                    obt_target_x = item.obt_target_x, obt_target_y = item.obt_target_y,obt_target_z = item.obt_target_z
+                objCollection.Add(
+                    new { 
+                        type = "view", 
+                        id_assy = item.id_assy, 
+                        id_view = item.id_view, 
+                        title = item.title,
+
+                        cam_pos_x = item.cam_pos_x, 
+                        cam_pos_y = item.cam_pos_y, 
+                        cam_pos_z = item.cam_pos_z,
+
+                        cam_lookat_x = item.cam_lookat_x, 
+                        cam_lookat_y = item.cam_lookat_y,
+                        cam_lookat_z = item.cam_lookat_z,
+
+                        cam_quat_x = item.cam_quat_x, 
+                        cam_quat_y = item.cam_quat_y,
+                        cam_quat_z = item.cam_quat_z,
+                        cam_quat_w = item.cam_quat_w,
+
+                        obt_target_x = item.obt_target_x, 
+                        obt_target_y = item.obt_target_y,
+                        obt_target_z = item.obt_target_z
                 });
             }
 

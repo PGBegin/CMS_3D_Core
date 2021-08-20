@@ -14,6 +14,7 @@ namespace CMS_3D_Core.Models.EDM
 
         public long id_assy { get; set; }
         public int id_view { get; set; }
+        public string title { get; set; }
         public double? cam_pos_x { get; set; }
         public double? cam_pos_y { get; set; }
         public double? cam_pos_z { get; set; }

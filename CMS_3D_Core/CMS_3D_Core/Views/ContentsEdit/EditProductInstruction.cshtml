@@ -61,12 +61,20 @@
                 </div>
             </div>
 
+            <div class="col-sm-2">
+                @Html.Label("display_order", "表示順序(display_order)", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <div class="px-3">
+                    @Html.TextBox("display_order", "", new { id = "instruction_display_order", @class = "form-control" })
+                </div>
+            </div>
+
             <div class="col-sm-8">
                 @Html.Label("short_description", "説明文書(short_description)", htmlAttributes: new { @class = "control-label font-weight-bold" })
                 <div class="px-3">
                     @Html.TextArea("short_description", null, new { id = "instruction_short_description", rows = "10", @class = "form-control" })
                 </div>
             </div>
+
 
             <div class="col-sm-8">
                 @Html.Label("", "", htmlAttributes: new { @class = "control-label font-weight-bold" })
@@ -90,13 +98,36 @@
 
     <form asp-action="EditProductView">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        
+        <div class="form-group row ">
+
+
+            @Html.Hidden("id_assy", 0, new { id = "view_id_assy" })
+            @*
+            @Html.Hidden("id_view", 0, new { id = "view_id_view" })
+            <input id="view_id_view" name="id_view" type="text" value="" class="form-control" />
+            <input id="view_title" name="title" type="text" value="" class="form-control" />
+
+            *@
 
 
 
-        @Html.Hidden("id_assy", 0, new { id = "view_id_assy" })
-        @*@Html.Hidden("id_view", 0, new { id = "view_id_view" })*@
+            <div class="col-sm-2">
+                @Html.Label("id_rust", "Indstuction Id(id_rust)", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <div class="px-3">
+                    @Html.TextBox("id_view", "", new { id = "view_id_view", @class = "form-control" })
+                </div>
+            </div>
 
-        <input id="view_id_view" name="id_view" type="text" value="" class="form-control" />
+            <div class="col-sm-3">
+                @Html.Label("title", "ビュータイトル(title)", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <div class="px-3">
+                    @Html.TextBox("title", "", new { id = "view_title", @class = "form-control" })
+                </div>
+            </div>
+
+        </div>
+          
         <table class="table">
             <tr>
                 <th>
@@ -304,12 +335,15 @@
         document.getElementById('instruction_short_description').textContent = instruction_gp[id_ruct].short_description;
         document.getElementById('instruction_id_assy').value = instruction_gp[id_ruct].id_assy;
         document.getElementById('instruction_id_rust').value = instruction_gp[id_ruct].id_ruct;
+        document.getElementById('instruction_display_order').value = instruction_gp[id_ruct].display_order;
 
+        
 
         //ビュー情報を更新
         document.getElementById('view_id_assy').value = view_object[i].id_assy;
         document.getElementById('view_id_view').value = view_object[i].id_view;
-
+        document.getElementById('view_title').value = view_object[i].title;
+        
     }
 
 

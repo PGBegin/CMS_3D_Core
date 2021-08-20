@@ -253,6 +253,8 @@ namespace CMS_3D_Core.Models.EDM
 
                 entity.ToTable("t_view");
 
+                entity.Property(e => e.title).HasMaxLength(128);
+
                 entity.HasOne(d => d.id_assyNavigation)
                     .WithMany(p => p.t_views)
                     .HasForeignKey(d => d.id_assy)
