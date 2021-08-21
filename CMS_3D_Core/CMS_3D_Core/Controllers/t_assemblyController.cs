@@ -67,14 +67,14 @@ namespace CMS_3D_Core.Controllers
         }
 
         // GET: t_assembly/Edit/5
-        public async Task<IActionResult> Edit(long? id)
+        public async Task<IActionResult> Edit(long? id_assy)
         {
-            if (id == null)
+            if (id_assy == null)
             {
                 return NotFound();
             }
 
-            var t_assembly = await _context.t_assemblies.FindAsync(id);
+            var t_assembly = await _context.t_assemblies.FindAsync(id_assy);
             if (t_assembly == null)
             {
                 return NotFound();
@@ -87,12 +87,13 @@ namespace CMS_3D_Core.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("id_assy,assy_name")] t_assembly t_assembly)
+        public async Task<IActionResult> Edit([Bind("id_assy,assy_name")] t_assembly t_assembly)
         {
+            /*
             if (id != t_assembly.id_assy)
             {
                 return NotFound();
-            }
+            }*/
 
             if (ModelState.IsValid)
             {
@@ -118,15 +119,15 @@ namespace CMS_3D_Core.Controllers
         }
 
         // GET: t_assembly/Delete/5
-        public async Task<IActionResult> Delete(long? id)
+        public async Task<IActionResult> Delete(long? id_assy)
         {
-            if (id == null)
+            if (id_assy == null)
             {
                 return NotFound();
             }
 
             var t_assembly = await _context.t_assemblies
-                .FirstOrDefaultAsync(m => m.id_assy == id);
+                .FirstOrDefaultAsync(m => m.id_assy == id_assy);
             if (t_assembly == null)
             {
                 return NotFound();
@@ -138,9 +139,9 @@ namespace CMS_3D_Core.Controllers
         // POST: t_assembly/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        public async Task<IActionResult> DeleteConfirmed(long id_assy)
         {
-            var t_assembly = await _context.t_assemblies.FindAsync(id);
+            var t_assembly = await _context.t_assemblies.FindAsync(id_assy);
             _context.t_assemblies.Remove(t_assembly);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

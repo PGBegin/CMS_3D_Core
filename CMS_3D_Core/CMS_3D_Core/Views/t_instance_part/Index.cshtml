@@ -31,9 +31,7 @@
                 @Html.DisplayFor(modelItem => item.id_partNavigation.part_number)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                @Html.ActionLink("Delete", "Delete", new { id_assy = item.id_assy, id_inst = item.id_inst })
             </td>
         </tr>
 }

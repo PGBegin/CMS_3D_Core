@@ -19,10 +19,13 @@
             @Html.DisplayNameFor(model => model.assy_name)
         </th>
         <th>
-            View
+            Assy
         </th>
         <th>
-            Add Instance
+            Instance
+        </th>
+        <th>
+            Detail Instructions
         </th>
         <th>
             Link
@@ -40,13 +43,22 @@
                 @Html.DisplayFor(modelItem => item.assy_name)
             </td>
             <td>
-                @Html.ActionLink("View Detail", "DetailProductInstruction", "ContentsView", new { id_assy = item.id_assy })
+                @Html.ActionLink("Edit", "Edit", "t_assembly", new { id_assy = item.id_assy })
+                |
+                @Html.ActionLink("Delete", "Delete", "t_assembly", new { id_assy = item.id_assy })
             </td>
             <td>
-                @Html.ActionLink("Add Instance", "CreateInstancePart", "ContentsEdit", new { id_assy = item.id_assy })
+                @Html.ActionLink("Add", "CreateInstancePart", "ContentsEdit", new { id_assy = item.id_assy })
+                |
+                @Html.ActionLink("List(for Delete)", "Index", "t_instance_part", new { id_assy = item.id_assy })
             </td>
             <td>
-                @Html.ActionLink("Edit Detail", "EditProductInstruction", "ContentsEdit", new { id_assy = item.id_assy })
+                @Html.ActionLink("List(for Delete)", "Index", "t_view", new { id_assy = item.id_assy })
+            </td>
+            <td>
+                @Html.ActionLink("View", "DetailProductInstruction", "ContentsView", new { id_assy = item.id_assy })
+                |
+                @Html.ActionLink("Edit", "EditProductInstruction", "ContentsEdit", new { id_assy = item.id_assy })
             </td>
         </tr>
         }

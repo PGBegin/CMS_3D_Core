@@ -21,12 +21,22 @@ namespace CMS_3D_Core.Controllers
         }
 
         // GET: t_instance_part
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(long id_assy)
         {
-            var db_data_coreContext = _context.t_instance_parts.Include(t => t.id_assyNavigation).Include(t => t.id_partNavigation);
-            return View(await db_data_coreContext.ToListAsync());
-        }
+            var db_data_coreContext = _context.t_instance_parts
+                                            .Include(t => t.id_assyNavigation)
+                                            .Include(t => t.id_partNavigation)
+                                            .Where(t => t.id_assy == id_assy);
 
+            return View(await db_data_coreContext.ToListAsync());
+
+
+
+
+
+
+        }
+        /*
         // GET: t_instance_part/Details/5
         public async Task<IActionResult> Details(long? id)
         {
@@ -127,11 +137,11 @@ namespace CMS_3D_Core.Controllers
             ViewData["id_part"] = new SelectList(_context.t_parts, "id_part", "part_number", t_instance_part.id_part);
             return View(t_instance_part);
         }
-
+        */
         // GET: t_instance_part/Delete/5
-        public async Task<IActionResult> Delete(long? id)
+        public async Task<IActionResult> Delete(long? id_assy, long? id_inst)
         {
-            if (id == null)
+            if (id_assy == null | id_inst == null)
             {
                 return NotFound();
             }
@@ -139,7 +149,7 @@ namespace CMS_3D_Core.Controllers
             var t_instance_part = await _context.t_instance_parts
                 .Include(t => t.id_assyNavigation)
                 .Include(t => t.id_partNavigation)
-                .FirstOrDefaultAsync(m => m.id_assy == id);
+                .FirstOrDefaultAsync(m => m.id_assy == id_assy & m.id_inst == id_inst);
             if (t_instance_part == null)
             {
                 return NotFound();
@@ -151,9 +161,9 @@ namespace CMS_3D_Core.Controllers
         // POST: t_instance_part/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        public async Task<IActionResult> DeleteConfirmed(long id_assy, long id_inst)
         {
-            var t_instance_part = await _context.t_instance_parts.FindAsync(id);
+            var t_instance_part = await _context.t_instance_parts.FindAsync(id_assy, id_inst);
             _context.t_instance_parts.Remove(t_instance_part);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
