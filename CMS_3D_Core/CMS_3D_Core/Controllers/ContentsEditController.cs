@@ -22,13 +22,19 @@ namespace CMS_3D_Core.Controllers
     [Authorize]
     public class ContentsEditController : Controller
     {
-        private db_data_coreContext db = new db_data_coreContext();
+        //private db_data_coreContext db = new db_data_coreContext();
+        private readonly db_data_coreContext _context;
+
+        public ContentsEditController(db_data_coreContext context)
+        {
+            _context = context;
+        }
 
         // GET: Use3DmodelTest
-//        public ActionResult Index()
+        //        public ActionResult Index()
         public async Task<IActionResult> Index()
         {
-            var assys = await db.t_assemblies.ToListAsync();
+            var assys = await _context.t_assemblies.ToListAsync();
             return View(assys);
         }
 
@@ -42,7 +48,7 @@ namespace CMS_3D_Core.Controllers
 
 
 
-            var t = await db.t_assemblies.FindAsync(id_assy);
+            var t = await _context.t_assemblies.FindAsync(id_assy);
 
 
             return View(t);
@@ -64,7 +70,7 @@ namespace CMS_3D_Core.Controllers
             {
                 try
                 {
-                    var target = await db.t_instructions.FindAsync(id_assy, id_rust);
+                    var target = await _context.t_instructions.FindAsync(id_assy, id_rust);
                     if (target == null)
                     {
                         t_instruction t_instruction = new t_instruction();
@@ -75,8 +81,8 @@ namespace CMS_3D_Core.Controllers
                         t_instruction.short_description = short_description;
                         t_instruction.display_order = display_order;
 
-                        await db.AddAsync(t_instruction);
-                        await db.SaveChangesAsync();
+                        await _context.AddAsync(t_instruction);
+                        await _context.SaveChangesAsync();
 
                         TempData["ResultMsg"] = "AddNew Success";
                         return RedirectToAction("EditProductInstruction", new { id_assy = id_assy });
@@ -89,7 +95,7 @@ namespace CMS_3D_Core.Controllers
                         target.display_order = display_order;
 
                         // DBに更新を反映
-                        await db.SaveChangesAsync();
+                        await _context.SaveChangesAsync();
 
 
                         TempData["ResultMsg"] = "Update Success";
@@ -114,9 +120,9 @@ namespace CMS_3D_Core.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteProductInstructionConfirmed(long id_assy, long id_rust)
         {
-            t_instruction t_instruction = await db.t_instructions.FindAsync(id_assy, id_rust);
-            db.t_instructions.Remove(t_instruction);
-            await db.SaveChangesAsync();
+            t_instruction t_instruction = await _context.t_instructions.FindAsync(id_assy, id_rust);
+            _context.t_instructions.Remove(t_instruction);
+            await _context.SaveChangesAsync();
 
             TempData["ResultMsg"] = "Update Success";
             return RedirectToAction("EditProductInstruction", new { id_assy = id_assy });
@@ -142,7 +148,7 @@ namespace CMS_3D_Core.Controllers
             {
                 try
                 {
-                    var target = await db.t_views.FindAsync(id_assy, id_view);
+                    var target = await _context.t_views.FindAsync(id_assy, id_view);
                     if (target == null)
                     {
 
@@ -172,8 +178,8 @@ namespace CMS_3D_Core.Controllers
 
                         // DBに更新を反映
 
-                        await db.AddAsync(t_view);
-                        await db.SaveChangesAsync();
+                        await _context.AddAsync(t_view);
+                        await _context.SaveChangesAsync();
 
                         TempData["ResultMsg"] = "AddNew Success";
                         return RedirectToAction("EditProductInstruction", new { id_assy = id_assy });
@@ -203,7 +209,7 @@ namespace CMS_3D_Core.Controllers
                     target.obt_target_z = obt_target_z;
 
                     // DBに更新を反映
-                    await db.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
 
 
                     TempData["ResultMsg"] = "Update Success";
@@ -237,8 +243,8 @@ namespace CMS_3D_Core.Controllers
         {
             if (ModelState.IsValid)
             {
-                await db.AddAsync(t_assembly);
-                await db.SaveChangesAsync();
+                await _context.AddAsync(t_assembly);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(t_assembly);
@@ -249,8 +255,8 @@ namespace CMS_3D_Core.Controllers
             t_instance_part t_instance_part = new t_instance_part();
             t_instance_part.id_assy = id_assy.Value;
 
-            ViewData["id_assy"] = new SelectList(db.t_assemblies, "id_assy", "assy_name");
-            ViewData["id_part"] = new SelectList(db.t_parts, "id_part", "part_number");
+            ViewData["id_assy"] = new SelectList(_context.t_assemblies, "id_assy", "assy_name");
+            ViewData["id_part"] = new SelectList(_context.t_parts, "id_part", "part_number");
             return View(t_instance_part);
         }
 
@@ -263,8 +269,8 @@ namespace CMS_3D_Core.Controllers
         {
             if (ModelState.IsValid)
             {
-                await db.AddAsync(t_instance_part);
-                await db.SaveChangesAsync();
+                await _context.AddAsync(t_instance_part);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(t_instance_part);
@@ -274,7 +280,7 @@ namespace CMS_3D_Core.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                _context.Dispose();
             }
             base.Dispose(disposing);
         }

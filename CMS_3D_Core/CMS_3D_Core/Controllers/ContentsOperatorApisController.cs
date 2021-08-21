@@ -14,7 +14,14 @@ namespace CMS_3D_Core.Controllers
 {
     public class ContentsOperatorApisController : Controller
     {
-        private db_data_coreContext db = new db_data_coreContext();
+        //private db_data_coreContext db = new db_data_coreContext();
+
+        private readonly db_data_coreContext _context;
+
+        public ContentsOperatorApisController(db_data_coreContext context)
+        {
+            _context = context;
+        }
 
         /// <summary>
         /// GET: コンテンツのベースデータをJsonで返す
@@ -24,7 +31,7 @@ namespace CMS_3D_Core.Controllers
         [HttpGet]
         public JsonResult GetAssemblyObjectList(int id_assy)
         {
-            var t = db.t_assemblies
+            var t = _context.t_assemblies
                         .Include(x => x.t_instructions)
                         .Include(x => x.t_views)
                         .Include(x => x.t_instance_parts)
@@ -96,7 +103,7 @@ namespace CMS_3D_Core.Controllers
         [HttpGet]
         public ActionResult GetPartObjectFile(long id_part)
         {
-            t_part t_part = db.t_parts.Find(id_part);
+            t_part t_part = _context.t_parts.Find(id_part);
 
             return File(t_part.file_data, t_part.type_data, t_part.part_number);
         }
@@ -106,7 +113,7 @@ namespace CMS_3D_Core.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                _context.Dispose();
             }
             base.Dispose(disposing);
         }

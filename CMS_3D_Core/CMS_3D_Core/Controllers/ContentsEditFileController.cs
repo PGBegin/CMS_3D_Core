@@ -15,15 +15,20 @@ namespace CMS_3D_Core.Controllers
     [Authorize]
     public class ContentsEditFileController : Controller
     {
-        private db_data_coreContext db = new db_data_coreContext();
+        //private db_data_coreContext db = new db_data_coreContext();
+        private readonly db_data_coreContext _context;
 
+        public ContentsEditFileController(db_data_coreContext context)
+        {
+            _context = context;
+        }
 
 
         // GET: ContentsEditFile
         public ActionResult Index()
         {
 
-            var t = db.t_parts;
+            var t = _context.t_parts;
             return View(t.ToList());
         }
 
@@ -99,7 +104,7 @@ namespace CMS_3D_Core.Controllers
 
             try
             {
-                db.Database
+                _context.Database
                     .ExecuteSqlRaw("EXEC [dbo].[attachmentfile_add] @id_part,@part_number,@version,@file_data,@type_data,@format_data,@file_name,@file_length"
                     , parameter_id_part
                     , parameter_part_number
@@ -126,7 +131,7 @@ namespace CMS_3D_Core.Controllers
                 return NotFound();
             }
 
-            var t_part = await db.t_parts.FindAsync(id);
+            var t_part = await _context.t_parts.FindAsync(id);
             if (t_part == null)
             {
                 return NotFound();
@@ -150,8 +155,8 @@ namespace CMS_3D_Core.Controllers
             {
                 try
                 {
-                    db.Update(t_part);
-                    await db.SaveChangesAsync();
+                    _context.Update(t_part);
+                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -176,7 +181,7 @@ namespace CMS_3D_Core.Controllers
                 return NotFound();
             }
 
-            var t_part = db.t_parts.Find(id);
+            var t_part = _context.t_parts.Find(id);
                 
             if (t_part == null)
             {
@@ -191,15 +196,15 @@ namespace CMS_3D_Core.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(long id)
         {
-            var t_part = db.t_parts.Find(id);
-            db.t_parts.Remove(t_part);
-            db.SaveChanges();
+            var t_part = _context.t_parts.Find(id);
+            _context.t_parts.Remove(t_part);
+            _context.SaveChanges();
             return RedirectToAction("Index");
         }
 
         private bool t_partExists(long id)
         {
-            return db.t_parts.Any(e => e.id_part == id);
+            return _context.t_parts.Any(e => e.id_part == id);
         }
 
         /*

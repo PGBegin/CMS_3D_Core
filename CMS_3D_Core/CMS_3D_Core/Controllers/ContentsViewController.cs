@@ -14,7 +14,14 @@ namespace CMS_3D_Core.Controllers
 {
     public class ContentsViewController : Controller
     {
-        private db_data_coreContext db = new db_data_coreContext();
+        //private db_data_coreContext db = new db_data_coreContext();
+
+        private readonly db_data_coreContext _context;
+
+        public ContentsViewController(db_data_coreContext context)
+        {
+            _context = context;
+        }
 
         /// <summary>
         /// GET: コンテンツの一覧TOP画面
@@ -23,7 +30,7 @@ namespace CMS_3D_Core.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            var assys = db.t_assemblies;
+            var assys = _context.t_assemblies;
             return View(assys.ToList());
         }
 
@@ -36,7 +43,7 @@ namespace CMS_3D_Core.Controllers
         [HttpGet]
         public ActionResult DetailProductInstruction(long id_assy)
         {
-            var t = db.t_assemblies.Find(id_assy);
+            var t = _context.t_assemblies.Find(id_assy);
 
 
             return View(t);
@@ -47,7 +54,7 @@ namespace CMS_3D_Core.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                _context.Dispose();
             }
             base.Dispose(disposing);
         }
