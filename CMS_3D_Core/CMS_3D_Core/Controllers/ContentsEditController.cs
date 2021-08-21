@@ -154,6 +154,8 @@ namespace CMS_3D_Core.Controllers
 
                         t_view t_view = new t_view();
                         // データ更新
+                        t_view.id_assy = id_assy;
+                        t_view.id_view = id_view;
                         t_view.title = title;
                         //カメラ位置
                         t_view.cam_pos_x = cam_pos_x;
@@ -225,7 +227,20 @@ namespace CMS_3D_Core.Controllers
             // 更新に失敗した場合、編集画面を再描画
             return View(id_assy);
         }
+        /*
+        // POST: t_instance_part/Delete/5
+        [HttpPost, ActionName("DeleteProductView")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteProductViewConfirmed(long id_assy, long id_view)
+        {
+            t_view t_view = await _context.t_views.FindAsync(id_assy, id_view);
+            _context.t_views.Remove(t_view);
+            await _context.SaveChangesAsync();
 
+            TempData["ResultMsg"] = "Update Success";
+            return RedirectToAction("EditProductInstruction", new { id_assy = id_assy });
+        }
+        */
         //-------------------------------------------------------------------
         //アイテム追加
         // GET: t_assembly/Create

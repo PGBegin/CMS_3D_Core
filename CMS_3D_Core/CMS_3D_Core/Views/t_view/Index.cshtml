@@ -1,0 +1,101 @@
+﻿@model IEnumerable<CMS_3D_Core.Models.EDM.t_view>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+@*
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+*@
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.cam_pos_x)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.cam_pos_y)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.cam_pos_z)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.cam_quat_x)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.cam_quat_y)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.cam_quat_z)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.cam_quat_w)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.obt_target_x)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.obt_target_y)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.obt_target_z)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.id_assyNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.cam_pos_x)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.cam_pos_y)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.cam_pos_z)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.cam_quat_x)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.cam_quat_y)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.cam_quat_z)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.cam_quat_w)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.obt_target_x)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.obt_target_y)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.obt_target_z)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.id_assyNavigation.id_assy)
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "Delete", new { id_assy = item.id_assy, id_view = item.id_view })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -121,15 +121,15 @@
 
     <form asp-action="EditProductView">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        
+
         <div class="form-group row ">
 
 
             @Html.Hidden("id_assy", 0, new { id = "view_id_assy" })
             @*
-            @Html.Hidden("id_view", 0, new { id = "view_id_view" })
-            <input id="view_id_view" name="id_view" type="text" value="" class="form-control" />
-            <input id="view_title" name="title" type="text" value="" class="form-control" />
+                @Html.Hidden("id_view", 0, new { id = "view_id_view" })
+                <input id="view_id_view" name="id_view" type="text" value="" class="form-control" />
+                <input id="view_title" name="title" type="text" value="" class="form-control" />
 
             *@
 
@@ -150,7 +150,7 @@
             </div>
 
         </div>
-          
+
         <table class="table">
             <tr>
                 <th>
@@ -247,7 +247,26 @@
     </form>
 
 
+    @*ビューの削除
+        <form asp-action="DeleteProductView">
+            <div class="form-group row ">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+
+                @Html.Hidden("id_assy", 0, new { id = "view_id_assy_delete" })
+                @Html.Hidden("id_view", 0, new { id = "view_id_view_delete" })
+
+                <div class="col-sm-8">
+                    @Html.Label("", "", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                    <div class="px-3">
+                        <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('視点情報を削除しますか？')" />
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    *@
+    @Html.ActionLink("View", "Index", "t_view", new { id_assy = Model.id_assy })
 </div>
 
 
@@ -370,6 +389,12 @@
         document.getElementById('view_id_assy').value = view_object[i].id_assy;
         document.getElementById('view_id_view').value = view_object[i].id_view;
         document.getElementById('view_title').value = view_object[i].title;
+
+
+        //削除用ビュー情報を更新
+        //document.getElementById('view_id_assy_delete').value = view_object[i].id_assy;
+        //document.getElementById('view_id_view_delete').value = view_object[i].id_view;
+
 
     }
 
