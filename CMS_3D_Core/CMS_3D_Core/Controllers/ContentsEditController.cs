@@ -25,10 +25,11 @@ namespace CMS_3D_Core.Controllers
         private db_data_coreContext db = new db_data_coreContext();
 
         // GET: Use3DmodelTest
-        public ActionResult Index()
+//        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var assys = db.t_assemblies;
-            return View(assys.ToList());
+            var assys = await db.t_assemblies.ToListAsync();
+            return View(assys);
         }
 
         [HttpGet]
@@ -41,7 +42,7 @@ namespace CMS_3D_Core.Controllers
 
 
 
-            var t = db.t_assemblies.Find(id_assy);
+            var t = await db.t_assemblies.FindAsync(id_assy);
 
 
             return View(t);
@@ -74,8 +75,8 @@ namespace CMS_3D_Core.Controllers
                         t_instruction.short_description = short_description;
                         t_instruction.display_order = display_order;
 
-                        db.Add(t_instruction);
-                        db.SaveChanges();
+                        await db.AddAsync(t_instruction);
+                        await db.SaveChangesAsync();
 
                         TempData["ResultMsg"] = "AddNew Success";
                         return RedirectToAction("EditProductInstruction", new { id_assy = id_assy });
@@ -105,6 +106,20 @@ namespace CMS_3D_Core.Controllers
 
             // 更新に失敗した場合、編集画面を再描画
             return View(id_assy);
+        }
+
+
+        // POST: t_instance_part/Delete/5
+        [HttpPost, ActionName("DeleteProductInstruction")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteProductInstructionConfirmed(long id_assy, long id_rust)
+        {
+            t_instruction t_instruction = await db.t_instructions.FindAsync(id_assy, id_rust);
+            db.t_instructions.Remove(t_instruction);
+            await db.SaveChangesAsync();
+
+            TempData["ResultMsg"] = "Update Success";
+            return RedirectToAction("EditProductInstruction", new { id_assy = id_assy });
         }
 
         // POST: Role/Edit/5
@@ -208,7 +223,7 @@ namespace CMS_3D_Core.Controllers
         //-------------------------------------------------------------------
         //アイテム追加
         // GET: t_assembly/Create
-        public ActionResult CreateAssembly()
+        public async Task<IActionResult> CreateAssembly()
         {
             return View();
         }
@@ -218,12 +233,12 @@ namespace CMS_3D_Core.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateAssembly([Bind("id_assy,assy_name")] t_assembly t_assembly)
+        public async Task<IActionResult> CreateAssembly([Bind("id_assy,assy_name")] t_assembly t_assembly)
         {
             if (ModelState.IsValid)
             {
-                db.Add(t_assembly);
-                db.SaveChanges();
+                await db.AddAsync(t_assembly);
+                await db.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(t_assembly);
@@ -244,12 +259,12 @@ namespace CMS_3D_Core.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateInstancePart([Bind("id_assy,id_inst,id_part")] t_instance_part t_instance_part)
+        public async Task<IActionResult> CreateInstancePart([Bind("id_assy,id_inst,id_part")] t_instance_part t_instance_part)
         {
             if (ModelState.IsValid)
             {
-                db.Add(t_instance_part);
-                db.SaveChanges();
+                await db.AddAsync(t_instance_part);
+                await db.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(t_instance_part);

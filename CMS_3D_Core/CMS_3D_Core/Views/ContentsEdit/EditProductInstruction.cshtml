@@ -85,6 +85,29 @@
 
         </div>
     </form>
+
+
+    <form asp-action="DeleteProductInstruction">
+        <div class="form-group row ">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            @*インストラクションの文書表示領域*@
+            @Html.Hidden("id_assy", 0, new { id = "instruction_id_assy_delete" })
+            @Html.Hidden("id_rust", 0, new { id = "instruction_id_rust_delete" })
+
+
+            <div class="col-sm-8">
+                @Html.Label("", "", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <div class="px-3">
+                    <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('説明文を更新しますか？')" />
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+
+
 </div>
 
 
@@ -329,7 +352,7 @@
         var node_temp;
 
         //
-        //インストラクション関連の標記
+        //インストラクション(編集)関連の標記
         document.getElementById('instruction_title').value = instruction_gp[id_ruct].title;
         document.getElementById('instruction_id_view').value = instruction_gp[id_ruct].id_view;
         document.getElementById('instruction_short_description').textContent = instruction_gp[id_ruct].short_description;
@@ -337,13 +360,17 @@
         document.getElementById('instruction_id_rust').value = instruction_gp[id_ruct].id_ruct;
         document.getElementById('instruction_display_order').value = instruction_gp[id_ruct].display_order;
 
-        
+
+
+        //インストラクション(削除)関連の標記
+        document.getElementById('instruction_id_assy_delete').value = instruction_gp[id_ruct].id_assy;
+        document.getElementById('instruction_id_rust_delete').value = instruction_gp[id_ruct].id_ruct;
 
         //ビュー情報を更新
         document.getElementById('view_id_assy').value = view_object[i].id_assy;
         document.getElementById('view_id_view').value = view_object[i].id_view;
         document.getElementById('view_title').value = view_object[i].title;
-        
+
     }
 
 
