@@ -74,6 +74,7 @@
     var instruction_gp = [];
     var instance_part = [];
 
+    var orbit_active = false;
 
 
     // ロード後に実行される処理
@@ -108,9 +109,14 @@
                 //データモデルを取得する
                 setup_instance_part_model(str_url_partapi_base, instance_part, glfLoader, scene);
 
-
+                //表示領域を初期化する
                 initial_optional01();
                 initial_setup_and_render();
+
+                //orbitコントロールモードを有効にし、レンダリングを開始する
+                orbit_active = true;
+                render_orbital();
+
                 //initial_setup_and_render2(scene, camera_main, controls, light, ambient, renderer, width, height);
 
             })
@@ -127,18 +133,64 @@
         'use strict';
 
 
+        orbit_active = false;
 
         //カメラ位置の変更
         //---------------------
         var i = instruction_gp[id_ruct].id_view;
-        controls.reset();
+        //controls.reset();
 
-        set_camera(camera_main, view_object[i].cam_pos_x, view_object[i].cam_pos_y, view_object[i].cam_pos_z,
-            new THREE.Quaternion(view_object[i].cam_quat_x, view_object[i].cam_quat_y, view_object[i].cam_quat_z, view_object[i].cam_quat_w));
+        //set_camera(camera_main, view_object[i].cam_pos_x, view_object[i].cam_pos_y, view_object[i].cam_pos_z,
+        //    new THREE.Quaternion(view_object[i].cam_quat_x, view_object[i].cam_quat_y, view_object[i].cam_quat_z, view_object[i].cam_quat_w));
 
-        controls.target.set(view_object[i].obt_target_x, view_object[i].obt_target_y, view_object[i].obt_target_z);
-        controls.update();
+        //controls.target.set(view_object[i].obt_target_x, view_object[i].obt_target_y, view_object[i].obt_target_z);
+        //controls.update();
         //---------------------
+
+
+        // 視点のアニメーションによる移行
+        // ------------------------------------------------------------------------------------------------
+        var counter = 0;
+        var step = 100;
+
+        var pitch_px = (view_object[i].cam_pos_x - camera_main.position.x) / step;
+        var pitch_py = (view_object[i].cam_pos_y - camera_main.position.y) / step;
+        var pitch_pz = (view_object[i].cam_pos_z - camera_main.position.z) / step;
+
+        var pitch_tx = (view_object[i].obt_target_x - controls.target.x) / step;
+        var pitch_ty = (view_object[i].obt_target_y - controls.target.y) / step;
+        var pitch_tz = (view_object[i].obt_target_z - controls.target.z) / step;
+
+        function flight() {
+
+            if (counter >= step) {
+                orbit_active = true;
+
+                render_orbital();
+                return;
+            } else {
+                counter = counter + 1;
+                requestAnimationFrame(flight);
+
+                camera_main.position.x += pitch_px;
+                camera_main.position.y += pitch_py;
+                camera_main.position.z += pitch_pz;
+
+
+                controls.target.x += pitch_tx;
+                controls.target.y += pitch_ty;
+                controls.target.z += pitch_tz;
+
+                controls.update();
+                renderer.render(scene, camera_main);
+
+                //update_viewinfo();
+            }
+        }
+        flight();
+
+
+
 
         //タイトルの表示
         var node_temp;
@@ -179,7 +231,8 @@
 
         controls = new THREE.OrbitControls(camera_main, renderer.domElement);
 
-
+        //レンダリングは仕様変更に伴いコメントアウト
+        /*
         function render() {
             requestAnimationFrame(render);
 
@@ -188,11 +241,19 @@
             controls.update();
             renderer.render(scene, camera_main);
         }
-        render();
+        render();*/
 
     };
 
+    //通常の、orbit control有効状態でのレンダリング
+    function render_orbital() {
+        if (!orbit_active) { return; }
+        requestAnimationFrame(render_orbital);
 
+
+        controls.update();
+        renderer.render(scene, camera_main);
+    }
 
     //表示関連を初期化する
     function initial_optional01() {
