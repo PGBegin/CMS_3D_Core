@@ -5,33 +5,50 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+@{ 
+    int index = 0;
+}
+
+<div class="row">
+    <div class="col-md-3"></div>
 
 
+    <div class="col-md-6">
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.id_assy)
-        </th>
-        <th>
-            Link
-        </th>
-    </tr>
-    @{
-        foreach (var item in Model)
-        {
+        <h2>List of Contents</h2>
 
+        <table class="table">
             <tr>
-                <td>
-                    Assy: @Html.DisplayFor(modelItem => item.id_assy)
-                </td>
-                <td>
-                    @Html.ActionLink("View Detail", "DetailProductInstruction", new { id_assy = item.id_assy })
-                </td>
+                <th>
+                    No
+                </th>
+                <th>
+                    Title
+                </th>
+                <th>
+                    Link
+                </th>
             </tr>
-        }
-    }
+            @{
+                foreach (var item in Model)
+                {
 
-</table>
+                    <tr>
+                        <td>
+                            @(index + 1)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.assy_name)
+                        </td>
+                        <td>
+                            @Html.ActionLink("View Detail", "DetailProductInstruction", new { id_assy = item.id_assy })
+                        </td>
+                    </tr>
+                    index += 1;
+                }
+            }
 
+        </table>
+    </div>
+
+</div>
