@@ -66,8 +66,8 @@
     var light;
     var ambient;
     var renderer;
-    var width = 960;
-    var height = 540;
+    var width = 720;
+    var height = 405;
 
     var view_object = [];
     var instruction_gp = [];
@@ -150,7 +150,7 @@
         // 視点のアニメーションによる移行
         // ------------------------------------------------------------------------------------------------
         var counter = 0;
-        var step = 100;
+        var step = 75;
 
         var pitch_px = (view_object[i].cam_pos_x - camera_main.position.x) / step;
         var pitch_py = (view_object[i].cam_pos_y - camera_main.position.y) / step;
