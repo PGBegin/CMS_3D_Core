@@ -47,7 +47,7 @@
                 @Html.DisplayNameFor(model => model.obt_target_z)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.id_assyNavigation)
+                @Html.DisplayNameFor(model => model.id_articleNavigation)
             </th>
             <th></th>
         </tr>
@@ -90,10 +90,10 @@
                     @Html.DisplayFor(modelItem => item.obt_target_z)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.id_assyNavigation.id_assy)
+                    @Html.DisplayFor(modelItem => item.id_articleNavigation.id_article)
                 </td>
                 <td>
-                    @Html.ActionLink("Delete", "Delete", new { id_assy = item.id_assy, id_view = item.id_view })
+                    @Html.ActionLink("Delete", "Delete", new { id_article = item.id_article, id_view = item.id_view })
                 </td>
             </tr>
         }

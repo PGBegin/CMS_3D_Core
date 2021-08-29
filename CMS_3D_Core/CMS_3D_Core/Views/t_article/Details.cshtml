@@ -1,0 +1,48 @@
+﻿@model CMS_3D_Core.Models.EDM.t_article
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>t_article</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.title)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.title)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.short_description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.short_description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.long_description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.long_description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.id_assyNavigation)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.id_assyNavigation.assy_name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.statusNavigation)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.statusNavigation.name)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id_article="@Model.id_article">Edit</a> |
+    <a asp-action="Index" asp-controller="ContentsEdit">Back to List</a>
+</div>

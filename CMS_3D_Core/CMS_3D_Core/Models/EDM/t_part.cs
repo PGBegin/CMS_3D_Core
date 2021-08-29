@@ -22,6 +22,9 @@ namespace CMS_3D_Core.Models.EDM
         public string type_texture { get; set; }
         public string file_name { get; set; }
         public long? file_length { get; set; }
+        public string itemlink { get; set; }
+        public string license { get; set; }
+        public string memo { get; set; }
 
         public virtual ICollection<t_instance_part> t_instance_parts { get; set; }
     }

@@ -2,9 +2,9 @@
 
 
 class Instruction {
-    constructor(id_assy, id_ruct, id_view, title, short_description, display_order) {
-        this.id_assy = id_assy;
-        this.id_ruct = id_ruct;
+    constructor(id_article, id_instruct, id_view, title, short_description, display_order) {
+        this.id_article = id_article;
+        this.id_instruct = id_instruct;
         this.id_view = id_view;
         this.title = title;
         this.short_description = short_description;
@@ -13,12 +13,12 @@ class Instruction {
 }
 
 class ViewObject {
-    constructor(id_assy, id_view, title,
+    constructor(id_article, id_view, title,
         cam_pos_x, cam_pos_y, cam_pos_z, cam_lookat_x, cam_lookat_y, cam_lookat_z,
         cam_quat_x, cam_quat_y, cam_quat_z, cam_quat_w, obt_target_x, obt_target_y, obt_target_z) {
 
         this.title = title;
-        this.id_assy = id_assy;
+        this.id_article = id_article;
         this.id_view = id_view;
 
         this.cam_pos_x = cam_pos_x;
@@ -42,9 +42,9 @@ class ViewObject {
 
 
 class InstancePart {
-    constructor(id_assy, id_ruct, id_part, objectdata) {
+    constructor(id_assy, id_inst, id_part, objectdata) {
         this.id_assy = id_assy;
-        this.id_ruct = id_ruct;
+        this.id_inst = id_inst;
         this.id_part = id_part;
         this.objectdata = objectdata;
     }
@@ -57,7 +57,7 @@ function data_inmprt(data, view_object, instruction_gp, instance_part) {
         if (data[i].type == "view") {
             view_object[data[i].id_view] = new ViewObject(
 
-                data[i].id_assy,
+                data[i].id_article,
                 data[i].id_view,
                 data[i].title,
                 
@@ -83,9 +83,9 @@ function data_inmprt(data, view_object, instruction_gp, instance_part) {
 
         if (data[i].type == "instruction") {
 
-            instruction_gp[data[i].id_ruct] = new Instruction(
-                data[i].id_assy,
-                data[i].id_ruct,
+            instruction_gp[data[i].id_instruct] = new Instruction(
+                data[i].id_article,
+                data[i].id_instruct,
                 data[i].id_view,
                 data[i].title,
                 data[i].short_description,
@@ -99,7 +99,7 @@ function data_inmprt(data, view_object, instruction_gp, instance_part) {
 
             instance_part[data[i].id_inst] = new InstancePart(
                 data[i].id_assy,
-                data[i].id_ruct,
+                data[i].id_inst,
                 data[i].id_part, null);
         }
     }
@@ -136,8 +136,8 @@ function setup_control_panel_zone(elementid, instruction_gp) {
 
         temp_bt = document.createElement('button');
         temp_bt.type = 'button';
-        temp_bt.onclick = transition_instruction.bind(null, element.id_ruct);
-        temp_bt.id = "btn_inst" + element.id_ruct;
+        temp_bt.onclick = transition_instruction.bind(null, element.id_instruct);
+        temp_bt.id = "btn_inst" + element.id_instruct;
         temp_bt.classList.add('btn');
         temp_bt.classList.add('btn-primary');
         temp_bt.textContent = element.title;

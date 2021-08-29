@@ -34,21 +34,23 @@ namespace CMS_3D_Core.Controllers
         //        public ActionResult Index()
         public async Task<IActionResult> Index()
         {
-            var assys = await _context.t_assemblies.ToListAsync();
+            var assys = await _context.t_articles
+                                        .Include(t => t.id_assyNavigation)
+                                        .ToListAsync();
             return View(assys);
         }
 
         [HttpGet]
-        public async Task<IActionResult> EditProductInstruction(long id_assy)
+        public async Task<IActionResult> EditProductInstruction(long id_article)
         {
-            if (id_assy == null)
+            if (id_article == null)
             {
                 return NotFound();
             }
 
 
 
-            var t = await _context.t_assemblies.FindAsync(id_assy);
+            var t = await _context.t_articles.FindAsync(id_article);
 
 
             return View(t);
@@ -59,9 +61,9 @@ namespace CMS_3D_Core.Controllers
         // POST: Role/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditProductInstruction(long id_assy, long id_rust, int id_view, string title, string short_description, long display_order)
+        public async Task<IActionResult> EditProductInstruction(long id_article, long id_instruct, int id_view, string title, string short_description, long display_order)
         {
-            if (id_assy == null | id_rust == null)
+            if (id_article == null | id_instruct == null)
             {
                 return NotFound();
             }
@@ -70,12 +72,12 @@ namespace CMS_3D_Core.Controllers
             {
                 try
                 {
-                    var target = await _context.t_instructions.FindAsync(id_assy, id_rust);
+                    var target = await _context.t_instructions.FindAsync(id_article, id_instruct);
                     if (target == null)
                     {
                         t_instruction t_instruction = new t_instruction();
-                        t_instruction.id_assy = id_assy;
-                        t_instruction.id_ruct = id_rust;
+                        t_instruction.id_article = id_article;
+                        t_instruction.id_instruct = id_instruct;
                         t_instruction.id_view = id_view;
                         t_instruction.title = title;
                         t_instruction.short_description = short_description;
@@ -85,7 +87,7 @@ namespace CMS_3D_Core.Controllers
                         await _context.SaveChangesAsync();
 
                         TempData["ResultMsg"] = "AddNew Success";
-                        return RedirectToAction("EditProductInstruction", new { id_assy = id_assy });
+                        return RedirectToAction("EditProductInstruction", new { id_article = id_article });
                     } else
                     {
                         // データ更新
@@ -99,7 +101,7 @@ namespace CMS_3D_Core.Controllers
 
 
                         TempData["ResultMsg"] = "Update Success";
-                        return RedirectToAction("EditProductInstruction", new { id_assy = id_assy });
+                        return RedirectToAction("EditProductInstruction", new { id_article = id_article });
                     }
 
 
@@ -111,35 +113,35 @@ namespace CMS_3D_Core.Controllers
             }
 
             // 更新に失敗した場合、編集画面を再描画
-            return View(id_assy);
+            return View(id_article);
         }
 
 
         // POST: t_instance_part/Delete/5
         [HttpPost, ActionName("DeleteProductInstruction")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteProductInstructionConfirmed(long id_assy, long id_rust)
+        public async Task<IActionResult> DeleteProductInstructionConfirmed(long id_article, long id_instruct)
         {
-            t_instruction t_instruction = await _context.t_instructions.FindAsync(id_assy, id_rust);
+            t_instruction t_instruction = await _context.t_instructions.FindAsync(id_article, id_instruct);
             _context.t_instructions.Remove(t_instruction);
             await _context.SaveChangesAsync();
 
             TempData["ResultMsg"] = "Update Success";
-            return RedirectToAction("EditProductInstruction", new { id_assy = id_assy });
+            return RedirectToAction("EditProductInstruction", new { id_article = id_article });
         }
 
         // POST: Role/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProductView(
-                                                        long id_assy, int id_view, string title,
+                                                        long id_article, int id_view, string title,
                                                         float cam_pos_x,float cam_pos_y,float cam_pos_z,
                                                         float cam_lookat_x,float cam_lookat_y,float cam_lookat_z,
                                                         float cam_quat_x,float cam_quat_y,float cam_quat_z,float cam_quat_w,
                                                         float obt_target_x,float obt_target_y,float obt_target_z
             )
         {
-            if (id_assy == null | id_view == null)
+            if (id_article == null | id_view == null)
             {
                 return NotFound();
             }
@@ -148,13 +150,13 @@ namespace CMS_3D_Core.Controllers
             {
                 try
                 {
-                    var target = await _context.t_views.FindAsync(id_assy, id_view);
+                    var target = await _context.t_views.FindAsync(id_article, id_view);
                     if (target == null)
                     {
 
                         t_view t_view = new t_view();
                         // データ更新
-                        t_view.id_assy = id_assy;
+                        t_view.id_article = id_article;
                         t_view.id_view = id_view;
                         t_view.title = title;
                         //カメラ位置
@@ -184,7 +186,7 @@ namespace CMS_3D_Core.Controllers
                         await _context.SaveChangesAsync();
 
                         TempData["ResultMsg"] = "AddNew Success";
-                        return RedirectToAction("EditProductInstruction", new { id_assy = id_assy });
+                        return RedirectToAction("EditProductInstruction", new { id_article = id_article });
                     }
 
                     // データ更新
@@ -215,7 +217,7 @@ namespace CMS_3D_Core.Controllers
 
 
                     TempData["ResultMsg"] = "Update Success";
-                    return RedirectToAction("EditProductInstruction", new { id_assy = id_assy});
+                    return RedirectToAction("EditProductInstruction", new { id_article = id_article });
 
                 }
                 catch
@@ -225,7 +227,7 @@ namespace CMS_3D_Core.Controllers
             }
 
             // 更新に失敗した場合、編集画面を再描画
-            return View(id_assy);
+            return View(id_article);
         }
         /*
         // POST: t_instance_part/Delete/5
@@ -272,6 +274,13 @@ namespace CMS_3D_Core.Controllers
 
             ViewData["id_assy"] = new SelectList(_context.t_assemblies, "id_assy", "assy_name");
             ViewData["id_part"] = new SelectList(_context.t_parts, "id_part", "part_number");
+
+
+
+
+            //List<SelectListItem> x =  new SelectList(_context.t_parts, "id_part", "part_number");
+
+
             return View(t_instance_part);
         }
 

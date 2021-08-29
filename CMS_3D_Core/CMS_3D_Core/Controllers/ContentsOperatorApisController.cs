@@ -29,17 +29,17 @@ namespace CMS_3D_Core.Controllers
         /// <param name="id_assy">アセンブリID</param>
         /// <returns>ファイルのJsonデータ</returns>
         [HttpGet]
-        public JsonResult GetAssemblyObjectList(int id_assy)
+        public JsonResult GetAssemblyObjectList(int id_article)
         {
-            var t = _context.t_assemblies
+            var t = _context.t_articles
                         .Include(x => x.t_instructions)
                         .Include(x => x.t_views)
-                        .Include(x => x.t_instance_parts)
-                        .FirstOrDefault(x => x.id_assy == id_assy);
+                        .Include(x => x.id_assyNavigation).ThenInclude(x => x.t_instance_parts)
+                        .FirstOrDefault(x => x.id_article == id_article);
 
             IList<object> objCollection = new List<object>();
 
-            foreach (var item in t.t_instance_parts)
+            foreach (var item in t.id_assyNavigation.t_instance_parts)
             {
                 objCollection.Add(
                     new { 
@@ -54,9 +54,9 @@ namespace CMS_3D_Core.Controllers
             {
                 objCollection.Add(
                     new { 
-                        type = "instruction", 
-                        id_assy = item.id_assy, 
-                        id_ruct = item.id_ruct, 
+                        type = "instruction",
+                        id_article = item.id_article,
+                        id_instruct = item.id_instruct, 
                         id_view = item.id_view, 
                         title = item.title, 
                         short_description = item.short_description,
@@ -68,8 +68,8 @@ namespace CMS_3D_Core.Controllers
             {
                 objCollection.Add(
                     new { 
-                        type = "view", 
-                        id_assy = item.id_assy, 
+                        type = "view",
+                        id_article = item.id_article, 
                         id_view = item.id_view, 
                         title = item.title,
 

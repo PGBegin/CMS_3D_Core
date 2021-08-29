@@ -1,276 +1,294 @@
-﻿@model CMS_3D_Core.Models.EDM.t_assembly
+﻿@model CMS_3D_Core.Models.EDM.t_article
 
 @{
     ViewData["Title"] = "EditProductInstruction";
 }
 
-<h1>@Model.assy_name</h1>
+<h1>@Model.title</h1>
 
 
 
-<div id="model_screen">
-    @*モデルの表示領域*@
-</div>
-@* 表示専用ビューならこうなってる
+<div class="row">
 
-    <div id="instruction_data">
-        <h4 id="instruction_title"></h4>
-        <div id="instruction_short_description">
+
+    <div class="col-md-6">
+
+        <div id="model_screen">
+            @*モデルの表示領域*@
+        </div>
+        @* 表示専用ビューならこうなってる
+
+        <div id="instruction_data">
+            <h4 id="instruction_title"></h4>
+            <div id="instruction_short_description">
+
+            </div>
+        </div>
+        *@
+
+        <hr />
+
+
+        <div id="control_panel_zone">
+        </div>
+
+
+        <hr />
+        <h4> Instruction Edit</h4>
+        <div id="instruction_data">
+
+            <form asp-action="EditProductInstruction">
+                <div class="form-group row ">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    @*インストラクションの文書表示領域*@
+                    @Html.Hidden("id_article", 0, new { id = "instruction_id_article" })
+
+
+                    <div class="col-sm-2">
+                        @Html.Label("id_instruct", "Indstuction Id", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                        <div class="px-3">
+                            @Html.TextBox("id_instruct", "", new { id = "instruction_id_instruct", @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                        @Html.Label("title", "Title(Button Name)", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                        <div class="px-3">
+                            @Html.TextBox("title", "", new { id = "instruction_title", @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.Label("id_view", "Id View", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                        <div class="px-3">
+                            @Html.TextBox("id_view", "", new { id = "instruction_id_view", @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        @Html.Label("display_order", "Display Order", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                        <div class="px-3">
+                            @Html.TextBox("display_order", "", new { id = "instruction_display_order", @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        @Html.Label("short_description", "Description", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                        <div class="px-3">
+                            @Html.TextArea("short_description", null, new { id = "instruction_short_description", rows = "10", @class = "form-control" })
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-8">
+                        @Html.Label("", "", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                        <div class="px-3">
+                            <input type="submit" value="Save" class="btn btn-primary" onclick="return confirm('説明文を更新しますか？')" />
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+
+
+            <form asp-action="DeleteProductInstruction">
+                <div class="form-group row ">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    @*インストラクションの文書表示領域*@
+                    @Html.Hidden("id_article", 0, new { id = "instruction_id_article_delete" })
+                    @Html.Hidden("id_instruct", 0, new { id = "instruction_id_instruct_delete" })
+
+
+                    <div class="col-sm-8">
+                        @Html.Label("", "", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                        <div class="px-3">
+                            <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('説明文を更新しますか？')" />
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+
 
         </div>
+
+
+        <hr />
     </div>
-*@
-
-<hr />
 
 
-<div id="control_panel_zone">
-</div>
+    <div class="col-md-4">
+        <h4> View Info and Edit</h4>
 
-
-<hr />
-<h4> Instruction Edit</h4>
-<div id="instruction_data">
-
-    <form asp-action="EditProductInstruction">
-        <div class="form-group row ">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            @*インストラクションの文書表示領域*@
-            @Html.Hidden("id_assy", 0, new { id = "instruction_id_assy" })
-
-
-            <div class="col-sm-2">
-                @Html.Label("id_rust", "Indstuction Id(id_rust)", htmlAttributes: new { @class = "control-label font-weight-bold" })
-                <div class="px-3">
-                    @Html.TextBox("id_rust", "", new { id = "instruction_id_rust", @class = "form-control" })
-                </div>
-            </div>
-
-            <div class="col-sm-3">
-                @Html.Label("title", "移行ボタン名(title)", htmlAttributes: new { @class = "control-label font-weight-bold" })
-                <div class="px-3">
-                    @Html.TextBox("title", "", new { id = "instruction_title", @class = "form-control" })
-                </div>
-            </div>
-
-            <div class="col-sm-2">
-                @Html.Label("id_view", "ビューID(id_view)", htmlAttributes: new { @class = "control-label font-weight-bold" })
-                <div class="px-3">
-                    @Html.TextBox("id_view", "", new { id = "instruction_id_view", @class = "form-control" })
-                </div>
-            </div>
-
-            <div class="col-sm-2">
-                @Html.Label("display_order", "表示順序(display_order)", htmlAttributes: new { @class = "control-label font-weight-bold" })
-                <div class="px-3">
-                    @Html.TextBox("display_order", "", new { id = "instruction_display_order", @class = "form-control" })
-                </div>
-            </div>
-
-            <div class="col-sm-8">
-                @Html.Label("short_description", "説明文書(short_description)", htmlAttributes: new { @class = "control-label font-weight-bold" })
-                <div class="px-3">
-                    @Html.TextArea("short_description", null, new { id = "instruction_short_description", rows = "10", @class = "form-control" })
-                </div>
-            </div>
-
-
-            <div class="col-sm-8">
-                @Html.Label("", "", htmlAttributes: new { @class = "control-label font-weight-bold" })
-                <div class="px-3">
-                    <input type="submit" value="Save" class="btn btn-primary" onclick="return confirm('説明文を更新しますか？')" />
-                </div>
-            </div>
-
-        </div>
-    </form>
-
-
-    <form asp-action="DeleteProductInstruction">
-        <div class="form-group row ">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            @*インストラクションの文書表示領域*@
-            @Html.Hidden("id_assy", 0, new { id = "instruction_id_assy_delete" })
-            @Html.Hidden("id_rust", 0, new { id = "instruction_id_rust_delete" })
-
-
-            <div class="col-sm-8">
-                @Html.Label("", "", htmlAttributes: new { @class = "control-label font-weight-bold" })
-                <div class="px-3">
-                    <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('説明文を更新しますか？')" />
-                </div>
-            </div>
-
-        </div>
-    </form>
+        <div id="view_data">
 
 
 
-</div>
-
-
-<hr />
-
-<h4> View Info and Edit</h4>
-
-<div id="view_data">
-
-
-
-    <form asp-action="EditProductView">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-        <div class="form-group row ">
-
-
-            @Html.Hidden("id_assy", 0, new { id = "view_id_assy" })
-            @*
-                @Html.Hidden("id_view", 0, new { id = "view_id_view" })
-                <input id="view_id_view" name="id_view" type="text" value="" class="form-control" />
-                <input id="view_title" name="title" type="text" value="" class="form-control" />
-
-            *@
-
-
-
-            <div class="col-sm-2">
-                @Html.Label("id_rust", "Indstuction Id(id_rust)", htmlAttributes: new { @class = "control-label font-weight-bold" })
-                <div class="px-3">
-                    @Html.TextBox("id_view", "", new { id = "view_id_view", @class = "form-control" })
-                </div>
-            </div>
-
-            <div class="col-sm-3">
-                @Html.Label("title", "ビュータイトル(title)", htmlAttributes: new { @class = "control-label font-weight-bold" })
-                <div class="px-3">
-                    @Html.TextBox("title", "", new { id = "view_title", @class = "form-control" })
-                </div>
-            </div>
-
-        </div>
-
-        <table class="table">
-            <tr>
-                <th>
-                    Elementname
-                </th>
-                <th>
-                    X
-                </th>
-                <th>
-                    Y
-                </th>
-                <th>
-                    Z
-                </th>
-                <th>
-                    W
-                </th>
-            </tr>
-            <tr>
-                <td>
-                    Camera Position
-                </td>
-                <td>
-                    <input id="cam_pos_x" name="cam_pos_x" type="text" value="" class="form-control" />
-                </td>
-                <td>
-                    <input id="cam_pos_y" name="cam_pos_y" type="text" value="" class="form-control" />
-                </td>
-                <td>
-                    <input id="cam_pos_z" name="cam_pos_z" type="text" value="" class="form-control" />
-                </td>
-                <td>
-                    --
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Camera Look At
-                </td>
-                <td>
-                    <input id="cam_lookat_x" name="cam_lookat_x" type="text" value="" class="form-control" />
-                </td>
-                <td>
-                    <input id="cam_lookat_y" name="cam_lookat_y" type="text" value="" class="form-control" />
-                </td>
-                <td>
-                    <input id="cam_lookat_z" name="cam_lookat_z" type="text" value="" class="form-control" />
-                </td>
-                <td>
-                    --
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Camera Quaternion
-                </td>
-                <td>
-                    <input id="cam_quat_x" name="cam_quat_x" type="text" value="" class="form-control" />
-                </td>
-                <td>
-                    <input id="cam_quat_y" name="cam_quat_y" type="text" value="" class="form-control" />
-                </td>
-                <td>
-                    <input id="cam_quat_z" name="cam_quat_z" type="text" value="" class="form-control" />
-                </td>
-                <td>
-                    <input id="cam_quat_w" name="cam_quat_w" type="text" value="" class="form-control" />
-                </td>
-            </tr>
-            <tr>
-            <tr>
-                <td>
-                    Orbit Control Target
-                </td>
-                <td>
-                    <input id="obt_target_x" name="obt_target_x" type="text" value="" class="form-control" />
-                </td>
-                <td>
-                    <input id="obt_target_y" name="obt_target_y" type="text" value="" class="form-control" />
-                </td>
-                <td>
-                    <input id="obt_target_z" name="obt_target_z" type="text" value="" class="form-control" />
-                </td>
-                <td>
-                    --
-                </td>
-            </tr>
-        </table>
-
-
-        <div class="form-group">
-            <input type="submit" value="Save" class="btn btn-primary" onclick="return confirm('視点情報を更新しますか？')" />
-        </div>
-    </form>
-
-
-    @*ビューの削除
-        <form asp-action="DeleteProductView">
-            <div class="form-group row ">
+            <form asp-action="EditProductView">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+                <div class="form-group row ">
 
-                @Html.Hidden("id_assy", 0, new { id = "view_id_assy_delete" })
-                @Html.Hidden("id_view", 0, new { id = "view_id_view_delete" })
 
-                <div class="col-sm-8">
-                    @Html.Label("", "", htmlAttributes: new { @class = "control-label font-weight-bold" })
-                    <div class="px-3">
-                        <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('視点情報を削除しますか？')" />
+                    @Html.Hidden("id_article", 0, new { id = "view_id_article" })
+                    @*
+                    @Html.Hidden("id_view", 0, new { id = "view_id_view" })
+                    <input id="view_id_view" name="id_view" type="text" value="" class="form-control" />
+                    <input id="view_title" name="title" type="text" value="" class="form-control" />
+
+                    *@
+
+
+
+                    <div class="col-sm-2">
+                        @Html.Label("id_view", "ID View", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                        <div class="px-3">
+                            @Html.TextBox("id_view", "", new { id = "view_id_view", @class = "form-control" })
+                        </div>
                     </div>
+
+                    <div class="col-sm-6">
+                        @Html.Label("title", "ビュータイトル(title)", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                        <div class="px-3">
+                            @Html.TextBox("title", "", new { id = "view_title", @class = "form-control" })
+                        </div>
+                    </div>
+
                 </div>
 
-            </div>
-        </form>
-    *@
-    @Html.ActionLink("View", "Index", "t_view", new { id_assy = Model.id_assy })
+                <table class="table">
+                    <tr>
+                        <th>
+                            Elementname
+                        </th>
+                        <th>
+                            X
+                        </th>
+                        <th>
+                            Y
+                        </th>
+                        <th>
+                            Z
+                        </th>
+                        <th>
+                            W
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>
+                            Camera Position
+                        </td>
+                        <td>
+                            <input id="cam_pos_x" name="cam_pos_x" type="text" value="" class="form-control" />
+                        </td>
+                        <td>
+                            <input id="cam_pos_y" name="cam_pos_y" type="text" value="" class="form-control" />
+                        </td>
+                        <td>
+                            <input id="cam_pos_z" name="cam_pos_z" type="text" value="" class="form-control" />
+                        </td>
+                        <td>
+                            --
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Camera Look At
+                        </td>
+                        <td>
+                            <input id="cam_lookat_x" name="cam_lookat_x" type="text" value="" class="form-control" />
+                        </td>
+                        <td>
+                            <input id="cam_lookat_y" name="cam_lookat_y" type="text" value="" class="form-control" />
+                        </td>
+                        <td>
+                            <input id="cam_lookat_z" name="cam_lookat_z" type="text" value="" class="form-control" />
+                        </td>
+                        <td>
+                            --
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Camera Quaternion
+                        </td>
+                        <td>
+                            <input id="cam_quat_x" name="cam_quat_x" type="text" value="" class="form-control" />
+                        </td>
+                        <td>
+                            <input id="cam_quat_y" name="cam_quat_y" type="text" value="" class="form-control" />
+                        </td>
+                        <td>
+                            <input id="cam_quat_z" name="cam_quat_z" type="text" value="" class="form-control" />
+                        </td>
+                        <td>
+                            <input id="cam_quat_w" name="cam_quat_w" type="text" value="" class="form-control" />
+                        </td>
+                    </tr>
+                    <tr>
+                    <tr>
+                        <td>
+                            Orbit Control Target
+                        </td>
+                        <td>
+                            <input id="obt_target_x" name="obt_target_x" type="text" value="" class="form-control" />
+                        </td>
+                        <td>
+                            <input id="obt_target_y" name="obt_target_y" type="text" value="" class="form-control" />
+                        </td>
+                        <td>
+                            <input id="obt_target_z" name="obt_target_z" type="text" value="" class="form-control" />
+                        </td>
+                        <td>
+                            --
+                        </td>
+                    </tr>
+                </table>
+
+
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" onclick="return confirm('視点情報を更新しますか？')" />
+                </div>
+            </form>
+
+
+            @*ビューの削除
+            <form asp-action="DeleteProductView">
+                <div class="form-group row ">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+                    @Html.Hidden("id_assy", 0, new { id = "view_id_assy_delete" })
+                    @Html.Hidden("id_view", 0, new { id = "view_id_view_delete" })
+
+                    <div class="col-sm-8">
+                        @Html.Label("", "", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                        <div class="px-3">
+                            <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('視点情報を削除しますか？')" />
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+            *@
+            @Html.ActionLink("View", "Index", "t_view", new { id_article = Model.id_article })
+        </div>
+
+
+
+        @await Component.InvokeAsync("ViewList", new { id_article = Model.id_article })
+
+
+        <hr />
+
+        <h4> View Info and Edit</h4>
+
+        @await Component.InvokeAsync("EditArticle", new { id_article = Model.id_article })
+    </div>
 </div>
-
-
-@*<div id="content"></div>*@
+        @*<div id="content"></div>*@
 
 <script src="~/lib/three/three.js"></script>
 <script src="~/lib/three/Loader/GLTFLoader.js"></script>
@@ -295,8 +313,8 @@
     var light;
     var ambient;
     var renderer;
-    var width = 960;
-    var height = 540;
+    var width = 720;
+    var height = 405;
 
     var view_object = [];
     var instruction_gp = [];
@@ -309,7 +327,7 @@
         'use strict';
 
         var str_url_prodobjectapi_base = "/ContentsOperatorApis/GetAssemblyObjectList?";
-        var str_url_prodobjectapi = str_url_prodobjectapi_base + new URLSearchParams({ id_assy: @Model.id_assy }).toString();
+        var str_url_prodobjectapi = str_url_prodobjectapi_base + new URLSearchParams({ id_article: @Model.id_article }).toString();
 
         var str_url_partapi_base = "/ContentsOperatorApis/GetPartObjectFile?";
 
@@ -350,14 +368,14 @@
     }
 
     //指定されたIDのインストラクションを表示する
-    function transition_instruction(id_ruct) {
+    function transition_instruction(id_instruct) {
         'use strict';
 
 
 
         //カメラ位置の変更
         //---------------------
-        var i = instruction_gp[id_ruct].id_view;
+        var i = instruction_gp[id_instruct].id_view;
         controls.reset();
 
         set_camera(camera_main, view_object[i].cam_pos_x, view_object[i].cam_pos_y, view_object[i].cam_pos_z,
@@ -372,21 +390,21 @@
 
         //
         //インストラクション(編集)関連の標記
-        document.getElementById('instruction_title').value = instruction_gp[id_ruct].title;
-        document.getElementById('instruction_id_view').value = instruction_gp[id_ruct].id_view;
-        document.getElementById('instruction_short_description').textContent = instruction_gp[id_ruct].short_description;
-        document.getElementById('instruction_id_assy').value = instruction_gp[id_ruct].id_assy;
-        document.getElementById('instruction_id_rust').value = instruction_gp[id_ruct].id_ruct;
-        document.getElementById('instruction_display_order').value = instruction_gp[id_ruct].display_order;
+        document.getElementById('instruction_title').value = instruction_gp[id_instruct].title;
+        document.getElementById('instruction_id_view').value = instruction_gp[id_instruct].id_view;
+        document.getElementById('instruction_short_description').textContent = instruction_gp[id_instruct].short_description;
+        document.getElementById('instruction_id_article').value = instruction_gp[id_instruct].id_article;
+        document.getElementById('instruction_id_instruct').value = instruction_gp[id_instruct].id_instruct;
+        document.getElementById('instruction_display_order').value = instruction_gp[id_instruct].display_order;
 
 
 
         //インストラクション(削除)関連の標記
-        document.getElementById('instruction_id_assy_delete').value = instruction_gp[id_ruct].id_assy;
-        document.getElementById('instruction_id_rust_delete').value = instruction_gp[id_ruct].id_ruct;
+        document.getElementById('instruction_id_article_delete').value = instruction_gp[id_instruct].id_article;
+        document.getElementById('instruction_id_instruct_delete').value = instruction_gp[id_instruct].id_instruct;
 
         //ビュー情報を更新
-        document.getElementById('view_id_assy').value = view_object[i].id_assy;
+        document.getElementById('view_id_article').value = view_object[i].id_article;
         document.getElementById('view_id_view').value = view_object[i].id_view;
         document.getElementById('view_title').value = view_object[i].title;
 
@@ -483,4 +501,4 @@
     }
 
 
-</script>
+        </script>

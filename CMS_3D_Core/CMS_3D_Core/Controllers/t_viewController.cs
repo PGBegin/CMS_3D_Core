@@ -21,11 +21,11 @@ namespace CMS_3D_Core.Controllers
         }
 
         // GET: t_view
-        public async Task<IActionResult> Index(long id_assy)
+        public async Task<IActionResult> Index(long id_article)
         {
             var db_data_coreContext = _context.t_views
-                                            .Include(t => t.id_assyNavigation)
-                                            .Where(t => t.id_assy == id_assy);
+                                            .Include(t => t.id_articleNavigation)
+                                            .Where(t => t.id_article == id_article);
 
             return View(await db_data_coreContext.ToListAsync());
         }
@@ -127,16 +127,16 @@ namespace CMS_3D_Core.Controllers
         }
         */
         // GET: t_view/Delete/5
-        public async Task<IActionResult> Delete(long? id_assy, int? id_view )
+        public async Task<IActionResult> Delete(long? id_article, int? id_view )
         {
-            if (id_assy == null | id_view == null)
+            if (id_article == null | id_view == null)
             {
                 return NotFound();
             }
 
             var t_view = await _context.t_views
-                .Include(t => t.id_assyNavigation)
-                .FirstOrDefaultAsync(m => m.id_assy == id_assy & m.id_view == id_view);
+                .Include(t => t.id_articleNavigation)
+                .FirstOrDefaultAsync(m => m.id_article == id_article & m.id_view == id_view);
             if (t_view == null)
             {
                 return NotFound();
@@ -148,17 +148,20 @@ namespace CMS_3D_Core.Controllers
         // POST: t_view/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id_assy, int id_view)
+        public async Task<IActionResult> DeleteConfirmed(long id_article, int id_view)
         {
-            var t_view = await _context.t_views.FindAsync(id_assy ,id_view);
+            var t_view = await _context.t_views.FindAsync(id_article, id_view);
             _context.t_views.Remove(t_view);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index),new { id_assy = id_assy });
+            //return RedirectToAction(nameof(Index),new { id_article = id_article });
+            return RedirectToAction(nameof(ContentsEditController.EditProductInstruction),new { controller = "ContentsEdit", id_article = id_article });
+
+            //ContentsEdit / EditProductInstruction
         }
 
         private bool t_viewExists(long id)
         {
-            return _context.t_views.Any(e => e.id_assy == id);
+            return _context.t_views.Any(e => e.id_article == id);
         }
     }
 }

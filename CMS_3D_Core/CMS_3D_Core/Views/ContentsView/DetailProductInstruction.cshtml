@@ -1,8 +1,8 @@
-﻿@model CMS_3D_Core.Models.EDM.t_assembly
+﻿@model CMS_3D_Core.Models.EDM.t_article
 @*  @model CMS_3D_Core.Models.EDM.t_assembly*@
 
 @{
-    ViewData["Title"] = "Contents:" + @Model.assy_name;
+    ViewData["Title"] = "Contents:" + @Model.title;
 }
 
 
@@ -10,7 +10,7 @@
 <div class="container">
 
     <div class="row">
-        <h1>@Model.assy_name</h1>
+        <h1>@Model.title</h1>
         <div>
             <div id="model_screen">
                 @*モデルの表示領域*@
@@ -81,7 +81,7 @@
         'use strict';
 
         var str_url_prodobjectapi_base = "/ContentsOperatorApis/GetAssemblyObjectList?";
-        var str_url_prodobjectapi = str_url_prodobjectapi_base + new URLSearchParams({ id_assy: @Model.id_assy }).toString();
+        var str_url_prodobjectapi = str_url_prodobjectapi_base + new URLSearchParams({ id_article: @Model.id_article }).toString();
 
         var str_url_partapi_base = "/ContentsOperatorApis/GetPartObjectFile?";
 
@@ -128,7 +128,7 @@
     }
 
     //指定されたIDのインストラクションを表示する
-    function transition_instruction(id_ruct) {
+    function transition_instruction(id_instruct) {
         'use strict';
 
 
@@ -136,7 +136,7 @@
 
         //カメラ位置の変更
         //---------------------
-        var i = instruction_gp[id_ruct].id_view;
+        var i = instruction_gp[id_instruct].id_view;
         //controls.reset();
 
         //set_camera(camera_main, view_object[i].cam_pos_x, view_object[i].cam_pos_y, view_object[i].cam_pos_z,
@@ -199,7 +199,7 @@
 
         //テキスト内容をマークダウン方式に変更して表示
         node_temp = document.getElementById('instruction_short_description');
-        node_temp.innerHTML = marked(instruction_gp[id_ruct].short_description);
+        node_temp.innerHTML = marked(instruction_gp[id_instruct].short_description);
     }
 
 

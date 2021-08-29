@@ -12,7 +12,7 @@ namespace CMS_3D_Core.Models.EDM
             t_instructions = new HashSet<t_instruction>();
         }
 
-        public long id_assy { get; set; }
+        public long id_article { get; set; }
         public int id_view { get; set; }
         public string title { get; set; }
         public double? cam_pos_x { get; set; }
@@ -29,7 +29,7 @@ namespace CMS_3D_Core.Models.EDM
         public double? obt_target_y { get; set; }
         public double? obt_target_z { get; set; }
 
-        public virtual t_assembly id_assyNavigation { get; set; }
+        public virtual t_article id_articleNavigation { get; set; }
         public virtual ICollection<t_instruction> t_instructions { get; set; }
     }
 }

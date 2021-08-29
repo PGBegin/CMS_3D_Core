@@ -1,0 +1,52 @@
+﻿@model IEnumerable<CMS_3D_Core.Models.EDM.t_assembly>
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.id_assy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.assy_name)
+            </th>
+            <th>
+                Count Ref from Article
+            </th>
+            <th>
+                Operation
+            </th>
+            <th>
+                Instance
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                <a asp-action="Edit" asp-controller="t_assembly" asp-route-id_assy="@item.id_assy">@Html.DisplayFor(modelItem => item.id_assy)</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.assy_name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.t_articles.Count)
+            </td>
+            <td>
+                @if (item.t_articles.Count > 0) { }
+                else
+                {
+                    <a asp-action="Delete" asp-controller="t_assembly" asp-route-id_assy="@item.id_assy">Delete</a>
+                }
+            </td>
+            <td>
+                @Html.ActionLink("Add", "CreateInstancePart", "ContentsEdit", new { id_assy = item.id_assy })
+                |
+                @Html.ActionLink("List(for Delete)", "Index", "t_instance_part", new { id_assy = item.id_assy })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

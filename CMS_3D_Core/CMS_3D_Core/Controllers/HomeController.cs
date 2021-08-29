@@ -17,24 +17,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CMS_3D_Core.Controllers
 {
-    public class ContentsListViewComponent : ViewComponent
-    {
-        private readonly db_data_coreContext _context;
-
-        public ContentsListViewComponent(db_data_coreContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<IViewComponentResult> InvokeAsync()
-        {
-            
-            var t = await _context.t_assemblies                            
-                            .ToListAsync();
-
-            return View("_ContentsListView", t);
-        }
-    }
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

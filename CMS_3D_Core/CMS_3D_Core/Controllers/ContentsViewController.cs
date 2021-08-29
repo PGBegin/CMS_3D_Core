@@ -30,8 +30,9 @@ namespace CMS_3D_Core.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            var assys = _context.t_assemblies;
-            return View(assys.ToList());
+            //var assys = _context.t_assemblies;
+            //return View(assys.ToList());
+            return View();
         }
 
 
@@ -41,9 +42,9 @@ namespace CMS_3D_Core.Controllers
         /// <param name="id_assy"></param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult DetailProductInstruction(long id_assy)
+        public ActionResult DetailProductInstruction(long id_article)
         {
-            var t = _context.t_assemblies.Find(id_assy);
+            var t = _context.t_articles.Find(id_article);
 
 
             return View(t);

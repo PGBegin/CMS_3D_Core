@@ -1,0 +1,35 @@
+﻿@model CMS_3D_Core.Models.EDM.t_article
+
+
+<form asp-action="Edit" asp-controller="t_article">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="id_article" />
+    <div class="form-group">
+        <label asp-for="id_assy" class="control-label"></label>
+        <select asp-for="id_assy" class="form-control" asp-items="ViewBag.id_assy"></select>
+        <span asp-validation-for="id_assy" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="title" class="control-label"></label>
+        <input asp-for="title" class="form-control" />
+        <span asp-validation-for="title" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="short_description" class="control-label"></label>
+        <input asp-for="short_description" class="form-control" />
+        <span asp-validation-for="short_description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="long_description" class="control-label"></label>
+        <input asp-for="long_description" class="form-control" />
+        <span asp-validation-for="long_description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="status" class="control-label"></label>
+        <select asp-for="status" class="form-control" asp-items="ViewBag.status"></select>
+        <span asp-validation-for="status" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+</form>

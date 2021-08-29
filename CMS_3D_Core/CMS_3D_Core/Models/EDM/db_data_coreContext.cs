@@ -24,21 +24,22 @@ namespace CMS_3D_Core.Models.EDM
         public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
         public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; }
         public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
+        public virtual DbSet<m_status_article> m_status_articles { get; set; }
+        public virtual DbSet<t_article> t_articles { get; set; }
         public virtual DbSet<t_assembly> t_assemblies { get; set; }
         public virtual DbSet<t_instance_part> t_instance_parts { get; set; }
         public virtual DbSet<t_instruction> t_instructions { get; set; }
         public virtual DbSet<t_part> t_parts { get; set; }
         public virtual DbSet<t_part_display> t_part_displays { get; set; }
-        public virtual DbSet<t_product> t_products { get; set; }
         public virtual DbSet<t_view> t_views { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-//            if (!optionsBuilder.IsConfigured)
-//            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//                optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=db_data_core");
-//            }
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=db_data_core");
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -140,6 +141,44 @@ namespace CMS_3D_Core.Models.EDM
                     .HasForeignKey(d => d.UserId);
             });
 
+            modelBuilder.Entity<m_status_article>(entity =>
+            {
+                entity.ToTable("m_status_article");
+
+                entity.Property(e => e.id).ValueGeneratedNever();
+
+                entity.Property(e => e.description).HasMaxLength(250);
+
+                entity.Property(e => e.name).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<t_article>(entity =>
+            {
+                entity.HasKey(e => e.id_article)
+                    .HasName("PK_t_product");
+
+                entity.ToTable("t_article");
+
+                entity.HasComment("総合的な製品情報を格納するテーブル");
+
+                entity.Property(e => e.id_article).ValueGeneratedNever();
+
+                entity.Property(e => e.short_description).HasMaxLength(550);
+
+                entity.Property(e => e.title).HasMaxLength(250);
+
+                entity.HasOne(d => d.id_assyNavigation)
+                    .WithMany(p => p.t_articles)
+                    .HasForeignKey(d => d.id_assy)
+                    .HasConstraintName("FK_t_product_t_assembly");
+
+                entity.HasOne(d => d.statusNavigation)
+                    .WithMany(p => p.t_articles)
+                    .HasForeignKey(d => d.status)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_t_article_m_status_article");
+            });
+
             modelBuilder.Entity<t_assembly>(entity =>
             {
                 entity.HasKey(e => e.id_assy);
@@ -175,21 +214,21 @@ namespace CMS_3D_Core.Models.EDM
 
             modelBuilder.Entity<t_instruction>(entity =>
             {
-                entity.HasKey(e => new { e.id_assy, e.id_ruct });
+                entity.HasKey(e => new { e.id_article, e.id_instruct });
 
                 entity.ToTable("t_instruction");
 
                 entity.Property(e => e.title).HasMaxLength(128);
 
-                entity.HasOne(d => d.id_assyNavigation)
+                entity.HasOne(d => d.id_articleNavigation)
                     .WithMany(p => p.t_instructions)
-                    .HasForeignKey(d => d.id_assy)
+                    .HasForeignKey(d => d.id_article)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_t_instruction_t_assembly");
+                    .HasConstraintName("FK_t_instruction_t_article");
 
                 entity.HasOne(d => d.id_)
                     .WithMany(p => p.t_instructions)
-                    .HasForeignKey(d => new { d.id_assy, d.id_view })
+                    .HasForeignKey(d => new { d.id_article, d.id_view })
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_t_instruction_t_view");
             });
@@ -206,6 +245,12 @@ namespace CMS_3D_Core.Models.EDM
 
                 entity.Property(e => e.format_data).HasMaxLength(50);
 
+                entity.Property(e => e.itemlink).HasMaxLength(2048);
+
+                entity.Property(e => e.license).HasMaxLength(255);
+
+                entity.Property(e => e.memo).HasMaxLength(2048);
+
                 entity.Property(e => e.part_number)
                     .IsRequired()
                     .HasMaxLength(50);
@@ -217,47 +262,24 @@ namespace CMS_3D_Core.Models.EDM
 
             modelBuilder.Entity<t_part_display>(entity =>
             {
-                entity.HasKey(e => new { e.id_ruct, e.id_assy, e.id_inst });
+                entity.HasKey(e => new { e.id_instruct, e.id_assy, e.id_inst });
 
                 entity.ToTable("t_part_display");
-
-                entity.HasOne(d => d.id_)
-                    .WithMany(p => p.t_part_displays)
-                    .HasForeignKey(d => new { d.id_assy, d.id_ruct })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_t_part_display_t_instruction");
-            });
-
-            modelBuilder.Entity<t_product>(entity =>
-            {
-                entity.HasKey(e => e.id_product);
-
-                entity.ToTable("t_product");
-
-                entity.HasComment("総合的な製品情報を格納するテーブル");
-
-                entity.Property(e => e.id_product).ValueGeneratedNever();
-
-                entity.HasOne(d => d.id_assyNavigation)
-                    .WithMany(p => p.t_products)
-                    .HasForeignKey(d => d.id_assy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_t_product_t_assembly");
             });
 
             modelBuilder.Entity<t_view>(entity =>
             {
-                entity.HasKey(e => new { e.id_assy, e.id_view });
+                entity.HasKey(e => new { e.id_article, e.id_view });
 
                 entity.ToTable("t_view");
 
                 entity.Property(e => e.title).HasMaxLength(128);
 
-                entity.HasOne(d => d.id_assyNavigation)
+                entity.HasOne(d => d.id_articleNavigation)
                     .WithMany(p => p.t_views)
-                    .HasForeignKey(d => d.id_assy)
+                    .HasForeignKey(d => d.id_article)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_t_view_t_assembly");
+                    .HasConstraintName("FK_t_view_t_article");
             });
 
             OnModelCreatingPartial(modelBuilder);

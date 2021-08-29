@@ -96,15 +96,15 @@
             @Html.DisplayFor(model => model.obt_target_z)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.id_assyNavigation)
+            @Html.DisplayNameFor(model => model.id_articleNavigation)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.id_assyNavigation.id_assy)
+            @Html.DisplayFor(model => model.id_articleNavigation.id_article)
         </dd class>
     </dl>
     
     <form asp-action="Delete">
-        <input type="hidden" asp-for="id_assy" />
+        <input type="hidden" asp-for="id_article" />
         <input type="hidden" asp-for="id_view" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>

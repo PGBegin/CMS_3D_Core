@@ -1,0 +1,54 @@
+﻿@model IEnumerable<CMS_3D_Core.Models.EDM.t_article>
+
+
+
+@{
+    int index = 0;
+}
+
+@*
+<div class="row">
+    <div class="col-md-3"></div>
+
+
+    <div class="col-md-6">
+        *@
+
+        <table class="table">
+            <tr>
+                <th>
+                    No
+                </th>
+                <th>
+                    Title
+                </th>
+                <th>
+                    Description
+                </th>
+            </tr>
+            @{
+                foreach (var item in Model)
+                {
+
+                    <tr>
+                        <td>
+                            @(index + 1)
+                        </td>
+                        <td>
+                            @Html.ActionLink(item.title, "DetailProductInstruction", "ContentsView", new { id_article = item.id_article })
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.short_description)
+                        </td>
+                    </tr>
+                    index += 1;
+                }
+            }
+
+        </table>
+
+        @*
+    </div>
+
+</div>
+*@
