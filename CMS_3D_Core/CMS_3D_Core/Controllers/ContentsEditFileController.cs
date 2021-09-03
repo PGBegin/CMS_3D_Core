@@ -38,7 +38,7 @@ namespace CMS_3D_Core.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AttachFile(long id_part, string part_number, int version, string format_data, [FromForm] IFormFile formFile)
+        public ActionResult AttachFile(long id_part, string part_number, int version, string format_data, string itemlink, string license, string memo, [FromForm] IFormFile formFile)
         {
             var parameter_id_part = new SqlParameter
             {
@@ -94,6 +94,28 @@ namespace CMS_3D_Core.Controllers
             };
 
 
+            var parameter_itemlink = new SqlParameter
+            {
+                ParameterName = "itemlink",
+                SqlDbType = System.Data.SqlDbType.NVarChar,
+                Value = itemlink,
+            };
+
+            var parameter_license = new SqlParameter
+            {
+                ParameterName = "license",
+                SqlDbType = System.Data.SqlDbType.NVarChar,
+                Value = license,
+            };
+
+            var parameter_memo = new SqlParameter
+            {
+                ParameterName = "memo",
+                SqlDbType = System.Data.SqlDbType.NVarChar,
+                Value = memo,
+            };
+            
+
             parameter_file_data.Value = formFile.OpenReadStream();
 //            parameter_format_data.Value = "dummy";
             parameter_type_data.Value = formFile.ContentType;
@@ -105,7 +127,7 @@ namespace CMS_3D_Core.Controllers
             try
             {
                 _context.Database
-                    .ExecuteSqlRaw("EXEC [dbo].[attachmentfile_add] @id_part,@part_number,@version,@file_data,@type_data,@format_data,@file_name,@file_length"
+                    .ExecuteSqlRaw("EXEC [dbo].[attachmentfile_add] @id_part,@part_number,@version,@file_data,@type_data,@format_data,@file_name,@file_length,@itemlink,@license,@memo"
                     , parameter_id_part
                     , parameter_part_number
                     , parameter_version
@@ -113,8 +135,14 @@ namespace CMS_3D_Core.Controllers
                     , parameter_type_data
                     , parameter_format_data
                     , parameter_file_name
-                    , parameter_file_length);
+                    , parameter_file_length
+                    , parameter_itemlink
+                    , parameter_license
+                    , parameter_memo);
             }
+
+            
+
             catch (Exception e)
             {
                 TempData["ResultMsg"] = e.Message.ToString();
@@ -144,7 +172,7 @@ namespace CMS_3D_Core.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("id_part,part_number,version,file_data,type_data,format_data,file_texture,type_texture,file_name,file_length")] t_part t_part)
+        public async Task<IActionResult> Edit(long id, [Bind("id_part,part_number,version,type_data,format_data,file_name,file_length,itemlink,license,memo")] t_part t_part)
         {
             if (id != t_part.id_part)
             {
@@ -155,7 +183,18 @@ namespace CMS_3D_Core.Controllers
             {
                 try
                 {
-                    _context.Update(t_part);
+                    var target = await _context.t_parts.FindAsync(t_part.id_part);
+                    target.part_number = t_part.part_number;
+                    target.version = t_part.version;
+                    target.type_data = t_part.type_data;
+                    target.format_data = t_part.format_data;
+                    target.file_name = t_part.file_name;
+                    target.file_length = t_part.file_length;
+                    target.itemlink = t_part.itemlink;
+                    target.license = t_part.license;
+                    target.memo = t_part.memo;
+
+                    //_context.Update(t_part);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

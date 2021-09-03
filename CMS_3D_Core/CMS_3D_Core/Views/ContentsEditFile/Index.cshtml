@@ -32,6 +32,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.file_length)
             </th>
+            <th>
+                Data Source
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -61,9 +64,12 @@
                     @Html.DisplayFor(modelItem => item.file_length)
                 </td>
                 <td>
+                    <a href="@item.itemlink">Data Source</a>
+                </td>
+                <td>
                     <a asp-action="Edit" asp-route-id="@item.id_part">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.id_part">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.id_part">Delete</a>
+                    <a asp-action="Delete" asp-route-id="@item.id_part">Delete</a> |
                 </td>
             </tr>
         }

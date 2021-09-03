@@ -37,12 +37,34 @@
             </div>
 
 
-            <input type="file" name="formFile" class="" />
+            <div class="form-group">
+                <label asp-for="itemlink" class="control-label"></label>
+                <input asp-for="itemlink" class="form-control" />
+                <span asp-validation-for="itemlink" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="license" class="control-label"></label>
+                <input asp-for="license" class="form-control" />
+                <span asp-validation-for="license" class="text-danger"></span>
+            </div>
+
+
+
+            <div class="form-group">
+                <label asp-for="memo" class="control-label"></label>
+                <input asp-for="memo" class="form-control" />
+                <span asp-validation-for="memo" class="text-danger"></span>
+            </div>
+
+
             <div class="form-group">
                 <label asp-for="file_data" class="control-label"></label>
+                <input type="file" name="formFile" class="custom-file-input" />
                 @*<input asp-for="file_data" class="form-control" />*@
                 <span asp-validation-for="file_data" class="text-danger"></span>
             </div>
+
 
 
 
