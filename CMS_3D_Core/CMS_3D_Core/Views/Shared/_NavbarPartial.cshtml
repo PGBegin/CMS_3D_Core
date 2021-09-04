@@ -6,8 +6,12 @@
 @if (SignInManager.IsSignedIn(User))
 {
         <li class="nav-item">
-            @Html.ActionLink("ContentsEdit", "Index", "ContentsEdit", null, new { @class = "nav-link" })
+         @*   @Html.ActionLink("ContentsEdit", "Index", "ContentsEdit", null, new { @class = "nav-link" })  *@
+            <a class="nav-link" asp-area="" asp-controller="ContentsEdit" asp-action="Index">ContentsEdit</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-area="" asp-controller="SiteSetting" asp-action="Index">SiteSetting</a>
+        </li>        
 }
 else
 {

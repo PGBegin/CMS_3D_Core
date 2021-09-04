@@ -1,0 +1,49 @@
+﻿@model IEnumerable<CMS_3D_Core.Models.EDM.t_website_setting>
+
+@{
+    ViewData["Title"] = "Index";
+    int i = 0;
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                No
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.memo)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @(i+1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.memo)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.title">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.title">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.title">Delete</a>
+            </td>
+        </tr>
+        i = i + 1;
+}
+    </tbody>
+</table>

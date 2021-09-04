@@ -32,6 +32,7 @@ namespace CMS_3D_Core.Models.EDM
         public virtual DbSet<t_part> t_parts { get; set; }
         public virtual DbSet<t_part_display> t_part_displays { get; set; }
         public virtual DbSet<t_view> t_views { get; set; }
+        public virtual DbSet<t_website_setting> t_website_settings { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -280,6 +281,19 @@ namespace CMS_3D_Core.Models.EDM
                     .HasForeignKey(d => d.id_article)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_t_view_t_article");
+            });
+
+            modelBuilder.Entity<t_website_setting>(entity =>
+            {
+                entity.HasKey(e => e.title);
+
+                entity.ToTable("t_website_setting");
+
+                entity.Property(e => e.title).HasMaxLength(50);
+
+                entity.Property(e => e.data).HasMaxLength(2000);
+
+                entity.Property(e => e.memo).HasMaxLength(255);
             });
 
             OnModelCreatingPartial(modelBuilder);

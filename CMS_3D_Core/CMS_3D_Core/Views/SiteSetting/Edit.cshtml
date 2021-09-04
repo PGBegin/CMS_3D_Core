@@ -1,0 +1,36 @@
+﻿@model CMS_3D_Core.Models.EDM.t_website_setting
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>t_website_setting</h4>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="title" />
+            <div class="form-group">
+                <label asp-for="data" class="control-label"></label>
+                <textarea asp-for="data" class="form-control"></textarea>
+                <span asp-validation-for="data" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="memo" class="control-label"></label>
+                <textarea asp-for="memo" class="form-control"></textarea>
+                <span asp-validation-for="memo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

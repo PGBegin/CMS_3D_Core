@@ -4,6 +4,9 @@
     ViewData["Title"] = "Details";
 }
 
+
+    @Html.Raw(Model.memo)
+
 <h1>Details</h1>
 
 <div>
@@ -21,12 +24,6 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.version)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.file_data)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.file_data)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.type_data)
@@ -63,6 +60,24 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.file_length)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.itemlink)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.itemlink)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.license)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.license)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.memo)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.memo)
         </dd>
     </dl>
 </div>
