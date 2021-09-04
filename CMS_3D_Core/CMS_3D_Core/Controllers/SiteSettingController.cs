@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using CMS_3D_Core.Models.EDM;
 
 namespace CMS_3D_Core.Controllers
 {
+    [Authorize]
     public class SiteSettingController : Controller
     {
         private readonly db_data_coreContext _context;
