@@ -1,10 +1,20 @@
 ﻿@{
     ViewData["Title"] = "Privacy Policy";
 }
-<h1>@ViewData["Title"]</h1>
 
-<div>
 
-    @await Component.InvokeAsync("PrivacyPolicy", null)
 
+<div class="row">
+    <div class="col-md-2"></div>
+
+
+    <div class="col-md-6">
+        <h1>@ViewData["Title"]</h1>
+
+        <hr />
+
+
+        @await Component.InvokeAsync("PrivacyPolicy", null)
+
+    </div>
 </div>

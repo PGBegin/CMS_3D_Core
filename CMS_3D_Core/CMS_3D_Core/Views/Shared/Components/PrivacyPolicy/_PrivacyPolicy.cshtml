@@ -1,29 +1,35 @@
 ﻿@model CMS_3D_Core.Models.EDM.t_website_setting
 
 
+@using Markdig
 
-<div id="privacy_policy_description"></div>
+<div id="privacy_policy_description">
+
+    @Html.Raw(Markdig.Markdown.ToHtml(@Model.data))
+
+</div>
+
+@*
+    <script src="~/lib/marked/marked.js"></script>
+
+    <script type="text/javascript">
+
+    // ロード後に実行される処理
+    window.onload = function () {
+        'use strict';
+
+        var node_temp;
+        @{
+            string str;
+            str =  Model.data.ToString() ;
 
 
-<script src="~/lib/marked/marked.js"></script>
-
-<script type="text/javascript">
-
-// ロード後に実行される処理
-window.onload = function () {
-    'use strict';
-
-    var node_temp;
-    @{
-        string str;
-        str =  Model.data.ToString() ;
-
-
-//@Html.Raw(Model.data.ToString());
-    }
-    //テキスト内容をマークダウン方式に変更して表示
-    node_temp = document.getElementById('privacy_policy_description');
-    //node_temp.innerHTML = marked('html.raw(str');
-    node_temp.innerHTML = marked('@Model.data');
-    }
-</script>
+    //@Html.Raw(Model.data.ToString());
+        }
+        //テキスト内容をマークダウン方式に変更して表示
+        node_temp = document.getElementById('privacy_policy_description');
+        //node_temp.innerHTML = marked('html.raw(str');
+        //node_temp.innerHTML = marked('@Model.data');
+        }
+    </script>
+*@
