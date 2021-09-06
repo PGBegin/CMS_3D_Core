@@ -34,6 +34,7 @@ namespace CMS_3D_Core.Controllers
 
         public ActionResult AttachFile()
         {
+            ViewBag.ResultMsg = TempData["ResultMsg"];
             return View();
         }
         [HttpPost]
@@ -139,15 +140,21 @@ namespace CMS_3D_Core.Controllers
                     , parameter_itemlink
                     , parameter_license
                     , parameter_memo);
+
+                TempData["ResultMsg"] = "New File Attach Success";
+                return RedirectToAction(nameof(Details), new { id = id_part });
+
             }
 
             
 
             catch (Exception e)
             {
-                TempData["ResultMsg"] = e.Message.ToString();
+                //TempData["ResultMsg"] = e.Message.ToString();
+                TempData["ResultMsg"] = "New File Attach Failed";
             }
 
+            ViewBag.ResultMsg = TempData["ResultMsg"];
             return View();
         }
 
@@ -167,6 +174,7 @@ namespace CMS_3D_Core.Controllers
                 return NotFound();
             }
 
+            ViewBag.ResultMsg = TempData["ResultMsg"];
             return View(t_part);
         }
 
@@ -215,6 +223,8 @@ namespace CMS_3D_Core.Controllers
 
                     //_context.Update(t_part);
                     await _context.SaveChangesAsync();
+                    TempData["ResultMsg"] = "Edit Success";
+                    return RedirectToAction(nameof(Details),new { id = t_part.id_part });
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -226,9 +236,12 @@ namespace CMS_3D_Core.Controllers
                     {
                         throw;
                     }
+                    //TempData["ResultMsg"] = e.Message.ToString();
+                    TempData["ResultMsg"] = "Edit Failed";
                 }
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));
             }
+            ViewBag.ResultMsg = TempData["ResultMsg"];
             return View(t_part);
         }
         // GET: ContentsEditFile/Delete/5

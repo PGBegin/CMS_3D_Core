@@ -60,6 +60,7 @@ namespace CMS_3D_Core.Controllers
                         id_view = item.id_view, 
                         title = item.title, 
                         short_description = item.short_description,
+                        memo = item.memo,
                         display_order = item.display_order
                     });
             }

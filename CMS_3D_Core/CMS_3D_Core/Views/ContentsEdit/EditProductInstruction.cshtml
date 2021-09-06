@@ -6,6 +6,9 @@
 
 <h1>@Model.title</h1>
 
+<p class="text-info">
+    @ViewBag.ResultMsg
+</p>
 
 
 <div class="row">
@@ -80,6 +83,13 @@
                         </div>
                     </div>
 
+                    <div class="col-sm-12">
+                        @Html.Label("memo", "MEMO", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                        <div class="px-3">
+                            @Html.TextArea("memo", null, new { id = "instruction_memo", rows = "10", @class = "form-control" })
+                        </div>
+                    </div>
+                    
 
                     <div class="col-sm-8">
                         @Html.Label("", "", htmlAttributes: new { @class = "control-label font-weight-bold" })
@@ -396,6 +406,7 @@
         document.getElementById('instruction_id_article').value = instruction_gp[id_instruct].id_article;
         document.getElementById('instruction_id_instruct').value = instruction_gp[id_instruct].id_instruct;
         document.getElementById('instruction_display_order').value = instruction_gp[id_instruct].display_order;
+        document.getElementById('instruction_memo').value = instruction_gp[id_instruct].memo;
 
 
 

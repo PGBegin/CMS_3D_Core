@@ -2,13 +2,14 @@
 
 
 class Instruction {
-    constructor(id_article, id_instruct, id_view, title, short_description, display_order) {
+    constructor(id_article, id_instruct, id_view, title, short_description, display_order, memo) {
         this.id_article = id_article;
         this.id_instruct = id_instruct;
         this.id_view = id_view;
         this.title = title;
         this.short_description = short_description;
         this.display_order = display_order;
+        this.memo = memo;
     }
 }
 
@@ -89,7 +90,8 @@ function data_inmprt(data, view_object, instruction_gp, instance_part) {
                 data[i].id_view,
                 data[i].title,
                 data[i].short_description,
-                data[i].display_order                
+                data[i].display_order,
+                data[i].memo
             );
 
         }

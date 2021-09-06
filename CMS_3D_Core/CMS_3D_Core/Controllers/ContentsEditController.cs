@@ -40,6 +40,11 @@ namespace CMS_3D_Core.Controllers
             return View(assys);
         }
 
+        /// <summary>
+        /// Show Edit View of Articles
+        /// </summary>
+        /// <param name="id_article"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> EditProductInstruction(long id_article)
         {
@@ -53,6 +58,7 @@ namespace CMS_3D_Core.Controllers
             var t = await _context.t_articles.FindAsync(id_article);
 
 
+            ViewBag.ResultMsg = TempData["ResultMsg"];
             return View(t);
             //return View(id_assy);
 
@@ -61,7 +67,7 @@ namespace CMS_3D_Core.Controllers
         // POST: Role/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditProductInstruction(long id_article, long id_instruct, int id_view, string title, string short_description, long display_order)
+        public async Task<IActionResult> EditProductInstruction(long id_article, long id_instruct, int id_view, string title, string short_description, long display_order, string memo)
         {
             if (id_article == null | id_instruct == null)
             {
@@ -75,6 +81,8 @@ namespace CMS_3D_Core.Controllers
                     var target = await _context.t_instructions.FindAsync(id_article, id_instruct);
                     if (target == null)
                     {
+                        // if object is not in table
+                        // do add new item acrion
                         t_instruction t_instruction = new t_instruction();
                         t_instruction.id_article = id_article;
                         t_instruction.id_instruct = id_instruct;
@@ -82,6 +90,7 @@ namespace CMS_3D_Core.Controllers
                         t_instruction.title = title;
                         t_instruction.short_description = short_description;
                         t_instruction.display_order = display_order;
+                        t_instruction.memo = memo;
 
                         await _context.AddAsync(t_instruction);
                         await _context.SaveChangesAsync();
@@ -90,11 +99,13 @@ namespace CMS_3D_Core.Controllers
                         return RedirectToAction("EditProductInstruction", new { id_article = id_article });
                     } else
                     {
-                        // データ更新
+                        // if object is in table
+                        // do update new item acrion
                         target.id_view = id_view;
                         target.title = title;
                         target.short_description = short_description;
                         target.display_order = display_order;
+                        target.memo = memo;
 
                         // DBに更新を反映
                         await _context.SaveChangesAsync();
@@ -106,7 +117,7 @@ namespace CMS_3D_Core.Controllers
 
 
                 }
-                catch
+                catch(Exception e)
                 {
                     TempData["ResultMsg"] = "Update Failed";
                 }

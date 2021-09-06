@@ -5,9 +5,12 @@
 }
 
 
-    @Html.Raw(Model.memo)
 
 <h1>Details</h1>
+
+<p class="text-info">
+    @ViewBag.ResultMsg
+</p>
 
 <div>
     <h4>t_part</h4>
@@ -65,7 +68,7 @@
             @Html.DisplayNameFor(model => model.itemlink)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.itemlink)
+            <a href="@Model.itemlink">@Model.itemlink</a>
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.license)
