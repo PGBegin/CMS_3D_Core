@@ -105,7 +105,7 @@ namespace CMS_3D_Core.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([Bind("id_article,id_assy,title,short_description,long_description,status")] t_article t_article)
+        public async Task<IActionResult> Edit([Bind("id_article,id_assy,title,short_description,long_description,status,directional_light_color,directional_light_intensity,directional_light_px,directional_light_py,directional_light_pz,ambient_light_color,ambient_light_intensity,gammaOutput")] t_article t_article)
         {
 
             if (ModelState.IsValid)
@@ -126,8 +126,6 @@ namespace CMS_3D_Core.Controllers
                         throw;
                     }
                 }
-                //return RedirectToAction(nameof(Index));
-                //return RedirectToAction(nameof(Details), new { id_article = t_article.id_article });
                 return RedirectToAction(nameof(ContentsEditController.EditProductInstruction), new { controller = "ContentsEdit", id_article = t_article.id_article });
             }
             ViewData["id_assy"] = new SelectList(_context.t_assemblies, "id_assy", "assy_name", t_article.id_assy);

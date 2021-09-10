@@ -11,6 +11,8 @@
 </p>
 
 
+
+
 <div class="row">
 
 
@@ -21,12 +23,12 @@
         </div>
         @* 表示専用ビューならこうなってる
 
-        <div id="instruction_data">
-            <h4 id="instruction_title"></h4>
-            <div id="instruction_short_description">
+            <div id="instruction_data">
+                <h4 id="instruction_title"></h4>
+                <div id="instruction_short_description">
 
+                </div>
             </div>
-        </div>
         *@
 
         <hr />
@@ -89,7 +91,7 @@
                             @Html.TextArea("memo", null, new { id = "instruction_memo", rows = "10", @class = "form-control" })
                         </div>
                     </div>
-                    
+
 
                     <div class="col-sm-8">
                         @Html.Label("", "", htmlAttributes: new { @class = "control-label font-weight-bold" })
@@ -130,175 +132,161 @@
 
 
     <div class="col-md-4">
-        <h4> View Info and Edit</h4>
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" href="#nav-viewinfo">View</a>
+                <a class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" href="#nav-articlebase">Article Base</a>
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-viewinfo">
 
-        <div id="view_data">
+                <h4> View Info and Edit</h4>
 
+                <div id="view_data">
 
+                    <form asp-action="EditProductView">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <form asp-action="EditProductView">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                <div class="form-group row ">
-
-
-                    @Html.Hidden("id_article", 0, new { id = "view_id_article" })
-                    @*
-                    @Html.Hidden("id_view", 0, new { id = "view_id_view" })
-                    <input id="view_id_view" name="id_view" type="text" value="" class="form-control" />
-                    <input id="view_title" name="title" type="text" value="" class="form-control" />
-
-                    *@
+                        <div class="form-group row ">
 
 
+                            @Html.Hidden("id_article", 0, new { id = "view_id_article" })
 
-                    <div class="col-sm-2">
-                        @Html.Label("id_view", "ID View", htmlAttributes: new { @class = "control-label font-weight-bold" })
-                        <div class="px-3">
-                            @Html.TextBox("id_view", "", new { id = "view_id_view", @class = "form-control" })
+                            <div class="col-sm-2">
+                                @Html.Label("id_view", "ID View", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                                <div class="px-3">
+                                    @Html.TextBox("id_view", "", new { id = "view_id_view", @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                @Html.Label("title", "ビュータイトル(title)", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                                <div class="px-3">
+                                    @Html.TextBox("title", "", new { id = "view_title", @class = "form-control" })
+                                </div>
+                            </div>
+
                         </div>
-                    </div>
 
-                    <div class="col-sm-6">
-                        @Html.Label("title", "ビュータイトル(title)", htmlAttributes: new { @class = "control-label font-weight-bold" })
-                        <div class="px-3">
-                            @Html.TextBox("title", "", new { id = "view_title", @class = "form-control" })
+                        <table class="table">
+                            <tr>
+                                <th>
+                                    Elementname
+                                </th>
+                                <th>
+                                    X
+                                </th>
+                                <th>
+                                    Y
+                                </th>
+                                <th>
+                                    Z
+                                </th>
+                                <th>
+                                    W
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Camera Position
+                                </td>
+                                <td>
+                                    <input id="cam_pos_x" name="cam_pos_x" type="text" value="" class="form-control" />
+                                </td>
+                                <td>
+                                    <input id="cam_pos_y" name="cam_pos_y" type="text" value="" class="form-control" />
+                                </td>
+                                <td>
+                                    <input id="cam_pos_z" name="cam_pos_z" type="text" value="" class="form-control" />
+                                </td>
+                                <td>
+                                    --
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Camera Look At
+                                </td>
+                                <td>
+                                    <input id="cam_lookat_x" name="cam_lookat_x" type="text" value="" class="form-control" />
+                                </td>
+                                <td>
+                                    <input id="cam_lookat_y" name="cam_lookat_y" type="text" value="" class="form-control" />
+                                </td>
+                                <td>
+                                    <input id="cam_lookat_z" name="cam_lookat_z" type="text" value="" class="form-control" />
+                                </td>
+                                <td>
+                                    --
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Camera Quaternion
+                                </td>
+                                <td>
+                                    <input id="cam_quat_x" name="cam_quat_x" type="text" value="" class="form-control" />
+                                </td>
+                                <td>
+                                    <input id="cam_quat_y" name="cam_quat_y" type="text" value="" class="form-control" />
+                                </td>
+                                <td>
+                                    <input id="cam_quat_z" name="cam_quat_z" type="text" value="" class="form-control" />
+                                </td>
+                                <td>
+                                    <input id="cam_quat_w" name="cam_quat_w" type="text" value="" class="form-control" />
+                                </td>
+                            </tr>
+                            <tr>
+                            <tr>
+                                <td>
+                                    Orbit Control Target
+                                </td>
+                                <td>
+                                    <input id="obt_target_x" name="obt_target_x" type="text" value="" class="form-control" />
+                                </td>
+                                <td>
+                                    <input id="obt_target_y" name="obt_target_y" type="text" value="" class="form-control" />
+                                </td>
+                                <td>
+                                    <input id="obt_target_z" name="obt_target_z" type="text" value="" class="form-control" />
+                                </td>
+                                <td>
+                                    --
+                                </td>
+                            </tr>
+                        </table>
+
+
+                        <div class="form-group">
+                            <input type="submit" value="Save" class="btn btn-primary" onclick="return confirm('視点情報を更新しますか？')" />
                         </div>
-                    </div>
+                    </form>
 
+                    @Html.ActionLink("View", "Index", "t_view", new { id_article = Model.id_article })
                 </div>
 
-                <table class="table">
-                    <tr>
-                        <th>
-                            Elementname
-                        </th>
-                        <th>
-                            X
-                        </th>
-                        <th>
-                            Y
-                        </th>
-                        <th>
-                            Z
-                        </th>
-                        <th>
-                            W
-                        </th>
-                    </tr>
-                    <tr>
-                        <td>
-                            Camera Position
-                        </td>
-                        <td>
-                            <input id="cam_pos_x" name="cam_pos_x" type="text" value="" class="form-control" />
-                        </td>
-                        <td>
-                            <input id="cam_pos_y" name="cam_pos_y" type="text" value="" class="form-control" />
-                        </td>
-                        <td>
-                            <input id="cam_pos_z" name="cam_pos_z" type="text" value="" class="form-control" />
-                        </td>
-                        <td>
-                            --
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Camera Look At
-                        </td>
-                        <td>
-                            <input id="cam_lookat_x" name="cam_lookat_x" type="text" value="" class="form-control" />
-                        </td>
-                        <td>
-                            <input id="cam_lookat_y" name="cam_lookat_y" type="text" value="" class="form-control" />
-                        </td>
-                        <td>
-                            <input id="cam_lookat_z" name="cam_lookat_z" type="text" value="" class="form-control" />
-                        </td>
-                        <td>
-                            --
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Camera Quaternion
-                        </td>
-                        <td>
-                            <input id="cam_quat_x" name="cam_quat_x" type="text" value="" class="form-control" />
-                        </td>
-                        <td>
-                            <input id="cam_quat_y" name="cam_quat_y" type="text" value="" class="form-control" />
-                        </td>
-                        <td>
-                            <input id="cam_quat_z" name="cam_quat_z" type="text" value="" class="form-control" />
-                        </td>
-                        <td>
-                            <input id="cam_quat_w" name="cam_quat_w" type="text" value="" class="form-control" />
-                        </td>
-                    </tr>
-                    <tr>
-                    <tr>
-                        <td>
-                            Orbit Control Target
-                        </td>
-                        <td>
-                            <input id="obt_target_x" name="obt_target_x" type="text" value="" class="form-control" />
-                        </td>
-                        <td>
-                            <input id="obt_target_y" name="obt_target_y" type="text" value="" class="form-control" />
-                        </td>
-                        <td>
-                            <input id="obt_target_z" name="obt_target_z" type="text" value="" class="form-control" />
-                        </td>
-                        <td>
-                            --
-                        </td>
-                    </tr>
-                </table>
 
 
-                <div class="form-group">
-                    <input type="submit" value="Save" class="btn btn-primary" onclick="return confirm('視点情報を更新しますか？')" />
-                </div>
-            </form>
+                @await Component.InvokeAsync("ViewList", new { id_article = Model.id_article })
 
 
-            @*ビューの削除
-            <form asp-action="DeleteProductView">
-                <div class="form-group row ">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 
-                    @Html.Hidden("id_assy", 0, new { id = "view_id_assy_delete" })
-                    @Html.Hidden("id_view", 0, new { id = "view_id_view_delete" })
+            </div>
+            <div class="tab-pane fade" id="nav-articlebase">
 
-                    <div class="col-sm-8">
-                        @Html.Label("", "", htmlAttributes: new { @class = "control-label font-weight-bold" })
-                        <div class="px-3">
-                            <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('視点情報を削除しますか？')" />
-                        </div>
-                    </div>
+                <h4> View Info and Edit</h4>
 
-                </div>
-            </form>
-            *@
-            @Html.ActionLink("View", "Index", "t_view", new { id_article = Model.id_article })
+                @await Component.InvokeAsync("EditArticle", new { id_article = Model.id_article })
+
+            </div>
         </div>
 
-
-
-        @await Component.InvokeAsync("ViewList", new { id_article = Model.id_article })
-
-
-        <hr />
-
-        <h4> View Info and Edit</h4>
-
-        @await Component.InvokeAsync("EditArticle", new { id_article = Model.id_article })
     </div>
+
 </div>
-        @*<div id="content"></div>*@
 
 <script src="~/lib/three/three.js"></script>
 <script src="~/lib/three/Loader/GLTFLoader.js"></script>
@@ -330,6 +318,7 @@
     var instruction_gp = [];
     var instance_part = [];
 
+    var orbit_active = false;
 
 
     // ロード後に実行される処理
@@ -364,9 +353,14 @@
                 setup_instance_part_model(str_url_partapi_base, instance_part, glfLoader, scene);
 
 
+                //表示領域を初期化する
                 initial_optional01();
                 initial_setup_and_render();
-                //initial_setup_and_render2(scene, camera_main, controls, light, ambient, renderer, width, height);
+
+
+                //orbitコントロールモードを有効にし、レンダリングを開始する
+                orbit_active = true;
+                render_orbital();
 
             })
             .catch(error => { // エラーの場合の処理
@@ -382,18 +376,54 @@
         'use strict';
 
 
+        orbit_active = false;
 
         //カメラ位置の変更
         //---------------------
         var i = instruction_gp[id_instruct].id_view;
-        controls.reset();
 
-        set_camera(camera_main, view_object[i].cam_pos_x, view_object[i].cam_pos_y, view_object[i].cam_pos_z,
-            new THREE.Quaternion(view_object[i].cam_quat_x, view_object[i].cam_quat_y, view_object[i].cam_quat_z, view_object[i].cam_quat_w));
 
-        controls.target.set(view_object[i].obt_target_x, view_object[i].obt_target_y, view_object[i].obt_target_z);
-        controls.update();
-        //---------------------
+        // 視点のアニメーションによる移行
+        // ------------------------------------------------------------------------------------------------
+        var counter = 0;
+        var step = 75;
+
+        var pitch_px = (view_object[i].cam_pos_x - camera_main.position.x) / step;
+        var pitch_py = (view_object[i].cam_pos_y - camera_main.position.y) / step;
+        var pitch_pz = (view_object[i].cam_pos_z - camera_main.position.z) / step;
+
+        var pitch_tx = (view_object[i].obt_target_x - controls.target.x) / step;
+        var pitch_ty = (view_object[i].obt_target_y - controls.target.y) / step;
+        var pitch_tz = (view_object[i].obt_target_z - controls.target.z) / step;
+
+
+        function flight() {
+
+            update_viewinfo();
+
+            if (counter >= step) {
+                orbit_active = true;
+
+                render_orbital();
+                return;
+            } else {
+                counter = counter + 1;
+                requestAnimationFrame(flight);
+
+                camera_main.position.x += pitch_px;
+                camera_main.position.y += pitch_py;
+                camera_main.position.z += pitch_pz;
+
+
+                controls.target.x += pitch_tx;
+                controls.target.y += pitch_ty;
+                controls.target.z += pitch_tz;
+
+                controls.update();
+                renderer.render(scene, camera_main);
+            }
+        }
+        flight();
 
         //タイトルの表示
         var node_temp;
@@ -420,11 +450,6 @@
         document.getElementById('view_title').value = view_object[i].title;
 
 
-        //削除用ビュー情報を更新
-        //document.getElementById('view_id_assy_delete').value = view_object[i].id_assy;
-        //document.getElementById('view_id_view_delete').value = view_object[i].id_view;
-
-
     }
 
 
@@ -433,17 +458,18 @@
         'use strict';
 
         // light
-        light = new THREE.DirectionalLight(0xffffff, 1);
-        light.position.set(0, 100, 30);
+        light = new THREE.DirectionalLight(0xffffff, @Model.directional_light_intensity);
+        light.position.set(@Model.directional_light_px, @Model.directional_light_py, @Model.directional_light_pz);
         scene.add(light);
 
 
-        ambient = new THREE.AmbientLight(0x404040, 1);
+
+        ambient = new THREE.AmbientLight(0x404040, @Model.ambient_light_intensity);
         scene.add(ambient);
 
         // main camara
         camera_main = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
-        set_camera(camera_main, 30, 30, 30, new THREE.Quaternion(0.017, 0.168, -0.003, 0.985));
+        //set_camera(camera_main, 30, 30, 30, new THREE.Quaternion(0.017, 0.168, -0.003, 0.985));
 
         // renderer
         renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -452,22 +478,39 @@
         renderer.setPixelRatio(window.devicePixelRatio);
         document.getElementById('model_screen').appendChild(renderer.domElement);
 
-
         controls = new THREE.OrbitControls(camera_main, renderer.domElement);
 
 
-        function render() {
-            requestAnimationFrame(render);
-
-            update_viewinfo();
-
-            controls.update();
-            renderer.render(scene, camera_main);
+        @{
+            int idv = Model.t_instructions.OrderBy(m => m.display_order).FirstOrDefault().id_view;
         }
-        render();
 
+        camera_main.position.x =@Model.t_views.FirstOrDefault(m => m.id_view == idv).cam_pos_x;
+        camera_main.position.y =@Model.t_views.FirstOrDefault(m => m.id_view == idv).cam_pos_y;
+        camera_main.position.z =@Model.t_views.FirstOrDefault(m => m.id_view == idv).cam_pos_z;
+
+
+        controls.target.x =@Model.t_views.FirstOrDefault(m => m.id_view == idv).obt_target_x;
+        controls.target.y =@Model.t_views.FirstOrDefault(m => m.id_view == idv).obt_target_y;
+        controls.target.z =@Model.t_views.FirstOrDefault(m => m.id_view == idv).obt_target_z;
+
+        //ガンマ値をtrueに。
+        //(truee.jsで一部のアイテムが暗くなるのを軽減)
+        @if(Model.gammaOutput==true){
+            @Html.Raw("renderer.gammaOutput = true;")
+        }
     };
 
+    //通常の、orbit control有効状態でのレンダリング
+    function render_orbital() {
+        update_viewinfo();
+        if (!orbit_active) { return; }
+        requestAnimationFrame(render_orbital);
+
+
+        controls.update();
+        renderer.render(scene, camera_main);
+    }
 
 
     //表示関連を初期化する
@@ -512,4 +555,4 @@
     }
 
 
-        </script>
+</script>

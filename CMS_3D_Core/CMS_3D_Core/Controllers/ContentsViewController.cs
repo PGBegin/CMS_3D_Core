@@ -42,13 +42,40 @@ namespace CMS_3D_Core.Controllers
         /// <param name="id_assy"></param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult DetailProductInstruction(long id_article)
+        //public ActionResult DetailProductInstruction(long? id_article)
+        public async Task<IActionResult> DetailProductInstruction(long? id_article)
         {
-            var t = _context.t_articles.Find(id_article);
+
+            if (id_article == null)
+            {
+                return NotFound();
+            }
+
+            /*
+            var min_display = await _context.t_instructions
+                                        .Where(m => id_article == id_article)
+                                        .MinAsync(m => m.display_order);
+
+            var temp = await _context.t_instructions
+                                        //.OrderBy(t => t.display_order)
+                                        .FirstOrDefaultAsync(m => id_article == id_article & m.display_order == min_display);
+
+            int id_view = temp.id_view;
+            */
+
+            t_article t_article = await _context.t_articles
+                                          .Include(t => t.t_views)//.Where(m => m.id_view == id_view))
+                                          .Include(t => t.t_instructions)
+                                          .Where(m => m.id_article == id_article & m.statusNavigation.is_approved == true)
+                                          .FirstOrDefaultAsync();
+
+            if (t_article == null)
+            {
+                return NotFound();
+            }
 
 
-            return View(t);
-            //return View(id_assy);
+            return View(t_article);
         }
 
         protected override void Dispose(bool disposing)

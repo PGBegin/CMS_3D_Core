@@ -4,31 +4,140 @@
 <form asp-action="Edit" asp-controller="t_article">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" asp-for="id_article" />
-    <div class="form-group">
-        <label asp-for="id_assy" class="control-label"></label>
-        <select asp-for="id_assy" class="form-control" asp-items="ViewBag.id_assy"></select>
-        <span asp-validation-for="id_assy" class="text-danger"></span>
+
+    <h5>Base Info</h5>
+
+    <div class="form-group row ">
+        <div class="col-sm-4">
+            <label asp-for="status" class="control-label"></label>
+            <select asp-for="status" class="form-control" asp-items="ViewBag.status"></select>
+            <span asp-validation-for="status" class="text-danger"></span>
+        </div>
+        <div class="col-sm-8">
+            <label asp-for="id_assy" class="control-label"></label>
+            <select asp-for="id_assy" class="form-control" asp-items="ViewBag.id_assy"></select>
+            <span asp-validation-for="id_assy" class="text-danger"></span>
+        </div>
+        <div class="col-sm-12">
+            <label asp-for="title" class="control-label"></label>
+            <input asp-for="title" class="form-control" />
+            <span asp-validation-for="title" class="text-danger"></span>
+        </div>
+        <div class="col-sm-12">
+            <label asp-for="short_description" class="control-label"></label>
+            @Html.TextArea("short_description", null, new { rows = "3", @class = "form-control" })
+            <span asp-validation-for="short_description" class="text-danger"></span>
+        </div>
+        <div class="col-sm-12">
+            <label asp-for="long_description" class="control-label"></label>
+            <input asp-for="long_description" class="form-control" />
+            <span asp-validation-for="long_description" class="text-danger"></span>
+        </div>
     </div>
-    <div class="form-group">
-        <label asp-for="title" class="control-label"></label>
-        <input asp-for="title" class="form-control" />
-        <span asp-validation-for="title" class="text-danger"></span>
+
+    <hr />
+
+    <h5>Directional Light Info</h5>
+    <div class="form-group row">
+
+        <div class="col-sm-5">
+            <label asp-for="directional_light_color" class="control-label"></label>
+            <input asp-for="directional_light_color" class="form-control" />
+            <span asp-validation-for="directional_light_color" class="text-danger"></span>
+        </div>
+        <div class="col-sm-5">
+            <label asp-for="directional_light_intensity" class="control-label"></label>
+            <input asp-for="directional_light_intensity" class="form-control" />
+            <span asp-validation-for="directional_light_intensity" class="text-danger"></span>
+        </div>
+
+
+        <div class="col-sm-4">
+            <label asp-for="directional_light_px" class="control-label"></label>
+            <input asp-for="directional_light_px" class="form-control" />
+            <span asp-validation-for="directional_light_px" class="text-danger"></span>
+        </div>
+        <div class="col-sm-4">
+            <label asp-for="directional_light_py" class="control-label"></label>
+            <input asp-for="directional_light_py" class="form-control" />
+            <span asp-validation-for="directional_light_py" class="text-danger"></span>
+        </div>
+        <div class="col-sm-4">
+            <label asp-for="directional_light_pz" class="control-label"></label>
+            <input asp-for="directional_light_pz" class="form-control" />
+            <span asp-validation-for="directional_light_pz" class="text-danger"></span>
+        </div>
     </div>
-    <div class="form-group">
-        <label asp-for="short_description" class="control-label"></label>
-        <input asp-for="short_description" class="form-control" />
-        <span asp-validation-for="short_description" class="text-danger"></span>
+
+    <hr />
+    <h5>Ambient Light Info</h5>
+    <div class="form-group row">
+
+        <div class="col-sm-5">
+            <label asp-for="ambient_light_color" class="control-label"></label>
+            <input asp-for="ambient_light_color" class="form-control" />
+            <span asp-validation-for="ambient_light_color" class="text-danger"></span>
+        </div>
+        <div class="col-sm-5">
+            <label asp-for="ambient_light_intensity" class="control-label"></label>
+            <input asp-for="ambient_light_intensity" class="form-control" />
+            <span asp-validation-for="ambient_light_intensity" class="text-danger"></span>
+        </div>
+
     </div>
-    <div class="form-group">
-        <label asp-for="long_description" class="control-label"></label>
-        <input asp-for="long_description" class="form-control" />
-        <span asp-validation-for="long_description" class="text-danger"></span>
+
+    <hr />
+    <h5>Ambient Light Info</h5>
+    <div class="form-group row">
+
+        <div class="col-sm-5">
+            <label asp-for="gammaOutput" class="control-label"></label>
+            <input asp-for="gammaOutput" class="form-control" />
+            <span asp-validation-for="gammaOutput" class="text-danger"></span>
+        </div>
+
     </div>
-    <div class="form-group">
-        <label asp-for="status" class="control-label"></label>
-        <select asp-for="status" class="form-control" asp-items="ViewBag.status"></select>
-        <span asp-validation-for="status" class="text-danger"></span>
-    </div>
+    @*
+        <table class="table">
+            <tr>
+                <th>
+                    Elementname
+                </th>
+                <th>
+                    X
+                </th>
+                <th>
+                    Y
+                </th>
+                <th>
+                    Z
+                </th>
+                <th>
+                    W
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    Camera Position
+                </td>
+                <td>
+                    <input id="cam_pos_x" name="cam_pos_x" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    <input id="cam_pos_y" name="cam_pos_y" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    <input id="cam_pos_z" name="cam_pos_z" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    --
+                </td>
+            </tr>
+        </table>
+    *@
+
+
+
     <div class="form-group">
         <input type="submit" value="Save" class="btn btn-primary" />
     </div>

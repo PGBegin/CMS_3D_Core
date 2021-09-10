@@ -55,11 +55,16 @@ namespace CMS_3D_Core.Controllers
 
 
 
-            var t = await _context.t_articles.FindAsync(id_article);
+            //var t = await _context.t_articles.FindAsync(id_article);
 
+            t_article t_article = await _context.t_articles
+                                          .Include(t => t.t_views)//.Where(m => m.id_view == id_view))
+                                          .Include(t => t.t_instructions)
+                                          .Where(m => m.id_article == id_article)
+                                          .FirstOrDefaultAsync();
 
             ViewBag.ResultMsg = TempData["ResultMsg"];
-            return View(t);
+            return View(t_article);
             //return View(id_assy);
 
         }

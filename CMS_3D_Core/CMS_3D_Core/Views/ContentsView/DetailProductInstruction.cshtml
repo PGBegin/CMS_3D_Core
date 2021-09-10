@@ -1,5 +1,4 @@
 ﻿@model CMS_3D_Core.Models.EDM.t_article
-@*  @model CMS_3D_Core.Models.EDM.t_assembly*@
 
 @{
     ViewData["Title"] = "Contents:" + @Model.title;
@@ -31,13 +30,20 @@
                 <h4 id="instruction_title"></h4>
                 <div id="instruction_short_description">
 
+                    @{
+                        long idi2 = Model.t_instructions.OrderBy(m => m.display_order).FirstOrDefault().id_instruct;
+                    }
+
+                    @Html.Raw(Markdig.Markdown.ToHtml(@Model.t_instructions.FirstOrDefault(m => m.id_instruct == idi2).short_description))
+
+                    
+
                 </div>
             </div>
         </div>
     </div>
 
 </div>
-
 
 
 
@@ -137,14 +143,6 @@
         //カメラ位置の変更
         //---------------------
         var i = instruction_gp[id_instruct].id_view;
-        //controls.reset();
-
-        //set_camera(camera_main, view_object[i].cam_pos_x, view_object[i].cam_pos_y, view_object[i].cam_pos_z,
-        //    new THREE.Quaternion(view_object[i].cam_quat_x, view_object[i].cam_quat_y, view_object[i].cam_quat_z, view_object[i].cam_quat_w));
-
-        //controls.target.set(view_object[i].obt_target_x, view_object[i].obt_target_y, view_object[i].obt_target_z);
-        //controls.update();
-        //---------------------
 
 
         // 視点のアニメーションによる移行
@@ -189,13 +187,7 @@
         flight();
 
 
-
-
-        //タイトルの表示
         var node_temp;
-        //node_temp = document.getElementById('instruction_title');
-        //node_temp.textContent = instruction_gp[id_ruct].title;
-
 
         //テキスト内容をマークダウン方式に変更して表示
         node_temp = document.getElementById('instruction_short_description');
@@ -208,17 +200,17 @@
         'use strict';
 
         // light
-        light = new THREE.DirectionalLight(0xffffff, 1);
-        light.position.set(0, 100, 30);
+        light = new THREE.DirectionalLight(0xffffff, @Model.directional_light_intensity);
+        light.position.set(@Model.directional_light_px, @Model.directional_light_py, @Model.directional_light_pz);
         scene.add(light);
 
 
-        ambient = new THREE.AmbientLight(0x404040, 1);
+        ambient = new THREE.AmbientLight(0x404040, @Model.ambient_light_intensity);
         scene.add(ambient);
 
         // main camara
         camera_main = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
-        set_camera(camera_main, 30, 30, 30, new THREE.Quaternion(0.017, 0.168, -0.003, 0.985));
+
 
         // renderer
         renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -227,21 +219,26 @@
         renderer.setPixelRatio(window.devicePixelRatio);
         document.getElementById('model_screen').appendChild(renderer.domElement);
 
-
         controls = new THREE.OrbitControls(camera_main, renderer.domElement);
 
-        //レンダリングは仕様変更に伴いコメントアウト
-        /*
-        function render() {
-            requestAnimationFrame(render);
-
-            //update_viewinfo();
-
-            controls.update();
-            renderer.render(scene, camera_main);
+        @{
+            int idv = Model.t_instructions.OrderBy(m => m.display_order).FirstOrDefault().id_view;
         }
-        render();*/
 
+        camera_main.position.x =@Model.t_views.FirstOrDefault(m => m.id_view == idv).cam_pos_x;
+        camera_main.position.y =@Model.t_views.FirstOrDefault(m => m.id_view == idv).cam_pos_y;
+        camera_main.position.z =@Model.t_views.FirstOrDefault(m => m.id_view == idv).cam_pos_z;
+
+
+        controls.target.x =@Model.t_views.FirstOrDefault(m => m.id_view == idv).obt_target_x;
+        controls.target.y =@Model.t_views.FirstOrDefault(m => m.id_view == idv).obt_target_y;
+        controls.target.z =@Model.t_views.FirstOrDefault(m => m.id_view == idv).obt_target_z;
+
+        //ガンマ値をtrueに。
+        //(truee.jsで一部のアイテムが暗くなるのを軽減)
+        @if(Model.gammaOutput==true){ 
+            @Html.Raw("renderer.gammaOutput = true;")
+        }
     };
 
     //通常の、orbit control有効状態でのレンダリング

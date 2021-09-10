@@ -19,6 +19,14 @@ namespace CMS_3D_Core.Models.EDM
         public string short_description { get; set; }
         public string long_description { get; set; }
         public short status { get; set; }
+        public int? directional_light_color { get; set; }
+        public double? directional_light_intensity { get; set; }
+        public double? directional_light_px { get; set; }
+        public double? directional_light_py { get; set; }
+        public double? directional_light_pz { get; set; }
+        public int? ambient_light_color { get; set; }
+        public double? ambient_light_intensity { get; set; }
+        public bool? gammaOutput { get; set; }
 
         public virtual t_assembly id_assyNavigation { get; set; }
         public virtual m_status_article statusNavigation { get; set; }
