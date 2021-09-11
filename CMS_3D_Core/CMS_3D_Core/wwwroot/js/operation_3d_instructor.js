@@ -162,10 +162,14 @@ function setup_instance_part_model(str_url_partapi_base, instance_part, glfLoade
 
 
         glfLoader.load(str_url_partapi, function (gltf) {
-
+            
             scene.add(gltf.scene);
 
-        }, undefined, function (error) {
+        }, function (xhr) {
+
+            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+
+        }, function (error) {
 
             console.error(error);
 
