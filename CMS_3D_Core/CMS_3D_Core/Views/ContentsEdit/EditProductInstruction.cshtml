@@ -23,14 +23,17 @@
         </div>
         @* 表示専用ビューならこうなってる
 
-            <div id="instruction_data">
-                <h4 id="instruction_title"></h4>
-                <div id="instruction_short_description">
+        <div id="instruction_data">
+            <h4 id="instruction_title"></h4>
+            <div id="instruction_short_description">
 
-                </div>
             </div>
+        </div>
         *@
 
+        <div class="progress" id="div_progressbar_modeldl">
+            <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" id="progressbar_modeldl"></div>
+        </div>
         <hr />
 
 
@@ -448,6 +451,8 @@
         document.getElementById('view_id_article').value = view_object[i].id_article;
         document.getElementById('view_id_view').value = view_object[i].id_view;
         document.getElementById('view_title').value = view_object[i].title;
+
+
 
 
     }

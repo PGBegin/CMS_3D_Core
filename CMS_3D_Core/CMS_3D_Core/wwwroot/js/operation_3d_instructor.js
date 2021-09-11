@@ -162,12 +162,15 @@ function setup_instance_part_model(str_url_partapi_base, instance_part, glfLoade
 
 
         glfLoader.load(str_url_partapi, function (gltf) {
-            
+
+
+            document.getElementById('div_progressbar_modeldl').setAttribute('hidden', '');
             scene.add(gltf.scene);
 
         }, function (xhr) {
 
-            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+            //console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+            document.getElementById('progressbar_modeldl').setAttribute('style', 'width: ' + Math.floor(xhr.loaded / xhr.total * 100) + '%');
 
         }, function (error) {
 
