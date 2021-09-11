@@ -25,11 +25,13 @@ namespace CMS_3D_Core.Controllers
 
 
         // GET: ContentsEditFile
-        public ActionResult Index()
+        //public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
 
-            var t = _context.t_parts;
-            return View(t.ToList());
+            //var t = _context.t_parts;
+            var t = await _context.t_parts.ToListAsync();
+            return View(t);
         }
 
         public ActionResult AttachFile()

@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CMS_3D_Core.Models.EDM;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CMS_3D_Core.Controllers
 {
+    [Authorize]
     public class t_articleController : Controller
     {
         private readonly db_data_coreContext _context;

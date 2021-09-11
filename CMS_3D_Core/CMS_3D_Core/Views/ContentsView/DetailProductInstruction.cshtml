@@ -191,11 +191,23 @@
         flight();
 
 
-        var node_temp;
+        document.getElementById('instruction_short_description').innerHTML = marked(instruction_gp[id_instruct].short_description);
 
-        //テキスト内容をマークダウン方式に変更して表示
-        node_temp = document.getElementById('instruction_short_description');
-        node_temp.innerHTML = marked(instruction_gp[id_instruct].short_description);
+        //ボタンの色
+        var children = document.getElementById('control_panel_zone').children;
+        var buttunid = 'btn_inst' + id_instruct;
+        for (var j = 0; j < children.length; j++) {
+
+            if ("button".localeCompare(children[j].tagName, {}, { sensitivity: "base" }) == 0) {
+
+                if (buttunid.localeCompare(children[j].id, {}, { sensitivity: "base" }) == 0) {
+                    children[j].classList.replace('btn-outline-primary', 'btn-primary');
+
+                } else {
+                    children[j].classList.replace('btn-primary', 'btn-outline-primary');
+                }
+            }
+        }
     }
 
 
