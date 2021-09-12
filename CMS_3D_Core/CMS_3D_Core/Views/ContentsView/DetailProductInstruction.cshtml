@@ -1,7 +1,19 @@
 ﻿@model CMS_3D_Core.Models.EDM.t_article
 
 @{
-    ViewData["Title"] = "Contents:" + @Model.title;
+    //ViewData["Title"] = "Contents:" + @Model.title;
+    ViewData["Title"] = @Model.title;
+    ViewData["ShowGoogleAdSenseAdvertisement"] = "ON";
+
+    if (Model.meta_description == null)
+    {
+        ViewData["MetaDescription"] = @Model.short_description;
+
+    }
+    else
+    {
+        ViewData["MetaDescription"] = @Model.meta_description;
+    }
 }
 
 

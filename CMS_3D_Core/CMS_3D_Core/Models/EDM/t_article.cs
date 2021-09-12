@@ -18,6 +18,7 @@ namespace CMS_3D_Core.Models.EDM
         public string title { get; set; }
         public string short_description { get; set; }
         public string long_description { get; set; }
+        public string meta_description { get; set; }
         public short status { get; set; }
         public int? directional_light_color { get; set; }
         public double? directional_light_intensity { get; set; }

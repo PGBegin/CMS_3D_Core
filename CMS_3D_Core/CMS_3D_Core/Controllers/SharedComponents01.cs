@@ -133,6 +133,28 @@ namespace CMS_3D_Core.Controllers
         }
     }
 
+    /// <summary>
+    /// Google AdSense Advertisementを表示する
+    /// </summary>
+    public class GoogleAdSenseAdvertisementViewComponent : ViewComponent
+    {
+        private readonly db_data_coreContext _context;
+
+        public GoogleAdSenseAdvertisementViewComponent(db_data_coreContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IViewComponentResult> InvokeAsync()
+        {
+
+            var t = await _context.t_website_settings
+                                .Where(x => x.title == "GoogleAdSenseAdvertisement")
+                                .FirstOrDefaultAsync();
+
+            return View("_GoogleAdSenseAdvertisement", t);
+        }
+    }
 
     /// <summary>
     /// Google Analytics情報を表示する

@@ -164,6 +164,8 @@ namespace CMS_3D_Core.Models.EDM
 
                 entity.Property(e => e.id_article).ValueGeneratedNever();
 
+                entity.Property(e => e.meta_description).HasMaxLength(550);
+
                 entity.Property(e => e.short_description).HasMaxLength(550);
 
                 entity.Property(e => e.title).HasMaxLength(250);
