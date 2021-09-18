@@ -24,14 +24,24 @@
             <span asp-validation-for="title" class="text-danger"></span>
         </div>
         <div class="col-sm-12">
+            <label asp-for="meta_description" class="control-label"></label>
+            @Html.TextArea("meta_description", null, new { rows = "2", @class = "form-control" })
+            <span asp-validation-for="meta_description" class="text-danger"></span>
+        </div>
+        <div class="col-sm-12">
             <label asp-for="short_description" class="control-label"></label>
             @Html.TextArea("short_description", null, new { rows = "3", @class = "form-control" })
             <span asp-validation-for="short_description" class="text-danger"></span>
         </div>
         <div class="col-sm-12">
             <label asp-for="long_description" class="control-label"></label>
-            <input asp-for="long_description" class="form-control" />
+            @Html.TextArea("long_description", null, new { rows = "3", @class = "form-control" })
             <span asp-validation-for="long_description" class="text-danger"></span>
+        </div>
+        <div class="col-sm-12">
+            <label asp-for="meta_category" class="control-label"></label>
+            <input asp-for="meta_category" class="form-control" />
+            <span asp-validation-for="meta_category" class="text-danger"></span>
         </div>
     </div>
 
@@ -97,46 +107,6 @@
         </div>
 
     </div>
-    @*
-        <table class="table">
-            <tr>
-                <th>
-                    Elementname
-                </th>
-                <th>
-                    X
-                </th>
-                <th>
-                    Y
-                </th>
-                <th>
-                    Z
-                </th>
-                <th>
-                    W
-                </th>
-            </tr>
-            <tr>
-                <td>
-                    Camera Position
-                </td>
-                <td>
-                    <input id="cam_pos_x" name="cam_pos_x" type="text" value="" class="form-control" />
-                </td>
-                <td>
-                    <input id="cam_pos_y" name="cam_pos_y" type="text" value="" class="form-control" />
-                </td>
-                <td>
-                    <input id="cam_pos_z" name="cam_pos_z" type="text" value="" class="form-control" />
-                </td>
-                <td>
-                    --
-                </td>
-            </tr>
-        </table>
-    *@
-
-
 
     <div class="form-group">
         <input type="submit" value="Save" class="btn btn-primary" />

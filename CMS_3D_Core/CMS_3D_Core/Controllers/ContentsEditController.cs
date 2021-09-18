@@ -36,6 +36,7 @@ namespace CMS_3D_Core.Controllers
         {
             var assys = await _context.t_articles
                                         .Include(t => t.id_assyNavigation)
+                                        .Include(t => t.t_instructions)
                                         .ToListAsync();
             return View(assys);
         }
@@ -46,7 +47,7 @@ namespace CMS_3D_Core.Controllers
         /// <param name="id_article"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> EditProductInstruction(long id_article)
+        public async Task<IActionResult> EditProductInstruction(long? id_article)
         {
             if (id_article == null)
             {
@@ -74,10 +75,11 @@ namespace CMS_3D_Core.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProductInstruction(long id_article, long id_instruct, int id_view, string title, string short_description, long display_order, string memo)
         {
+            /*
             if (id_article == null | id_instruct == null)
             {
                 return NotFound();
-            }
+            }*/
 
             if (ModelState.IsValid)
             {
@@ -157,10 +159,13 @@ namespace CMS_3D_Core.Controllers
                                                         float obt_target_x,float obt_target_y,float obt_target_z
             )
         {
+
+            /*
             if (id_article == null | id_view == null)
             {
                 return NotFound();
             }
+            */
 
             if (ModelState.IsValid)
             {
@@ -262,7 +267,7 @@ namespace CMS_3D_Core.Controllers
         //-------------------------------------------------------------------
         //アイテム追加
         // GET: t_assembly/Create
-        public async Task<IActionResult> CreateAssembly()
+        public ActionResult CreateAssembly()
         {
             return View();
         }

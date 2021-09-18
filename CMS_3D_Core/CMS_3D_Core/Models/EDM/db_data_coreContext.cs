@@ -33,7 +33,7 @@ namespace CMS_3D_Core.Models.EDM
         public virtual DbSet<t_part_display> t_part_displays { get; set; }
         public virtual DbSet<t_view> t_views { get; set; }
         public virtual DbSet<t_website_setting> t_website_settings { get; set; }
-
+        /*
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -41,7 +41,7 @@ namespace CMS_3D_Core.Models.EDM
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=db_data_core");
             }
-        }
+        }*/
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -163,6 +163,8 @@ namespace CMS_3D_Core.Models.EDM
                 entity.HasComment("総合的な製品情報を格納するテーブル");
 
                 entity.Property(e => e.id_article).ValueGeneratedNever();
+
+                entity.Property(e => e.meta_category).HasMaxLength(250);
 
                 entity.Property(e => e.meta_description).HasMaxLength(550);
 

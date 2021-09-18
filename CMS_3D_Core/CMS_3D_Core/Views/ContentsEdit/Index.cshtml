@@ -39,6 +39,9 @@
                 <th>
                     Link
                 </th>
+                <th>
+                    Length<br />(First Instruction)
+                </th>
             </tr>
             @{
                 foreach (var item in Model)
@@ -67,6 +70,12 @@
                         </td>
                         <td>
                             @Html.ActionLink("View", "DetailProductInstruction", "ContentsView", new { id_article = item.id_article })
+                        </td>
+                        <td>
+                            @((item.t_instructions.OrderBy(m => m.display_order).Sum(m => m.short_description.Length)))
+                            (
+                            @((item.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction { short_description="" }).short_description.Length)
+                            )
                         </td>
                     </tr>
                 }

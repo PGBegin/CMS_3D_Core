@@ -107,7 +107,7 @@ namespace CMS_3D_Core.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([Bind("id_article,id_assy,title,short_description,long_description,status,directional_light_color,directional_light_intensity,directional_light_px,directional_light_py,directional_light_pz,ambient_light_color,ambient_light_intensity,gammaOutput")] t_article t_article)
+        public async Task<IActionResult> Edit([Bind("id_article,id_assy,title,short_description,long_description,meta_description,meta_category,status,directional_light_color,directional_light_intensity,directional_light_px,directional_light_py,directional_light_pz,ambient_light_color,ambient_light_intensity,gammaOutput")] t_article t_article)
         {
 
             if (ModelState.IsValid)

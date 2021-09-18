@@ -230,6 +230,8 @@ namespace CMS_3D_Core.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
+                    TempData["ResultMsg"] = "Edit Failed";
+
                     if (!t_partExists(t_part.id_part))
                     {
                         return NotFound();
@@ -239,7 +241,6 @@ namespace CMS_3D_Core.Controllers
                         throw;
                     }
                     //TempData["ResultMsg"] = e.Message.ToString();
-                    TempData["ResultMsg"] = "Edit Failed";
                 }
                 //return RedirectToAction(nameof(Index));
             }
