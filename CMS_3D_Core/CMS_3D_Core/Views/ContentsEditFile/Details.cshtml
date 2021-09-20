@@ -15,76 +15,427 @@
 <div>
     <h4>t_part</h4>
     <hr />
+
+    <div class="row">
+        <div class="col-md-6">
+
+            <div id="model_screen">
+                @*モデルの表示領域*@
+                <div class="progress" id="div_progressbar_modeldl">
+                    <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" id="progressbar_modeldl"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <table class="table">
+                <tr>
+                    <th>
+                        Elementname
+                    </th>
+                    <th>
+                        X
+                    </th>
+                    <th>
+                        Y
+                    </th>
+                    <th>
+                        Z
+                    </th>
+                    <th>
+                        W
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        Camera Position
+                    </td>
+                    <td>
+                        <input id="cam_pos_x" name="cam_pos_x" type="text" value="" class="form-control" disabled />
+                    </td>
+                    <td>
+                        <input id="cam_pos_y" name="cam_pos_y" type="text" value="" class="form-control" disabled />
+                    </td>
+                    <td>
+                        <input id="cam_pos_z" name="cam_pos_z" type="text" value="" class="form-control" disabled />
+                    </td>
+                    <td>
+                        --
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Camera Look At
+                    </td>
+                    <td>
+                        <input id="cam_lookat_x" name="cam_lookat_x" type="text" value="" class="form-control" disabled />
+                    </td>
+                    <td>
+                        <input id="cam_lookat_y" name="cam_lookat_y" type="text" value="" class="form-control" disabled />
+                    </td>
+                    <td>
+                        <input id="cam_lookat_z" name="cam_lookat_z" type="text" value="" class="form-control" disabled />
+                    </td>
+                    <td>
+                        --
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Camera Quaternion
+                    </td>
+                    <td>
+                        <input id="cam_quat_x" name="cam_quat_x" type="text" value="" class="form-control" disabled />
+                    </td>
+                    <td>
+                        <input id="cam_quat_y" name="cam_quat_y" type="text" value="" class="form-control" disabled />
+                    </td>
+                    <td>
+                        <input id="cam_quat_z" name="cam_quat_z" type="text" value="" class="form-control" disabled />
+                    </td>
+                    <td>
+                        <input id="cam_quat_w" name="cam_quat_w" type="text" value="" class="form-control" disabled />
+                    </td>
+                </tr>
+                <tr>
+                <tr>
+                    <td>
+                        Orbit Control Target
+                    </td>
+                    <td>
+                        <input id="obt_target_x" name="obt_target_x" type="text" value="" class="form-control" disabled />
+                    </td>
+                    <td>
+                        <input id="obt_target_y" name="obt_target_y" type="text" value="" class="form-control" disabled />
+                    </td>
+                    <td>
+                        <input id="obt_target_z" name="obt_target_z" type="text" value="" class="form-control" disabled />
+                    </td>
+                    <td>
+                        --
+                    </td>
+                </tr>
+            </table>
+
+
+
+        </div>
+
+
+
+
+
+    </div>
+    
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.part_number)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.part_number)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.version)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.version)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.type_data)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.type_data)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.format_data)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.format_data)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.file_texture)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.file_texture)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.type_texture)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.type_texture)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.file_name)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.file_name)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.file_length)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.file_length)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.itemlink)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             <a href="@Model.itemlink">@Model.itemlink</a>
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.license)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.license)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.memo)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.memo)
         </dd>
     </dl>
 </div>
 <div>
+    <a asp-action="Index">Back to List</a> |
     <a asp-action="Edit" asp-route-id="@Model.id_part">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Delete" asp-route-id="@Model.id_part">Delete</a>
 </div>
+
+
+
+
+<script src="~/lib/three/three.js"></script>
+<script src="~/lib/three/Loader/GLTFLoader.js"></script>
+<script src="~/lib/three/Loader/OBJLoader.js"></script>
+<script src="~/lib/three/Loader/MTLLoader.js"></script>
+<script src="~/lib/three/OrbitControls.js"></script>
+<script src="~/lib/marked/marked.js"></script>
+<script src="~/js/operation_3d_instructor.js"></script>
+
+
+<script type="text/javascript">
+
+
+    var camera_main;
+    var scene = new THREE.Scene();
+    var controls;
+
+    var gridHelper;
+    var axisHelper;
+    var lightHelper;
+
+    var light;
+    var ambient;
+    var renderer;
+    var width = 720;
+    var height = 405;
+
+    var view_object = [];
+    var instruction_gp = [];
+    var instance_part = [];
+
+    var orbit_active = false;
+
+
+    // ロード後に実行される処理
+    window.onload = function () {
+        'use strict';
+
+        var str_url_partapi_base = "/ContentsOperatorApis/GetPartObjectFile?";
+
+        const glfLoader = new THREE.GLTFLoader();
+
+
+
+        //データモデルを取得する
+        get_model(str_url_partapi_base, @Model.id_part, glfLoader, scene);
+
+
+        //表示領域を初期化する
+        initial_setup_and_render();
+
+        initial_optional01();
+
+        //orbitコントロールモードを有効にし、レンダリングを開始する
+        orbit_active = true;
+        render_orbital();
+
+
+    }
+
+    //指定されたIDのインストラクションを表示する
+    function transition_instruction(id_instruct) {
+        'use strict';
+
+
+        orbit_active = false;
+
+        //カメラ位置の変更
+        //---------------------
+        var i = instruction_gp[id_instruct].id_view;
+
+
+        // 視点のアニメーションによる移行
+        // ------------------------------------------------------------------------------------------------
+        var counter = 0;
+        var step = 75;
+
+        var pitch_px = (view_object[i].cam_pos_x - camera_main.position.x) / step;
+        var pitch_py = (view_object[i].cam_pos_y - camera_main.position.y) / step;
+        var pitch_pz = (view_object[i].cam_pos_z - camera_main.position.z) / step;
+
+        var pitch_tx = (view_object[i].obt_target_x - controls.target.x) / step;
+        var pitch_ty = (view_object[i].obt_target_y - controls.target.y) / step;
+        var pitch_tz = (view_object[i].obt_target_z - controls.target.z) / step;
+
+
+        function flight() {
+
+            update_viewinfo();
+
+            if (counter >= step) {
+                orbit_active = true;
+
+                render_orbital();
+                return;
+            } else {
+                counter = counter + 1;
+                requestAnimationFrame(flight);
+
+                camera_main.position.x += pitch_px;
+                camera_main.position.y += pitch_py;
+                camera_main.position.z += pitch_pz;
+
+
+                controls.target.x += pitch_tx;
+                controls.target.y += pitch_ty;
+                controls.target.z += pitch_tz;
+
+                controls.update();
+                renderer.render(scene, camera_main);
+            }
+        }
+        flight();
+
+
+    }
+
+
+    //データモデルを取得する
+    function get_model(str_url_partapi_base, id_part, glfLoader, scene) {
+
+        var str_url_partapi = "";
+        str_url_partapi = str_url_partapi_base + new URLSearchParams({ id_part: id_part }).toString();
+
+        glfLoader.load(str_url_partapi, function (gltf) {
+
+
+            document.getElementById('div_progressbar_modeldl').setAttribute('hidden', '');
+            scene.add(gltf.scene);
+
+        }, function (xhr) {
+
+            document.getElementById('progressbar_modeldl').setAttribute('style', 'width: ' + Math.floor(xhr.loaded / xhr.total * 100) + '%');
+
+        }, function (error) {
+
+            console.error(error);
+
+        });
+    }
+
+    //表示関連を初期化する
+    function initial_setup_and_render() {
+        'use strict';
+
+        // light
+        light = new THREE.DirectionalLight(0xffffff, 1);
+        light.position.set(30, 30, 30);
+        scene.add(light);
+
+
+
+        ambient = new THREE.AmbientLight(0x404040, 1);
+        scene.add(ambient);
+
+        // main camara
+        camera_main = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
+        //set_camera(camera_main, 30, 30, 30, new THREE.Quaternion(0.017, 0.168, -0.003, 0.985));
+
+        // renderer
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(width, height);
+        renderer.setClearColor(0xefefef);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        document.getElementById('model_screen').appendChild(renderer.domElement);
+
+        controls = new THREE.OrbitControls(camera_main, renderer.domElement);
+
+
+
+
+        camera_main.position.x = 10;
+        camera_main.position.y = 10;
+        camera_main.position.z = 10;
+
+        controls.target.x = 0;
+        controls.target.y = 0;
+        controls.target.z = 0;
+    };
+
+    //通常の、orbit control有効状態でのレンダリング
+    function render_orbital() {
+        update_viewinfo();
+        if (!orbit_active) { return; }
+        requestAnimationFrame(render_orbital);
+
+
+        controls.update();
+        renderer.render(scene, camera_main);
+    }
+
+
+    //表示関連を初期化する
+    function initial_optional01() {
+        'use strict';
+
+
+        //helper
+        
+        gridHelper = new THREE.GridHelper(200, 50);
+        scene.add(gridHelper);
+
+
+        axisHelper = new THREE.AxisHelper(1000);
+        scene.add(axisHelper);
+        
+
+        lightHelper = new THREE.DirectionalLightHelper(light, 20);
+        scene.add(lightHelper);
+    };
+
+    function update_viewinfo() {
+
+
+        document.getElementById('cam_pos_x').value = Math.floor(camera_main.position.x * 100) / 100;
+        document.getElementById('cam_pos_y').value = Math.floor(camera_main.position.y * 100) / 100;
+        document.getElementById('cam_pos_z').value = Math.floor(camera_main.position.z * 100) / 100;
+
+        document.getElementById('cam_lookat_x').value = 0;
+        document.getElementById('cam_lookat_y').value = 0;
+        document.getElementById('cam_lookat_z').value = 0;
+
+        document.getElementById('cam_quat_x').value = Math.floor(camera_main.quaternion.x * 1000) / 1000;
+        document.getElementById('cam_quat_y').value = Math.floor(camera_main.quaternion.y * 1000) / 1000;
+        document.getElementById('cam_quat_z').value = Math.floor(camera_main.quaternion.z * 1000) / 1000;
+        document.getElementById('cam_quat_w').value = Math.floor(camera_main.quaternion.w * 1000) / 1000;
+
+        document.getElementById('obt_target_x').value = Math.floor(controls.target.x * 100) / 100;
+        document.getElementById('obt_target_y').value = Math.floor(controls.target.y * 100) / 100;
+        document.getElementById('obt_target_z').value = Math.floor(controls.target.z * 100) / 100;
+
+    }
+
+
+</script>

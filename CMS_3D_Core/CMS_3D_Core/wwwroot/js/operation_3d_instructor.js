@@ -159,7 +159,7 @@ function setup_instance_part_model(str_url_partapi_base, instance_part, glfLoade
     var str_url_partapi = "";
     instance_part.forEach(function (element) {
         str_url_partapi = str_url_partapi_base + new URLSearchParams({ id_part: element.id_part }).toString();
-
+        console.log(str_url_partapi);
 
         glfLoader.load(str_url_partapi, function (gltf) {
 

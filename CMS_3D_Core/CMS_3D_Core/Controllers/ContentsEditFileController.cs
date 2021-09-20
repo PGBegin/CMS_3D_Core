@@ -12,10 +12,43 @@ using CMS_3D_Core.Models.EDM;
 
 namespace CMS_3D_Core.Controllers
 {
+
+
+    [Authorize]
+    public class ContensEditFileApiController : ControllerBase
+    {
+        private readonly db_data_coreContext _context;
+
+        public ContensEditFileApiController(db_data_coreContext context)
+        {
+            _context = context;
+        }
+
+        ///ContensEditFileApi/ExistPartNumber?part_number=xxxxxx
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="part_number"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<bool> ExistPartNumber(string part_number)
+        {
+            long num = await _context.t_parts
+                            .Where(t => t.part_number == part_number)
+                            .CountAsync();
+            if (num > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+    }
+
+
     [Authorize]
     public class ContentsEditFileController : Controller
     {
-        //private db_data_coreContext db = new db_data_coreContext();
         private readonly db_data_coreContext _context;
 
         public ContentsEditFileController(db_data_coreContext context)
@@ -26,35 +59,40 @@ namespace CMS_3D_Core.Controllers
 
         // GET: ContentsEditFile
         //public ActionResult Index()
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
-
-            //var t = _context.t_parts;
             var t = await _context.t_parts.ToListAsync();
             return View(t);
         }
 
-        public ActionResult AttachFile()
+
+        [HttpGet]
+        public ActionResult Create()
         {
             ViewBag.ResultMsg = TempData["ResultMsg"];
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AttachFile(long id_part, string part_number, int version, string format_data, string itemlink, string license, string memo, [FromForm] IFormFile formFile)
+        public ActionResult Create(string part_number, int version, string format_data, string itemlink, string license, string memo, [FromForm] IFormFile formFile)
         {
             var parameter_id_part = new SqlParameter
             {
                 ParameterName = "id_part",
                 SqlDbType = System.Data.SqlDbType.BigInt,
-                Value = id_part,
+                //Value = id_part,
+                Direction = System.Data.ParameterDirection.Output
             };
+
             var parameter_part_number = new SqlParameter
             {
                 ParameterName = "part_number",
                 SqlDbType = System.Data.SqlDbType.NVarChar,
                 Value = part_number,
             };
+
             var parameter_version = new SqlParameter
             {
                 ParameterName = "version",
@@ -62,14 +100,149 @@ namespace CMS_3D_Core.Controllers
                 Value = version,
             };
 
-
-
             var parameter_file_data = new SqlParameter
             {
                 ParameterName = "file_data",
                 SqlDbType = System.Data.SqlDbType.VarBinary,
             };
 
+            var parameter_type_data = new SqlParameter
+            {
+                ParameterName = "type_data",
+                SqlDbType = System.Data.SqlDbType.NVarChar,
+            };
+
+            var parameter_format_data = new SqlParameter
+            {
+                ParameterName = "format_data",
+                SqlDbType = System.Data.SqlDbType.NVarChar,
+                Value = format_data,
+            };
+
+            var parameter_file_name = new SqlParameter
+            {
+                ParameterName = "file_name",
+                SqlDbType = System.Data.SqlDbType.NVarChar,
+            };
+
+            var parameter_file_length = new SqlParameter
+            {
+                ParameterName = "file_length",
+                SqlDbType = System.Data.SqlDbType.BigInt,
+            };
+
+
+            var parameter_itemlink = new SqlParameter
+            {
+                ParameterName = "itemlink",
+                SqlDbType = System.Data.SqlDbType.NVarChar,
+                Value = itemlink,
+            };
+
+            var parameter_license = new SqlParameter
+            {
+                ParameterName = "license",
+                SqlDbType = System.Data.SqlDbType.NVarChar,
+                Value = license,
+            };
+
+            var parameter_memo = new SqlParameter
+            {
+                ParameterName = "memo",
+                SqlDbType = System.Data.SqlDbType.NVarChar,
+                Value = memo,
+            };
+
+
+            parameter_file_data.Value = formFile.OpenReadStream();
+            parameter_type_data.Value = formFile.ContentType;
+            parameter_file_name.Value = formFile.FileName;
+            parameter_file_length.Value = formFile.Length;
+
+
+            try
+            {
+                _context.Database
+                    .ExecuteSqlRaw("EXEC [dbo].[attachmentfile_add] @part_number,@version,@file_data,@type_data,@format_data,@file_name,@file_length,@itemlink,@license,@memo,@id_part OUTPUT"
+                    //, parameter_id_part
+                    , parameter_part_number
+                    , parameter_version
+                    , parameter_file_data
+                    , parameter_type_data
+                    , parameter_format_data
+                    , parameter_file_name
+                    , parameter_file_length
+                    , parameter_itemlink
+                    , parameter_license
+                    , parameter_memo
+                    , parameter_id_part);
+
+                TempData["ResultMsg"] = "New File Attach Success";
+                return RedirectToAction(nameof(Details), new { id = parameter_id_part.Value });
+
+            }
+
+
+
+            catch (Exception e)
+            {
+                //TempData["ResultMsg"] = e.Message.ToString();
+                TempData["ResultMsg"] = "New File Attach Failed";
+            }
+
+            ViewBag.ResultMsg = TempData["ResultMsg"];
+            return View();
+        }
+        /*
+        [HttpGet]
+        public ActionResult AttachFile()
+        {
+            ViewBag.ResultMsg = TempData["ResultMsg"];
+            return View();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="part_number"></param>
+        /// <param name="version"></param>
+        /// <param name="format_data"></param>
+        /// <param name="itemlink"></param>
+        /// <param name="license"></param>
+        /// <param name="memo"></param>
+        /// <param name="formFile"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AttachFile(string part_number, int version, string format_data, string itemlink, string license, string memo, [FromForm] IFormFile formFile)
+        {
+            var parameter_id_part = new SqlParameter
+            {
+                ParameterName = "id_part",
+                SqlDbType = System.Data.SqlDbType.BigInt,
+                //Value = id_part,
+                Direction = System.Data.ParameterDirection.Output
+            };
+
+            var parameter_part_number = new SqlParameter
+            {
+                ParameterName = "part_number",
+                SqlDbType = System.Data.SqlDbType.NVarChar,
+                Value = part_number,
+            };
+
+            var parameter_version = new SqlParameter
+            {
+                ParameterName = "version",
+                SqlDbType = System.Data.SqlDbType.Int,
+                Value = version,
+            };
+
+            var parameter_file_data = new SqlParameter
+            {
+                ParameterName = "file_data",
+                SqlDbType = System.Data.SqlDbType.VarBinary,
+            };
 
             var parameter_type_data = new SqlParameter
             {
@@ -120,18 +293,16 @@ namespace CMS_3D_Core.Controllers
             
 
             parameter_file_data.Value = formFile.OpenReadStream();
-//            parameter_format_data.Value = "dummy";
             parameter_type_data.Value = formFile.ContentType;
             parameter_file_name.Value = formFile.FileName;
             parameter_file_length.Value = formFile.Length;
 
 
-
             try
             {
                 _context.Database
-                    .ExecuteSqlRaw("EXEC [dbo].[attachmentfile_add] @id_part,@part_number,@version,@file_data,@type_data,@format_data,@file_name,@file_length,@itemlink,@license,@memo"
-                    , parameter_id_part
+                    .ExecuteSqlRaw("EXEC [dbo].[attachmentfile_add] @part_number,@version,@file_data,@type_data,@format_data,@file_name,@file_length,@itemlink,@license,@memo,@id_part OUTPUT"
+                    //, parameter_id_part
                     , parameter_part_number
                     , parameter_version
                     , parameter_file_data
@@ -141,10 +312,11 @@ namespace CMS_3D_Core.Controllers
                     , parameter_file_length
                     , parameter_itemlink
                     , parameter_license
-                    , parameter_memo);
+                    , parameter_memo
+                    , parameter_id_part);
 
                 TempData["ResultMsg"] = "New File Attach Success";
-                return RedirectToAction(nameof(Details), new { id = id_part });
+                return RedirectToAction(nameof(Details), new { id = parameter_id_part.Value });
 
             }
 
@@ -159,8 +331,8 @@ namespace CMS_3D_Core.Controllers
             ViewBag.ResultMsg = TempData["ResultMsg"];
             return View();
         }
-
-
+        
+        */
         // GET: ContentsEditFile/Details/5
         public async Task<IActionResult> Details(long? id)
         {
@@ -179,6 +351,8 @@ namespace CMS_3D_Core.Controllers
             ViewBag.ResultMsg = TempData["ResultMsg"];
             return View(t_part);
         }
+
+        
 
         // GET: ContentsEditFile/Edit/5
         public async Task<IActionResult> Edit(long? id)
@@ -279,8 +453,6 @@ namespace CMS_3D_Core.Controllers
         private bool t_partExists(long id)
         {
             return _context.t_parts.Any(e => e.id_part == id);
-        }
-
-        
+        }        
     }
 }

@@ -102,14 +102,37 @@ namespace CMS_3D_Core.Controllers
         /// <param name="id_part"></param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult GetPartObjectFile(long id_part)
+        public ActionResult GetPartObjectFile2(long id_part)
         {
             t_part t_part = _context.t_parts.Find(id_part);
 
             return File(t_part.file_data, t_part.type_data, t_part.part_number);
         }
 
+        /// <summary>
+        /// GET: 選択されたオブジェクトファイルを返す関数
+        /// </summary>
+        /// <param name="id_part"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> GetPartObjectFile(long id_part)
+        {
+            t_part t_part = await _context.t_parts.FindAsync(id_part);
 
+            return File(t_part.file_data, t_part.type_data, t_part.part_number);
+        }
+
+        private static vm_instruction vm_instruction(t_instruction todoItem) =>
+            new vm_instruction
+            {
+                id_article = todoItem.id_article,
+                id_instruct = todoItem.id_instruct,
+                id_view = todoItem.id_view,
+                title = todoItem.title,
+                short_description = todoItem.short_description,
+                memo = todoItem.memo,
+                display_order = todoItem.display_order
+            };
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -118,5 +141,112 @@ namespace CMS_3D_Core.Controllers
             }
             base.Dispose(disposing);
         }
+    }
+
+
+    public class vm_instruction
+    {
+        public long id_article { get; set; }
+        public long id_instruct { get; set; }
+        public int id_view { get; set; }
+        public string title { get; set; }
+        public string short_description { get; set; }
+        public string memo { get; set; }
+        public long display_order { get; set; }
+    }
+
+    public partial class vm_instance_part
+    {
+        public long id_assy { get; set; }
+        public long id_inst { get; set; }
+        public long id_part { get; set; }
+    }
+
+
+
+    public class ContentsOperatorApis2Controller : ControllerBase
+    {
+        //private db_data_coreContext db = new db_data_coreContext();
+
+        private readonly db_data_coreContext _context;
+
+        public ContentsOperatorApis2Controller(db_data_coreContext context)
+        {
+            _context = context;
+        }
+
+
+        //ContentsOperatorApis2/GetAssemblyObjectList/1
+        /// <summary>
+        /// GET: コンテンツのベースデータをJsonで返す
+        /// </summary>
+        /// <param name="id_assy">アセンブリID</param>
+        /// <returns>ファイルのJsonデータ</returns>
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<vm_instruction>>> GetInstructionList(int id_article)
+        {
+            var t = _context.t_instructions
+                        .Where(x => x.id_article == id_article)
+                        .Select(x => vm_instruction(x));
+
+
+            return t.ToList();
+        }
+        //ContentsOperatorApis2/GetAssemblyObjectList/1
+        /// <summary>
+        /// GET: コンテンツのベースデータをJsonで返す
+        /// </summary>
+        /// <param name="id_assy">アセンブリID</param>
+        /// <returns>ファイルのJsonデータ</returns>
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<t_instance_part>>> GetInstancePartList(int id_article)
+        {
+            /*
+            var z = await _context.t_articles
+                        .Include(t => t.id_assyNavigation).ThenInclude(t => t.t_instance_parts)
+                        .Where(t => t.id_article == id_article)
+                        .Select(t => vm_instance_part(t));
+            */
+
+            var t = await _context.t_instance_parts
+                        //.Where(x => x.id_assyNavigation.t_articles.FirstOrDefault().id_article == id_article)
+//                        .Where(x => x.id_assyNavigation.t_articles.Where(m => m.id_article == id_article).)
+                        .ToListAsync();
+//                        .Select(x => vm_instruction(x));
+            
+
+            return t;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPartObjectFile(long id_part)
+        {
+            t_part t_part = await _context.t_parts.FindAsync(id_part);
+
+            return File(t_part.file_data, t_part.type_data, t_part.part_number);
+        }
+        private static vm_instruction vm_instruction(t_instruction todoItem) =>
+            new vm_instruction
+            {
+                id_article = todoItem.id_article,
+                id_instruct = todoItem.id_instruct,
+                id_view = todoItem.id_view,
+                title = todoItem.title,
+                short_description = todoItem.short_description,
+                memo = todoItem.memo,
+                display_order = todoItem.display_order
+            };
+        /*
+        private static vm_instruction vm_instance_part(t_article todoItem) =>
+            new vm_instruction
+            {
+                id_article = todoItem.id_article,
+                id_instruct = todoItem.id_instruct,
+                id_view = todoItem.id_view,
+                title = todoItem.title,
+                short_description = todoItem.short_description,
+                memo = todoItem.memo,
+                display_order = todoItem.display_order
+            };*/
     }
 }

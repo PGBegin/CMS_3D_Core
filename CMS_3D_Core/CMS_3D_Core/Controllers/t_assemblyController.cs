@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+//using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+//using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using CMS_3D_Core.Models.EDM;
@@ -57,11 +57,22 @@ namespace CMS_3D_Core.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id_assy,assy_name")] t_assembly t_assembly)
         {
-            if (ModelState.IsValid)
+            //if (ModelState.IsValid)
+            try
             {
+                long id = 1 + (await _context.t_assemblies
+                                        .Where(t => t.id_assy > 500)
+                                        .MaxAsync(t => (long?)t.id_assy) ?? 0);
+
+                t_assembly.id_assy = id;
+
                 _context.Add(t_assembly);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
+            }
+            catch(Exception e)
+            {
+
             }
             return View(t_assembly);
         }

@@ -502,15 +502,6 @@
             int idv = (Model.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction { id_view = 0 }).id_view;
             CMS_3D_Core.Models.EDM.t_view t_view = Model.t_views.FirstOrDefault(m => m.id_view == idv) ?? new CMS_3D_Core.Models.EDM.t_view { cam_pos_x = 10, cam_pos_y = 10, cam_pos_z = 10, obt_target_x = 0, obt_target_y = 0, obt_target_z = 0 };
         }
-        @*
-        camera_main.position.x = @((Model.t_views.FirstOrDefault(m => m.id_view == idv) ?? new CMS_3D_Core.Models.EDM.t_view { cam_pos_x = 10 }).cam_pos_x);
-        camera_main.position.y = @((Model.t_views.FirstOrDefault(m => m.id_view == idv) ?? new CMS_3D_Core.Models.EDM.t_view { cam_pos_y = 10 }).cam_pos_y);
-        camera_main.position.z = @((Model.t_views.FirstOrDefault(m => m.id_view == idv) ?? new CMS_3D_Core.Models.EDM.t_view { cam_pos_z = 10 }).cam_pos_z);
-
-        controls.target.x = @((Model.t_views.FirstOrDefault(m => m.id_view == idv) ?? new CMS_3D_Core.Models.EDM.t_view { obt_target_x = 0 }).obt_target_x);
-        controls.target.y = @((Model.t_views.FirstOrDefault(m => m.id_view == idv) ?? new CMS_3D_Core.Models.EDM.t_view { obt_target_y = 0 }).obt_target_y);
-        controls.target.z = @((Model.t_views.FirstOrDefault(m => m.id_view == idv) ?? new CMS_3D_Core.Models.EDM.t_view { obt_target_z = 0 }).obt_target_z);
-            *@
 
         camera_main.position.x = @t_view.cam_pos_x;
         camera_main.position.y = @t_view.cam_pos_y;

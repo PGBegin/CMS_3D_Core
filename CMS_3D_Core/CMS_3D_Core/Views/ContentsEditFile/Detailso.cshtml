@@ -1,0 +1,91 @@
+﻿@model CMS_3D_Core.Models.EDM.t_part
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+
+
+<h1>Details</h1>
+
+<p class="text-info">
+    @ViewBag.ResultMsg
+</p>
+
+<div>
+    <h4>t_part</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.part_number)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.part_number)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.version)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.version)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.type_data)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.type_data)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.format_data)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.format_data)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.file_texture)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.file_texture)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.type_texture)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.type_texture)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.file_name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.file_name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.file_length)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.file_length)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.itemlink)
+        </dt>
+        <dd class = "col-sm-10">
+            <a href="@Model.itemlink">@Model.itemlink</a>
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.license)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.license)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.memo)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.memo)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a> |
+    <a asp-action="Edit" asp-route-id="@Model.id_part">Edit</a> |
+    <a asp-action="Delete" asp-route-id="@Model.id_part">Delete</a>
+</div>

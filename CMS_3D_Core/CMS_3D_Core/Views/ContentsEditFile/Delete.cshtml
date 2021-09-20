@@ -54,10 +54,13 @@
             @Html.DisplayFor(model => model.file_length)
         </dd>
     </dl>
-    
+
     <form asp-action="Delete">
         <input type="hidden" asp-for="id_part" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Edit" asp-route-id="@Model.id_part">Edit</a> |
+        <a asp-action="Details" asp-route-id="@Model.id_part">Details</a>
         <a asp-action="Index">Back to List</a>
     </form>
+
 </div>

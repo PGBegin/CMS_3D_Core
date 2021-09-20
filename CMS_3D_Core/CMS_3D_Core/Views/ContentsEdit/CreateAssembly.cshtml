@@ -19,11 +19,12 @@
     <div class="col-md-4">
         <form asp-action="CreateAssembly">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="id_assy" class="control-label"></label>
-                <input asp-for="id_assy" class="form-control" />
-                <span asp-validation-for="id_assy" class="text-danger"></span>
-            </div>
+            @*
+        <div class="form-group">
+            <label asp-for="id_assy" class="control-label"></label>
+            <input asp-for="id_assy" class="form-control" />
+            <span asp-validation-for="id_assy" class="text-danger"></span>
+        </div>*@
             <div class="form-group">
                 <label asp-for="assy_name" class="control-label"></label>
                 <input asp-for="assy_name" class="form-control" />

@@ -1,22 +1,22 @@
 ﻿@model CMS_3D_Core.Models.EDM.t_part
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "AttachFile";
 }
 
-<h1>Create</h1>
+<h1>AttachFile</h1>
+
+<p class="text-info">
+    @ViewBag.ResultMsg
+</p>
 
 <h4>t_part</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="id_part" class="control-label"></label>
-                <input asp-for="id_part" class="form-control" />
-                <span asp-validation-for="id_part" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label asp-for="part_number" class="control-label"></label>
                 <input asp-for="part_number" class="form-control" />
@@ -27,43 +27,46 @@
                 <input asp-for="version" class="form-control" />
                 <span asp-validation-for="version" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="file_data" class="control-label"></label>
-                <input asp-for="file_data" class="form-control" />
-                <span asp-validation-for="file_data" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="type_data" class="control-label"></label>
-                <input asp-for="type_data" class="form-control" />
-                <span asp-validation-for="type_data" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label asp-for="format_data" class="control-label"></label>
                 <input asp-for="format_data" class="form-control" />
                 <span asp-validation-for="format_data" class="text-danger"></span>
             </div>
+
+
             <div class="form-group">
-                <label asp-for="file_texture" class="control-label"></label>
-                <input asp-for="file_texture" class="form-control" />
-                <span asp-validation-for="file_texture" class="text-danger"></span>
+                <label asp-for="itemlink" class="control-label"></label>
+                <input asp-for="itemlink" class="form-control" />
+                <span asp-validation-for="itemlink" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="type_texture" class="control-label"></label>
-                <input asp-for="type_texture" class="form-control" />
-                <span asp-validation-for="type_texture" class="text-danger"></span>
+                <label asp-for="license" class="control-label"></label>
+                <input asp-for="license" class="form-control" />
+                <span asp-validation-for="license" class="text-danger"></span>
             </div>
+
+
+
             <div class="form-group">
-                <label asp-for="file_name" class="control-label"></label>
-                <input asp-for="file_name" class="form-control" />
-                <span asp-validation-for="file_name" class="text-danger"></span>
+                <label asp-for="memo" class="control-label"></label>
+                <input asp-for="memo" class="form-control" />
+                <span asp-validation-for="memo" class="text-danger"></span>
             </div>
+
+
             <div class="form-group">
-                <label asp-for="file_length" class="control-label"></label>
-                <input asp-for="file_length" class="form-control" />
-                <span asp-validation-for="file_length" class="text-danger"></span>
+                <label asp-for="file_data" class="control-label"></label>
+                <input type="file" name="formFile" class="custom-file-input" />
+                <span asp-validation-for="file_data" class="text-danger"></span>
             </div>
+
+
+
+
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Upload" class="btn btn-primary" />
             </div>
         </form>
     </div>

@@ -22,7 +22,6 @@ namespace CMS_3D_Core.Controllers
     [Authorize]
     public class ContentsEditController : Controller
     {
-        //private db_data_coreContext db = new db_data_coreContext();
         private readonly db_data_coreContext _context;
 
         public ContentsEditController(db_data_coreContext context)
@@ -32,11 +31,16 @@ namespace CMS_3D_Core.Controllers
 
         // GET: Use3DmodelTest
         //        public ActionResult Index()
+        /// <summary>
+        /// Show Index of Edit Items Of Articles
+        /// </summary>
+        /// <returns></returns>
         public async Task<IActionResult> Index()
         {
             var assys = await _context.t_articles
                                         .Include(t => t.id_assyNavigation)
                                         .Include(t => t.t_instructions)
+                                        .Include(t => t.statusNavigation)
                                         .ToListAsync();
             return View(assys);
         }
@@ -54,19 +58,14 @@ namespace CMS_3D_Core.Controllers
                 return NotFound();
             }
 
-
-
-            //var t = await _context.t_articles.FindAsync(id_article);
-
             t_article t_article = await _context.t_articles
-                                          .Include(t => t.t_views)//.Where(m => m.id_view == id_view))
+                                          .Include(t => t.t_views)
                                           .Include(t => t.t_instructions)
                                           .Where(m => m.id_article == id_article)
                                           .FirstOrDefaultAsync();
 
             ViewBag.ResultMsg = TempData["ResultMsg"];
             return View(t_article);
-            //return View(id_assy);
 
         }
 
@@ -114,7 +113,7 @@ namespace CMS_3D_Core.Controllers
                         target.display_order = display_order;
                         target.memo = memo;
 
-                        // DBに更新を反映
+                        // Update Db
                         await _context.SaveChangesAsync();
 
 
@@ -174,71 +173,75 @@ namespace CMS_3D_Core.Controllers
                     var target = await _context.t_views.FindAsync(id_article, id_view);
                     if (target == null)
                     {
+                        //if target does not find, update new item
 
                         t_view t_view = new t_view();
-                        // データ更新
+                        // Key data
                         t_view.id_article = id_article;
                         t_view.id_view = id_view;
                         t_view.title = title;
-                        //カメラ位置
+                        //Camera Position
                         t_view.cam_pos_x = cam_pos_x;
                         t_view.cam_pos_y = cam_pos_y;
                         t_view.cam_pos_z = cam_pos_z;
 
-                        //Lookat(現状まともに動いていない)
+                        //Lookat
                         t_view.cam_lookat_x = cam_lookat_x;
                         t_view.cam_lookat_y = cam_lookat_y;
                         t_view.cam_lookat_z = cam_lookat_z;
 
-                        //カメラのクオータニオン
+                        //quatunion of camera
                         t_view.cam_quat_x = cam_quat_x;
                         t_view.cam_quat_y = cam_quat_y;
                         t_view.cam_quat_z = cam_quat_z;
                         t_view.cam_quat_w = cam_quat_w;
 
-                        //OrbitControlのターゲット
+                        //OrbitControl Target
                         t_view.obt_target_x = obt_target_x;
                         t_view.obt_target_y = obt_target_y;
                         t_view.obt_target_z = obt_target_z;
 
-                        // DBに更新を反映
+                        // Update DB
 
                         await _context.AddAsync(t_view);
                         await _context.SaveChangesAsync();
 
                         TempData["ResultMsg"] = "AddNew Success";
                         return RedirectToAction("EditProductInstruction", new { id_article = id_article });
+                    } else
+                    {
+
+                        // データ更新
+                        target.title = title;
+                        //カメラ位置
+                        target.cam_pos_x = cam_pos_x;
+                        target.cam_pos_y = cam_pos_y;
+                        target.cam_pos_z = cam_pos_z;
+
+                        //Lookat(現状まともに動いていない)
+                        target.cam_lookat_x = cam_lookat_x;
+                        target.cam_lookat_y = cam_lookat_y;
+                        target.cam_lookat_z = cam_lookat_z;
+
+                        //カメラのクオータニオン
+                        target.cam_quat_x = cam_quat_x;
+                        target.cam_quat_y = cam_quat_y;
+                        target.cam_quat_z = cam_quat_z;
+                        target.cam_quat_w = cam_quat_w;
+
+                        //OrbitControlのターゲット
+                        target.obt_target_x = obt_target_x;
+                        target.obt_target_y = obt_target_y;
+                        target.obt_target_z = obt_target_z;
+
+                        // DBに更新を反映
+                        await _context.SaveChangesAsync();
+
+
+                        TempData["ResultMsg"] = "Update Success";
+                        return RedirectToAction("EditProductInstruction", new { id_article = id_article });
+
                     }
-
-                    // データ更新
-                    target.title = title;
-                    //カメラ位置
-                    target.cam_pos_x = cam_pos_x;
-                    target.cam_pos_y = cam_pos_y;
-                    target.cam_pos_z = cam_pos_z;
-
-                    //Lookat(現状まともに動いていない)
-                    target.cam_lookat_x = cam_lookat_x;
-                    target.cam_lookat_y = cam_lookat_y;
-                    target.cam_lookat_z = cam_lookat_z;
-
-                    //カメラのクオータニオン
-                    target.cam_quat_x = cam_quat_x;
-                    target.cam_quat_y = cam_quat_y;
-                    target.cam_quat_z = cam_quat_z;
-                    target.cam_quat_w = cam_quat_w;
-
-                    //OrbitControlのターゲット
-                    target.obt_target_x = obt_target_x;
-                    target.obt_target_y = obt_target_y;
-                    target.obt_target_z = obt_target_z;
-
-                    // DBに更新を反映
-                    await _context.SaveChangesAsync();
-
-
-                    TempData["ResultMsg"] = "Update Success";
-                    return RedirectToAction("EditProductInstruction", new { id_article = id_article });
 
                 }
                 catch
@@ -275,7 +278,7 @@ namespace CMS_3D_Core.Controllers
         // POST: t_assembly/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+ /*       [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateAssembly([Bind("id_assy,assy_name")] t_assembly t_assembly)
         {
@@ -286,14 +289,39 @@ namespace CMS_3D_Core.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(t_assembly);
+        }*/
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateAssembly([Bind("assy_name")] t_assembly t_assembly)
+        {
+            //if (ModelState.IsValid)
+            try
+            {
+                long id = 1 + (await _context.t_assemblies
+                                        .MaxAsync(t => (long?)t.id_assy) ?? 0);
+
+                t_assembly.id_assy = id;
+
+                await _context.AddAsync(t_assembly);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+
+            }
+            return View(t_assembly);
         }
 
-        public ActionResult CreateInstancePart(long? id_assy)
+
+        public async Task<IActionResult> CreateInstancePart(long? id_assy)
         {
             t_instance_part t_instance_part = new t_instance_part();
             t_instance_part.id_assy = id_assy.Value;
+            t_instance_part.id_assyNavigation = await _context.t_assemblies.FindAsync(id_assy=id_assy);
 
-            ViewData["id_assy"] = new SelectList(_context.t_assemblies, "id_assy", "assy_name");
+            //ViewData["id_assy"] = new SelectList(_context.t_assemblies, "id_assy", "assy_name");
             ViewData["id_part"] = new SelectList(_context.t_parts, "id_part", "part_number");
 
 
@@ -314,6 +342,11 @@ namespace CMS_3D_Core.Controllers
         {
             if (ModelState.IsValid)
             {
+                long id = 1 + (await _context.t_instance_parts
+                                        .Where(t => t.id_assy == t.id_assy)
+                                        .MaxAsync(t => (long?)t.id_assy) ?? 0);
+
+                t_instance_part.id_inst = id;
                 await _context.AddAsync(t_instance_part);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
