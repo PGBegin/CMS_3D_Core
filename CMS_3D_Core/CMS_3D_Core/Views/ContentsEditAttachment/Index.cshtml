@@ -1,0 +1,100 @@
+﻿@model IEnumerable<CMS_3D_Core.Models.EDM.t_attachment>
+
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="row">
+    <div class="col-md-3"></div>
+
+
+    <div class="col-md-6">
+
+
+
+        <h1>Index</h1>
+        <p>
+            <a asp-action="Create">Create New</a>
+        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.type_data)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.format_data)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.file_length)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.itemlink)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.license)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.isActive)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.create_datetime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.latest_update_datetime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.target_article_id)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.type_data)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.format_data)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.file_length)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.itemlink)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.license)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.isActive)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.create_datetime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.latest_update_datetime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.target_article_id)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.id_file">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.id_file">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.id_file">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

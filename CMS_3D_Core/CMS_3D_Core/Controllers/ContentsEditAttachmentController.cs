@@ -1,25 +1,27 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+using System.IO;
+
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Data.SqlClient;
-using Microsoft.AspNetCore.Http;
 using CMS_3D_Core.Models.EDM;
-using System.IO;
-
 
 namespace CMS_3D_Core.Controllers
 {
 
-
+    /*
     [Authorize]
-    public class ContensEditFileApiController : ControllerBase
+    public class ContentsEditAttachmentController : ControllerBase
     {
         private readonly db_data_coreContext _context;
 
-        public ContensEditFileApiController(db_data_coreContext context)
+        public ContentsEditAttachmentController(db_data_coreContext context)
         {
             _context = context;
         }
@@ -44,44 +46,25 @@ namespace CMS_3D_Core.Controllers
         }
 
     }
-
+    */
 
     [Authorize]
-    public class ContentsEditFileController : Controller
+    public class ContentsEditAttachmentController : Controller
     {
         private readonly db_data_coreContext _context;
 
-        public ContentsEditFileController(db_data_coreContext context)
+        public ContentsEditAttachmentController(db_data_coreContext context)
         {
             _context = context;
         }
 
-        public static byte[] GetByteArrayFromStream(Stream sm)
-        {
-            using (MemoryStream ms = new MemoryStream())
-            {
-                sm.CopyTo(ms);
-                return ms.ToArray();
-            }
-        }
 
         // GET: ContentsEditFile
         //public ActionResult Index()
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var t = await _context.t_parts
-                                .Select(x => new t_part()
-                                {
-                                    id_part = x.id_part,
-                                    part_number = x.part_number,
-                                    version = x.version,
-                                    format_data = x.format_data,
-                                    file_length = x.file_length,
-                                    license = x.license,
-                                    itemlink = x.itemlink
-                                })
-                                .ToListAsync();
+            var t = await _context.t_attachments.ToListAsync();
             return View(t);
         }
 
@@ -93,60 +76,62 @@ namespace CMS_3D_Core.Controllers
             return View();
         }
 
+
+        public static byte[] GetByteArrayFromStream(Stream sm)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                sm.CopyTo(ms);
+                return ms.ToArray();
+            }
+        }
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(string part_number, int version, string format_data, string itemlink, string license, string memo, [FromForm] IFormFile formFile)
+        public ActionResult Create(string name, string format_data, string itemlink, string license, string memo, [FromForm] IFormFile formFile)
         {
-
-            t_part t_part = new t_part();
-
-            if (formFile == null)
-            {
-                TempData["ResultMsg"] = "New File Attach Failed";
-                return View(t_part);
-            }
-
-            t_part.part_number = part_number;
-            t_part.file_data = GetByteArrayFromStream(formFile.OpenReadStream());
-            t_part.type_data = formFile.ContentType;
-            t_part.file_name = formFile.FileName;
-            t_part.file_length = formFile.Length;
-            t_part.format_data = format_data;
-
-
-            t_part.itemlink = itemlink;
-            t_part.license = license;
-            t_part.memo = memo;
-
-
-
-            t_part.create_user = User.Identity.Name;
-            t_part.create_datetime = DateTime.Now;
-            t_part.latest_update_user = User.Identity.Name;
-            t_part.latest_update_datetime = DateTime.Now;
-
-            t_part.id_part = 1 + (await _context.t_parts
-                                        .Where(t => t.id_part == t.id_part)
-                                        .MaxAsync(t => (long?)t.id_part) ?? 0);
-
-
-            ModelState.ClearValidationState(nameof(t_part));
-            if (!TryValidateModel(t_part, nameof(t_part)))
-            {
-                TempData["ResultMsg"] = "New File Attach Failed";
-                return View(t_part);
-            }
 
 
             try
             {
-                await _context.AddAsync(t_part);
-                await _context.SaveChangesAsync();
+                t_attachment t_attachment = new t_attachment();
+
+
+                t_attachment.name = name;
+                t_attachment.file_data = GetByteArrayFromStream(formFile.OpenReadStream());
+                t_attachment.type_data = formFile.ContentType;
+                t_attachment.file_name = formFile.FileName;
+                t_attachment.file_length = formFile.Length;
+                t_attachment.format_data = format_data;
+
+                t_attachment.itemlink = itemlink;
+                t_attachment.license = license;
+                t_attachment.memo = memo;
+
+                t_attachment.isActive = true;
+
+                
+                t_attachment.create_user = User.Identity.Name;
+                t_attachment.create_datetime = DateTime.Now;
+                t_attachment.latest_update_user = User.Identity.Name;
+                t_attachment.latest_update_datetime = DateTime.Now;
+
+
+                t_attachment.id_file = 1 + (_context.t_attachments
+                                            .Where(t => t.id_file == t.id_file)
+                                            .Max(t => (long?)t.id_file) ?? 0);
+
+                _context.Add(t_attachment);
+                _context.SaveChanges();
 
                 TempData["ResultMsg"] = "New File Attach Success";
-                return RedirectToAction(nameof(Details), new { id = t_part.id_part });
+                return RedirectToAction(nameof(Details), new { id = t_attachment.id_file });
 
             }
+
+
+
             catch (Exception e)
             {
                 //TempData["ResultMsg"] = e.Message.ToString();
@@ -155,12 +140,29 @@ namespace CMS_3D_Core.Controllers
 
             ViewBag.ResultMsg = TempData["ResultMsg"];
             return View();
-
         }
         /*
+        [HttpGet]
+        public ActionResult AttachFile()
+        {
+            ViewBag.ResultMsg = TempData["ResultMsg"];
+            return View();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="part_number"></param>
+        /// <param name="version"></param>
+        /// <param name="format_data"></param>
+        /// <param name="itemlink"></param>
+        /// <param name="license"></param>
+        /// <param name="memo"></param>
+        /// <param name="formFile"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create2(string part_number, int version, string format_data, string itemlink, string license, string memo, [FromForm] IFormFile formFile)
+        public ActionResult AttachFile(string part_number, int version, string format_data, string itemlink, string license, string memo, [FromForm] IFormFile formFile)
         {
             var parameter_id_part = new SqlParameter
             {
@@ -236,7 +238,7 @@ namespace CMS_3D_Core.Controllers
                 SqlDbType = System.Data.SqlDbType.NVarChar,
                 Value = memo,
             };
-
+            
 
             parameter_file_data.Value = formFile.OpenReadStream();
             parameter_type_data.Value = formFile.ContentType;
@@ -266,7 +268,7 @@ namespace CMS_3D_Core.Controllers
 
             }
 
-
+            
 
             catch (Exception e)
             {
@@ -277,14 +279,9 @@ namespace CMS_3D_Core.Controllers
             ViewBag.ResultMsg = TempData["ResultMsg"];
             return View();
         }
+        
         */
-
-
-        /// <summary>
-        /// show datails
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        // GET: ContentsEditFile/Details/5
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
@@ -303,7 +300,7 @@ namespace CMS_3D_Core.Controllers
             return View(t_part);
         }
 
-        
+
 
         // GET: ContentsEditFile/Edit/5
         public async Task<IActionResult> Edit(long? id)
@@ -351,7 +348,7 @@ namespace CMS_3D_Core.Controllers
                     //_context.Update(t_part);
                     await _context.SaveChangesAsync();
                     TempData["ResultMsg"] = "Edit Success";
-                    return RedirectToAction(nameof(Details),new { id = t_part.id_part });
+                    return RedirectToAction(nameof(Details), new { id = t_part.id_part });
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -381,7 +378,7 @@ namespace CMS_3D_Core.Controllers
             }
 
             var t_part = _context.t_parts.Find(id);
-                
+
             if (t_part == null)
             {
                 return NotFound();
@@ -407,11 +404,3 @@ namespace CMS_3D_Core.Controllers
         }
     }
 }
-
-
-
- 
- 
-
-
-

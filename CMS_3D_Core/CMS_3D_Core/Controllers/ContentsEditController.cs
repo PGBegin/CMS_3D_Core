@@ -253,20 +253,7 @@ namespace CMS_3D_Core.Controllers
             // 更新に失敗した場合、編集画面を再描画
             return View(id_article);
         }
-        /*
-        // POST: t_instance_part/Delete/5
-        [HttpPost, ActionName("DeleteProductView")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteProductViewConfirmed(long id_assy, long id_view)
-        {
-            t_view t_view = await _context.t_views.FindAsync(id_assy, id_view);
-            _context.t_views.Remove(t_view);
-            await _context.SaveChangesAsync();
 
-            TempData["ResultMsg"] = "Update Success";
-            return RedirectToAction("EditProductInstruction", new { id_assy = id_assy });
-        }
-        */
         //-------------------------------------------------------------------
         //アイテム追加
         // GET: t_assembly/Create
@@ -278,18 +265,6 @@ namespace CMS_3D_Core.Controllers
         // POST: t_assembly/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
- /*       [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateAssembly([Bind("id_assy,assy_name")] t_assembly t_assembly)
-        {
-            if (ModelState.IsValid)
-            {
-                await _context.AddAsync(t_assembly);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(t_assembly);
-        }*/
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -321,13 +296,10 @@ namespace CMS_3D_Core.Controllers
             t_instance_part.id_assy = id_assy.Value;
             t_instance_part.id_assyNavigation = await _context.t_assemblies.FindAsync(id_assy=id_assy);
 
-            //ViewData["id_assy"] = new SelectList(_context.t_assemblies, "id_assy", "assy_name");
             ViewData["id_part"] = new SelectList(_context.t_parts, "id_part", "part_number");
 
 
 
-
-            //List<SelectListItem> x =  new SelectList(_context.t_parts, "id_part", "part_number");
 
 
             return View(t_instance_part);

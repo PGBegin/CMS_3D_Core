@@ -95,7 +95,7 @@ namespace CMS_3D_Core.Controllers
 
             return Json(objCollection);
         }
-
+        
         /// <summary>
         /// GET: 選択されたオブジェクトファイルを返す関数
         /// </summary>
@@ -108,7 +108,8 @@ namespace CMS_3D_Core.Controllers
 
             return File(t_part.file_data, t_part.type_data, t_part.part_number);
         }
-
+        
+        
         /// <summary>
         /// GET: 選択されたオブジェクトファイルを返す関数
         /// </summary>
@@ -117,11 +118,12 @@ namespace CMS_3D_Core.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPartObjectFile(long id_part)
         {
+
             t_part t_part = await _context.t_parts.FindAsync(id_part);
 
             return File(t_part.file_data, t_part.type_data, t_part.part_number);
         }
-
+        
         private static vm_instruction vm_instruction(t_instruction todoItem) =>
             new vm_instruction
             {
@@ -217,7 +219,7 @@ namespace CMS_3D_Core.Controllers
 
             return t;
         }
-
+        
         [HttpGet]
         public async Task<IActionResult> GetPartObjectFile(long id_part)
         {
@@ -236,17 +238,5 @@ namespace CMS_3D_Core.Controllers
                 memo = todoItem.memo,
                 display_order = todoItem.display_order
             };
-        /*
-        private static vm_instruction vm_instance_part(t_article todoItem) =>
-            new vm_instruction
-            {
-                id_article = todoItem.id_article,
-                id_instruct = todoItem.id_instruct,
-                id_view = todoItem.id_view,
-                title = todoItem.title,
-                short_description = todoItem.short_description,
-                memo = todoItem.memo,
-                display_order = todoItem.display_order
-            };*/
     }
 }

@@ -27,13 +27,14 @@ namespace CMS_3D_Core.Models.EDM
         public virtual DbSet<m_status_article> m_status_articles { get; set; }
         public virtual DbSet<t_article> t_articles { get; set; }
         public virtual DbSet<t_assembly> t_assemblies { get; set; }
+        public virtual DbSet<t_attachment> t_attachments { get; set; }
         public virtual DbSet<t_instance_part> t_instance_parts { get; set; }
         public virtual DbSet<t_instruction> t_instructions { get; set; }
         public virtual DbSet<t_part> t_parts { get; set; }
         public virtual DbSet<t_part_display> t_part_displays { get; set; }
         public virtual DbSet<t_view> t_views { get; set; }
         public virtual DbSet<t_website_setting> t_website_settings { get; set; }
-        /*
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -41,7 +42,7 @@ namespace CMS_3D_Core.Models.EDM
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=db_data_core");
             }
-        }*/
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -197,6 +198,46 @@ namespace CMS_3D_Core.Models.EDM
                 entity.Property(e => e.assy_name).HasMaxLength(250);
             });
 
+            modelBuilder.Entity<t_attachment>(entity =>
+            {
+                entity.HasKey(e => e.id_file);
+
+                entity.ToTable("t_attachment");
+
+                entity.Property(e => e.id_file).ValueGeneratedNever();
+
+                entity.Property(e => e.create_user)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.file_name).HasMaxLength(255);
+
+                entity.Property(e => e.format_data).HasMaxLength(50);
+
+                entity.Property(e => e.isActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))")
+                    .HasComment("有効／無効");
+
+                entity.Property(e => e.itemlink).HasMaxLength(2048);
+
+                entity.Property(e => e.latest_update_user)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.license).HasMaxLength(255);
+
+                entity.Property(e => e.memo).HasMaxLength(2048);
+
+                entity.Property(e => e.name)
+                    .IsRequired()
+                    .HasMaxLength(255);
+
+                entity.Property(e => e.target_article_id).HasMaxLength(1000);
+
+                entity.Property(e => e.type_data).HasMaxLength(128);
+            });
+
             modelBuilder.Entity<t_instance_part>(entity =>
             {
                 entity.HasKey(e => new { e.id_assy, e.id_inst })
@@ -246,11 +287,15 @@ namespace CMS_3D_Core.Models.EDM
 
                 entity.Property(e => e.id_part).ValueGeneratedNever();
 
+                entity.Property(e => e.create_user).HasMaxLength(50);
+
                 entity.Property(e => e.file_name).HasMaxLength(255);
 
                 entity.Property(e => e.format_data).HasMaxLength(50);
 
                 entity.Property(e => e.itemlink).HasMaxLength(2048);
+
+                entity.Property(e => e.latest_update_user).HasMaxLength(50);
 
                 entity.Property(e => e.license).HasMaxLength(255);
 
