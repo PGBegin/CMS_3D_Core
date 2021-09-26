@@ -5,29 +5,59 @@
     ViewData["ShowGoogleAdSenseAdvertisement"] = "ON";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to 3D Aerospace Museum</h1>
+@*  copied from bootstrap examples*@
+<div class="bd-masthead mb-3" id="content">
+    <div class="container px-4 px-md-3">
+        <div class="row align-items-lg-center">
+            <div class="col-8 mx-auto col-md-4 order-md-2 col-lg-5">
+            </div>
+            <div class="col-md-8 order-md-1 col-lg-7 text-center text-md-start">
+                <h1 class="mb-3">Welcome to 3D Aerospace Museum</h1>
+                <p class="lead mb-4">
+                    This site introduces various aerospace products with using 3D models.
+                    <br />
+                    Learn aerospace products more easily and enjoyably with 3D models.
+                </p>
 
-    <h2>About Us</h2>
-    <p>
-        This site introduces various aerospace products with using 3D models.
+            </div>
+        </div>
 
-        <br />
-        Learn aerospace products more easily and enjoyably with 3D models.
 
-        <br />
-
-        @Html.ActionLink("Go to Contents", "Index", "ContentsView", null, null)
-
-    </p>
+    </div>
 </div>
 
 
+
+
+
+
+
+@*
+    <div class="text-center">
+        <h1 class="display-4">Welcome to 3D Aerospace Museum</h1>
+
+        <h2>About Us</h2>
+        <p>
+            This site introduces various aerospace products with using 3D models.
+
+            <br />
+            Learn aerospace products more easily and enjoyably with 3D models.
+
+            <br />
+
+            @Html.ActionLink("Go to Contents", "Index", "ContentsView", null, null)
+
+        </p>
+    </div>
+
+*@
+
 <div class="row">
-    <div class="col-md-3"></div>
+    <div class="col-md-2"></div>
 
 
-    <div class="col-md-6">
+    <div class="col-md-8">
+
 
 
         @await Component.InvokeAsync("ContentsList", null)

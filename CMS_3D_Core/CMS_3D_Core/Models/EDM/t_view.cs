@@ -28,6 +28,10 @@ namespace CMS_3D_Core.Models.EDM
         public double? obt_target_x { get; set; }
         public double? obt_target_y { get; set; }
         public double? obt_target_z { get; set; }
+        public string create_user { get; set; }
+        public DateTime? create_datetime { get; set; }
+        public string latest_update_user { get; set; }
+        public DateTime? latest_update_datetime { get; set; }
 
         public virtual t_article id_articleNavigation { get; set; }
         public virtual ICollection<t_instruction> t_instructions { get; set; }

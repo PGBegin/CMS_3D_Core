@@ -187,12 +187,13 @@ namespace CMS_3D_Core.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<vm_instruction>>> GetInstructionList(int id_article)
         {
-            var t = _context.t_instructions
+            var t = await _context.t_instructions
                         .Where(x => x.id_article == id_article)
-                        .Select(x => vm_instruction(x));
+                        .Select(x => vm_instruction(x))
+                        .ToListAsync();
 
 
-            return t.ToList();
+            return t;
         }
         //ContentsOperatorApis2/GetAssemblyObjectList/1
         /// <summary>

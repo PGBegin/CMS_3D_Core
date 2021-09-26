@@ -29,6 +29,11 @@ namespace CMS_3D_Core.Models.EDM
         public int? ambient_light_color { get; set; }
         public double? ambient_light_intensity { get; set; }
         public bool? gammaOutput { get; set; }
+        public string create_user { get; set; }
+        public DateTime? create_datetime { get; set; }
+        public string latest_update_user { get; set; }
+        public DateTime? latest_update_datetime { get; set; }
+        public long? id_attachment_for_eye_catch { get; set; }
 
         public virtual t_assembly id_assyNavigation { get; set; }
         public virtual m_status_article statusNavigation { get; set; }

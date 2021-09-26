@@ -21,16 +21,16 @@
             <thead>
                 <tr>
                     <th>
+                        @Html.DisplayNameFor(model => model.id_file)
+                    </th>
+                    <th>
                         @Html.DisplayNameFor(model => model.name)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.type_data)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.format_data)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.file_length)
+                        FileSize[MB]
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.itemlink)
@@ -39,18 +39,17 @@
                         @Html.DisplayNameFor(model => model.license)
                     </th>
                     <th>
+                        Create
+                    </th>
+                    <th>
+                        Latest Update
+                    </th>
+                    <th>
                         @Html.DisplayNameFor(model => model.isActive)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.create_datetime)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.latest_update_datetime)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.target_article_id)
                     </th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -58,39 +57,34 @@
                 {
                     <tr>
                         <td>
+                            <a asp-action="Details" asp-route-id="@item.id_file">@Html.DisplayFor(modelItem => item.id_file)</a>
+                        </td>
+                        <td>
                             @Html.DisplayFor(modelItem => item.name)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.type_data)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.format_data)
+                            @(((float)item.file_length.Value/1000000).ToString("0.00"))
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.file_length)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.itemlink)
+                            <a href="@item.itemlink">Data Source</a>
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.license)
                         </td>
                         <td>
+                            @item.create_datetime.ToString("MM/dd/yyyy")
+                        </td>
+                        <td>
+                            @item.latest_update_datetime.ToString("MM/dd/yyyy")
+                        </td>
+                        <td>
                             @Html.DisplayFor(modelItem => item.isActive)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.create_datetime)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.latest_update_datetime)
-                        </td>
-                        <td>
                             @Html.DisplayFor(modelItem => item.target_article_id)
-                        </td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.id_file">Edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.id_file">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.id_file">Delete</a>
                         </td>
                     </tr>
                 }

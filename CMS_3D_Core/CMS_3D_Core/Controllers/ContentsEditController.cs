@@ -126,6 +126,9 @@ namespace CMS_3D_Core.Controllers
                 catch(Exception e)
                 {
                     TempData["ResultMsg"] = "Update Failed";
+#if DEBUG
+                    TempData["ResultMsg"] = e.Message;
+#endif
                 }
             }
 
@@ -284,6 +287,9 @@ namespace CMS_3D_Core.Controllers
             }
             catch (Exception e)
             {
+#if DEBUG
+                TempData["ResultMsg"] = e.Message;
+#endif
 
             }
             return View(t_assembly);
@@ -294,7 +300,8 @@ namespace CMS_3D_Core.Controllers
         {
             t_instance_part t_instance_part = new t_instance_part();
             t_instance_part.id_assy = id_assy.Value;
-            t_instance_part.id_assyNavigation = await _context.t_assemblies.FindAsync(id_assy=id_assy);
+            t_instance_part.id_assyNavigation = await _context.t_assemblies.FindAsync(id_assy);
+
 
             ViewData["id_part"] = new SelectList(_context.t_parts, "id_part", "part_number");
 

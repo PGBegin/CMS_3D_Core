@@ -1,0 +1,88 @@
+﻿@model CMS_3D_Core.Models.EDM.t_attachment
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+
+<h1>AttachFile</h1>
+
+<p class="text-info">
+    @ViewBag.ResultMsg
+</p>
+
+<div>
+    <h4>Details</h4>
+    <hr />
+
+
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.file_data)
+        </dt>
+        <dd class="col-sm-12">
+            <img src="~/ContentsEditAttachment/GetAttachmentFile/@Model.id_file">
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.id_file)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.id_file)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.type_data)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.type_data)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.format_data)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.format_data)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.file_name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.file_name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.file_length)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.file_length)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.itemlink)
+        </dt>
+        <dd class="col-sm-10">
+            <a href="@Model.itemlink">@Model.itemlink</a>
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.license)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.license)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.memo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.memo)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a> |
+    <a asp-action="Edit" asp-route-id="@Model.id_file">Edit</a> |
+    <a asp-action="Delete" asp-route-id="@Model.id_file">Delete</a>
+</div>
+
+

@@ -61,7 +61,6 @@ namespace CMS_3D_Core.Controllers
             try
             {
                 long id = 1 + (await _context.t_assemblies
-                                        .Where(t => t.id_assy > 500)
                                         .MaxAsync(t => (long?)t.id_assy) ?? 0);
 
                 t_assembly.id_assy = id;
@@ -73,6 +72,9 @@ namespace CMS_3D_Core.Controllers
             catch(Exception e)
             {
 
+#if DEBUG
+                TempData["ResultMsg"] = e.Message;
+#endif
             }
             return View(t_assembly);
         }

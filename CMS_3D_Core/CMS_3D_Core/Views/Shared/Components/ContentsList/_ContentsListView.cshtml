@@ -6,49 +6,66 @@
     int index = 0;
 }
 
-@*
+
 <div class="row">
-    <div class="col-md-3"></div>
+    @{
+        foreach (var item in Model)
+        {
 
 
-    <div class="col-md-6">
-        *@
+            <div class="col-sm-6 col-md-4 col-xl-3 mb-3">
+                <a asp-controller="ContentsView" asp-action="DetailProductInstruction" asp-route-id_article="@item.id_article">
+                    @*<a href="/docs/5.0/examples/cheatsheet-rtl/" hreflang="ar">*@
+                    <img class="img-thumbnail mb-3"
+                         src="~/ContentsEditAttachment/GetAttachmentFile/@(item.id_attachment_for_eye_catch ?? 4)"
+                         alt=""
+                         width="480" height="300"
+                         loading="lazy">
+                    <h3 class="h5 mb-1">@item.title</h3>
+                    @*<h3 class="h5 mb-1">@(index + 1) @Html.ActionLink(item.title, "DetailProductInstruction", "ContentsView", new { id_article = item.id_article })</h3>*@
+                </a>
+                <p class="text-muted">@Html.DisplayFor(modelItem => item.short_description)</p>
+            </div>
 
-        <table class="table">
-            <tr>
-                <th>
-                    No
-                </th>
-                <th>
-                    Title
-                </th>
-                <th>
-                    Description
-                </th>
-            </tr>
-            @{
-                foreach (var item in Model)
-                {
-
-                    <tr>
-                        <td>
-                            @(index + 1)
-                        </td>
-                        <td>
-                            @Html.ActionLink(item.title, "DetailProductInstruction", "ContentsView", new { id_article = item.id_article })
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.short_description)
-                        </td>
-                    </tr>
-                    index += 1;
-                }
-            }
-
-        </table>
-
-        @*
-    </div>
+            index += 1;
+        }
+    }
 
 </div>
+
+
+@*
+
+<table class="table">
+    <tr>
+        <th>
+            No
+        </th>
+        <th>
+            Title
+        </th>
+        <th>
+            Description
+        </th>
+    </tr>
+    @{
+        foreach (var item in Model)
+        {
+
+            <tr>
+                <td>
+                    @(index + 1)
+                </td>
+                <td>
+                    @Html.ActionLink(item.title, "DetailProductInstruction", "ContentsView", new { id_article = item.id_article })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.short_description)
+                </td>
+            </tr>
+            index += 1;
+        }
+    }
+
+</table>
 *@

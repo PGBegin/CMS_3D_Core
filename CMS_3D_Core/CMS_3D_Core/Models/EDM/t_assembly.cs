@@ -15,6 +15,10 @@ namespace CMS_3D_Core.Models.EDM
 
         public long id_assy { get; set; }
         public string assy_name { get; set; }
+        public string create_user { get; set; }
+        public DateTime? create_datetime { get; set; }
+        public string latest_update_user { get; set; }
+        public DateTime? latest_update_datetime { get; set; }
 
         public virtual ICollection<t_article> t_articles { get; set; }
         public virtual ICollection<t_instance_part> t_instance_parts { get; set; }

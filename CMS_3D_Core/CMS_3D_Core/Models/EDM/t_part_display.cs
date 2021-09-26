@@ -11,5 +11,9 @@ namespace CMS_3D_Core.Models.EDM
         public long id_assy { get; set; }
         public long id_inst { get; set; }
         public long id_part { get; set; }
+        public string create_user { get; set; }
+        public DateTime? create_datetime { get; set; }
+        public string latest_update_user { get; set; }
+        public DateTime? latest_update_datetime { get; set; }
     }
 }

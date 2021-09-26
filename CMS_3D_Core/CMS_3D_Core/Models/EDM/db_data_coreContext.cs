@@ -36,12 +36,12 @@ namespace CMS_3D_Core.Models.EDM
         public virtual DbSet<t_website_setting> t_website_settings { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
+        {/*
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=db_data_core");
-            }
+            }*/
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -165,6 +165,10 @@ namespace CMS_3D_Core.Models.EDM
 
                 entity.Property(e => e.id_article).ValueGeneratedNever();
 
+                entity.Property(e => e.create_user).HasMaxLength(50);
+
+                entity.Property(e => e.latest_update_user).HasMaxLength(50);
+
                 entity.Property(e => e.meta_category).HasMaxLength(250);
 
                 entity.Property(e => e.meta_description).HasMaxLength(550);
@@ -196,6 +200,10 @@ namespace CMS_3D_Core.Models.EDM
                 entity.Property(e => e.id_assy).ValueGeneratedNever();
 
                 entity.Property(e => e.assy_name).HasMaxLength(250);
+
+                entity.Property(e => e.create_user).HasMaxLength(50);
+
+                entity.Property(e => e.latest_update_user).HasMaxLength(50);
             });
 
             modelBuilder.Entity<t_attachment>(entity =>
@@ -245,6 +253,10 @@ namespace CMS_3D_Core.Models.EDM
 
                 entity.ToTable("t_instance_part");
 
+                entity.Property(e => e.create_user).HasMaxLength(50);
+
+                entity.Property(e => e.latest_update_user).HasMaxLength(50);
+
                 entity.HasOne(d => d.id_assyNavigation)
                     .WithMany(p => p.t_instance_parts)
                     .HasForeignKey(d => d.id_assy)
@@ -263,6 +275,10 @@ namespace CMS_3D_Core.Models.EDM
                 entity.HasKey(e => new { e.id_article, e.id_instruct });
 
                 entity.ToTable("t_instruction");
+
+                entity.Property(e => e.create_user).HasMaxLength(50);
+
+                entity.Property(e => e.latest_update_user).HasMaxLength(50);
 
                 entity.Property(e => e.title).HasMaxLength(128);
 
@@ -315,6 +331,10 @@ namespace CMS_3D_Core.Models.EDM
                 entity.HasKey(e => new { e.id_instruct, e.id_assy, e.id_inst });
 
                 entity.ToTable("t_part_display");
+
+                entity.Property(e => e.create_user).HasMaxLength(50);
+
+                entity.Property(e => e.latest_update_user).HasMaxLength(50);
             });
 
             modelBuilder.Entity<t_view>(entity =>
@@ -322,6 +342,10 @@ namespace CMS_3D_Core.Models.EDM
                 entity.HasKey(e => new { e.id_article, e.id_view });
 
                 entity.ToTable("t_view");
+
+                entity.Property(e => e.create_user).HasMaxLength(50);
+
+                entity.Property(e => e.latest_update_user).HasMaxLength(50);
 
                 entity.Property(e => e.title).HasMaxLength(128);
 
@@ -340,7 +364,11 @@ namespace CMS_3D_Core.Models.EDM
 
                 entity.Property(e => e.title).HasMaxLength(50);
 
+                entity.Property(e => e.create_user).HasMaxLength(50);
+
                 entity.Property(e => e.data).HasMaxLength(2000);
+
+                entity.Property(e => e.latest_update_user).HasMaxLength(50);
 
                 entity.Property(e => e.memo).HasMaxLength(255);
             });

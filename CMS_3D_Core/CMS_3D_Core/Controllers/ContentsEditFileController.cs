@@ -151,6 +151,9 @@ namespace CMS_3D_Core.Controllers
             {
                 //TempData["ResultMsg"] = e.Message.ToString();
                 TempData["ResultMsg"] = "New File Attach Failed";
+#if DEBUG
+                TempData["ResultMsg"] = e.Message;
+#endif
             }
 
             ViewBag.ResultMsg = TempData["ResultMsg"];
