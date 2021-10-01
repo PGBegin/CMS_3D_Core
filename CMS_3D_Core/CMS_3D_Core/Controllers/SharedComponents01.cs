@@ -33,7 +33,7 @@ namespace CMS_3D_Core.Controllers
                                 .Where(x => x.statusNavigation.is_approved == true)
                                 .ToListAsync();
 
-            return View("_ContentsListView", t);
+            return View("_ContentsList", t);
         }
     }
 
@@ -110,6 +110,48 @@ namespace CMS_3D_Core.Controllers
         }
     }
 
+
+    /// <summary>
+    /// Edit View
+    /// </summary>
+    public class EditProductViewViewComponent : ViewComponent
+    {
+        private readonly db_data_coreContext _context;
+
+        public EditProductViewViewComponent(db_data_coreContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IViewComponentResult> InvokeAsync(long id_article)
+        {
+
+            var t_article = await _context.t_articles.FindAsync(id_article);
+
+            return View("_EditProductView", t_article);
+        }
+    }
+
+    /// <summary>
+    /// Edit Instruction
+    /// </summary>
+    public class EditProductInstructionViewComponent : ViewComponent
+    {
+        private readonly db_data_coreContext _context;
+
+        public EditProductInstructionViewComponent(db_data_coreContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IViewComponentResult> InvokeAsync(long id_article)
+        {
+
+            var t_article = await _context.t_articles.FindAsync(id_article);
+
+            return View("_EditProductInstruction", t_article);
+        }
+    }
     /// <summary>
     /// Google Analytics情報を表示する
     /// </summary>

@@ -1,0 +1,126 @@
+﻿@model CMS_3D_Core.Models.EDM.t_article
+
+
+<div id="view_data">
+
+    <form asp-action="EditProductView">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group row ">
+
+
+            @Html.Hidden("id_article", 0, new { id = "view_id_article" })
+            @*<input type="hidden" asp-for="id_article" id="view_id_article" />*@
+
+            <div class="col-sm-2">
+                @Html.Label("id_view", "ID View", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <div class="px-3">
+                    @Html.TextBox("id_view", "", new { id = "view_id_view", @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                @Html.Label("title", "ビュータイトル(title)", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <div class="px-3">
+                    @Html.TextBox("title", "", new { id = "view_title", @class = "form-control" })
+                </div>
+            </div>
+
+        </div>
+
+        <table class="table">
+            <tr>
+                <th>
+                    Elementname
+                </th>
+                <th>
+                    X
+                </th>
+                <th>
+                    Y
+                </th>
+                <th>
+                    Z
+                </th>
+                <th>
+                    W
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    Camera Position
+                </td>
+                <td>
+                    <input id="cam_pos_x" name="cam_pos_x" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    <input id="cam_pos_y" name="cam_pos_y" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    <input id="cam_pos_z" name="cam_pos_z" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    --
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Camera Look At
+                </td>
+                <td>
+                    <input id="cam_lookat_x" name="cam_lookat_x" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    <input id="cam_lookat_y" name="cam_lookat_y" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    <input id="cam_lookat_z" name="cam_lookat_z" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    --
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Camera Quaternion
+                </td>
+                <td>
+                    <input id="cam_quat_x" name="cam_quat_x" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    <input id="cam_quat_y" name="cam_quat_y" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    <input id="cam_quat_z" name="cam_quat_z" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    <input id="cam_quat_w" name="cam_quat_w" type="text" value="" class="form-control" />
+                </td>
+            </tr>
+            <tr>
+            <tr>
+                <td>
+                    Orbit Control Target
+                </td>
+                <td>
+                    <input id="obt_target_x" name="obt_target_x" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    <input id="obt_target_y" name="obt_target_y" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    <input id="obt_target_z" name="obt_target_z" type="text" value="" class="form-control" />
+                </td>
+                <td>
+                    --
+                </td>
+            </tr>
+        </table>
+
+
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" onclick="return confirm('視点情報を更新しますか？')" />
+        </div>
+    </form>
+
+</div>

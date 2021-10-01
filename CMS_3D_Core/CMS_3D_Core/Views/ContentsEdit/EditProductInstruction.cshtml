@@ -11,270 +11,53 @@
 </p>
 
 
-
-
 <div class="row">
 
 
-    <div class="col-md-6">
+    <div class="col-md-5">
 
+        @*モデルの表示領域*@
         <div id="model_screen">
-            @*モデルの表示領域*@
         </div>
-        @* 表示専用ビューならこうなってる
-
-        <div id="instruction_data">
-            <h4 id="instruction_title"></h4>
-            <div id="instruction_short_description">
-
-            </div>
-        </div>
-        *@
 
         <div class="progress" id="div_progressbar_modeldl">
             <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" id="progressbar_modeldl"></div>
         </div>
         <hr />
 
-
         <div id="control_panel_zone">
         </div>
 
+        @*表示用ビューならここにインストラクションの表示領域がある*@
 
-        <hr />
-        <h4> Instruction Edit</h4>
-        <div id="instruction_data">
-
-            <form asp-action="EditProductInstruction">
-                <div class="form-group row ">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                    @*インストラクションの文書表示領域*@
-                    @Html.Hidden("id_article", 0, new { id = "instruction_id_article" })
-
-
-                    <div class="col-sm-2">
-                        @Html.Label("id_instruct", "Indstuction Id", htmlAttributes: new { @class = "control-label font-weight-bold" })
-                        <div class="px-3">
-                            @Html.TextBox("id_instruct", "", new { id = "instruction_id_instruct", @class = "form-control" })
-                        </div>
-                    </div>
-
-                    <div class="col-sm-3">
-                        @Html.Label("title", "Title(Button Name)", htmlAttributes: new { @class = "control-label font-weight-bold" })
-                        <div class="px-3">
-                            @Html.TextBox("title", "", new { id = "instruction_title", @class = "form-control" })
-                        </div>
-                    </div>
-
-                    <div class="col-sm-2">
-                        @Html.Label("id_view", "Id View", htmlAttributes: new { @class = "control-label font-weight-bold" })
-                        <div class="px-3">
-                            @Html.TextBox("id_view", "", new { id = "instruction_id_view", @class = "form-control" })
-                        </div>
-                    </div>
-
-                    <div class="col-sm-2">
-                        @Html.Label("display_order", "Display Order", htmlAttributes: new { @class = "control-label font-weight-bold" })
-                        <div class="px-3">
-                            @Html.TextBox("display_order", "", new { id = "instruction_display_order", @class = "form-control" })
-                        </div>
-                    </div>
-
-                    <div class="col-sm-12">
-                        @Html.Label("short_description", "Description", htmlAttributes: new { @class = "control-label font-weight-bold" })
-                        <div class="px-3">
-                            @Html.TextArea("short_description", null, new { id = "instruction_short_description", rows = "10", @class = "form-control" })
-                        </div>
-                    </div>
-
-                    <div class="col-sm-12">
-                        @Html.Label("memo", "MEMO", htmlAttributes: new { @class = "control-label font-weight-bold" })
-                        <div class="px-3">
-                            @Html.TextArea("memo", null, new { id = "instruction_memo", rows = "10", @class = "form-control" })
-                        </div>
-                    </div>
-
-
-                    <div class="col-sm-8">
-                        @Html.Label("", "", htmlAttributes: new { @class = "control-label font-weight-bold" })
-                        <div class="px-3">
-                            <input type="submit" value="Save" class="btn btn-primary" onclick="return confirm('説明文を更新しますか？')" />
-                        </div>
-                    </div>
-
-                </div>
-            </form>
-
-
-            <form asp-action="DeleteProductInstruction">
-                <div class="form-group row ">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                    @*インストラクションの文書表示領域*@
-                    @Html.Hidden("id_article", 0, new { id = "instruction_id_article_delete" })
-                    @Html.Hidden("id_instruct", 0, new { id = "instruction_id_instruct_delete" })
-
-
-                    <div class="col-sm-8">
-                        @Html.Label("", "", htmlAttributes: new { @class = "control-label font-weight-bold" })
-                        <div class="px-3">
-                            <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('説明文を更新しますか？')" />
-                        </div>
-                    </div>
-
-                </div>
-            </form>
-
-
-        </div>
-
-
-        <hr />
     </div>
 
 
-    <div class="col-md-4">
+    <div class="col-md-6">
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <a class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" href="#nav-viewinfo">View</a>
+                <a class="nav-link active" id="nav-instruction-tab" data-bs-toggle="tab" href="#nav-instruction">Instruction</a>
+                <a class="nav-link" id="nav-home-tab" data-bs-toggle="tab" href="#nav-viewinfo">View</a>
                 <a class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" href="#nav-articlebase">Article Base</a>
+                <a class="nav-link" id="nav-thumbnail-tab" data-bs-toggle="tab" href="#nav-thumbnail">Thumbnail</a>
             </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active" id="nav-viewinfo">
+            <div class="tab-pane fade show active" id="nav-instruction">
+                @await Component.InvokeAsync("EditProductInstruction", new { id_article = Model.id_article })
+            </div>
+
+            <div class="tab-pane fade" id="nav-viewinfo">
 
                 <h4> View Info and Edit</h4>
 
-                <div id="view_data">
-
-                    <form asp-action="EditProductView">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                        <div class="form-group row ">
-
-
-                            @Html.Hidden("id_article", 0, new { id = "view_id_article" })
-
-                            <div class="col-sm-2">
-                                @Html.Label("id_view", "ID View", htmlAttributes: new { @class = "control-label font-weight-bold" })
-                                <div class="px-3">
-                                    @Html.TextBox("id_view", "", new { id = "view_id_view", @class = "form-control" })
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                @Html.Label("title", "ビュータイトル(title)", htmlAttributes: new { @class = "control-label font-weight-bold" })
-                                <div class="px-3">
-                                    @Html.TextBox("title", "", new { id = "view_title", @class = "form-control" })
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <table class="table">
-                            <tr>
-                                <th>
-                                    Elementname
-                                </th>
-                                <th>
-                                    X
-                                </th>
-                                <th>
-                                    Y
-                                </th>
-                                <th>
-                                    Z
-                                </th>
-                                <th>
-                                    W
-                                </th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Camera Position
-                                </td>
-                                <td>
-                                    <input id="cam_pos_x" name="cam_pos_x" type="text" value="" class="form-control" />
-                                </td>
-                                <td>
-                                    <input id="cam_pos_y" name="cam_pos_y" type="text" value="" class="form-control" />
-                                </td>
-                                <td>
-                                    <input id="cam_pos_z" name="cam_pos_z" type="text" value="" class="form-control" />
-                                </td>
-                                <td>
-                                    --
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Camera Look At
-                                </td>
-                                <td>
-                                    <input id="cam_lookat_x" name="cam_lookat_x" type="text" value="" class="form-control" />
-                                </td>
-                                <td>
-                                    <input id="cam_lookat_y" name="cam_lookat_y" type="text" value="" class="form-control" />
-                                </td>
-                                <td>
-                                    <input id="cam_lookat_z" name="cam_lookat_z" type="text" value="" class="form-control" />
-                                </td>
-                                <td>
-                                    --
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Camera Quaternion
-                                </td>
-                                <td>
-                                    <input id="cam_quat_x" name="cam_quat_x" type="text" value="" class="form-control" />
-                                </td>
-                                <td>
-                                    <input id="cam_quat_y" name="cam_quat_y" type="text" value="" class="form-control" />
-                                </td>
-                                <td>
-                                    <input id="cam_quat_z" name="cam_quat_z" type="text" value="" class="form-control" />
-                                </td>
-                                <td>
-                                    <input id="cam_quat_w" name="cam_quat_w" type="text" value="" class="form-control" />
-                                </td>
-                            </tr>
-                            <tr>
-                            <tr>
-                                <td>
-                                    Orbit Control Target
-                                </td>
-                                <td>
-                                    <input id="obt_target_x" name="obt_target_x" type="text" value="" class="form-control" />
-                                </td>
-                                <td>
-                                    <input id="obt_target_y" name="obt_target_y" type="text" value="" class="form-control" />
-                                </td>
-                                <td>
-                                    <input id="obt_target_z" name="obt_target_z" type="text" value="" class="form-control" />
-                                </td>
-                                <td>
-                                    --
-                                </td>
-                            </tr>
-                        </table>
-
-
-                        <div class="form-group">
-                            <input type="submit" value="Save" class="btn btn-primary" onclick="return confirm('視点情報を更新しますか？')" />
-                        </div>
-                    </form>
-
-                    @Html.ActionLink("View", "Index", "t_view", new { id_article = Model.id_article })
-                </div>
-
+                @await Component.InvokeAsync("EditProductView", new { id_article = Model.id_article })
 
 
                 @await Component.InvokeAsync("ViewList", new { id_article = Model.id_article })
 
 
+                @Html.ActionLink("View", "Index", "t_view", new { id_article = Model.id_article })
 
 
             </div>
@@ -283,6 +66,36 @@
                 <h4> View Info and Edit</h4>
 
                 @await Component.InvokeAsync("EditArticle", new { id_article = Model.id_article })
+
+            </div>
+            <div class="tab-pane fade" id="nav-thumbnail">
+
+                <h4>Thumbnail</h4>
+
+                <div id="view_capture">
+                    @*モデルの表示領域*@
+                </div>
+
+
+                @*-----------------------------------------------------------------------------------------------------*@
+
+                <button id="screenshot" type="button" onclick="GetScreenshotForUpload('view_capture', 'getimage', 'up_img_input')" class="btn btn-primary">Save...</button>
+                <div class="row">
+                    <div class="col-md-4">
+                        <form asp-action="UpdateThumbnail" enctype="multipart/form-data">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                            <input type="hidden" asp-for="id_article" />
+                            <input type="hidden" name="imgfilebin" id="up_img_input" />
+
+                            <div class="form-group">
+                                <input type="submit" value="Create" class="btn btn-primary" id="up_img_submit" disabled />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                @*----------------------------------------------------------------------------------------------------*@
 
             </div>
         </div>
@@ -298,6 +111,7 @@
 <script src="~/lib/three/OrbitControls.js"></script>
 <script src="~/lib/marked/marked.js"></script>
 <script src="~/js/operation_3d_instructor.js"></script>
+<script src="~/js/GetScreenshotForUpload.js"></script>
 
 
 <script type="text/javascript">
@@ -569,6 +383,5 @@
         document.getElementById('obt_target_z').value = Math.floor(controls.target.z * 100) / 100;
 
     }
-
 
 </script>

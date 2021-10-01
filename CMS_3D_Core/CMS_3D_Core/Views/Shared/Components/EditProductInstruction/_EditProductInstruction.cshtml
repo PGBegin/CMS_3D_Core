@@ -1,0 +1,91 @@
+﻿@model CMS_3D_Core.Models.EDM.t_article
+
+@*<h4> Instruction Edit</h4>*@
+<div id="instruction_data">
+
+    <form asp-c asp-action="EditProductInstruction">
+        <div class="form-group row ">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            @*Edit Instruction*@
+            @Html.Hidden("id_article", 0, new { id = "instruction_id_article" })
+
+
+            <div class="col-sm-3">
+                @Html.Label("id_instruct", "Indstuction Id", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <div class="px-3">
+                    @Html.TextBox("id_instruct", "", new { id = "instruction_id_instruct", @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                @Html.Label("title", "Title(Button Name)", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <div class="px-3">
+                    @Html.TextBox("title", "", new { id = "instruction_title", @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="col-sm-2">
+                @Html.Label("id_view", "Id View", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <div class="px-3">
+                    @Html.TextBox("id_view", "", new { id = "instruction_id_view", @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                @Html.Label("display_order", "Display Order", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <div class="px-3">
+                    @Html.TextBox("display_order", "", new { id = "instruction_display_order", @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="form-group row ">
+            <div class="col-sm-12">
+                @Html.Label("short_description", "Description", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <div class="px-3">
+                    @Html.TextArea("short_description", null, new { id = "instruction_short_description", rows = "10", @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="col-sm-12">
+                @Html.Label("memo", "MEMO", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <div class="px-3">
+                    @Html.TextArea("memo", null, new { id = "instruction_memo", rows = "10", @class = "form-control" })
+                </div>
+            </div>
+
+
+            <div class="col-sm-8">
+                @Html.Label("", "", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <div class="px-3">
+                    <input type="submit" value="Save" class="btn btn-primary" onclick="return confirm('Are you update Instruction?')" />
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+
+    <form asp-action="DeleteProductInstruction">
+        <div class="form-group row ">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            @Html.Hidden("id_article", 0, new { id = "instruction_id_article_delete" })
+            @Html.Hidden("id_instruct", 0, new { id = "instruction_id_instruct_delete" })
+
+
+            <div class="col-sm-8">
+                @Html.Label("", "", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <div class="px-3">
+                    <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Are you sure delete Instruction?')" />
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+
+</div>

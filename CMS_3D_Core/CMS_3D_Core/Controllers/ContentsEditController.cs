@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using CMS_3D_Core.Models.EDM;
 
 
+using System.IO;
 
 
 
@@ -29,8 +30,6 @@ namespace CMS_3D_Core.Controllers
             _context = context;
         }
 
-        // GET: Use3DmodelTest
-        //        public ActionResult Index()
         /// <summary>
         /// Show Index of Edit Items Of Articles
         /// </summary>
@@ -256,6 +255,92 @@ namespace CMS_3D_Core.Controllers
             // 更新に失敗した場合、編集画面を再描画
             return View(id_article);
         }
+
+        public static byte[] GetByteArrayFromStream(Stream sm)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                sm.CopyTo(ms);
+                return ms.ToArray();
+            }
+        }
+
+        // POST: Role/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateThumbnail(long id_article, string imgfilebin)
+        {/*
+            if (formFile == null)
+            {
+                TempData["ResultMsg"] = "New File Attach Failed";
+                ViewBag.ResultMsg = TempData["ResultMsg"];
+                return View();
+            }*/
+
+            try
+            {
+                t_attachment t_attachment = new t_attachment();
+
+
+                t_attachment.name = "Thumbnail_"+ id_article;
+                // ?? System.IO.Path.GetFileNameWithoutExtension(formFile.FileName);
+                //                t_attachment.file_data = GetByteArrayFromStream(formFile.OpenReadStream());
+                //t_attachment.file_data = System.Text.Encoding.ASCII.GetBytes(imgfilebin);
+                //string result = System.Text.RegularExpressions.Regex.Replace(imgfilebin, @"^data:image/[a-zA-Z]+;base64,", string.Empty);
+                string result = imgfilebin.Substring(imgfilebin.IndexOf(",") + 1);
+                t_attachment.file_data = GetByteArrayFromStream(new System.IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(result)));
+                t_attachment.file_data = Convert.FromBase64String(result);
+                t_attachment.type_data = "image/jpeg";// formFile.ContentType;
+                t_attachment.file_name = t_attachment.name + ".jpg";// formFile.FileName;
+                t_attachment.file_length = result.Length;// formFile.Length;
+                t_attachment.format_data = "jpeg";// format_data ?? System.IO.Path.GetExtension(formFile.FileName);
+                
+                //t_attachment.itemlink = itemlink;
+                //t_attachment.license = license;
+                //t_attachment.memo = memo;
+
+                t_attachment.isActive = true;
+
+
+                t_attachment.create_user = User.Identity.Name;
+                t_attachment.create_datetime = DateTime.Now;
+                t_attachment.latest_update_user = User.Identity.Name;
+                t_attachment.latest_update_datetime = DateTime.Now;
+
+
+                t_attachment.id_file = 1 + (_context.t_attachments
+                                            .Where(t => t.id_file == t.id_file)
+                                            .Max(t => (long?)t.id_file) ?? 0);
+
+                _context.Add(t_attachment);
+
+                t_article t_article = _context.t_articles.Find(id_article);
+
+                t_article.id_attachment_for_eye_catch = t_attachment.id_file;
+
+
+                _context.SaveChanges();
+
+                TempData["ResultMsg"] = "New Eye Catch Setting Success";
+                return RedirectToAction("EditProductInstruction", new { id_article = id_article });
+
+            }
+
+
+
+            catch (Exception e)
+            {
+                TempData["ResultMsg"] = "New Eye Catch Setting Failed";
+#if DEBUG
+                TempData["ResultMsg"] = e.Message;
+#endif
+            }
+
+            ViewBag.ResultMsg = TempData["ResultMsg"];
+            return View();
+        }
+
+
 
         //-------------------------------------------------------------------
         //アイテム追加
