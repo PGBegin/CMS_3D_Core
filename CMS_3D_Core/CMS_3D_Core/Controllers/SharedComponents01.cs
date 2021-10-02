@@ -126,9 +126,13 @@ namespace CMS_3D_Core.Controllers
         public async Task<IViewComponentResult> InvokeAsync(long id_article)
         {
 
-            var t_article = await _context.t_articles.FindAsync(id_article);
+            //var t_article = await _context.t_articles.FindAsync(id_article);
 
-            return View("_EditProductView", t_article);
+
+            var t = (await _context.t_instructions.Where(m => m.id_article == id_article).OrderBy(m => m.display_order).FirstOrDefaultAsync()) ?? new t_instruction() { id_view = 0 };
+            var t2 = await _context.t_views.Where(m => m.id_article == id_article & m.id_view == t.id_view).FirstOrDefaultAsync();
+
+            return View("_EditProductView", t2);
         }
     }
 
@@ -147,9 +151,12 @@ namespace CMS_3D_Core.Controllers
         public async Task<IViewComponentResult> InvokeAsync(long id_article)
         {
 
-            var t_article = await _context.t_articles.FindAsync(id_article);
+            //var t_article = await _context.t_articles.FindAsync(id_article);
 
-            return View("_EditProductInstruction", t_article);
+            var t = await _context.t_instructions.Where(m => m.id_article == id_article).OrderBy(m => m.display_order).FirstOrDefaultAsync();
+
+            return View("_EditProductInstruction", t);
+            //return View("_EditProductInstruction", t_article);
         }
     }
     /// <summary>

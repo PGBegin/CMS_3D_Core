@@ -93,7 +93,7 @@ namespace CMS_3D_Core.Controllers
                 //return RedirectToAction(nameof(Index));
 
                 TempData["ResultMsg"] = "AddNewArticle Success";
-                return RedirectToAction("EditProductInstruction", "ContentsEdit", new { id_article = t_article.id_article });
+                return RedirectToAction("EditArticleWholeContents", "ContentsEdit", new { id_article = t_article.id_article });
 
             }
             catch(Exception e)
@@ -152,7 +152,7 @@ namespace CMS_3D_Core.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(ContentsEditController.EditProductInstruction), new { controller = "ContentsEdit", id_article = t_article.id_article });
+                return RedirectToAction(nameof(ContentsEditController.EditArticleWholeContents), new { controller = "ContentsEdit", id_article = t_article.id_article });
             }
             ViewData["id_assy"] = new SelectList(_context.t_assemblies, "id_assy", "assy_name", t_article.id_assy);
             ViewData["status"] = new SelectList(_context.m_status_articles, "id", "name", t_article.status);

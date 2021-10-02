@@ -73,7 +73,7 @@
                 <h4>Thumbnail</h4>
 
                 <div id="view_capture">
-                    @*モデルの表示領域*@
+                    @*キャプチャーの表示領域*@
                 </div>
 
 
@@ -197,21 +197,21 @@
 
         //カメラ位置の変更
         //---------------------
-        var i = instruction_gp[id_instruct].id_view;
+        let i = instruction_gp[id_instruct].id_view;
 
 
         // 視点のアニメーションによる移行
         // ------------------------------------------------------------------------------------------------
-        var counter = 0;
-        var step = 75;
+        let counter = 0;
+        let step = 75;
 
-        var pitch_px = (view_object[i].cam_pos_x - camera_main.position.x) / step;
-        var pitch_py = (view_object[i].cam_pos_y - camera_main.position.y) / step;
-        var pitch_pz = (view_object[i].cam_pos_z - camera_main.position.z) / step;
+        let pitch_px = (view_object[i].cam_pos_x - camera_main.position.x) / step;
+        let pitch_py = (view_object[i].cam_pos_y - camera_main.position.y) / step;
+        let pitch_pz = (view_object[i].cam_pos_z - camera_main.position.z) / step;
 
-        var pitch_tx = (view_object[i].obt_target_x - controls.target.x) / step;
-        var pitch_ty = (view_object[i].obt_target_y - controls.target.y) / step;
-        var pitch_tz = (view_object[i].obt_target_z - controls.target.z) / step;
+        let pitch_tx = (view_object[i].obt_target_x - controls.target.x) / step;
+        let pitch_ty = (view_object[i].obt_target_y - controls.target.y) / step;
+        let pitch_tz = (view_object[i].obt_target_z - controls.target.z) / step;
 
 
         function flight() {
@@ -242,6 +242,18 @@
         }
         flight();
 
+        update_instruction_statements(id_instruct);
+
+    }
+
+
+    //指定されたIDのインストラクションに合わせて、文書類を更新する
+    function update_instruction_statements(id_instruct) {
+        'use strict';
+
+
+
+        let i = instruction_gp[id_instruct].id_view;
 
         //インストラクション(編集)関連の標記
         document.getElementById('instruction_title').value = instruction_gp[id_instruct].title;
@@ -265,23 +277,21 @@
 
 
         //ボタンの色
-        var children = document.getElementById('control_panel_zone').children;
-        var buttunid = 'btn_inst' + id_instruct;
+        let children = document.getElementById('control_panel_zone').children;
+        let buttunid = 'btn_inst' + id_instruct;
         for (var j = 0; j < children.length; j++) {
 
             if ("button".localeCompare(children[j].tagName, {}, { sensitivity: "base" }) == 0) {
 
                 if (buttunid.localeCompare(children[j].id, {}, { sensitivity: "base" }) == 0) {
-                    children[j].classList.replace('btn-outline-primary','btn-primary');
+                    children[j].classList.replace('btn-outline-primary', 'btn-primary');
 
                 } else {
                     children[j].classList.replace('btn-primary', 'btn-outline-primary');
                 }
             }
         }
-
     }
-
 
     //表示関連を初期化する
     function initial_setup_and_render() {
@@ -312,11 +322,13 @@
 
 
         @{
+            long id_instx = (Model.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction { id_instruct = 0 }).id_instruct;
             //instructionがなかったらidは0
             int idv = (Model.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction { id_view = 0 }).id_view;
             CMS_3D_Core.Models.EDM.t_view t_view = Model.t_views.FirstOrDefault(m => m.id_view == idv) ?? new CMS_3D_Core.Models.EDM.t_view { cam_pos_x = 10, cam_pos_y = 10, cam_pos_z = 10, obt_target_x = 0, obt_target_y = 0, obt_target_z = 0 };
         }
-
+        console.log(@id_instx);
+        if (@id_instx == 0) {
         camera_main.position.x = @t_view.cam_pos_x;
         camera_main.position.y = @t_view.cam_pos_y;
         camera_main.position.z = @t_view.cam_pos_z;
@@ -324,6 +336,11 @@
         controls.target.x = @t_view.obt_target_x;
         controls.target.y = @t_view.obt_target_y;
         controls.target.z = @t_view.obt_target_z;
+
+        } else {
+            transition_instruction(@id_instx);
+        }
+
         //ガンマ値をtrueに。
         //(truee.jsで一部のアイテムが暗くなるのを軽減)
         @if(Model.gammaOutput==true){
@@ -362,6 +379,7 @@
         //scene.add(lightHelper);
     };
 
+    //ビュー情報を更新する
     function update_viewinfo() {
 
 

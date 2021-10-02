@@ -1,4 +1,4 @@
-﻿@model CMS_3D_Core.Models.EDM.t_article
+﻿@model CMS_3D_Core.Models.EDM.t_view
 
 
 <div id="view_data">
@@ -9,20 +9,30 @@
         <div class="form-group row ">
 
 
-            @Html.Hidden("id_article", 0, new { id = "view_id_article" })
-            @*<input type="hidden" asp-for="id_article" id="view_id_article" />*@
+            <input type="hidden" asp-for="id_article" id="view_id_article" />
+            @*@Html.Hidden("id_article", 0, new { id = "view_id_article" })*@
 
             <div class="col-sm-2">
-                @Html.Label("id_view", "ID View", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                @*@Html.Label("id_view", "ID View", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                *@
+                <label asp-for="id_view" class="control-label font-weight-bold"></label>
                 <div class="px-3">
-                    @Html.TextBox("id_view", "", new { id = "view_id_view", @class = "form-control" })
+                    @*@Html.TextBox("id_view", "", new { id = "view_id_view", @class = "form-control" })
+                    *@
+                    <input asp-for="id_view" class="form-control" id="view_id_view" />
+                    <span asp-validation-for="id_view" class="text-danger"></span>
                 </div>
             </div>
 
             <div class="col-sm-6">
-                @Html.Label("title", "ビュータイトル(title)", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                @*@Html.Label("title", "ビュータイトル(title)", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                *@
+                <label asp-for="title" class="control-label font-weight-bold"></label>
                 <div class="px-3">
-                    @Html.TextBox("title", "", new { id = "view_title", @class = "form-control" })
+                    @*@Html.TextBox("title", "", new { id = "view_title", @class = "form-control" })
+                    *@
+                    <input asp-for="title" class="form-control" id="view_title" />
+                    <span asp-validation-for="title" class="text-danger"></span>
                 </div>
             </div>
 
@@ -51,13 +61,22 @@
                     Camera Position
                 </td>
                 <td>
-                    <input id="cam_pos_x" name="cam_pos_x" type="text" value="" class="form-control" />
+                    @*<input id="cam_pos_x" name="cam_pos_x" type="text" value="" class="form-control" />
+                    *@
+                    <input asp-for="cam_pos_x" class="form-control" id="cam_pos_x" />
+                    <span asp-validation-for="cam_pos_x" class="text-danger"></span>
                 </td>
                 <td>
-                    <input id="cam_pos_y" name="cam_pos_y" type="text" value="" class="form-control" />
+                    @*<input id="cam_pos_y" name="cam_pos_y" type="text" value="" class="form-control" />
+                    *@
+                    <input asp-for="cam_pos_y" class="form-control" id="cam_pos_y" />
+                    <span asp-validation-for="cam_pos_y" class="text-danger"></span>
                 </td>
                 <td>
-                    <input id="cam_pos_z" name="cam_pos_z" type="text" value="" class="form-control" />
+                    @*<input id="cam_pos_z" name="cam_pos_z" type="text" value="" class="form-control" />
+                    *@
+                    <input asp-for="cam_pos_z" class="form-control" id="cam_pos_z" />
+                    <span asp-validation-for="cam_pos_z" class="text-danger"></span>
                 </td>
                 <td>
                     --
@@ -68,13 +87,22 @@
                     Camera Look At
                 </td>
                 <td>
-                    <input id="cam_lookat_x" name="cam_lookat_x" type="text" value="" class="form-control" />
+                    @*<input id="cam_lookat_x" name="cam_lookat_x" type="text" value="" class="form-control" />
+                    *@
+                    <input asp-for="cam_lookat_x" class="form-control" id="cam_lookat_x" />
+                    <span asp-validation-for="cam_lookat_x" class="text-danger"></span>
                 </td>
                 <td>
-                    <input id="cam_lookat_y" name="cam_lookat_y" type="text" value="" class="form-control" />
+                    @*<input id="cam_lookat_y" name="cam_lookat_y" type="text" value="" class="form-control" />
+                    *@
+                    <input asp-for="cam_lookat_y" class="form-control" id="cam_lookat_y" />
+                    <span asp-validation-for="cam_lookat_y" class="text-danger"></span>
                 </td>
                 <td>
-                    <input id="cam_lookat_z" name="cam_lookat_z" type="text" value="" class="form-control" />
+                    @*<input id="cam_lookat_z" name="cam_lookat_z" type="text" value="" class="form-control" />
+                    *@
+                    <input asp-for="cam_lookat_z" class="form-control" id="cam_lookat_z" />
+                    <span asp-validation-for="cam_lookat_z" class="text-danger"></span>
                 </td>
                 <td>
                     --
@@ -85,16 +113,28 @@
                     Camera Quaternion
                 </td>
                 <td>
-                    <input id="cam_quat_x" name="cam_quat_x" type="text" value="" class="form-control" />
+                    @*<input id="cam_quat_x" name="cam_quat_x" type="text" value="" class="form-control" />
+                    *@
+                    <input asp-for="cam_quat_x" class="form-control" id="cam_quat_x" />
+                    <span asp-validation-for="cam_quat_x" class="text-danger"></span>
                 </td>
                 <td>
-                    <input id="cam_quat_y" name="cam_quat_y" type="text" value="" class="form-control" />
+                    @*<input id="cam_quat_y" name="cam_quat_y" type="text" value="" class="form-control" />
+                    *@
+                    <input asp-for="cam_quat_y" class="form-control" id="cam_quat_y" />
+                    <span asp-validation-for="cam_quat_y" class="text-danger"></span>
                 </td>
                 <td>
-                    <input id="cam_quat_z" name="cam_quat_z" type="text" value="" class="form-control" />
+                    @*<input id="cam_quat_z" name="cam_quat_z" type="text" value="" class="form-control" />
+                    *@
+                    <input asp-for="cam_quat_z" class="form-control" id="cam_quat_z" />
+                    <span asp-validation-for="cam_quat_z" class="text-danger"></span>
                 </td>
                 <td>
-                    <input id="cam_quat_w" name="cam_quat_w" type="text" value="" class="form-control" />
+                    @*<input id="cam_quat_w" name="cam_quat_w" type="text" value="" class="form-control" />
+                    *@
+                    <input asp-for="cam_quat_w" class="form-control" id="cam_quat_w" />
+                    <span asp-validation-for="cam_quat_w" class="text-danger"></span>
                 </td>
             </tr>
             <tr>
@@ -103,13 +143,22 @@
                     Orbit Control Target
                 </td>
                 <td>
-                    <input id="obt_target_x" name="obt_target_x" type="text" value="" class="form-control" />
+                    @*<input id="obt_target_x" name="obt_target_x" type="text" value="" class="form-control" />
+                    *@
+                    <input asp-for="obt_target_x" class="form-control" id="obt_target_x" />
+                    <span asp-validation-for="obt_target_x" class="text-danger"></span>
                 </td>
                 <td>
-                    <input id="obt_target_y" name="obt_target_y" type="text" value="" class="form-control" />
+                    @*<input id="obt_target_y" name="obt_target_y" type="text" value="" class="form-control" />
+                    *@
+                    <input asp-for="obt_target_y" class="form-control" id="obt_target_y" />
+                    <span asp-validation-for="obt_target_y" class="text-danger"></span>
                 </td>
                 <td>
-                    <input id="obt_target_z" name="obt_target_z" type="text" value="" class="form-control" />
+                    @*<input id="obt_target_z" name="obt_target_z" type="text" value="" class="form-control" />
+                    *@
+                    <input asp-for="obt_target_z" class="form-control" id="obt_target_z" />
+                    <span asp-validation-for="obt_target_z" class="text-danger"></span>
                 </td>
                 <td>
                     --
@@ -119,7 +168,7 @@
 
 
         <div class="form-group">
-            <input type="submit" value="Save" class="btn btn-primary" onclick="return confirm('視点情報を更新しますか？')" />
+            <input type="submit" value="Save" class="btn btn-primary" onclick="return confirm('Are you update View?')" />
         </div>
     </form>
 

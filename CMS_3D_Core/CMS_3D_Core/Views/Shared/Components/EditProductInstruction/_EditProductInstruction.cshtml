@@ -1,41 +1,55 @@
-﻿@model CMS_3D_Core.Models.EDM.t_article
+﻿@model CMS_3D_Core.Models.EDM.t_instruction
 
 @*<h4> Instruction Edit</h4>*@
 <div id="instruction_data">
 
-    <form asp-c asp-action="EditProductInstruction">
+    <form asp-controller="ContentsEdit" asp-action="EditProductInstruction">
         <div class="form-group row ">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            @*Edit Instruction*@
-            @Html.Hidden("id_article", 0, new { id = "instruction_id_article" })
+            @*Edit Instruction
+        @Html.Hidden("id_article", 0, new {  })
+        @Html.("id_article", 0, new { id = "instruction_id_article" })*@
 
+            <input type="hidden" asp-for="id_article" id="instruction_id_article" />
 
             <div class="col-sm-3">
-                @Html.Label("id_instruct", "Indstuction Id", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <label asp-for="id_instruct" class="control-label font-weight-bold"></label>
+                @*@Html.Label("id_instruct", "Indstuction Id", htmlAttributes: new { @class = "control-label font-weight-bold" })*@
                 <div class="px-3">
-                    @Html.TextBox("id_instruct", "", new { id = "instruction_id_instruct", @class = "form-control" })
+                    @*   @Html.TextBox("id_instruct", "", new { id = "instruction_id_instruct", @class = "form-control" }) *@
+                    <input asp-for="id_instruct" class="form-control" id="instruction_id_instruct" />
+                    <span asp-validation-for="id_instruct" class="text-danger"></span>
                 </div>
             </div>
 
             <div class="col-sm-3">
-                @Html.Label("title", "Title(Button Name)", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <label asp-for="title" class="control-label font-weight-bold"></label>
+                @*@Html.Label("title", "Title(Button Name)", htmlAttributes: new { @class = "control-label font-weight-bold" })*@
                 <div class="px-3">
-                    @Html.TextBox("title", "", new { id = "instruction_title", @class = "form-control" })
+                    @*@Html.TextBox("title", "", new { id = "instruction_title", @class = "form-control" })*@
+                    <input asp-for="title" class="form-control" id="instruction_title" />
+                    <span asp-validation-for="title" class="text-danger"></span>
                 </div>
             </div>
 
             <div class="col-sm-2">
-                @Html.Label("id_view", "Id View", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <label asp-for="id_view" class="control-label font-weight-bold" ></label>
+                @*@Html.Label("id_view", "Id View", htmlAttributes: new { @class = "control-label font-weight-bold" })*@
                 <div class="px-3">
-                    @Html.TextBox("id_view", "", new { id = "instruction_id_view", @class = "form-control" })
+                    @*@Html.TextBox("id_view", "", new { id = "instruction_id_view", @class = "form-control" })*@
+                    <input asp-for="id_view" class="form-control" id="instruction_id_view" />
+                    <span asp-validation-for="id_view" class="text-danger"></span>
                 </div>
             </div>
 
             <div class="col-sm-3">
-                @Html.Label("display_order", "Display Order", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <label asp-for="display_order" class="control-label font-weight-bold"></label>
+                @*@Html.Label("display_order", "Display Order", htmlAttributes: new { @class = "control-label font-weight-bold" })*@
                 <div class="px-3">
-                    @Html.TextBox("display_order", "", new { id = "instruction_display_order", @class = "form-control" })
+                    @*@Html.TextBox("display_order", "", new { id = "instruction_display_order", @class = "form-control" })*@
+                    <input asp-for="display_order" class="form-control" id="instruction_display_order" />
+                    <span asp-validation-for="display_order" class="text-danger"></span>
                 </div>
             </div>
         </div>
@@ -44,22 +58,27 @@
 
         <div class="form-group row ">
             <div class="col-sm-12">
-                @Html.Label("short_description", "Description", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <label asp-for="short_description" class="control-label font-weight-bold"></label>
+                @*@Html.Label("short_description", "Description", htmlAttributes: new { @class = "control-label font-weight-bold" })*@
                 <div class="px-3">
-                    @Html.TextArea("short_description", null, new { id = "instruction_short_description", rows = "10", @class = "form-control" })
+                    @* @Html.TextArea("short_description", null, new { id = "instruction_short_description", rows = "10", @class = "form-control" })*@
+                    <textarea asp-for="short_description" class="form-control" id="instruction_short_description" rows="10"></textarea>
                 </div>
             </div>
 
             <div class="col-sm-12">
-                @Html.Label("memo", "MEMO", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <label asp-for="memo" class="control-label font-weight-bold"></label>
+                @* @Html.Label("memo", "MEMO", htmlAttributes: new { @class = "control-label font-weight-bold" })*@
                 <div class="px-3">
-                    @Html.TextArea("memo", null, new { id = "instruction_memo", rows = "10", @class = "form-control" })
+                    @* @Html.TextArea("memo", null, new { id = "instruction_memo", rows = "10", @class = "form-control" })*@
+                    <textarea asp-for="memo" class="form-control" id="instruction_memo" rows="10"></textarea>
                 </div>
             </div>
 
 
             <div class="col-sm-8">
-                @Html.Label("", "", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <label class="control-label font-weight-bold"></label>
+                @* @Html.Label("", "", htmlAttributes: new { @class = "control-label font-weight-bold" })*@
                 <div class="px-3">
                     <input type="submit" value="Save" class="btn btn-primary" onclick="return confirm('Are you update Instruction?')" />
                 </div>
@@ -72,13 +91,16 @@
     <form asp-action="DeleteProductInstruction">
         <div class="form-group row ">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            @Html.Hidden("id_article", 0, new { id = "instruction_id_article_delete" })
-            @Html.Hidden("id_instruct", 0, new { id = "instruction_id_instruct_delete" })
-
+            @*
+        @Html.Hidden("id_article", 0, new { id = "instruction_id_article_delete" })
+        @Html.Hidden("id_instruct", 0, new { id = "instruction_id_instruct_delete" })
+            *@
+            <input type="hidden" asp-for="id_article" id="instruction_id_article_delete" />
+            <input type="hidden" asp-for="id_instruct" id="instruction_id_instruct_delete" />
 
             <div class="col-sm-8">
-                @Html.Label("", "", htmlAttributes: new { @class = "control-label font-weight-bold" })
+                <label class="control-label font-weight-bold"></label>
+                @*@Html.Label("", "", htmlAttributes: new { @class = "control-label font-weight-bold" })*@
                 <div class="px-3">
                     <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Are you sure delete Instruction?')" />
                 </div>

@@ -54,7 +54,7 @@ class InstancePart {
 
 function data_inmprt(data, view_object, instruction_gp, instance_part) {
 
-    for (var i in data) {
+    for (let i in data) {
         if (data[i].type == "view") {
             view_object[data[i].id_view] = new ViewObject(
 
@@ -132,7 +132,7 @@ function set_camera(objcom, p1, p2, p3, look) {
 //コントロールパネル領域を生成する
 function setup_control_panel_zone(elementid, instruction_gp) {
 
-    var pn = document.getElementById(elementid);
+    let pn = document.getElementById(elementid);
 
     instruction_gp.forEach(function (element) {
 
@@ -156,7 +156,7 @@ function setup_control_panel_zone(elementid, instruction_gp) {
 //データモデルを取得する
 function setup_instance_part_model(str_url_partapi_base, instance_part, glfLoader, scene) {
 
-    var str_url_partapi = "";
+    let str_url_partapi = "";
     instance_part.forEach(function (element) {
         str_url_partapi = str_url_partapi_base + new URLSearchParams({ id_part: element.id_part }).toString();
         console.log(str_url_partapi);

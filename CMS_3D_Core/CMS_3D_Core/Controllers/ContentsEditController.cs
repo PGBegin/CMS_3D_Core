@@ -50,7 +50,7 @@ namespace CMS_3D_Core.Controllers
         /// <param name="id_article"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> EditProductInstruction(long? id_article)
+        public async Task<IActionResult> EditArticleWholeContents(long? id_article)
         {
             if (id_article == null)
             {
@@ -101,7 +101,7 @@ namespace CMS_3D_Core.Controllers
                         await _context.SaveChangesAsync();
 
                         TempData["ResultMsg"] = "AddNew Success";
-                        return RedirectToAction("EditProductInstruction", new { id_article = id_article });
+                        return RedirectToAction("EditArticleWholeContents", new { id_article = id_article });
                     } else
                     {
                         // if object is in table
@@ -117,7 +117,7 @@ namespace CMS_3D_Core.Controllers
 
 
                         TempData["ResultMsg"] = "Update Success";
-                        return RedirectToAction("EditProductInstruction", new { id_article = id_article });
+                        return RedirectToAction("EditArticleWholeContents", new { id_article = id_article });
                     }
 
 
@@ -146,7 +146,7 @@ namespace CMS_3D_Core.Controllers
             await _context.SaveChangesAsync();
 
             TempData["ResultMsg"] = "Update Success";
-            return RedirectToAction("EditProductInstruction", new { id_article = id_article });
+            return RedirectToAction("EditArticleWholeContents", new { id_article = id_article });
         }
 
         // POST: Role/Edit/5
@@ -209,7 +209,7 @@ namespace CMS_3D_Core.Controllers
                         await _context.SaveChangesAsync();
 
                         TempData["ResultMsg"] = "AddNew Success";
-                        return RedirectToAction("EditProductInstruction", new { id_article = id_article });
+                        return RedirectToAction("EditArticleWholeContents", new { id_article = id_article });
                     } else
                     {
 
@@ -241,7 +241,7 @@ namespace CMS_3D_Core.Controllers
 
 
                         TempData["ResultMsg"] = "Update Success";
-                        return RedirectToAction("EditProductInstruction", new { id_article = id_article });
+                        return RedirectToAction("EditArticleWholeContents", new { id_article = id_article });
 
                     }
 
@@ -322,7 +322,7 @@ namespace CMS_3D_Core.Controllers
                 _context.SaveChanges();
 
                 TempData["ResultMsg"] = "New Eye Catch Setting Success";
-                return RedirectToAction("EditProductInstruction", new { id_article = id_article });
+                return RedirectToAction("EditArticleWholeContents", new { id_article = id_article });
 
             }
 
