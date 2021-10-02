@@ -105,7 +105,7 @@
         var str_url_prodobjectapi_base = "/ContentsOperatorApis/GetAssemblyObjectList?";
         var str_url_prodobjectapi = str_url_prodobjectapi_base + new URLSearchParams({ id_article: @Model.id_article }).toString();
 
-        var str_url_partapi_base = "/ContentsOperatorApis/GetPartObjectFile?";
+        let str_url_partapi_base = "/ContentsOperatorApis/GetPartObjectFile?";
 
         const glfLoader = new THREE.GLTFLoader();
 

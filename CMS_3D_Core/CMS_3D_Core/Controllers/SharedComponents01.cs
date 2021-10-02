@@ -156,9 +156,33 @@ namespace CMS_3D_Core.Controllers
             var t = await _context.t_instructions.Where(m => m.id_article == id_article).OrderBy(m => m.display_order).FirstOrDefaultAsync();
 
             return View("_EditProductInstruction", t);
-            //return View("_EditProductInstruction", t_article);
         }
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class EditThumbnailViewComponent : ViewComponent
+    {
+        private readonly db_data_coreContext _context;
+
+        public EditThumbnailViewComponent(db_data_coreContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IViewComponentResult> InvokeAsync(long id_article)
+        {
+
+            var t = await _context.t_articles.FindAsync(id_article);
+
+            //var t = await _context.t_instructions.Where(m => m.id_article == id_article).OrderBy(m => m.display_order).FirstOrDefaultAsync();
+
+            return View("_EditThumbnail", t);
+        }
+    }
+
+
     /// <summary>
     /// Google Analytics情報を表示する
     /// </summary>

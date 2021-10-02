@@ -279,10 +279,15 @@ namespace CMS_3D_Core.Controllers
 
             try
             {
+
+
+                t_article t_article = _context.t_articles.Find(id_article);
+
+
                 t_attachment t_attachment = new t_attachment();
 
 
-                t_attachment.name = "Thumbnail_"+ id_article;
+                t_attachment.name = "Thumbnail_" + (t_article.title ?? "") + "_" + id_article;
                 // ?? System.IO.Path.GetFileNameWithoutExtension(formFile.FileName);
                 //                t_attachment.file_data = GetByteArrayFromStream(formFile.OpenReadStream());
                 //t_attachment.file_data = System.Text.Encoding.ASCII.GetBytes(imgfilebin);
@@ -314,7 +319,6 @@ namespace CMS_3D_Core.Controllers
 
                 _context.Add(t_attachment);
 
-                t_article t_article = _context.t_articles.Find(id_article);
 
                 t_article.id_attachment_for_eye_catch = t_attachment.id_file;
 

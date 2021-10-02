@@ -1,0 +1,28 @@
+﻿@model CMS_3D_Core.Models.EDM.t_article
+
+
+
+<div id="view_capture">
+    @*キャプチャーの表示領域*@
+</div>
+
+
+@*-----------------------------------------------------------------------------------------------------*@
+
+<button id="screenshot" type="button" onclick="GetScreenshotForUpload('view_capture', 'getimage', 'up_img_input')" class="btn btn-primary">Save...</button>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="UpdateThumbnail" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input type="hidden" asp-for="id_article" />
+            <input type="hidden" name="imgfilebin" id="up_img_input" />
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" id="up_img_submit" disabled />
+            </div>
+        </form>
+    </div>
+</div>
+
+@*----------------------------------------------------------------------------------------------------*@

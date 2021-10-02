@@ -72,12 +72,14 @@
 
                 <h4>Thumbnail</h4>
 
-                <div id="view_capture">
-                    @*キャプチャーの表示領域*@
-                </div>
+                @await Component.InvokeAsync("EditThumbnail", new { id_article = Model.id_article })
+
+                @*------------
+
+        <div id="view_capture">
+        </div>
 
 
-                @*-----------------------------------------------------------------------------------------------------*@
 
                 <button id="screenshot" type="button" onclick="GetScreenshotForUpload('view_capture', 'getimage', 'up_img_input')" class="btn btn-primary">Save...</button>
                 <div class="row">
@@ -95,7 +97,7 @@
                     </div>
                 </div>
 
-                @*----------------------------------------------------------------------------------------------------*@
+                -------------------------------------------------------------------------------------------------*@
 
             </div>
         </div>
@@ -110,46 +112,42 @@
 <script src="~/lib/three/Loader/MTLLoader.js"></script>
 <script src="~/lib/three/OrbitControls.js"></script>
 <script src="~/lib/marked/marked.js"></script>
-<script src="~/js/operation_3d_instructor.js"></script>
+<script src="~/js/tdarticle.js"></script>
 <script src="~/js/GetScreenshotForUpload.js"></script>
 
 
 <script type="text/javascript">
 
 
-    var camera_main;
-    var scene = new THREE.Scene();
-    var controls;
-
-    var gridHelper;
-    var axisHelper;
-    var lightHelper;
-
-    var light;
-    var ambient;
-    var renderer;
-    var width = 720;
-    var height = 405;
-
-    var view_object = [];
-    var instruction_gp = [];
-    var instance_part = [];
-
-    var orbit_active = false;
+    var adarticle = new TDArticle();
 
 
     // ロード後に実行される処理
     window.onload = function () {
         'use strict';
 
-        var str_url_prodobjectapi_base = "/ContentsOperatorApis/GetAssemblyObjectList?";
-        var str_url_prodobjectapi = str_url_prodobjectapi_base + new URLSearchParams({ id_article: @Model.id_article }).toString();
+        let str_url_prodobjectapi_base = "/ContentsOperatorApis/GetAssemblyObjectList?";
+        let str_url_prodobjectapi = str_url_prodobjectapi_base + new URLSearchParams({ id_article: @Model.id_article }).toString();
 
-        var str_url_partapi_base = "/ContentsOperatorApis/GetPartObjectFile?";
+        let str_url_partapi_base = "/ContentsOperatorApis/GetPartObjectFile?";
 
-        const glfLoader = new THREE.GLTFLoader();
+        //const glfLoader = new THREE.GLTFLoader();
+
+        let id_startinst = @((Model.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction() { id_instruct = 0 }).id_instruct);
 
 
+        let lint =@Model.directional_light_intensity;
+        let lpx =@Model.directional_light_px;
+        let lpy = @Model.directional_light_py;
+        let lpz =@Model.directional_light_pz;
+        let anbint = @Model.ambient_light_intensity;
+        let _gammaOutput =@if(Model.gammaOutput==true){@Html.Raw("true;")} else{@Html.Raw("false;")};
+
+
+        adarticle.startup(lint, lpx, lpy, lpz, anbint, _gammaOutput, str_url_prodobjectapi, id_startinst);
+
+
+            /*
         //指定urlからデータを取得
         fetch(str_url_prodobjectapi)
             .then(response => {
@@ -160,24 +158,29 @@
             .then(data => { // 処理が成功した場合に取得されるJSONデータ
 
                 //JSONのデータを各オブジェクトに詰め替える
-                data_inmprt(data, view_object, instruction_gp, instance_part);
+                adarticle.data_import(data);
 
                 //コントロールパネル領域を生成する
-                setup_control_panel_zone("control_panel_zone", instruction_gp);
-
+                adarticle.setup_control_panel_zone("control_panel_zone");
 
                 //データモデルを取得する
-                setup_instance_part_model(str_url_partapi_base, instance_part, glfLoader, scene);
-
+                adarticle.setup_instance_part_model(glfLoader, scene);
 
                 //表示領域を初期化する
-                initial_optional01();
-                initial_setup_and_render();
+                adarticle.initial_optional01();
 
+
+                adarticle.initial_setup_and_render(lint, lpx, lpy,lpz, anbint, _gammaOutput);
+
+
+                //adarticle.transition_instruction(1);
+                adarticle.transition_instruction(id_startinst);
 
                 //orbitコントロールモードを有効にし、レンダリングを開始する
                 orbit_active = true;
-                render_orbital();
+
+                adarticle.render_orbital();
+                //render_orbital();
 
             })
             .catch(error => { // エラーの場合の処理
@@ -185,221 +188,14 @@
                 console.log(error);
 
             });
-
+        */
     }
 
     //指定されたIDのインストラクションを表示する
-    function transition_instruction(id_instruct) {
-        'use strict';
-
-
-        orbit_active = false;
-
-        //カメラ位置の変更
-        //---------------------
-        let i = instruction_gp[id_instruct].id_view;
-
-
-        // 視点のアニメーションによる移行
-        // ------------------------------------------------------------------------------------------------
-        let counter = 0;
-        let step = 75;
-
-        let pitch_px = (view_object[i].cam_pos_x - camera_main.position.x) / step;
-        let pitch_py = (view_object[i].cam_pos_y - camera_main.position.y) / step;
-        let pitch_pz = (view_object[i].cam_pos_z - camera_main.position.z) / step;
-
-        let pitch_tx = (view_object[i].obt_target_x - controls.target.x) / step;
-        let pitch_ty = (view_object[i].obt_target_y - controls.target.y) / step;
-        let pitch_tz = (view_object[i].obt_target_z - controls.target.z) / step;
-
-
-        function flight() {
-
-            update_viewinfo();
-
-            if (counter >= step) {
-                orbit_active = true;
-
-                render_orbital();
-                return;
-            } else {
-                counter = counter + 1;
-                requestAnimationFrame(flight);
-
-                camera_main.position.x += pitch_px;
-                camera_main.position.y += pitch_py;
-                camera_main.position.z += pitch_pz;
-
-
-                controls.target.x += pitch_tx;
-                controls.target.y += pitch_ty;
-                controls.target.z += pitch_tz;
-
-                controls.update();
-                renderer.render(scene, camera_main);
-            }
-        }
-        flight();
-
-        update_instruction_statements(id_instruct);
-
+    function transition_instruction2(id_instruct) {
+        adarticle.transition_instruction(id_instruct);
     }
 
 
-    //指定されたIDのインストラクションに合わせて、文書類を更新する
-    function update_instruction_statements(id_instruct) {
-        'use strict';
-
-
-
-        let i = instruction_gp[id_instruct].id_view;
-
-        //インストラクション(編集)関連の標記
-        document.getElementById('instruction_title').value = instruction_gp[id_instruct].title;
-        document.getElementById('instruction_id_view').value = instruction_gp[id_instruct].id_view;
-        document.getElementById('instruction_short_description').textContent = instruction_gp[id_instruct].short_description;
-        document.getElementById('instruction_id_article').value = instruction_gp[id_instruct].id_article;
-        document.getElementById('instruction_id_instruct').value = instruction_gp[id_instruct].id_instruct;
-        document.getElementById('instruction_display_order').value = instruction_gp[id_instruct].display_order;
-        document.getElementById('instruction_memo').value = instruction_gp[id_instruct].memo;
-
-
-
-        //インストラクション(削除)関連の標記
-        document.getElementById('instruction_id_article_delete').value = instruction_gp[id_instruct].id_article;
-        document.getElementById('instruction_id_instruct_delete').value = instruction_gp[id_instruct].id_instruct;
-
-        //ビュー情報を更新
-        document.getElementById('view_id_article').value = view_object[i].id_article;
-        document.getElementById('view_id_view').value = view_object[i].id_view;
-        document.getElementById('view_title').value = view_object[i].title;
-
-
-        //ボタンの色
-        let children = document.getElementById('control_panel_zone').children;
-        let buttunid = 'btn_inst' + id_instruct;
-        for (var j = 0; j < children.length; j++) {
-
-            if ("button".localeCompare(children[j].tagName, {}, { sensitivity: "base" }) == 0) {
-
-                if (buttunid.localeCompare(children[j].id, {}, { sensitivity: "base" }) == 0) {
-                    children[j].classList.replace('btn-outline-primary', 'btn-primary');
-
-                } else {
-                    children[j].classList.replace('btn-primary', 'btn-outline-primary');
-                }
-            }
-        }
-    }
-
-    //表示関連を初期化する
-    function initial_setup_and_render() {
-        'use strict';
-
-        // light
-        light = new THREE.DirectionalLight(0xffffff, @Model.directional_light_intensity);
-        light.position.set(@Model.directional_light_px, @Model.directional_light_py, @Model.directional_light_pz);
-        scene.add(light);
-
-
-
-        ambient = new THREE.AmbientLight(0x404040, @Model.ambient_light_intensity);
-        scene.add(ambient);
-
-        // main camara
-        camera_main = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
-        //set_camera(camera_main, 30, 30, 30, new THREE.Quaternion(0.017, 0.168, -0.003, 0.985));
-
-        // renderer
-        renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(width, height);
-        renderer.setClearColor(0xefefef);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        document.getElementById('model_screen').appendChild(renderer.domElement);
-
-        controls = new THREE.OrbitControls(camera_main, renderer.domElement);
-
-
-        @{
-            long id_instx = (Model.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction { id_instruct = 0 }).id_instruct;
-            //instructionがなかったらidは0
-            int idv = (Model.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction { id_view = 0 }).id_view;
-            CMS_3D_Core.Models.EDM.t_view t_view = Model.t_views.FirstOrDefault(m => m.id_view == idv) ?? new CMS_3D_Core.Models.EDM.t_view { cam_pos_x = 10, cam_pos_y = 10, cam_pos_z = 10, obt_target_x = 0, obt_target_y = 0, obt_target_z = 0 };
-        }
-        console.log(@id_instx);
-        if (@id_instx == 0) {
-        camera_main.position.x = @t_view.cam_pos_x;
-        camera_main.position.y = @t_view.cam_pos_y;
-        camera_main.position.z = @t_view.cam_pos_z;
-
-        controls.target.x = @t_view.obt_target_x;
-        controls.target.y = @t_view.obt_target_y;
-        controls.target.z = @t_view.obt_target_z;
-
-        } else {
-            transition_instruction(@id_instx);
-        }
-
-        //ガンマ値をtrueに。
-        //(truee.jsで一部のアイテムが暗くなるのを軽減)
-        @if(Model.gammaOutput==true){
-            @Html.Raw("renderer.gammaOutput = true;")
-        }
-    };
-
-    //通常の、orbit control有効状態でのレンダリング
-    function render_orbital() {
-        update_viewinfo();
-        if (!orbit_active) { return; }
-        requestAnimationFrame(render_orbital);
-
-
-        controls.update();
-        renderer.render(scene, camera_main);
-    }
-
-
-    //表示関連を初期化する
-    function initial_optional01() {
-        'use strict';
-
-
-        //helper
-        /*
-        gridHelper = new THREE.GridHelper(200, 50);
-        scene.add(gridHelper);
-
-
-        axisHelper = new THREE.AxisHelper(1000);
-        scene.add(axisHelper);
-        */
-
-        //lightHelper = new THREE.DirectionalLightHelper(light, 20);
-        //scene.add(lightHelper);
-    };
-
-    //ビュー情報を更新する
-    function update_viewinfo() {
-
-
-        document.getElementById('cam_pos_x').value = Math.floor(camera_main.position.x * 100) / 100;
-        document.getElementById('cam_pos_y').value = Math.floor(camera_main.position.y * 100) / 100;
-        document.getElementById('cam_pos_z').value = Math.floor(camera_main.position.z * 100) / 100;
-
-        document.getElementById('cam_lookat_x').value = 0;
-        document.getElementById('cam_lookat_y').value = 0;
-        document.getElementById('cam_lookat_z').value = 0;
-
-        document.getElementById('cam_quat_x').value = Math.floor(camera_main.quaternion.x * 1000) / 1000;
-        document.getElementById('cam_quat_y').value = Math.floor(camera_main.quaternion.y * 1000) / 1000;
-        document.getElementById('cam_quat_z').value = Math.floor(camera_main.quaternion.z * 1000) / 1000;
-        document.getElementById('cam_quat_w').value = Math.floor(camera_main.quaternion.w * 1000) / 1000;
-
-        document.getElementById('obt_target_x').value = Math.floor(controls.target.x * 100) / 100;
-        document.getElementById('obt_target_y').value = Math.floor(controls.target.y * 100) / 100;
-        document.getElementById('obt_target_z').value = Math.floor(controls.target.z * 100) / 100;
-
-    }
 
 </script>
