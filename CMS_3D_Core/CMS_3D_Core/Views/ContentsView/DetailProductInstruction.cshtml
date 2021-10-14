@@ -21,49 +21,35 @@
 <div class="container">
 
     <div class="row">
-        <h1>@Model.title</h1>
-        <div>
-            <div id="model_screen">
-                @*モデルの表示領域*@
-            </div>
+
+        <div class="col-md-7">
+            <h2>@Html.DisplayFor(model => model.title)</h2>
+
+            @*モデルの表示領域*@
+            <canvas id="model_screen">
+            </canvas>
 
             <div class="progress" id="div_progressbar_modeldl">
                 <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" id="progressbar_modeldl"></div>
             </div>
-        </div>
-        <hr />
-        @*<div class="col-md-8 order-md-1">*@
-        <div>
-            <div id="instruction_data">
+            <hr />
 
-                <div id="control_panel_zone">
-                    @*インストラクションの切り替えボタン表示領域*@
-                </div>
-
-                <hr />
-
-                @*インストラクションの文書表示領域*@
-                <h4 id="instruction_title"></h4>
-                <div id="instruction_short_description">
-
-                    @{
-                        long idi2 = Model.t_instructions.OrderBy(m => m.display_order).FirstOrDefault().id_instruct;
-                    }
-
-                    @Html.Raw(Markdig.Markdown.ToHtml(@Model.t_instructions.FirstOrDefault(m => m.id_instruct == idi2).short_description))
-
-                    
-
-                </div>
+            <div id="control_panel_zone">
             </div>
+
+            <hr />
+
+            @*表示用ビューならここにインストラクションの表示領域がある*@
+            <div id="preview_instruction_short_description"></div>
+
         </div>
+
     </div>
 
 </div>
 
 
 
-@*<div id="content"></div>*@
 
 <script src="~/lib/three/three.js"></script>
 <script src="~/lib/three/Loader/GLTFLoader.js"></script>
@@ -71,255 +57,48 @@
 <script src="~/lib/three/Loader/MTLLoader.js"></script>
 <script src="~/lib/three/OrbitControls.js"></script>
 <script src="~/lib/marked/marked.js"></script>
-<script src="~/js/operation_3d_instructor.js"></script>
+<script src="~/js/tdarticle.js"></script>
+<script src="~/js/GetScreenshotForUpload.js"></script>
 
 
 <script type="text/javascript">
 
 
-    var camera_main;
-    var scene = new THREE.Scene();
-    var controls;
-
-    var gridHelper;
-    var axisHelper;
-    var lightHelper;
-
-    var light;
-    var ambient;
-    var renderer;
-    var width = 720;
-    var height = 405;
-
-    var view_object = [];
-    var instruction_gp = [];
-    var instance_part = [];
-
-    var orbit_active = false;
+var adarticle = new TDArticle();
 
 
-    // ロード後に実行される処理
-    window.onload = function () {
-        'use strict';
+// ロード後に実行される処理
+window.onload = function () {
+    'use strict';
 
-        var str_url_prodobjectapi_base = "/ContentsOperatorApis/GetAssemblyObjectList?";
-        var str_url_prodobjectapi = str_url_prodobjectapi_base + new URLSearchParams({ id_article: @Model.id_article }).toString();
-
-        let str_url_partapi_base = "/ContentsOperatorApis/GetPartObjectFile?";
-
-        const glfLoader = new THREE.GLTFLoader();
-
-
-        //指定urlからデータを取得
-        fetch(str_url_prodobjectapi)
-            .then(response => {
-
-                return response.json();
-
-            })
-            .then(data => { // 処理が成功した場合に取得されるJSONデータ
-
-                //JSONのデータを各オブジェクトに詰め替える
-                data_inmprt(data, view_object, instruction_gp, instance_part);
-
-
-                //コントロールパネル領域を生成する
-                setup_control_panel_zone("control_panel_zone", instruction_gp);
-
-
-                //データモデルを取得する
-                setup_instance_part_model(str_url_partapi_base, instance_part, glfLoader, scene);
-
-                //表示領域を初期化する
-                initial_optional01();
-                initial_setup_and_render();
-
-                //orbitコントロールモードを有効にし、レンダリングを開始する
-                orbit_active = true;
-                render_orbital();
-
-                //initial_setup_and_render2(scene, camera_main, controls, light, ambient, renderer, width, height);
-
-            })
-            .catch(error => { // エラーの場合の処理
-
-                console.log(error);
-
-            });
-
+    @{
+        var obj = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { });
     }
 
-    //指定されたIDのインストラクションを表示する
-    function transition_instruction(id_instruct) {
-        'use strict';
+    let str_url_prodobjectapi_base = "/ContentsOperatorApis/GetAssemblyObjectList?";
+    let str_url_prodobjectapi = str_url_prodobjectapi_base + new URLSearchParams({ id_article: @obj.id_article }).toString();
 
 
-        orbit_active = false;
-
-        //カメラ位置の変更
-        //---------------------
-        var i = instruction_gp[id_instruct].id_view;
+    let id_startinst = @((obj.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction() { id_instruct = 0 }).id_instruct);
 
 
-        // 視点のアニメーションによる移行
-        // ------------------------------------------------------------------------------------------------
-        var counter = 0;
-        var step = 75;
+    let lint =@obj.directional_light_intensity;
+    let lpx =@obj.directional_light_px;
+    let lpy = @obj.directional_light_py;
+    let lpz =@obj.directional_light_pz;
+    let anbint = @obj.ambient_light_intensity;
+    let _gammaOutput =@if(obj.gammaOutput==true){@Html.Raw("true;")} else{@Html.Raw("false;")};
 
-        var pitch_px = (view_object[i].cam_pos_x - camera_main.position.x) / step;
-        var pitch_py = (view_object[i].cam_pos_y - camera_main.position.y) / step;
-        var pitch_pz = (view_object[i].cam_pos_z - camera_main.position.z) / step;
+    adarticle.is_edit_mode = false;
+    adarticle.startup(lint, lpx, lpy, lpz, anbint, _gammaOutput, str_url_prodobjectapi, id_startinst);
 
-        var pitch_tx = (view_object[i].obt_target_x - controls.target.x) / step;
-        var pitch_ty = (view_object[i].obt_target_y - controls.target.y) / step;
-        var pitch_tz = (view_object[i].obt_target_z - controls.target.z) / step;
+}
 
-        function flight() {
+//指定されたIDのインストラクションを表示する
+function transition_instruction2(id_instruct) {
+    adarticle.transition_instruction(id_instruct);
+}
 
-            if (counter >= step) {
-                orbit_active = true;
-
-                render_orbital();
-                return;
-            } else {
-                counter = counter + 1;
-                requestAnimationFrame(flight);
-
-                camera_main.position.x += pitch_px;
-                camera_main.position.y += pitch_py;
-                camera_main.position.z += pitch_pz;
-
-
-                controls.target.x += pitch_tx;
-                controls.target.y += pitch_ty;
-                controls.target.z += pitch_tz;
-
-                controls.update();
-                renderer.render(scene, camera_main);
-
-                //update_viewinfo();
-            }
-        }
-        flight();
-
-
-        document.getElementById('instruction_short_description').innerHTML = marked(instruction_gp[id_instruct].short_description);
-
-        //ボタンの色
-        var children = document.getElementById('control_panel_zone').children;
-        var buttunid = 'btn_inst' + id_instruct;
-        for (var j = 0; j < children.length; j++) {
-
-            if ("button".localeCompare(children[j].tagName, {}, { sensitivity: "base" }) == 0) {
-
-                if (buttunid.localeCompare(children[j].id, {}, { sensitivity: "base" }) == 0) {
-                    children[j].classList.replace('btn-outline-primary', 'btn-primary');
-
-                } else {
-                    children[j].classList.replace('btn-primary', 'btn-outline-primary');
-                }
-            }
-        }
-    }
-
-
-    //表示関連を初期化する
-    function initial_setup_and_render() {
-        'use strict';
-
-        // light
-        light = new THREE.DirectionalLight(0xffffff, @Model.directional_light_intensity);
-        light.position.set(@Model.directional_light_px, @Model.directional_light_py, @Model.directional_light_pz);
-        scene.add(light);
-
-
-        ambient = new THREE.AmbientLight(0x404040, @Model.ambient_light_intensity);
-        scene.add(ambient);
-
-        // main camara
-        camera_main = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
-
-
-        // renderer
-        renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(width, height);
-        renderer.setClearColor(0xefefef);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        document.getElementById('model_screen').appendChild(renderer.domElement);
-
-        controls = new THREE.OrbitControls(camera_main, renderer.domElement);
-
-        @{
-            int idv = Model.t_instructions.OrderBy(m => m.display_order).FirstOrDefault().id_view;
-        }
-
-        camera_main.position.x =@Model.t_views.FirstOrDefault(m => m.id_view == idv).cam_pos_x;
-        camera_main.position.y =@Model.t_views.FirstOrDefault(m => m.id_view == idv).cam_pos_y;
-        camera_main.position.z =@Model.t_views.FirstOrDefault(m => m.id_view == idv).cam_pos_z;
-
-
-        controls.target.x =@Model.t_views.FirstOrDefault(m => m.id_view == idv).obt_target_x;
-        controls.target.y =@Model.t_views.FirstOrDefault(m => m.id_view == idv).obt_target_y;
-        controls.target.z =@Model.t_views.FirstOrDefault(m => m.id_view == idv).obt_target_z;
-
-        //ガンマ値をtrueに。
-        //(truee.jsで一部のアイテムが暗くなるのを軽減)
-        @if(Model.gammaOutput==true){ 
-            @Html.Raw("renderer.gammaOutput = true;")
-        }
-    };
-
-    //通常の、orbit control有効状態でのレンダリング
-    function render_orbital() {
-        if (!orbit_active) { return; }
-        requestAnimationFrame(render_orbital);
-
-
-        controls.update();
-        renderer.render(scene, camera_main);
-    }
-
-    //表示関連を初期化する
-    function initial_optional01() {
-        'use strict';
-
-
-        //helper
-        /*
-        gridHelper = new THREE.GridHelper(200, 50);
-        scene.add(gridHelper);
-
-
-        axisHelper = new THREE.AxisHelper(1000);
-        scene.add(axisHelper);
-        */
-
-        //lightHelper = new THREE.DirectionalLightHelper(light, 20);
-        //scene.add(lightHelper);
-    };
-
-    function update_viewinfo() {
-
-
-        document.getElementById('cam_pos_x').value = Math.floor(camera_main.position.x * 100) / 100;
-        document.getElementById('cam_pos_y').value = Math.floor(camera_main.position.y * 100) / 100;
-        document.getElementById('cam_pos_z').value = Math.floor(camera_main.position.z * 100) / 100;
-
-        document.getElementById('cam_lookat_x').value = 0;
-        document.getElementById('cam_lookat_y').value = 0;
-        document.getElementById('cam_lookat_z').value = 0;
-
-        document.getElementById('cam_quat_x').value = Math.floor(camera_main.quaternion.x * 1000) / 1000;
-        document.getElementById('cam_quat_y').value = Math.floor(camera_main.quaternion.y * 1000) / 1000;
-        document.getElementById('cam_quat_z').value = Math.floor(camera_main.quaternion.z * 1000) / 1000;
-        document.getElementById('cam_quat_w').value = Math.floor(camera_main.quaternion.w * 1000) / 1000;
-
-        document.getElementById('obt_target_x').value = Math.floor(controls.target.x * 100) / 100;
-        document.getElementById('obt_target_y').value = Math.floor(controls.target.y * 100) / 100;
-        document.getElementById('obt_target_z').value = Math.floor(controls.target.z * 100) / 100;
-
-    }
 
 
 </script>
-

@@ -96,10 +96,10 @@ class TDArticle {
         //this.camera_main = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 1000);
         //this.controls = new THREE.OrbitControls(this.camera_main, renderer.domElement);
 
-        
+
         this.counter = 0;
         this.step = 75;
-        
+
         this.pitch_px = 0;
         this.pitch_py = 0;
         this.pitch_pz = 0;
@@ -248,7 +248,6 @@ class TDArticle {
             glfLoader.load(str_url_partapi, function (gltf) {
 
 
-
                 document.getElementById('div_progressbar_modeldl').setAttribute('hidden', '');
                 scene.add(gltf.scene);
 
@@ -304,9 +303,9 @@ class TDArticle {
         //lightHelper = new THREE.DirectionalLightHelper(light, 20);
         //scene.add(lightHelper);
     }
-    
+
     //表示関連を初期化する
-    initial_setup_and_render(lint, lpx, lpy,lpz, anbint, _gammaOutput) {
+    initial_setup_and_render(lint, lpx, lpy, lpz, anbint, _gammaOutput) {
 
         // light
         light = new THREE.DirectionalLight(0xffffff, lint);
@@ -322,16 +321,11 @@ class TDArticle {
         camera_main = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 1000);
 
         // renderer
-        //renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer = new THREE.WebGLRenderer({
-            canvas: document.querySelector('#model_screen')
-            , antialias: true
-        });
+        renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(adarticle.width, adarticle.height);
         renderer.setClearColor(0xefefef);
         renderer.setPixelRatio(window.devicePixelRatio);
-
-        //document.getElementById('model_screen').appendChild(renderer.domElement);
+        document.getElementById('model_screen').appendChild(renderer.domElement);
 
         controls = new THREE.OrbitControls(camera_main, renderer.domElement);
 
@@ -539,7 +533,7 @@ class TDArticle {
 
     }
 
-    
+
     //通常の、orbit control有効状態でのレンダリング
     render_orbital() {
 
@@ -553,8 +547,8 @@ class TDArticle {
         controls.update();
         renderer.render(scene, camera_main);
     }
-    
-    
+
+
     //ビュー情報を更新する
     update_viewinfo() {
 
@@ -578,10 +572,6 @@ class TDArticle {
 
     }
 
-    
+
 
 }
-
-//TDArticleここまで
-//---------------------------------------------------------------------------
-//通常の、orbit control有効状態でのレンダリング

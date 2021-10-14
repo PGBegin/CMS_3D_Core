@@ -103,8 +103,26 @@ namespace CMS_3D_Core.Controllers
 
             var t_article = await _context.t_articles.FindAsync(id_article);
 
-            ViewData["id_assy"] = new SelectList(_context.t_assemblies, "id_assy", "assy_name", t_article.id_assy);
-            ViewData["status"] = new SelectList(_context.m_status_articles, "id", "name", t_article.status);
+            if (t_article != null)
+            {
+                ViewData["id_assy"] = new SelectList(_context.t_assemblies, "id_assy", "assy_name", t_article.id_assy);
+                ViewData["status"] = new SelectList(_context.m_status_articles, "id", "name", t_article.status);
+            } else
+            {
+                t_article = new t_article() { 
+                                                directional_light_color=1,
+                                                directional_light_intensity=1,
+                                                directional_light_px=30, 
+                                                directional_light_py=30,
+                                                directional_light_pz=30,
+                                                ambient_light_color=1,
+                                                ambient_light_intensity=1,
+                                                gammaOutput=true
+                                                };
+
+                ViewData["id_assy"] = new SelectList(_context.t_assemblies, "id_assy", "assy_name");
+                ViewData["status"] = new SelectList(_context.m_status_articles, "id", "name");
+            }
 
             return View("_EditArticle", t_article);
         }
@@ -160,7 +178,7 @@ namespace CMS_3D_Core.Controllers
     }
 
     /// <summary>
-    /// 
+    /// Show Thmbnail Capture and Upload view
     /// </summary>
     public class EditThumbnailViewComponent : ViewComponent
     {
@@ -182,6 +200,31 @@ namespace CMS_3D_Core.Controllers
         }
     }
 
+    /// <summary>
+    /// Show Thmbnail Capture and Upload view
+    /// </summary>
+    public class InstanceListViewComponent : ViewComponent
+    {
+        private readonly db_data_coreContext _context;
+
+        public InstanceListViewComponent(db_data_coreContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IViewComponentResult> InvokeAsync(long? id_assy)
+        {
+
+            var t = await _context.t_instance_parts
+                                            .Include(t => t.id_assyNavigation)
+                                            .Include(t => t.id_partNavigation)
+                                            .Where(m => m.id_assy == id_assy)
+                                            .ToListAsync();
+
+
+            return View("_InstanceList", t);
+        }
+    }
 
     /// <summary>
     /// Google Analytics情報を表示する

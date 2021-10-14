@@ -144,7 +144,7 @@ namespace CMS_3D_Core.Controllers
             return View();
         }
 
-
+        [AllowAnonymous]
         public async Task<IActionResult> GetAttachmentFile(long id)
         {
 

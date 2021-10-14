@@ -95,7 +95,41 @@ namespace CMS_3D_Core.Controllers
 
             return Json(objCollection);
         }
-        
+
+
+        /// <summary>
+        /// GET: コンテンツのベースデータをJsonで返す
+        /// </summary>
+        /// <param name="id_assy">アセンブリID</param>
+        /// <returns>ファイルのJsonデータ</returns>
+        [HttpGet]
+        public JsonResult GetAssemblyObjectListOnlyInstance(int id_assy)
+        {
+            var t = _context.t_assemblies
+                        .Include(x => x.t_instance_parts)
+                        .FirstOrDefault(x => x.id_assy == id_assy);
+
+            IList<object> objCollection = new List<object>();
+
+            foreach (var item in t.t_instance_parts)
+            {
+                objCollection.Add(
+                    new
+                    {
+                        type = "instance_part",
+                        id_assy = item.id_assy,
+                        id_inst = item.id_inst,
+                        id_part = item.id_part
+                    });
+            }
+
+
+
+            return Json(objCollection);
+        }
+
+
+
         /// <summary>
         /// GET: 選択されたオブジェクトファイルを返す関数
         /// </summary>

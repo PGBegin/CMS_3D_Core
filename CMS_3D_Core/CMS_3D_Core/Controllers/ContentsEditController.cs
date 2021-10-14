@@ -45,6 +45,23 @@ namespace CMS_3D_Core.Controllers
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> CreateArticle()
+        {
+
+
+            t_article t_article = new t_article() { id_article = 0, id_assy=0 };
+
+            ViewData["id_assy"] = new SelectList(_context.t_assemblies, "id_assy", "assy_name");
+            ViewData["status"] = new SelectList(_context.m_status_articles, "id", "name");
+
+            return View("EditArticleWholeContents", t_article);
+        }
+
+        /// <summary>
         /// Show Edit View of Articles
         /// </summary>
         /// <param name="id_article"></param>
@@ -62,6 +79,12 @@ namespace CMS_3D_Core.Controllers
                                           .Include(t => t.t_instructions)
                                           .Where(m => m.id_article == id_article)
                                           .FirstOrDefaultAsync();
+
+            if (t_article == null)
+            {
+                return NotFound();
+            }
+
 
             ViewBag.ResultMsg = TempData["ResultMsg"];
             return View(t_article);
@@ -148,7 +171,7 @@ namespace CMS_3D_Core.Controllers
             TempData["ResultMsg"] = "Update Success";
             return RedirectToAction("EditArticleWholeContents", new { id_article = id_article });
         }
-
+        /*
         // POST: Role/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -161,12 +184,12 @@ namespace CMS_3D_Core.Controllers
             )
         {
 
-            /*
-            if (id_article == null | id_view == null)
-            {
-                return NotFound();
-            }
-            */
+            
+            //if (id_article == null | id_view == null)
+            //{
+            //    return NotFound();
+            //}
+            
 
             if (ModelState.IsValid)
             {
@@ -254,7 +277,7 @@ namespace CMS_3D_Core.Controllers
 
             // 更新に失敗した場合、編集画面を再描画
             return View(id_article);
-        }
+        }*/
 
         public static byte[] GetByteArrayFromStream(Stream sm)
         {

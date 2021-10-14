@@ -52,11 +52,11 @@ namespace CMS_3D_Core.Controllers
         {
 
             t_assembly z = new t_assembly();
-            z.id_assy = 6;
-            z.assy_name = "xxnone";
+            //z.id_assy = 6;
+            //z.assy_name = "xxnone";
 
-            IEnumerable<t_assembly> x = _context.t_assemblies;
-            x.Append(z);
+            //IEnumerable<t_assembly> x = _context.t_assemblies;
+            //x.Append(z);
 
 
 //            ViewData["id_assy"] = new SelectList(x, "id_assy", "assy_name");
