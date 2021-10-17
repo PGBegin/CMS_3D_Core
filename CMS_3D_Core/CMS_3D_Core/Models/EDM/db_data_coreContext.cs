@@ -25,7 +25,9 @@ namespace CMS_3D_Core.Models.EDM
         public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; }
         public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
         public virtual DbSet<m_status_article> m_status_articles { get; set; }
+        public virtual DbSet<t_annotation> t_annotations { get; set; }
         public virtual DbSet<t_article> t_articles { get; set; }
+        public virtual DbSet<t_article_length_sumarry> t_article_length_sumarries { get; set; }
         public virtual DbSet<t_assembly> t_assemblies { get; set; }
         public virtual DbSet<t_attachment> t_attachments { get; set; }
         public virtual DbSet<t_instance_part> t_instance_parts { get; set; }
@@ -36,12 +38,12 @@ namespace CMS_3D_Core.Models.EDM
         public virtual DbSet<t_website_setting> t_website_settings { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {/*
+        {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=db_data_core");
-            }*/
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -154,6 +156,29 @@ namespace CMS_3D_Core.Models.EDM
                 entity.Property(e => e.name).HasMaxLength(50);
             });
 
+            modelBuilder.Entity<t_annotation>(entity =>
+            {
+                entity.HasKey(e => new { e.id_article, e.id_annotation });
+
+                entity.ToTable("t_annotation");
+
+                entity.Property(e => e.create_user).HasMaxLength(50);
+
+                entity.Property(e => e.description1).HasMaxLength(550);
+
+                entity.Property(e => e.description2).HasMaxLength(550);
+
+                entity.Property(e => e.latest_update_user).HasMaxLength(50);
+
+                entity.Property(e => e.title).HasMaxLength(250);
+
+                entity.HasOne(d => d.id_articleNavigation)
+                    .WithMany(p => p.t_annotations)
+                    .HasForeignKey(d => d.id_article)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_t_annotation_t_article");
+            });
+
             modelBuilder.Entity<t_article>(entity =>
             {
                 entity.HasKey(e => e.id_article)
@@ -187,6 +212,13 @@ namespace CMS_3D_Core.Models.EDM
                     .HasForeignKey(d => d.status)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_t_article_m_status_article");
+            });
+
+            modelBuilder.Entity<t_article_length_sumarry>(entity =>
+            {
+                entity.HasKey(e => new { e.latest_update_datetime, e.status });
+
+                entity.ToTable("t_article_length_sumarry");
             });
 
             modelBuilder.Entity<t_assembly>(entity =>

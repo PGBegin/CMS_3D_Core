@@ -1,18 +1,7 @@
 ﻿
-var camera_main;
-var controls;
-var scene = new THREE.Scene();
-
-var gridHelper;
-var axisHelper;
-var lightHelper;
-
-var light;
-var ambient;
-var renderer;
 
 
-var orbit_active = false;
+
 
 class Instruction {
     constructor(id_article, id_instruct, id_view, title, short_description, display_order, memo) {
@@ -63,6 +52,21 @@ class InstancePart {
     }
 }
 
+class Annotation {
+    constructor(id_article, id_annotation, title, description1, description2, pos_x, pos_y, pos_z, web_id_annotation) {
+        this.id_article = id_article;
+        this.id_annotation = id_annotation;
+
+        this.title = title;
+        this.description1 = description1;
+        this.description2 = description2;
+
+        this.pos_x = pos_x;
+        this.pos_y = pos_y;
+        this.pos_z = pos_z;
+        this.web_id_annotation = web_id_annotation;
+    }
+}
 //---------------------------------------------------------------------------
 class TDArticle {
 
@@ -86,8 +90,12 @@ class TDArticle {
         this.view_object = [];
         this.instruction_gp = [];
         this.instance_part = [];
+        this.annotation = [];
 
         this.str_url_partapi_base = "/ContentsOperatorApis/GetPartObjectFile?";
+        this.str_url_annotation_base = "/ContentsOperatorApis/GetAnnotationObjectList?";
+
+        this.id_article = 0;
 
         //this.orbit_active = true;
 
@@ -96,10 +104,10 @@ class TDArticle {
         //this.camera_main = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 1000);
         //this.controls = new THREE.OrbitControls(this.camera_main, renderer.domElement);
 
-        
+
         this.counter = 0;
         this.step = 75;
-        
+
         this.pitch_px = 0;
         this.pitch_py = 0;
         this.pitch_pz = 0;
@@ -110,12 +118,85 @@ class TDArticle {
 
         this.is_edit_mode = true;
 
+        this.orbit_active = false;
 
+
+        this.camera_main;
+        this.controls;
+        this.scene = new THREE.Scene();
+
+        this.gridHelper;
+        this.axisHelper;
+        this.lightHelper;
+
+        this.light;
+        this.ambient;
+        this.renderer;
     }
+
+
+    //Loading Annotations
+    setup_annotations() {
+
+        let str_url_partapi = this.str_url_annotation_base + new URLSearchParams({ id_article: this.id_article }).toString();
+
+        //指定urlからデータを取得
+        fetch(str_url_partapi)
+            .then(response => {
+
+                return response.json();
+
+            })
+            .then(data => { // 処理が成功した場合に取得されるJSONデータ
+
+
+                let div_annotations = document.getElementById('annotations');
+                let temp_annotation;
+
+                for (let i in data) {
+                    this.annotation[data[i].id_annotation] = new Annotation(
+
+                        data[i].id_article,
+                        data[i].id_annotation,
+                        data[i].title,
+
+                        data[i].description1,
+                        data[i].description2,
+
+                        data[i].pos_x,
+                        data[i].pos_y,
+                        data[i].pos_z,
+                        'id_annotation_' + data[i].id_annotation
+                    );
+                    console.log(data[i].id_annotation);
+
+
+
+                    //Create Annotation Html Element
+                    temp_annotation = document.createElement('div');
+
+                    //temp_annotation.id = 'id_annotation_' + this.annotation[data[i].id_annotation].id_annotation;
+                    temp_annotation.id = this.annotation[data[i].id_annotation].web_id_annotation;
+
+
+                    temp_annotation.classList.add('annotation');
+                    temp_annotation.innerHTML = this.annotation[data[i].id_annotation].description1;
+                    div_annotations.appendChild(temp_annotation);
+
+
+                }
+
+            })
+            .catch(error => { // エラーの場合の処理
+
+                console.log(error);
+
+            });
+    }
+
 
     startup(lint, lpx, lpy, lpz, anbint, _gammaOutput, str_url_prodobjectapi, id_startinst) {
 
-        const glfLoader = new THREE.GLTFLoader();
         //指定urlからデータを取得
         fetch(str_url_prodobjectapi)
             .then(response => {
@@ -126,43 +207,47 @@ class TDArticle {
             .then(data => { // 処理が成功した場合に取得されるJSONデータ
 
                 //JSONのデータを各オブジェクトに詰め替える
-                adarticle.data_import(data);
+                this.data_import(data);
 
                 //コントロールパネル領域を生成する
-                adarticle.setup_control_panel_zone("control_panel_zone");
+                this.setup_control_panel_zone("control_panel_zone");
+
+                //Loading Annotations
+                this.setup_annotations();
 
                 //データモデルを取得する
-                adarticle.setup_instance_part_model(glfLoader, scene);
+                //this.setup_instance_part_model(glfLoader, this.scene);
+                this.setup_instance_part_model();
 
                 //表示領域を初期化する
-                adarticle.initial_optional01();
+                this.initial_optional01();
 
 
-                adarticle.initial_setup_and_render(lint, lpx, lpy, lpz, anbint, _gammaOutput);
+                this.initial_setup_and_render(lint, lpx, lpy, lpz, anbint, _gammaOutput);
 
 
-                //adarticle.transition_instruction(1);
+                //this.transition_instruction(1);
 
                 if (id_startinst == 0) {
 
-                    camera_main.position.x = 30;
-                    camera_main.position.y = 30;
-                    camera_main.position.z = 30;
+                    this.camera_main.position.x = 30;
+                    this.camera_main.position.y = 30;
+                    this.camera_main.position.z = 30;
 
 
-                    controls.target.x = 0;
-                    controls.target.y = 0;
-                    controls.target.z = 0;
+                    this.controls.target.x = 0;
+                    this.controls.target.y = 0;
+                    this.controls.target.z = 0;
                 }
                 else {
-                    adarticle.transition_instruction(id_startinst);
+                    this.transition_instruction(id_startinst);
 
                 }
 
                 //orbitコントロールモードを有効にし、レンダリングを開始する
-                orbit_active = true;
+                this.orbit_active = true;
 
-                adarticle.render_orbital();
+                this.render_orbital();
                 //render_orbital();
 
             })
@@ -235,12 +320,14 @@ class TDArticle {
 
 
     //モデルデータを読み込む
-    setup_instance_part_model(glfLoader, scene) {
+    setup_instance_part_model() {
 
+        const glfLoader = new THREE.GLTFLoader();
         let str_url_partapi = "";
         console.log(this.str_url_partapi_base);
 
         let x = this.str_url_partapi_base;
+        let scene = this.scene;
         this.instance_part.forEach(function (element) {
             str_url_partapi = x + new URLSearchParams({ id_part: element.id_part }).toString();
             console.log(str_url_partapi);
@@ -292,134 +379,75 @@ class TDArticle {
 
 
         //helper
-        /*
-        gridHelper = new THREE.GridHelper(200, 50);
-        scene.add(gridHelper);
+
+        this.gridHelper = new THREE.GridHelper(200, 50);
+        this.scene.add(this.gridHelper);
 
 
-        axisHelper = new THREE.AxisHelper(1000);
-        scene.add(axisHelper);
-        */
+        this.axisHelper = new THREE.AxisHelper(1000);
+        this.scene.add(this.axisHelper);
+
 
         //lightHelper = new THREE.DirectionalLightHelper(light, 20);
         //scene.add(lightHelper);
     }
-    
+
     //表示関連を初期化する
-    initial_setup_and_render(lint, lpx, lpy,lpz, anbint, _gammaOutput) {
+    initial_setup_and_render(lint, lpx, lpy, lpz, anbint, _gammaOutput) {
 
         // light
-        light = new THREE.DirectionalLight(0xffffff, lint);
-        light.position.set(lpx, lpy, lpz);
-        scene.add(light);
+        this.light = new THREE.DirectionalLight(0xffffff, lint);
+        this.light.position.set(lpx, lpy, lpz);
+        this.scene.add(this.light);
 
 
 
-        ambient = new THREE.AmbientLight(0x404040, anbint);
-        scene.add(ambient);
+        this.ambient = new THREE.AmbientLight(0x404040, anbint);
+        this.scene.add(this.ambient);
 
         // main camara
-        camera_main = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 1000);
+        this.camera_main = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 1000);
 
         // renderer
         //renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer = new THREE.WebGLRenderer({
-            canvas: document.querySelector('#model_screen')
-            , antialias: true
-        });
-        renderer.setSize(adarticle.width, adarticle.height);
-        renderer.setClearColor(0xefefef);
-        renderer.setPixelRatio(window.devicePixelRatio);
 
+        this.renderer = new THREE.WebGLRenderer({
+            canvas: document.querySelector('#model_screen')
+        });
+
+        this.renderer.setSize(this.width, this.height);
+        //renderer.setSize(500, 500);
+        this.renderer.setClearColor(0xefefef);
+        this.renderer.setPixelRatio(window.devicePixelRatio);
         //document.getElementById('model_screen').appendChild(renderer.domElement);
 
-        controls = new THREE.OrbitControls(camera_main, renderer.domElement);
+        this.controls = new THREE.OrbitControls(this.camera_main, this.renderer.domElement);
 
 
 
-        camera_main.position.x = 10;
-        camera_main.position.y = 10;
-        camera_main.position.z = 10;
+        this.camera_main.position.x = 10;
+        this.camera_main.position.y = 10;
+        this.camera_main.position.z = 10;
 
-        controls.target.x = 0;
-        controls.target.y = 0;
-        controls.target.z = 0;
+        this.controls.target.x = 0;
+        this.controls.target.y = 0;
+        this.controls.target.z = 0;
 
 
         //ガンマ値をtrueに。
         //(truee.jsで一部のアイテムが暗くなるのを軽減)
-        renderer.gammaOutput = _gammaOutput;
+        this.renderer.gammaOutput = _gammaOutput;
 
     }
 
 
-    /*
-    //指定されたIDのインストラクションに遷移する関数(旧世代)
-    transition_instruction_o(id_instruct) {
-
-
-        orbit_active = false;
-
-        //カメラ位置の変更
-        //---------------------
-        let i = this.instruction_gp[id_instruct].id_view;
-
-
-        // 視点のアニメーションによる移行
-        // ------------------------------------------------------------------------------------------------
-
-        let counter = 0;
-        let step = 75;
-
-        let pitch_px = (this.view_object[i].cam_pos_x - camera_main.position.x) / step;
-        let pitch_py = (this.view_object[i].cam_pos_y - camera_main.position.y) / step;
-        let pitch_pz = (this.view_object[i].cam_pos_z - camera_main.position.z) / step;
-
-        let pitch_tx = (this.view_object[i].obt_target_x - controls.target.x) / step;
-        let pitch_ty = (this.view_object[i].obt_target_y - controls.target.y) / step;
-        let pitch_tz = (this.view_object[i].obt_target_z - controls.target.z) / step;
-
-        
-        function flight() {
-
-            update_viewinfo();
-
-            //this.update_viewinfo();
-
-            if (counter >= step) {
-                orbit_active = true;
-                
-                //render_orbital();
-                return;
-            } else {
-                counter = counter + 1;
-                requestAnimationFrame(flight);
-
-                camera_main.position.x += pitch_px;
-                camera_main.position.y += pitch_py;
-                camera_main.position.z += pitch_pz;
-
-
-                controls.target.x += pitch_tx;
-                controls.target.y += pitch_ty;
-                controls.target.z += pitch_tz;
-
-                controls.update();
-                renderer.render(scene, camera_main);
-            }
-        }
-        flight();
-        this.update_instruction_statements(id_instruct);
-
-    }
-    */
 
 
     //指定されたIDのインストラクションに遷移する関数
     transition_instruction(id_instruct) {
 
 
-        orbit_active = false;
+        this.orbit_active = false;
 
         //カメラ位置の変更
         //---------------------
@@ -432,13 +460,13 @@ class TDArticle {
         this.counter = 0;
         this.step = 75;
 
-        this.pitch_px = (this.view_object[i].cam_pos_x - camera_main.position.x) / this.step;
-        this.pitch_py = (this.view_object[i].cam_pos_y - camera_main.position.y) / this.step;
-        this.pitch_pz = (this.view_object[i].cam_pos_z - camera_main.position.z) / this.step;
+        this.pitch_px = (this.view_object[i].cam_pos_x - this.camera_main.position.x) / this.step;
+        this.pitch_py = (this.view_object[i].cam_pos_y - this.camera_main.position.y) / this.step;
+        this.pitch_pz = (this.view_object[i].cam_pos_z - this.camera_main.position.z) / this.step;
 
-        this.pitch_tx = (this.view_object[i].obt_target_x - controls.target.x) / this.step;
-        this.pitch_ty = (this.view_object[i].obt_target_y - controls.target.y) / this.step;
-        this.pitch_tz = (this.view_object[i].obt_target_z - controls.target.z) / this.step;
+        this.pitch_tx = (this.view_object[i].obt_target_x - this.controls.target.x) / this.step;
+        this.pitch_ty = (this.view_object[i].obt_target_y - this.controls.target.y) / this.step;
+        this.pitch_tz = (this.view_object[i].obt_target_z - this.controls.target.z) / this.step;
 
 
         this.render_trans();
@@ -459,17 +487,17 @@ class TDArticle {
         if (this.counter >= this.step) { return; }
 
         this.counter = this.counter + 1;
-        camera_main.position.x += this.pitch_px;
-        camera_main.position.y += this.pitch_py;
-        camera_main.position.z += this.pitch_pz;
+        this.camera_main.position.x += this.pitch_px;
+        this.camera_main.position.y += this.pitch_py;
+        this.camera_main.position.z += this.pitch_pz;
 
 
-        controls.target.x += this.pitch_tx;
-        controls.target.y += this.pitch_ty;
-        controls.target.z += this.pitch_tz;
+        this.controls.target.x += this.pitch_tx;
+        this.controls.target.y += this.pitch_ty;
+        this.controls.target.z += this.pitch_tz;
 
-        controls.update();
-        renderer.render(scene, camera_main);
+        this.controls.update();
+        this.renderer.render(this.scene, this.camera_main);
 
         requestAnimationFrame(this.render_trans.bind(this));
 
@@ -479,7 +507,7 @@ class TDArticle {
         }
     }
 
-    //Update Instruction Statement and Controls for Display
+    //Update Instruction Statement and buttuns for Display
     update_instruction_statements_for_view(id_instruct) {
         let i = this.instruction_gp[id_instruct].id_view;
 
@@ -539,46 +567,71 @@ class TDArticle {
 
     }
 
-    
+
     //通常の、orbit control有効状態でのレンダリング
     render_orbital() {
 
         if (this.is_edit_mode) {
             this.update_viewinfo();
         }
-        //if (!orbit_active) { return; }
+        //if (!this.orbit_active) { return; }
         requestAnimationFrame(this.render_orbital.bind(this));
 
 
-        controls.update();
-        renderer.render(scene, camera_main);
+        this.controls.update();
+        this.renderer.render(this.scene, this.camera_main);
+        this.update_annotation_position();
     }
-    
-    
+
+
     //ビュー情報を更新する
     update_viewinfo() {
 
 
-        document.getElementById('cam_pos_x').value = Math.floor(camera_main.position.x * 100) / 100;
-        document.getElementById('cam_pos_y').value = Math.floor(camera_main.position.y * 100) / 100;
-        document.getElementById('cam_pos_z').value = Math.floor(camera_main.position.z * 100) / 100;
+        document.getElementById('cam_pos_x').value = Math.floor(this.camera_main.position.x * 100) / 100;
+        document.getElementById('cam_pos_y').value = Math.floor(this.camera_main.position.y * 100) / 100;
+        document.getElementById('cam_pos_z').value = Math.floor(this.camera_main.position.z * 100) / 100;
 
         document.getElementById('cam_lookat_x').value = 0;
         document.getElementById('cam_lookat_y').value = 0;
         document.getElementById('cam_lookat_z').value = 0;
 
-        document.getElementById('cam_quat_x').value = Math.floor(camera_main.quaternion.x * 1000) / 1000;
-        document.getElementById('cam_quat_y').value = Math.floor(camera_main.quaternion.y * 1000) / 1000;
-        document.getElementById('cam_quat_z').value = Math.floor(camera_main.quaternion.z * 1000) / 1000;
-        document.getElementById('cam_quat_w').value = Math.floor(camera_main.quaternion.w * 1000) / 1000;
+        document.getElementById('cam_quat_x').value = Math.floor(this.camera_main.quaternion.x * 1000) / 1000;
+        document.getElementById('cam_quat_y').value = Math.floor(this.camera_main.quaternion.y * 1000) / 1000;
+        document.getElementById('cam_quat_z').value = Math.floor(this.camera_main.quaternion.z * 1000) / 1000;
+        document.getElementById('cam_quat_w').value = Math.floor(this.camera_main.quaternion.w * 1000) / 1000;
 
-        document.getElementById('obt_target_x').value = Math.floor(controls.target.x * 100) / 100;
-        document.getElementById('obt_target_y').value = Math.floor(controls.target.y * 100) / 100;
-        document.getElementById('obt_target_z').value = Math.floor(controls.target.z * 100) / 100;
+        document.getElementById('obt_target_x').value = Math.floor(this.controls.target.x * 100) / 100;
+        document.getElementById('obt_target_y').value = Math.floor(this.controls.target.y * 100) / 100;
+        document.getElementById('obt_target_z').value = Math.floor(this.controls.target.z * 100) / 100;
+
+    }
+    //Update Annotation Position
+    update_annotation_position() {
+
+
+        let web_annotation;
+        const canvas = this.renderer.domElement;
+        const cm = this.camera_main;
+
+
+        this.annotation.forEach(function (element) {
+
+            const vector = new THREE.Vector3(element.pos_x, element.pos_y, element.pos_z);
+            vector.project(cm);
+
+
+            vector.x = Math.round((0.5 + vector.x / 2) * (canvas.width / window.devicePixelRatio));
+            vector.y = Math.round((0.5 - vector.y / 2) * (canvas.height / window.devicePixelRatio));
+
+            web_annotation = document.getElementById(element.web_id_annotation);
+            web_annotation.style.top = `${vector.y}px`;
+            web_annotation.style.left = `${vector.x}px`;
+
+        });
 
     }
 
-    
 
 }
 

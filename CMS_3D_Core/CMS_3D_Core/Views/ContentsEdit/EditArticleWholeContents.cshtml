@@ -4,6 +4,8 @@
     ViewData["Title"] = "EditProductInstruction";
 }
 
+<link rel="stylesheet" href="~/css/annotation.css" />
+
 <h1>@Html.DisplayFor(model => model.title)</h1>
 
 
@@ -17,6 +19,8 @@
 
     <div class="col-md-5">
 
+        <div id="annotations">
+        </div>
         @*モデルの表示領域*@
         <canvas id="model_screen">
         </canvas>
@@ -136,6 +140,8 @@
         let anbint = @obj.ambient_light_intensity;
         let _gammaOutput =@if(obj.gammaOutput==true){@Html.Raw("true;")} else{@Html.Raw("false;")};
 
+
+        adarticle.id_article = @obj.id_article;
         adarticle.is_edit_mode = true;
         adarticle.startup(lint, lpx, lpy, lpz, anbint, _gammaOutput, str_url_prodobjectapi, id_startinst);
 

@@ -17,6 +17,7 @@
 }
 
 
+<link rel="stylesheet" href="~/css/annotation.css" />
 
 <div class="container">
 
@@ -25,6 +26,8 @@
         <div class="col-md-7">
             <h2>@Html.DisplayFor(model => model.title)</h2>
 
+            <div id="annotations">
+            </div>
             @*モデルの表示領域*@
             <canvas id="model_screen">
             </canvas>
@@ -64,40 +67,41 @@
 <script type="text/javascript">
 
 
-var adarticle = new TDArticle();
+    var adarticle = new TDArticle();
 
 
-// ロード後に実行される処理
-window.onload = function () {
-    'use strict';
+    // ロード後に実行される処理
+    window.onload = function () {
+        'use strict';
 
-    @{
-        var obj = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { });
+        @{
+            var obj = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { });
+        }
+
+        let str_url_prodobjectapi_base = "/ContentsOperatorApis/GetAssemblyObjectList?";
+        let str_url_prodobjectapi = str_url_prodobjectapi_base + new URLSearchParams({ id_article: @obj.id_article }).toString();
+
+
+        let id_startinst = @((obj.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction() { id_instruct = 0 }).id_instruct);
+
+
+        let lint =@obj.directional_light_intensity;
+        let lpx =@obj.directional_light_px;
+        let lpy = @obj.directional_light_py;
+        let lpz =@obj.directional_light_pz;
+        let anbint = @obj.ambient_light_intensity;
+        let _gammaOutput =@if(obj.gammaOutput==true){@Html.Raw("true;")} else{@Html.Raw("false;")};
+
+        adarticle.id_article = @obj.id_article;
+        adarticle.is_edit_mode = false;
+        adarticle.startup(lint, lpx, lpy, lpz, anbint, _gammaOutput, str_url_prodobjectapi, id_startinst);
+
     }
 
-    let str_url_prodobjectapi_base = "/ContentsOperatorApis/GetAssemblyObjectList?";
-    let str_url_prodobjectapi = str_url_prodobjectapi_base + new URLSearchParams({ id_article: @obj.id_article }).toString();
-
-
-    let id_startinst = @((obj.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction() { id_instruct = 0 }).id_instruct);
-
-
-    let lint =@obj.directional_light_intensity;
-    let lpx =@obj.directional_light_px;
-    let lpy = @obj.directional_light_py;
-    let lpz =@obj.directional_light_pz;
-    let anbint = @obj.ambient_light_intensity;
-    let _gammaOutput =@if(obj.gammaOutput==true){@Html.Raw("true;")} else{@Html.Raw("false;")};
-
-    adarticle.is_edit_mode = false;
-    adarticle.startup(lint, lpx, lpy, lpz, anbint, _gammaOutput, str_url_prodobjectapi, id_startinst);
-
-}
-
-//指定されたIDのインストラクションを表示する
-function transition_instruction2(id_instruct) {
-    adarticle.transition_instruction(id_instruct);
-}
+    //指定されたIDのインストラクションを表示する
+    function transition_instruction2(id_instruct) {
+        adarticle.transition_instruction(id_instruct);
+    }
 
 
 

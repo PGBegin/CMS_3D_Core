@@ -128,8 +128,43 @@ namespace CMS_3D_Core.Controllers
             return Json(objCollection);
         }
 
+        /// <summary>
+        /// GET: Rerutn Annotation Data with Json Formats
+        /// </summary>
+        /// <param name="id_article">ArticleID</param>
+        /// <returns>ファイルのJsonデータ</returns>
+        [HttpGet]
+        public JsonResult GetAnnotationObjectList(long id_article)
+        {
+            var t = _context.t_annotations
+                        .Where(x => x.id_article == id_article)
+                        .ToList();
+
+            IList<object> objCollection = new List<object>();
+
+            foreach (var item in t)
+            {
+                objCollection.Add(
+                    new
+                    {
+                        type = "annotation",
+                        id_article = item.id_article,
+                        id_annotation = item.id_annotation,
+                        title = item.title,
+                        description1 = item.description1,
+                        description2 = item.description2,
+                        pos_x = item.pos_x,
+                        pos_y = item.pos_y,
+                        pos_z = item.pos_z
+                    });
+            }
 
 
+
+            return Json(objCollection);
+        }
+
+        /*
         /// <summary>
         /// GET: 選択されたオブジェクトファイルを返す関数
         /// </summary>
@@ -142,8 +177,8 @@ namespace CMS_3D_Core.Controllers
 
             return File(t_part.file_data, t_part.type_data, t_part.part_number);
         }
-        
-        
+        */
+
         /// <summary>
         /// GET: 選択されたオブジェクトファイルを返す関数
         /// </summary>
