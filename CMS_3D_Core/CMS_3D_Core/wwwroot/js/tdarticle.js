@@ -1,4 +1,5 @@
-﻿
+﻿//const { Vector3 } = require("../lib/three/three.module");
+
 
 
 
@@ -104,6 +105,8 @@ class TDArticle {
         //this.camera_main = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 1000);
         //this.controls = new THREE.OrbitControls(this.camera_main, renderer.domElement);
 
+        this.id_instruction_controlpanel = "control_panel_zone";
+        this.id_viewpoint_controlpanel = "id_view_operation_panel";
 
         this.counter = 0;
         this.step = 75;
@@ -168,7 +171,7 @@ class TDArticle {
                         data[i].pos_z,
                         'id_annotation_' + data[i].id_annotation
                     );
-                    console.log(data[i].id_annotation);
+                    //console.log(data[i].id_annotation);
 
 
 
@@ -210,7 +213,9 @@ class TDArticle {
                 this.data_import(data);
 
                 //コントロールパネル領域を生成する
-                this.setup_control_panel_zone("control_panel_zone");
+                this.setup_control_panel_zone();
+
+                this.setup_view_operation_panel();
 
                 //Loading Annotations
                 this.setup_annotations();
@@ -324,13 +329,14 @@ class TDArticle {
 
         const glfLoader = new THREE.GLTFLoader();
         let str_url_partapi = "";
-        console.log(this.str_url_partapi_base);
+        //console.log(this.str_url_partapi_base);
 
         let x = this.str_url_partapi_base;
         let scene = this.scene;
+
         this.instance_part.forEach(function (element) {
             str_url_partapi = x + new URLSearchParams({ id_part: element.id_part }).toString();
-            console.log(str_url_partapi);
+            //console.log(str_url_partapi);
 
             glfLoader.load(str_url_partapi, function (gltf) {
 
@@ -353,15 +359,17 @@ class TDArticle {
     }
 
     //コントロールパネル領域を生成する
-    setup_control_panel_zone(elementid) {
+    setup_control_panel_zone() {
 
-        let pn = document.getElementById(elementid);
+        let pn = document.getElementById(this.id_instruction_controlpanel);
         let temp_bt;
-        this.instruction_gp.forEach(function (element) {
+        let obj = this;
+        this.instruction_gp.forEach( function (element) {
 
             temp_bt = document.createElement('button');
             temp_bt.type = 'button';
-            temp_bt.onclick = transition_instruction2.bind(null, element.id_instruct);
+            //temp_bt.onclick = transition_instruction2.bind(null, element.id_instruct);
+            temp_bt.onclick = obj.transition_instruction.bind(obj, element.id_instruct);
             temp_bt.id = "btn_inst" + element.id_instruct;
             temp_bt.classList.add('btn');
             temp_bt.classList.add('btn-outline-primary');
@@ -371,6 +379,65 @@ class TDArticle {
         });
     }
 
+    //setup view operation panel
+    //id_viewpoint_controlpanel
+    setup_view_operation_panel() {
+
+        let pn = document.getElementById(this.id_viewpoint_controlpanel);
+        if (pn != null) {
+            let temp_bt;
+        
+            temp_bt = document.createElement('button');
+            temp_bt.type = 'button';
+            temp_bt.onclick = this.transition_view.bind(this, new THREE.Vector3(10, 0, 0), new THREE.Vector3(0, 0, 0));
+            temp_bt.classList.add('btn');
+            temp_bt.classList.add('btn-outline-primary');
+            temp_bt.textContent = "View-XF";
+            pn.appendChild(temp_bt);
+
+            temp_bt = document.createElement('button');
+            temp_bt.type = 'button';
+            temp_bt.onclick = this.transition_view.bind(this, new THREE.Vector3(-10, 0, 0), new THREE.Vector3(0, 0, 0));
+            temp_bt.classList.add('btn');
+            temp_bt.classList.add('btn-outline-primary');
+            temp_bt.textContent = "View-XR";
+            pn.appendChild(temp_bt);
+
+
+            temp_bt = document.createElement('button');
+            temp_bt.type = 'button';
+            temp_bt.onclick = this.transition_view.bind(this, new THREE.Vector3(0, 10, 0), new THREE.Vector3(0, 0, 0));
+            temp_bt.classList.add('btn');
+            temp_bt.classList.add('btn-outline-primary');
+            temp_bt.textContent = "View-YF";
+            pn.appendChild(temp_bt);
+
+            temp_bt = document.createElement('button');
+            temp_bt.type = 'button';
+            temp_bt.onclick = this.transition_view.bind(this, new THREE.Vector3(0, -10, 0), new THREE.Vector3(0, 0, 0));
+            temp_bt.classList.add('btn');
+            temp_bt.classList.add('btn-outline-primary');
+            temp_bt.textContent = "View-YR";
+            pn.appendChild(temp_bt);
+
+
+            temp_bt = document.createElement('button');
+            temp_bt.type = 'button';
+            temp_bt.onclick = this.transition_view.bind(this, new THREE.Vector3(0, 0, 10), new THREE.Vector3(0, 0, 0));
+            temp_bt.classList.add('btn');
+            temp_bt.classList.add('btn-outline-primary');
+            temp_bt.textContent = "View-ZF";
+            pn.appendChild(temp_bt);
+
+            temp_bt = document.createElement('button');
+            temp_bt.type = 'button';
+            temp_bt.onclick = this.transition_view.bind(this, new THREE.Vector3(0, 0, -10), new THREE.Vector3(0, 0, 0));
+            temp_bt.classList.add('btn');
+            temp_bt.classList.add('btn-outline-primary');
+            temp_bt.textContent = "View-ZR";
+            pn.appendChild(temp_bt);
+        }
+    }
 
 
     //表示関連を初期化する
@@ -412,7 +479,7 @@ class TDArticle {
         //renderer = new THREE.WebGLRenderer({ antialias: true });
 
         this.renderer = new THREE.WebGLRenderer({
-            canvas: document.querySelector('#model_screen')
+            canvas: document.querySelector('#model_screen'), antialias: true
         });
 
         this.renderer.setSize(this.width, this.height);
@@ -438,6 +505,45 @@ class TDArticle {
         //(truee.jsで一部のアイテムが暗くなるのを軽減)
         this.renderer.gammaOutput = _gammaOutput;
 
+    }
+
+    //指定した座標に遷移する関数
+    transition_view(cam_pos, target) {
+
+        
+        this.counter = 0;
+        this.step = 75;
+
+        this.pitch_px = (cam_pos.x - this.camera_main.position.x) / this.step;
+        this.pitch_py = (cam_pos.y - this.camera_main.position.y) / this.step;
+        this.pitch_pz = (cam_pos.z - this.camera_main.position.z) / this.step;
+
+        this.pitch_tx = (target.x - this.controls.target.x) / this.step;
+        this.pitch_ty = (target.y - this.controls.target.y) / this.step;
+        this.pitch_tz = (target.z - this.controls.target.z) / this.step;
+
+
+        if (this.counter >= this.step) { return; }
+
+        this.counter = this.counter + 1;
+        this.camera_main.position.x += this.pitch_px;
+        this.camera_main.position.y += this.pitch_py;
+        this.camera_main.position.z += this.pitch_pz;
+
+
+        this.controls.target.x += this.pitch_tx;
+        this.controls.target.y += this.pitch_ty;
+        this.controls.target.z += this.pitch_tz;
+
+        this.controls.update();
+        this.renderer.render(this.scene, this.camera_main);
+
+        requestAnimationFrame(this.render_trans.bind(this));
+
+
+        if (this.is_edit_mode) {
+            this.update_viewinfo();
+        }
     }
 
 
@@ -511,7 +617,7 @@ class TDArticle {
     update_instruction_statements_for_view(id_instruct) {
         let i = this.instruction_gp[id_instruct].id_view;
 
-        console.log(window.innerWidth);
+        //console.log(window.innerWidth);
 
         //Update Instruction for Preview
         document.getElementById('preview_instruction_short_description').innerHTML = marked(this.instruction_gp[id_instruct].short_description);
@@ -614,6 +720,9 @@ class TDArticle {
         const canvas = this.renderer.domElement;
         const cm = this.camera_main;
 
+        let ofx = document.getElementById('model_screen').getBoundingClientRect().left;
+        let ofy = document.getElementById('model_screen').getBoundingClientRect().top;
+        //console.log("ofx:" + ofx + ",ofy:" + ofy);
 
         this.annotation.forEach(function (element) {
 
@@ -623,6 +732,9 @@ class TDArticle {
 
             vector.x = Math.round((0.5 + vector.x / 2) * (canvas.width / window.devicePixelRatio));
             vector.y = Math.round((0.5 - vector.y / 2) * (canvas.height / window.devicePixelRatio));
+
+            vector.x = vector.x + ofx + pageXOffset;
+            vector.y = vector.y + ofy + pageYOffset;
 
             web_annotation = document.getElementById(element.web_id_annotation);
             web_annotation.style.top = `${vector.y}px`;

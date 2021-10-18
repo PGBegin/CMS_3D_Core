@@ -74,6 +74,7 @@
 
                 @Html.ActionLink("View", "Index", "t_view", new { id_article = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { id_article = 0 }).id_article })
 
+                <div id="id_view_operation_panel"></div>
 
             </div>
             <div class="tab-pane fade" id="nav-articlebase">
@@ -154,5 +155,10 @@
     }
 
 
+    //指定されたIDのインストラクションを表示する
+    function transition_instruction3(id_instruct) {
+        adarticle.transition_view(new THREE.Vector3(10, 10, 10), new THREE.Vector3(0, 0, 0));
+    }
+        //temp_bt.onclick = this.transition_view(new THREE.Vector3(10, 10, 10), new THREE.Vector3(0, 0, 0));
 
 </script>
