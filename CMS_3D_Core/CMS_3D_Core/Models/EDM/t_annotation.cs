@@ -7,6 +7,11 @@ namespace CMS_3D_Core.Models.EDM
 {
     public partial class t_annotation
     {
+        public t_annotation()
+        {
+            t_annotation_displays = new HashSet<t_annotation_display>();
+        }
+
         public long id_article { get; set; }
         public long id_annotation { get; set; }
         public string title { get; set; }
@@ -22,5 +27,6 @@ namespace CMS_3D_Core.Models.EDM
         public DateTime? latest_update_datetime { get; set; }
 
         public virtual t_article id_articleNavigation { get; set; }
+        public virtual ICollection<t_annotation_display> t_annotation_displays { get; set; }
     }
 }

@@ -1,6 +1,4 @@
-﻿//const { Vector3 } = require("../lib/three/three.module");
-
-
+﻿
 
 
 
@@ -68,6 +66,18 @@ class Annotation {
         this.web_id_annotation = web_id_annotation;
     }
 }
+
+
+
+
+class AnnotationDisplay {
+    constructor(id_article, id_instruct, id_annotation, is_display) {
+        this.id_article = id_article;
+        this.id_instruct = id_instruct;
+        this.id_annotation = id_annotation;
+        this.is_display = is_display;
+    }
+}
 //---------------------------------------------------------------------------
 class TDArticle {
 
@@ -92,9 +102,11 @@ class TDArticle {
         this.instruction_gp = [];
         this.instance_part = [];
         this.annotation = [];
+        this.annotation_display = [];
 
         this.str_url_partapi_base = "/ContentsOperatorApis/GetPartObjectFile?";
         this.str_url_annotation_base = "/ContentsOperatorApis/GetAnnotationObjectList?";
+        this.str_url_annotation_display_base = "/ContentsOperatorApis/GetAnnotationDisplayObjectList?";
 
         this.id_article = 0;
 
@@ -137,6 +149,171 @@ class TDArticle {
         this.renderer;
     }
 
+
+
+
+    startup(lint, lpx, lpy, lpz, anbint, _gammaOutput, str_url_prodobjectapi, id_startinst) {
+
+        //指定urlからデータを取得
+        fetch(str_url_prodobjectapi)
+            .then(response => {
+
+                return response.json();
+
+            })
+            .then(data => { // 処理が成功した場合に取得されるJSONデータ
+
+                //JSONのデータを各オブジェクトに詰め替える
+                this.data_import(data);
+
+                //コントロールパネル領域を生成する
+                this.setup_control_panel_zone();
+
+                //Op Panel
+                this.setup_view_operation_panel();
+
+                //Loading Annotations
+                this.setup_annotations();
+
+                this.setup_annotation_display();
+
+                //データモデルを取得する
+                //this.setup_instance_part_model(glfLoader, this.scene);
+                this.setup_instance_part_model();
+
+                //表示領域を初期化する
+                this.initial_optional01();
+
+
+                this.initial_setup_and_render(lint, lpx, lpy, lpz, anbint, _gammaOutput);
+
+
+                //this.transition_instruction(1);
+
+                if (id_startinst == 0) {
+
+                    this.camera_main.position.x = 30;
+                    this.camera_main.position.y = 30;
+                    this.camera_main.position.z = 30;
+
+
+                    this.controls.target.x = 0;
+                    this.controls.target.y = 0;
+                    this.controls.target.z = 0;
+                }
+                else {
+                    this.transition_instruction(id_startinst);
+
+                }
+
+                //orbitコントロールモードを有効にし、レンダリングを開始する
+                this.orbit_active = true;
+
+                this.render_orbital();
+                //render_orbital();
+
+            })
+            .catch(error => { // エラーの場合の処理
+
+                console.log(error);
+
+            });
+    }
+
+
+
+
+
+    //Loading Basic Data
+    data_import(data) {
+
+        for (let i in data) {
+            if (data[i].type == "view") {
+                this.view_object[data[i].id_view] = new ViewObject(
+
+                    data[i].id_article,
+                    data[i].id_view,
+                    data[i].title,
+
+                    data[i].cam_pos_x,
+                    data[i].cam_pos_y,
+                    data[i].cam_pos_z,
+
+                    data[i].cam_lookat_x,
+                    data[i].cam_lookat_y,
+                    data[i].cam_lookat_z,
+
+                    data[i].cam_quat_x,
+                    data[i].cam_quat_y,
+                    data[i].cam_quat_z,
+                    data[i].cam_quat_w,
+
+                    data[i].obt_target_x,
+                    data[i].obt_target_y,
+                    data[i].obt_target_z
+                );
+            }
+
+
+            if (data[i].type == "instruction") {
+
+                this.instruction_gp[data[i].id_instruct] = new Instruction(
+                    data[i].id_article,
+                    data[i].id_instruct,
+                    data[i].id_view,
+                    data[i].title,
+                    data[i].short_description,
+                    data[i].display_order,
+                    data[i].memo
+                );
+
+            }
+
+
+            if (data[i].type == "instance_part") {
+
+                this.instance_part[data[i].id_inst] = new InstancePart(
+                    data[i].id_assy,
+                    data[i].id_inst,
+                    data[i].id_part, null);
+            }
+        }
+    }
+
+
+    //Loading Models
+    setup_instance_part_model() {
+
+        const glfLoader = new THREE.GLTFLoader();
+        let str_url_partapi = "";
+        //console.log(this.str_url_partapi_base);
+
+        let x = this.str_url_partapi_base;
+        let scene = this.scene;
+
+        this.instance_part.forEach(function (element) {
+            str_url_partapi = x + new URLSearchParams({ id_part: element.id_part }).toString();
+            //console.log(str_url_partapi);
+
+            glfLoader.load(str_url_partapi, function (gltf) {
+
+
+
+                document.getElementById('div_progressbar_modeldl').setAttribute('hidden', '');
+                scene.add(gltf.scene);
+
+            }, function (xhr) {
+
+                //console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+                document.getElementById('progressbar_modeldl').setAttribute('style', 'width: ' + Math.floor(xhr.loaded / xhr.total * 100) + '%');
+
+            }, function (error) {
+
+                console.error(error);
+
+            });
+        });
+    }
 
     //Loading Annotations
     setup_annotations() {
@@ -198,164 +375,49 @@ class TDArticle {
     }
 
 
-    startup(lint, lpx, lpy, lpz, anbint, _gammaOutput, str_url_prodobjectapi, id_startinst) {
 
+
+
+    //Loading Annotation Display
+    setup_annotation_display() {
+
+        let str_url_api = this.str_url_annotation_display_base + new URLSearchParams({ id_article: this.id_article }).toString();
+
+        const obj = this;
+        const _id_article = this.id_article;
         //指定urlからデータを取得
-        fetch(str_url_prodobjectapi)
+        fetch(str_url_api)
             .then(response => {
 
                 return response.json();
 
             })
             .then(data => { // 処理が成功した場合に取得されるJSONデータ
+                let i, j;
+                obj.instruction_gp.forEach(function (element) {
+                    //i = 0;
+                    i = element.id_instruct;
+                    obj.annotation_display[i] = [];
+                    obj.annotation.forEach(function (element) {
+                        j = element.id_annotation;
+                        obj.annotation_display[i][j] = new AnnotationDisplay(
+                            _id_article,
+                            i,
+                            j,
+                            false
+                        );
+                    });
+                });
 
-                //JSONのデータを各オブジェクトに詰め替える
-                this.data_import(data);
-
-                //コントロールパネル領域を生成する
-                this.setup_control_panel_zone();
-
-                this.setup_view_operation_panel();
-
-                //Loading Annotations
-                this.setup_annotations();
-
-                //データモデルを取得する
-                //this.setup_instance_part_model(glfLoader, this.scene);
-                this.setup_instance_part_model();
-
-                //表示領域を初期化する
-                this.initial_optional01();
-
-
-                this.initial_setup_and_render(lint, lpx, lpy, lpz, anbint, _gammaOutput);
-
-
-                //this.transition_instruction(1);
-
-                if (id_startinst == 0) {
-
-                    this.camera_main.position.x = 30;
-                    this.camera_main.position.y = 30;
-                    this.camera_main.position.z = 30;
-
-
-                    this.controls.target.x = 0;
-                    this.controls.target.y = 0;
-                    this.controls.target.z = 0;
+                for (let k in data) {
+                    obj.annotation_display[data[k].id_instruct][data[k].id_annotation].is_display = true;
                 }
-                else {
-                    this.transition_instruction(id_startinst);
-
-                }
-
-                //orbitコントロールモードを有効にし、レンダリングを開始する
-                this.orbit_active = true;
-
-                this.render_orbital();
-                //render_orbital();
-
             })
             .catch(error => { // エラーの場合の処理
 
                 console.log(error);
 
             });
-    }
-
-
-
-
-
-    //基本データを読み込む
-    data_import(data) {
-
-        for (let i in data) {
-            if (data[i].type == "view") {
-                this.view_object[data[i].id_view] = new ViewObject(
-
-                    data[i].id_article,
-                    data[i].id_view,
-                    data[i].title,
-
-                    data[i].cam_pos_x,
-                    data[i].cam_pos_y,
-                    data[i].cam_pos_z,
-
-                    data[i].cam_lookat_x,
-                    data[i].cam_lookat_y,
-                    data[i].cam_lookat_z,
-
-                    data[i].cam_quat_x,
-                    data[i].cam_quat_y,
-                    data[i].cam_quat_z,
-                    data[i].cam_quat_w,
-
-                    data[i].obt_target_x,
-                    data[i].obt_target_y,
-                    data[i].obt_target_z
-                );
-            }
-
-
-            if (data[i].type == "instruction") {
-
-                this.instruction_gp[data[i].id_instruct] = new Instruction(
-                    data[i].id_article,
-                    data[i].id_instruct,
-                    data[i].id_view,
-                    data[i].title,
-                    data[i].short_description,
-                    data[i].display_order,
-                    data[i].memo
-                );
-
-            }
-
-
-            if (data[i].type == "instance_part") {
-
-                this.instance_part[data[i].id_inst] = new InstancePart(
-                    data[i].id_assy,
-                    data[i].id_inst,
-                    data[i].id_part, null);
-            }
-        }
-    }
-
-
-    //モデルデータを読み込む
-    setup_instance_part_model() {
-
-        const glfLoader = new THREE.GLTFLoader();
-        let str_url_partapi = "";
-        //console.log(this.str_url_partapi_base);
-
-        let x = this.str_url_partapi_base;
-        let scene = this.scene;
-
-        this.instance_part.forEach(function (element) {
-            str_url_partapi = x + new URLSearchParams({ id_part: element.id_part }).toString();
-            //console.log(str_url_partapi);
-
-            glfLoader.load(str_url_partapi, function (gltf) {
-
-
-
-                document.getElementById('div_progressbar_modeldl').setAttribute('hidden', '');
-                scene.add(gltf.scene);
-
-            }, function (xhr) {
-
-                //console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-                document.getElementById('progressbar_modeldl').setAttribute('style', 'width: ' + Math.floor(xhr.loaded / xhr.total * 100) + '%');
-
-            }, function (error) {
-
-                console.error(error);
-
-            });
-        });
     }
 
     //コントロールパネル領域を生成する

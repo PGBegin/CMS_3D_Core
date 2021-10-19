@@ -164,6 +164,37 @@ namespace CMS_3D_Core.Controllers
             return Json(objCollection);
         }
 
+
+        /// <summary>
+        /// GET: Rerutn Annotation Data with Json Formats
+        /// </summary>
+        /// <param name="id_article">ArticleID</param>
+        /// <returns>ファイルのJsonデータ</returns>
+        [HttpGet]
+        public JsonResult GetAnnotationDisplayObjectList(long id_article)
+        {
+            var t = _context.t_annotation_displays
+                        .Where(x => x.id_article == id_article)
+                        .ToList();
+
+            IList<object> objCollection = new List<object>();
+
+            foreach (var item in t)
+            {
+                objCollection.Add(
+                    new
+                    {
+                        type = "annotation_display",
+                        id_article = item.id_article,
+                        id_instruct = item.id_instruct,
+                        id_annotation = item.id_annotation
+                    });
+            }
+
+
+
+            return Json(objCollection);
+        }
         /*
         /// <summary>
         /// GET: 選択されたオブジェクトファイルを返す関数

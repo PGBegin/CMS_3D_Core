@@ -7,6 +7,11 @@ namespace CMS_3D_Core.Models.EDM
 {
     public partial class t_instruction
     {
+        public t_instruction()
+        {
+            t_annotation_displays = new HashSet<t_annotation_display>();
+        }
+
         public long id_article { get; set; }
         public long id_instruct { get; set; }
         public int id_view { get; set; }
@@ -21,5 +26,6 @@ namespace CMS_3D_Core.Models.EDM
 
         public virtual t_view id_ { get; set; }
         public virtual t_article id_articleNavigation { get; set; }
+        public virtual ICollection<t_annotation_display> t_annotation_displays { get; set; }
     }
 }

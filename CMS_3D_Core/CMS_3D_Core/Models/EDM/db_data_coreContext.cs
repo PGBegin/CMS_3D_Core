@@ -26,12 +26,14 @@ namespace CMS_3D_Core.Models.EDM
         public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
         public virtual DbSet<m_status_article> m_status_articles { get; set; }
         public virtual DbSet<t_annotation> t_annotations { get; set; }
+        public virtual DbSet<t_annotation_display> t_annotation_displays { get; set; }
         public virtual DbSet<t_article> t_articles { get; set; }
         public virtual DbSet<t_article_length_sumarry> t_article_length_sumarries { get; set; }
         public virtual DbSet<t_assembly> t_assemblies { get; set; }
         public virtual DbSet<t_attachment> t_attachments { get; set; }
         public virtual DbSet<t_instance_part> t_instance_parts { get; set; }
         public virtual DbSet<t_instruction> t_instructions { get; set; }
+        public virtual DbSet<t_instruction_display> t_instruction_displays { get; set; }
         public virtual DbSet<t_part> t_parts { get; set; }
         public virtual DbSet<t_part_display> t_part_displays { get; set; }
         public virtual DbSet<t_view> t_views { get; set; }
@@ -177,6 +179,29 @@ namespace CMS_3D_Core.Models.EDM
                     .HasForeignKey(d => d.id_article)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_t_annotation_t_article");
+            });
+
+            modelBuilder.Entity<t_annotation_display>(entity =>
+            {
+                entity.HasKey(e => new { e.id_article, e.id_instruct, e.id_annotation });
+
+                entity.ToTable("t_annotation_display");
+
+                entity.Property(e => e.create_user).HasMaxLength(50);
+
+                entity.Property(e => e.latest_update_user).HasMaxLength(50);
+
+                entity.HasOne(d => d.id_a)
+                    .WithMany(p => p.t_annotation_displays)
+                    .HasForeignKey(d => new { d.id_article, d.id_annotation })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_t_annotation_display_t_annotation");
+
+                entity.HasOne(d => d.id_)
+                    .WithMany(p => p.t_annotation_displays)
+                    .HasForeignKey(d => new { d.id_article, d.id_instruct })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_t_annotation_display_t_instruction");
             });
 
             modelBuilder.Entity<t_article>(entity =>
@@ -325,6 +350,17 @@ namespace CMS_3D_Core.Models.EDM
                     .HasForeignKey(d => new { d.id_article, d.id_view })
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_t_instruction_t_view");
+            });
+
+            modelBuilder.Entity<t_instruction_display>(entity =>
+            {
+                entity.HasKey(e => new { e.id_article, e.id_instruct, e.id_annotation });
+
+                entity.ToTable("t_instruction_display");
+
+                entity.Property(e => e.create_user).HasMaxLength(50);
+
+                entity.Property(e => e.latest_update_user).HasMaxLength(50);
             });
 
             modelBuilder.Entity<t_part>(entity =>
