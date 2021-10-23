@@ -84,7 +84,7 @@ var adarticle = new TDArticle();
 // ロード後に実行される処理
 window.onload = function () {
     'use strict';
-
+    @*
     @{
         var obj = (new CMS_3D_Core.Models.EDM.t_article() { directional_light_intensity=1, directional_light_px=30, directional_light_py=30, directional_light_pz=30, ambient_light_intensity=1});
     }
@@ -105,17 +105,19 @@ window.onload = function () {
     let _gammaOutput =@if(obj.gammaOutput==true){@Html.Raw("true;")} else{@Html.Raw("false;")};
 
 
-
+        *@
+    adarticle.is_mode_assy = true;
+    adarticle.id_assy = @Model.id_assy;
     adarticle.is_edit_mode = false;
-    adarticle.startup(lint, lpx, lpy, lpz, anbint, _gammaOutput, str_url_prodobjectapi, id_startinst);
+    adarticle.startup();//lint, lpx, lpy, lpz, anbint, _gammaOutput, str_url_prodobjectapi, id_startinst);
 
 }
-
+        @*
 //指定されたIDのインストラクションを表示する
 function transition_instruction2(id_instruct) {
     adarticle.transition_instruction(id_instruct);
 }
 
-
+ *@
 
 </script>

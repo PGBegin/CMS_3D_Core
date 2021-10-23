@@ -178,6 +178,29 @@ namespace CMS_3D_Core.Controllers
     }
 
     /// <summary>
+    /// Edit Instruction
+    /// </summary>
+    public class EditProductAnnotationViewComponent : ViewComponent
+    {
+        private readonly db_data_coreContext _context;
+
+        public EditProductAnnotationViewComponent(db_data_coreContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IViewComponentResult> InvokeAsync(long id_article)
+        {
+
+            //var t_article = await _context.t_articles.FindAsync(id_article);
+
+            var t = await _context.t_annotations.Where(m => m.id_article == id_article).OrderBy(m => m.id_annotation).FirstOrDefaultAsync();
+
+            return View("_EditProductAnnotation", t);
+        }
+    }
+
+    /// <summary>
     /// Show Thmbnail Capture and Upload view
     /// </summary>
     public class EditThumbnailViewComponent : ViewComponent
@@ -199,6 +222,55 @@ namespace CMS_3D_Core.Controllers
             return View("_EditThumbnail", t);
         }
     }
+
+
+
+    /// <summary>
+    /// Show AnnotationDisplay view
+    /// </summary>
+    public class EditProductAnnotationDisplayViewComponent : ViewComponent
+    {
+        private readonly db_data_coreContext _context;
+
+        public EditProductAnnotationDisplayViewComponent(db_data_coreContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IViewComponentResult> InvokeAsync(long id_article)
+        {
+
+
+            //var t = (await _context.t_instructions.Where(m => m.id_article == id_article).OrderBy(m => m.display_order).FirstOrDefaultAsync()) ?? new t_instruction() { id_view = 0 };
+
+
+            //if (id_article != 0) { 
+            var instfirst = (await _context.t_instructions.Where(m => m.id_article == id_article).FirstOrDefaultAsync()) ?? new t_instruction() { id_instruct = 0 };
+
+
+
+            var t = await _context.t_annotation_displays
+                                  .Include(m => m.id_a)
+                                  .Where(m => m.id_article == id_article & m.id_instruct == instfirst.id_instruct)
+                                  .ToListAsync();
+
+            return View("_EditProductAnnotationDisplay", t);
+            
+            
+            /*
+            }
+            else
+            {
+                var t = await _context.t_annotation_displays
+                      .Include(m => m.id_a)
+                      .Where(m => m.id_article == id_article)
+                      .ToListAsync();
+                return View("_EditProductAnnotationDisplay", t);
+            }*/
+        }
+    }
+
+
 
     /// <summary>
     /// Show Thmbnail Capture and Upload view

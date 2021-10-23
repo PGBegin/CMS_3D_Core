@@ -1,11 +1,12 @@
 ﻿
 function GetScreenshotForUpload(id_parent_element, id_img, id_img_input) {
     var imgData;
+    let obj = adarticle;
 
     try {
         var strMime = "image/jpeg";
-        renderer.render(scene, camera_main);
-        imgData = renderer.domElement.toDataURL(strMime);
+        obj.renderer.render(obj.scene, obj.camera_main);
+        imgData = obj.renderer.domElement.toDataURL(strMime);
 
 
         var temp_bt = document.getElementById(id_img);

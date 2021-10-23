@@ -77,12 +77,12 @@
         @{
             var obj = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { });
         }
-
+        @*
         let str_url_prodobjectapi_base = "/ContentsOperatorApis/GetAssemblyObjectList?";
         let str_url_prodobjectapi = str_url_prodobjectapi_base + new URLSearchParams({ id_article: @obj.id_article }).toString();
 
 
-        let id_startinst = @((obj.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction() { id_instruct = 0 }).id_instruct);
+        adarticle.id_startinst = @((obj.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction() { id_instruct = 0 }).id_instruct);
 
 
         let lint =@obj.directional_light_intensity;
@@ -94,15 +94,21 @@
 
         adarticle.id_article = @obj.id_article;
         adarticle.is_edit_mode = false;
-        adarticle.startup(lint, lpx, lpy, lpz, anbint, _gammaOutput, str_url_prodobjectapi, id_startinst);
+        adarticle.startup(lint, lpx, lpy, lpz, anbint, _gammaOutput, str_url_prodobjectapi, adarticle.id_startinst);
 
+        *@
+
+        adarticle.id_article = @obj.id_article;
+        adarticle.id_startinst = @((obj.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction() { id_instruct = 0 }).id_instruct);
+        adarticle.is_edit_mode = false;
+        adarticle.startup();
     }
-
+    @*
     //指定されたIDのインストラクションを表示する
     function transition_instruction2(id_instruct) {
         adarticle.transition_instruction(id_instruct);
     }
-
+        *@
 
 
 </script>

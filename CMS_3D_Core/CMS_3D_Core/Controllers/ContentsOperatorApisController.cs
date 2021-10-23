@@ -23,6 +23,44 @@ namespace CMS_3D_Core.Controllers
             _context = context;
         }
 
+
+        [HttpGet]
+        public JsonResult GetArticleObject(long id_article)
+        {
+            var t = _context.t_articles
+                        .Include(x => x.t_instructions)
+                        .Include(x => x.t_views)
+                        .Include(x => x.id_assyNavigation).ThenInclude(x => x.t_instance_parts)
+                        .FirstOrDefault(x => x.id_article == id_article);
+
+            object objCollection = new
+            {
+                type = "article",
+                id_article = t.id_article,
+                id_assy = t.id_assy,
+                title = t.title,
+                short_description = t.short_description,
+                long_description = t.long_description,
+                meta_description = t.meta_description,
+                meta_category = t.meta_category,
+                status = t.status,
+                directional_light_color = t.directional_light_color,
+                directional_light_intensity = t.directional_light_intensity,
+
+                directional_light_px = t.directional_light_px,
+                directional_light_py = t.directional_light_py,
+                directional_light_pz = t.directional_light_pz,
+
+                ambient_light_color = t.ambient_light_color,
+                ambient_light_intensity = t.ambient_light_intensity,
+                gammaOutput = t.gammaOutput,
+
+                id_attachment_for_eye_catch = t.id_attachment_for_eye_catch
+            };
+
+            return Json(objCollection);
+        }
+
         /// <summary>
         /// GET: コンテンツのベースデータをJsonで返す
         /// </summary>
@@ -98,7 +136,7 @@ namespace CMS_3D_Core.Controllers
 
 
         /// <summary>
-        /// GET: コンテンツのベースデータをJsonで返す
+        /// GET: インスタンスリストをJsonで返す
         /// </summary>
         /// <param name="id_assy">アセンブリID</param>
         /// <returns>ファイルのJsonデータ</returns>
@@ -153,6 +191,7 @@ namespace CMS_3D_Core.Controllers
                         title = item.title,
                         description1 = item.description1,
                         description2 = item.description2,
+                        status = item.status,
                         pos_x = item.pos_x,
                         pos_y = item.pos_y,
                         pos_z = item.pos_z
@@ -187,7 +226,8 @@ namespace CMS_3D_Core.Controllers
                         type = "annotation_display",
                         id_article = item.id_article,
                         id_instruct = item.id_instruct,
-                        id_annotation = item.id_annotation
+                        id_annotation = item.id_annotation,
+                        is_display = item.is_display
                     });
             }
 

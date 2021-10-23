@@ -102,6 +102,30 @@ namespace CMS_3D_Core.Controllers
                 return NotFound();
             }*/
 
+
+            var parameter_id_article = new SqlParameter
+            {
+                ParameterName = "id_article",
+                SqlDbType = System.Data.SqlDbType.BigInt,
+                Value = id_article,
+            };
+
+            var parameter_create_user = new SqlParameter
+            {
+                ParameterName = "create_user",
+                SqlDbType = System.Data.SqlDbType.NVarChar,
+                Value = User.Identity.Name,
+            };
+            var parameter_ans_result = new SqlParameter
+            {
+                ParameterName = "ans_result",
+                SqlDbType = System.Data.SqlDbType.SmallInt,
+                Direction = System.Data.ParameterDirection.Output
+            };
+
+
+
+
             if (ModelState.IsValid)
             {
                 try
@@ -122,6 +146,13 @@ namespace CMS_3D_Core.Controllers
 
                         await _context.AddAsync(t_instruction);
                         await _context.SaveChangesAsync();
+
+                        await _context.Database
+                            .ExecuteSqlRawAsync("EXEC [dbo].[annotation_display_add] @id_article,@create_user,@ans_result OUTPUT"
+                            , parameter_id_article
+                            , parameter_create_user
+                            , parameter_ans_result);
+
 
                         TempData["ResultMsg"] = "AddNew Success";
                         return RedirectToAction("EditArticleWholeContents", new { id_article = id_article });
@@ -158,14 +189,194 @@ namespace CMS_3D_Core.Controllers
             return View(id_article);
         }
 
+        // POST: Role/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditProductAnnotationDisplay(IList<t_annotation_display> list)
+        {
+            /*
+            if (id_article == null | id_instruct == null)
+            {
+                return NotFound();
+            }*/
+
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    foreach(var m in list)
+                    {
+                        var target = await _context.t_annotation_displays.FindAsync(m.id_article, m.id_instruct, m.id_annotation);
+                        target.is_display = m.is_display;
+                    }
+
+
+
+                    // Update Db
+                    await _context.SaveChangesAsync();
+
+
+                    TempData["ResultMsg"] = "Update Success";
+                    return RedirectToAction("EditArticleWholeContents", new { id_article = list[0].id_article });
+
+
+
+                }
+                catch (Exception e)
+                {
+                    TempData["ResultMsg"] = "Update Failed";
+#if DEBUG
+                    TempData["ResultMsg"] = e.Message;
+#endif
+                }
+            }
+
+            // 更新に失敗した場合、編集画面を再描画
+            return View(list[0].id_article);
+        }
+        
+
+
+
+
+        // POST: Role/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditProductAnnotation(long id_article, long id_annotation, string title, string description1, string description2, short status, float pos_x, float pos_y, float pos_z)
+        {
+            /*
+            if (id_article == null | id_instruct == null)
+            {
+                return NotFound();
+            }*/
+
+
+            var parameter_id_article = new SqlParameter
+            {
+                ParameterName = "id_article",
+                SqlDbType = System.Data.SqlDbType.BigInt,
+                Value = id_article,
+            };
+
+            var parameter_create_user = new SqlParameter
+            {
+                ParameterName = "create_user",
+                SqlDbType = System.Data.SqlDbType.NVarChar,
+                Value = User.Identity.Name,
+            };
+            var parameter_ans_result = new SqlParameter
+            {
+                ParameterName = "ans_result",
+                SqlDbType = System.Data.SqlDbType.SmallInt,
+                Direction = System.Data.ParameterDirection.Output
+            };
+
+
+
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var target = await _context.t_annotations.FindAsync(id_article, id_annotation);
+                    if (target == null)
+                    {
+                        // if object is not in table
+                        // do add new item acrion
+                        t_annotation t_annotation = new t_annotation();
+                        t_annotation.id_article = id_article;
+                        t_annotation.id_annotation = id_annotation;
+                        t_annotation.title = title;
+                        t_annotation.description1 = description1;
+                        t_annotation.description2 = description2;
+                        t_annotation.status = status;
+                        t_annotation.pos_x = pos_x;
+                        t_annotation.pos_y = pos_y;
+                        t_annotation.pos_z = pos_z;
+
+                        await _context.AddAsync(t_annotation);
+                        await _context.SaveChangesAsync();
+
+                        await _context.Database
+                            .ExecuteSqlRawAsync("EXEC [dbo].[annotation_display_add] @id_article,@create_user,@ans_result OUTPUT"
+                            , parameter_id_article
+                            , parameter_create_user
+                            , parameter_ans_result);
+
+
+                        TempData["ResultMsg"] = "AddNew Success";
+                        return RedirectToAction("EditArticleWholeContents", new { id_article = id_article });
+                    }
+                    else
+                    {
+                        // if object is in table
+                        // do update new item acrion
+                        target.title = title;
+                        target.description1 = description1;
+                        target.description2 = description2;
+                        target.status = status;
+                        target.pos_x = pos_x;
+                        target.pos_y = pos_y;
+                        target.pos_z = pos_z;
+
+                        // Update Db
+                        await _context.SaveChangesAsync();
+
+
+                        TempData["ResultMsg"] = "Update Success";
+                        return RedirectToAction("EditArticleWholeContents", new { id_article = id_article });
+                    }
+
+
+                }
+                catch (Exception e)
+                {
+                    TempData["ResultMsg"] = "Update Failed";
+#if DEBUG
+                    TempData["ResultMsg"] = e.Message;
+#endif
+                }
+            }
+
+            // 更新に失敗した場合、編集画面を再描画
+            return View(id_article);
+        }
 
         // POST: t_instance_part/Delete/5
         [HttpPost, ActionName("DeleteProductInstruction")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteProductInstructionConfirmed(long id_article, long id_instruct)
         {
+
+            var x = await _context.t_annotation_displays.Where(y => y.id_article == id_article & y.id_instruct == y.id_instruct).ToListAsync();
+            foreach(var s in x)
+            {
+                _context.t_annotation_displays.Remove(s);
+
+            }
+
             t_instruction t_instruction = await _context.t_instructions.FindAsync(id_article, id_instruct);
             _context.t_instructions.Remove(t_instruction);
+            await _context.SaveChangesAsync();
+
+            TempData["ResultMsg"] = "Update Success";
+            return RedirectToAction("EditArticleWholeContents", new { id_article = id_article });
+        }
+        // POST: t_instance_part/Delete/5
+        [HttpPost, ActionName("DeleteProductAnnotation")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteProductAnnotationConfirmed(long id_article, long id_annotation)
+        {
+
+            var x = await _context.t_annotation_displays.Where(y => y.id_article == id_article & y.id_annotation == y.id_annotation).ToListAsync();
+            foreach (var s in x)
+            {
+                _context.t_annotation_displays.Remove(s);
+            }
+
+            t_annotation t_annotation = await _context.t_annotations.FindAsync(id_article, id_annotation);
+            _context.t_annotations.Remove(t_annotation);
             await _context.SaveChangesAsync();
 
             TempData["ResultMsg"] = "Update Success";

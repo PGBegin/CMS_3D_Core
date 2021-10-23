@@ -1,0 +1,62 @@
+﻿@*テーブルとして出すのは、instruct毎のdisplayアイテム
+    一回ループが回るたびに、javascriptで書き換える*@
+
+@model IList<CMS_3D_Core.Models.EDM.t_annotation_display>
+
+<div id="view_data">
+
+
+</div>
+
+
+<form asp-controller="ContentsEdit" asp-action="EditProductAnnotationDisplay">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].id_annotation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].id_a.title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].id_a.description1)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].is_display)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Count; i++)
+            //@foreach (var item in Model)
+            {
+                var key = String.Format("[{0}].", Model[i].id_annotation);
+                <tr>
+                    <td>
+                        @Html.HiddenFor(modelItem => Model[i].id_article, new { id = key + "id_edit_annotation_display_input_id_article" })
+                        @Html.HiddenFor(modelItem => Model[i].id_instruct, new { id = key + "id_edit_annotation_display_input_id_instruct" })
+                        @Html.HiddenFor(modelItem => Model[i].id_annotation, new { id = key + "id_edit_annotation_display_input_id_annotation" })
+                        @Html.DisplayFor(modelItem => Model[i].id_annotation, new { id = key + "id_edit_annotation_display_display_id_annotation" } )
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model[i].id_a.title, new { id = key + "id_edit_annotation_display_input_title" })
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model[i].id_a.description1, new { id = key + "id_edit_annotation_display_input_description1" })
+                    </td>
+                    <td>
+                        @Html.CheckBoxFor(modelItem => Model[i].is_display, new { id = key + "id_edit_annotation_display_input_is_display" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" onclick="return confirm('Are you update View?')" />
+    </div>
+</form>

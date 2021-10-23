@@ -46,8 +46,10 @@
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
                 <a class="nav-link active" id="nav-instruction-tab" data-bs-toggle="tab" href="#nav-instruction">Instruction</a>
                 <a class="nav-link" id="nav-preview-instruction-tab" data-bs-toggle="tab" href="#preview-instruction">Preview Instruction</a>
-                <a class="nav-link" id="nav-home-tab" data-bs-toggle="tab" href="#nav-viewinfo">View</a>
-                <a class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" href="#nav-articlebase">Article Base</a>
+                <a class="nav-link" id="nav-viewinfo-tab" data-bs-toggle="tab" href="#nav-viewinfo">View</a>
+                <a class="nav-link" id="nav-annotationinfo-tab" data-bs-toggle="tab" href="#nav-annotationinfo">Annotation</a>
+                <a class="nav-link" id="nav-displayitemsinfo-tab" data-bs-toggle="tab" href="#nav-displayitemsinfo">Display Items Info</a>
+                <a class="nav-link" id="nav-articlebase-tab" data-bs-toggle="tab" href="#nav-articlebase">Article Base</a>
                 <a class="nav-link" id="nav-thumbnail-tab" data-bs-toggle="tab" href="#nav-thumbnail">Thumbnail</a>
             </div>
         </nav>
@@ -74,9 +76,28 @@
 
                 @Html.ActionLink("View", "Index", "t_view", new { id_article = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { id_article = 0 }).id_article })
 
+            </div>
+
+            <div class="tab-pane fade" id="nav-annotationinfo">
+
+                <h4> Annotation Info and Edit</h4>
+
+                @await Component.InvokeAsync("EditProductAnnotation", new { id_article = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { id_article = 0 }).id_article })
+
                 <div id="id_view_operation_panel"></div>
+            </div>
+
+            <div class="tab-pane fade" id="nav-displayitemsinfo">
+
+                <h4> DisplayItems Info and Edit</h4>
+
+                @await Component.InvokeAsync("EditProductAnnotationDisplay", new { id_article = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { id_article = 0 }).id_article })
+
 
             </div>
+
+
+
             <div class="tab-pane fade" id="nav-articlebase">
 
                 <h4> View Info and Edit</h4>
@@ -123,7 +144,7 @@
         @{
             var obj = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { });
         }
-
+        @*
         let str_url_prodobjectapi_base = "/ContentsOperatorApis/GetAssemblyObjectList?";
         let str_url_prodobjectapi = str_url_prodobjectapi_base + new URLSearchParams({ id_article: @obj.id_article }).toString();
 
@@ -131,8 +152,8 @@
 
         //const glfLoader = new THREE.GLTFLoader();
 
-        let id_startinst = @((obj.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction() { id_instruct = 0 }).id_instruct);
-
+        //let id_startinst = @((obj.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction() { id_instruct = 0 }).id_instruct);
+        //id_startinst = adarticle.id_startinst;
 
         let lint =@obj.directional_light_intensity;
         let lpx =@obj.directional_light_px;
@@ -141,24 +162,15 @@
         let anbint = @obj.ambient_light_intensity;
         let _gammaOutput =@if(obj.gammaOutput==true){@Html.Raw("true;")} else{@Html.Raw("false;")};
 
-
+        *@
         adarticle.id_article = @obj.id_article;
+        adarticle.id_startinst = @((obj.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction() { id_instruct = 0 }).id_instruct);
         adarticle.is_edit_mode = true;
-        adarticle.startup(lint, lpx, lpy, lpz, anbint, _gammaOutput, str_url_prodobjectapi, id_startinst);
+        adarticle.startup();
+        //adarticle.startup(lint, lpx, lpy, lpz, anbint, _gammaOutput, str_url_prodobjectapi, adarticle.id_startinst);
 
 
     }
 
-    //指定されたIDのインストラクションを表示する
-    function transition_instruction2(id_instruct) {
-        adarticle.transition_instruction(id_instruct);
-    }
-
-
-    //指定されたIDのインストラクションを表示する
-    function transition_instruction3(id_instruct) {
-        adarticle.transition_view(new THREE.Vector3(10, 10, 10), new THREE.Vector3(0, 0, 0));
-    }
-        //temp_bt.onclick = this.transition_view(new THREE.Vector3(10, 10, 10), new THREE.Vector3(0, 0, 0));
 
 </script>
