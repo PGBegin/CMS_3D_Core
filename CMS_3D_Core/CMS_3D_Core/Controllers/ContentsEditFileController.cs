@@ -79,6 +79,7 @@ namespace CMS_3D_Core.Controllers
                                     format_data = x.format_data,
                                     file_length = x.file_length,
                                     license = x.license,
+                                    author = x.author,
                                     itemlink = x.itemlink
                                 })
                                 .ToListAsync();
@@ -95,7 +96,7 @@ namespace CMS_3D_Core.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(string part_number, int version, string format_data, string itemlink, string license, string memo, [FromForm] IFormFile formFile)
+        public async Task<IActionResult> Create(string part_number, int version, string format_data, string itemlink, string license, string author, string memo, [FromForm] IFormFile formFile)
         {
 
             t_part t_part = new t_part();
@@ -116,6 +117,7 @@ namespace CMS_3D_Core.Controllers
 
             t_part.itemlink = itemlink;
             t_part.license = license;
+            t_part.author = author;
             t_part.memo = memo;
 
 
@@ -329,7 +331,7 @@ namespace CMS_3D_Core.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("id_part,part_number,version,type_data,format_data,file_name,file_length,itemlink,license,memo")] t_part t_part)
+        public async Task<IActionResult> Edit(long id, [Bind("id_part,part_number,version,type_data,format_data,file_name,file_length,itemlink,license,author,memo")] t_part t_part)
         {
             if (id != t_part.id_part)
             {
@@ -349,6 +351,7 @@ namespace CMS_3D_Core.Controllers
                     target.file_length = t_part.file_length;
                     target.itemlink = t_part.itemlink;
                     target.license = t_part.license;
+                    target.author = t_part.author;
                     target.memo = t_part.memo;
 
                     //_context.Update(t_part);

@@ -162,10 +162,6 @@ class TDArticle {
         this.camera_main_startpos = new THREE.Vector3(30, 30, 30);
         this.controls_target_startpos = new THREE.Vector3(0, 0, 0);
 
-        /*
-        this.camera_main.position.x = 30;
-        this.camera_main.position.y = 30;
-        this.camera_main.position.z = 30;*/
 
 
 
@@ -199,15 +195,9 @@ class TDArticle {
         this.is_mode_assy = false;
 
 
-
-        //this.camera_main = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 1000);
-        //this.controls = new THREE.OrbitControls(this.camera_main, renderer.domElement);
     }
 
-
-
-
-    //startup(lint, lpx, lpy, lpz, anbint, _gammaOutput, str_url_prodobjectapi, id_startinst) {
+    //Setup
     startup() {
 
 
@@ -252,7 +242,6 @@ class TDArticle {
                             this.initial_optional01();
 
                             //Initialize render
-                            //this.initial_setup_and_render(lint, lpx, lpy, lpz, anbint, _gammaOutput);
                             this.initial_setup_and_render(
                                 this.article.directional_light_intensity
                                 , this.article.directional_light_px, this.article.directional_light_py, this.article.directional_light_pz
@@ -265,22 +254,13 @@ class TDArticle {
 
 
 
-                            //this.transition_instruction(1);
-
                             if (this.id_startinst == 0) {
 
 
-                                //this.camera_main.position.x = this.camera_main_startpos.x;
-                                //this.camera_main.position.y = this.camera_main_startpos.y;
-                                //this.camera_main.position.z = this.camera_main_startpos.z;
                                 this.camera_main.position.copy(this.camera_main_startpos);
 
 
                                 this.controls.target.copy(this.controls_target_startpos);
-                                /*
-                                this.controls.target.x = 0;
-                                this.controls.target.y = 0;
-                                this.controls.target.z = 0;*/
                             }
                             else {
                                 this.transition_instruction(this.id_startinst);
@@ -413,14 +393,12 @@ class TDArticle {
     setup_instance_part_model() {
 
         const glfLoader = new THREE.GLTFLoader();
-        let str_url_partapi = "";
         //console.log(this.str_url_partapi_base);
 
-        let x = this.str_url_partapi_base;
         let scene = this.scene;
 
         this.instance_part.forEach(function (element) {
-            str_url_partapi = x + new URLSearchParams({ id_part: element.id_part }).toString();
+            let str_url_partapi = this.str_url_partapi_base + new URLSearchParams({ id_part: element.id_part }).toString();
             //console.log(str_url_partapi);
 
             glfLoader.load(str_url_partapi, function (gltf) {
@@ -440,7 +418,7 @@ class TDArticle {
                 console.error(error);
 
             });
-        });
+        }.bind(this));
     }
 
     //Loading Annotations
@@ -986,7 +964,6 @@ class TDArticle {
         // ------------------------------------------------------------------------------------------------
 
         this.counter = 0;
-        //this.step = 75;
 
         this.pitch_px = (this.view_object[i].cam_pos_x - this.camera_main.position.x) / this.step;
         this.pitch_py = (this.view_object[i].cam_pos_y - this.camera_main.position.y) / this.step;
@@ -1023,7 +1000,8 @@ class TDArticle {
         //update_viewinfo();
         if (this.counter >= this.step) { return; }
 
-        this.counter = this.counter + 1;
+        this.counter += 1;
+
         this.camera_main.position.x += this.pitch_px;
         this.camera_main.position.y += this.pitch_py;
         this.camera_main.position.z += this.pitch_pz;
@@ -1189,5 +1167,3 @@ class TDArticle {
 }
 
 //TDArticleここまで
-//---------------------------------------------------------------------------
-//通常の、orbit control有効状態でのレンダリング

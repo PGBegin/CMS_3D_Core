@@ -24,6 +24,7 @@ namespace CMS_3D_Core.Models.EDM
         public long? file_length { get; set; }
         public string itemlink { get; set; }
         public string license { get; set; }
+        public string author { get; set; }
         public string memo { get; set; }
         public string create_user { get; set; }
         public DateTime? create_datetime { get; set; }

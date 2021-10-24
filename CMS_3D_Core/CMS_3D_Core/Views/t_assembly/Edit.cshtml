@@ -84,40 +84,12 @@ var adarticle = new TDArticle();
 // ロード後に実行される処理
 window.onload = function () {
     'use strict';
-    @*
-    @{
-        var obj = (new CMS_3D_Core.Models.EDM.t_article() { directional_light_intensity=1, directional_light_px=30, directional_light_py=30, directional_light_pz=30, ambient_light_intensity=1});
-    }
 
-    let str_url_prodobjectapi_base = "/ContentsOperatorApis/GetAssemblyObjectListOnlyInstance?";
-    let str_url_prodobjectapi = str_url_prodobjectapi_base + new URLSearchParams({ id_assy: @Model.id_assy }).toString();
-
-
-
-    let id_startinst = @((obj.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction() { id_instruct = 0 }).id_instruct);
-
-
-    let lint =@obj.directional_light_intensity;
-    let lpx =@obj.directional_light_px;
-    let lpy = @obj.directional_light_py;
-    let lpz =@obj.directional_light_pz;
-    let anbint = @obj.ambient_light_intensity;
-    let _gammaOutput =@if(obj.gammaOutput==true){@Html.Raw("true;")} else{@Html.Raw("false;")};
-
-
-        *@
     adarticle.is_mode_assy = true;
     adarticle.id_assy = @Model.id_assy;
     adarticle.is_edit_mode = false;
-    adarticle.startup();//lint, lpx, lpy, lpz, anbint, _gammaOutput, str_url_prodobjectapi, id_startinst);
+    adarticle.startup();
 
 }
-        @*
-//指定されたIDのインストラクションを表示する
-function transition_instruction2(id_instruct) {
-    adarticle.transition_instruction(id_instruct);
-}
-
- *@
 
 </script>

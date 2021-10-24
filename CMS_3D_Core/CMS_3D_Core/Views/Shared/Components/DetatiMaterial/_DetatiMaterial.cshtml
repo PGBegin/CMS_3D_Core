@@ -1,0 +1,66 @@
+﻿
+@*
+@model IEnumerable<CMS_3D_Core.Models.EDM.t_article>
+    *@
+@model CMS_3D_Core.Models.EDM.t_article
+@{
+    ViewData["Title"] = "_DetatiMaterial";
+}
+
+@{
+    int i = 0;
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.id_assyNavigation.t_instance_parts.FirstOrDefault().id_partNavigation.part_number)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.id_assyNavigation.t_instance_parts.FirstOrDefault().id_partNavigation.file_name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.id_assyNavigation.t_instance_parts.FirstOrDefault().id_partNavigation.file_length)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.id_assyNavigation.t_instance_parts.FirstOrDefault().id_partNavigation.itemlink)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.id_assyNavigation.t_instance_parts.FirstOrDefault().id_partNavigation.author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.id_assyNavigation.t_instance_parts.FirstOrDefault().id_partNavigation.license)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.id_assyNavigation.t_instance_parts)
+        {
+            <tr>
+                <td>
+                    Model Name
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.id_partNavigation.file_name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.id_partNavigation.file_length)
+                </td>
+                <td>
+                    <a href="@item.id_partNavigation.itemlink">Data Source</a>
+                    
+                    @*
+                    @Html.DisplayFor(modelItem => item.id_partNavigation.itemlink)
+                    *@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.id_partNavigation.author)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.id_partNavigation.license)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

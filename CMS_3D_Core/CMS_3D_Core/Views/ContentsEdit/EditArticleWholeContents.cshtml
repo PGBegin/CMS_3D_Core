@@ -51,6 +51,7 @@
                 <a class="nav-link" id="nav-displayitemsinfo-tab" data-bs-toggle="tab" href="#nav-displayitemsinfo">Display Items Info</a>
                 <a class="nav-link" id="nav-articlebase-tab" data-bs-toggle="tab" href="#nav-articlebase">Article Base</a>
                 <a class="nav-link" id="nav-thumbnail-tab" data-bs-toggle="tab" href="#nav-thumbnail">Thumbnail</a>
+                <a class="nav-link" id="nav-materials-tab" data-bs-toggle="tab" href="#nav-materials">Materials</a>
             </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
@@ -61,8 +62,6 @@
 
             <div class="tab-pane fade" id="preview-instruction">
             </div>
-
-
 
             <div class="tab-pane fade" id="nav-viewinfo">
 
@@ -113,6 +112,13 @@
 
 
             </div>
+
+            <div class="tab-pane fade" id="nav-materials">
+
+                <h4>Materials</h4>
+                @await Component.InvokeAsync("DetatiMaterial", new { id_article = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { id_article = 0 }).id_article })
+
+            </div>
         </div>
 
     </div>
@@ -142,33 +148,14 @@
         'use strict';
 
         @{
-            var obj = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { });
+            var obj = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { }); 
         }
-        @*
-        let str_url_prodobjectapi_base = "/ContentsOperatorApis/GetAssemblyObjectList?";
-        let str_url_prodobjectapi = str_url_prodobjectapi_base + new URLSearchParams({ id_article: @obj.id_article }).toString();
 
-        //let str_url_partapi_base = "/ContentsOperatorApis/GetPartObjectFile?";
 
-        //const glfLoader = new THREE.GLTFLoader();
-
-        //let id_startinst = @((obj.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction() { id_instruct = 0 }).id_instruct);
-        //id_startinst = adarticle.id_startinst;
-
-        let lint =@obj.directional_light_intensity;
-        let lpx =@obj.directional_light_px;
-        let lpy = @obj.directional_light_py;
-        let lpz =@obj.directional_light_pz;
-        let anbint = @obj.ambient_light_intensity;
-        let _gammaOutput =@if(obj.gammaOutput==true){@Html.Raw("true;")} else{@Html.Raw("false;")};
-
-        *@
         adarticle.id_article = @obj.id_article;
         adarticle.id_startinst = @((obj.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction() { id_instruct = 0 }).id_instruct);
         adarticle.is_edit_mode = true;
         adarticle.startup();
-        //adarticle.startup(lint, lpx, lpy, lpz, anbint, _gammaOutput, str_url_prodobjectapi, adarticle.id_startinst);
-
 
     }
 

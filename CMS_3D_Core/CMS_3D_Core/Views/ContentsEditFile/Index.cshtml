@@ -40,6 +40,9 @@
                     <th>
                         Data Source
                     </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.author)
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -66,6 +69,9 @@
                         </td>
                         <td>
                             <a href="@item.itemlink">Data Source</a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.author)
                         </td>
                     </tr>
                 }

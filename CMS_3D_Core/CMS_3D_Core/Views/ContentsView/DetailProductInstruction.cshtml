@@ -1,7 +1,6 @@
 ﻿@model CMS_3D_Core.Models.EDM.t_article
 
 @{
-    //ViewData["Title"] = "Contents:" + @Model.title;
     ViewData["Title"] = @Model.title;
     ViewData["ShowGoogleAdSenseAdvertisement"] = "ON";
 
@@ -19,37 +18,62 @@
 
 <link rel="stylesheet" href="~/css/annotation.css" />
 
-<div class="container">
 
-    <div class="row">
+<div class="row">
 
-        <div class="col-md-7">
-            <h2>@Html.DisplayFor(model => model.title)</h2>
+    <div class="col-md-5">
+        <h2>@Html.DisplayFor(model => model.title)</h2>
 
-            <div id="annotations">
-            </div>
-            @*モデルの表示領域*@
-            <canvas id="model_screen">
-            </canvas>
-
-            <div class="progress" id="div_progressbar_modeldl">
-                <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" id="progressbar_modeldl"></div>
-            </div>
-            <hr />
-
-            <div id="control_panel_zone">
-            </div>
-
-            <hr />
-
-            @*表示用ビューならここにインストラクションの表示領域がある*@
-            <div id="preview_instruction_short_description"></div>
-
+        <div id="annotations">
         </div>
+        @*モデルの表示領域*@
+        <canvas id="model_screen">
+        </canvas>
+
+        <div class="progress" id="div_progressbar_modeldl">
+            <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" id="progressbar_modeldl"></div>
+        </div>
+        <hr />
+
+        <div id="control_panel_zone">
+        </div>
+
+        <hr />
+
+
+    </div>
+
+
+    <div class="col-md-6">
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-link active" id="nav-instruction-tab" data-bs-toggle="tab" href="#nav-instruction">Instruction</a>
+                <a class="nav-link" id="nav-materials-tab" data-bs-toggle="tab" href="#nav-materials">Materials</a>
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+
+
+            
+            <div class="tab-pane fade show active" id="nav-instruction">
+
+                <div id="preview_instruction_short_description"></div>
+
+            </div>
+
+            <div class="tab-pane fade" id="nav-materials">
+
+                <h4>Materials</h4>
+                @await Component.InvokeAsync("DetatiMaterial", new { id_article = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { id_article = 0 }).id_article })
+
+            </div>
+        </div>
+
 
     </div>
 
 </div>
+
 
 
 
@@ -77,38 +101,13 @@
         @{
             var obj = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { });
         }
-        @*
-        let str_url_prodobjectapi_base = "/ContentsOperatorApis/GetAssemblyObjectList?";
-        let str_url_prodobjectapi = str_url_prodobjectapi_base + new URLSearchParams({ id_article: @obj.id_article }).toString();
 
-
-        adarticle.id_startinst = @((obj.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction() { id_instruct = 0 }).id_instruct);
-
-
-        let lint =@obj.directional_light_intensity;
-        let lpx =@obj.directional_light_px;
-        let lpy = @obj.directional_light_py;
-        let lpz =@obj.directional_light_pz;
-        let anbint = @obj.ambient_light_intensity;
-        let _gammaOutput =@if(obj.gammaOutput==true){@Html.Raw("true;")} else{@Html.Raw("false;")};
-
-        adarticle.id_article = @obj.id_article;
-        adarticle.is_edit_mode = false;
-        adarticle.startup(lint, lpx, lpy, lpz, anbint, _gammaOutput, str_url_prodobjectapi, adarticle.id_startinst);
-
-        *@
 
         adarticle.id_article = @obj.id_article;
         adarticle.id_startinst = @((obj.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction() { id_instruct = 0 }).id_instruct);
         adarticle.is_edit_mode = false;
         adarticle.startup();
     }
-    @*
-    //指定されたIDのインストラクションを表示する
-    function transition_instruction2(id_instruct) {
-        adarticle.transition_instruction(id_instruct);
-    }
-        *@
 
 
 </script>

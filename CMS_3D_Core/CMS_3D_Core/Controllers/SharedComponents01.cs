@@ -144,9 +144,6 @@ namespace CMS_3D_Core.Controllers
         public async Task<IViewComponentResult> InvokeAsync(long id_article)
         {
 
-            //var t_article = await _context.t_articles.FindAsync(id_article);
-
-
             var t = (await _context.t_instructions.Where(m => m.id_article == id_article).OrderBy(m => m.display_order).FirstOrDefaultAsync()) ?? new t_instruction() { id_view = 0 };
             var t2 = await _context.t_views.Where(m => m.id_article == id_article & m.id_view == t.id_view).FirstOrDefaultAsync();
 
@@ -169,8 +166,6 @@ namespace CMS_3D_Core.Controllers
         public async Task<IViewComponentResult> InvokeAsync(long id_article)
         {
 
-            //var t_article = await _context.t_articles.FindAsync(id_article);
-
             var t = await _context.t_instructions.Where(m => m.id_article == id_article).OrderBy(m => m.display_order).FirstOrDefaultAsync();
 
             return View("_EditProductInstruction", t);
@@ -192,11 +187,33 @@ namespace CMS_3D_Core.Controllers
         public async Task<IViewComponentResult> InvokeAsync(long id_article)
         {
 
-            //var t_article = await _context.t_articles.FindAsync(id_article);
-
             var t = await _context.t_annotations.Where(m => m.id_article == id_article).OrderBy(m => m.id_annotation).FirstOrDefaultAsync();
 
             return View("_EditProductAnnotation", t);
+        }
+    }
+
+    /// <summary>
+    /// Edit Instruction
+    /// </summary>
+    public class DetatiMaterialViewComponent : ViewComponent
+    {
+        private readonly db_data_coreContext _context;
+
+        public DetatiMaterialViewComponent(db_data_coreContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IViewComponentResult> InvokeAsync(long id_article)
+        {
+
+
+            var t = await _context.t_articles
+                                .Include(x => x.id_assyNavigation).ThenInclude(x => x.t_instance_parts).ThenInclude(x => x.id_partNavigation)
+                                .Where(m => m.id_article == id_article).FirstOrDefaultAsync();
+
+            return View("_DetatiMaterial", t);
         }
     }
 
