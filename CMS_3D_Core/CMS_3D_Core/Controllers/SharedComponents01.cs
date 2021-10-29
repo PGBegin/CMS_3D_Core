@@ -16,7 +16,7 @@ namespace CMS_3D_Core.Controllers
     /// <summary>
     /// t_articlesの一覧を表示する(トップページ用)
     /// </summary>
-    public class ContentsListViewComponent : ViewComponent
+    public class ContentsListViewComponent : ViewComponent  
     {
         private readonly db_data_coreContext _context;
 

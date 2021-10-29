@@ -194,8 +194,67 @@ class TDArticle {
         this.is_display_helper = false;
         this.is_mode_assy = false;
 
+        // 1 : landscape, 0:Portrait 
+        this.orientation_mode = 1;
 
     }
+
+
+
+    //onWindowResize
+    onWindowResize() {
+        //1.画面サイズを測定し、モードを判定する
+        //0:縦モード、1:横モード
+
+
+        if (this.is_edit_mode) {
+
+            this.width = 0.95 * document.documentElement.clientWidth / 2;
+            this.height = this.width * 9 / 16;
+
+            document.getElementById('id_contents_models').setAttribute("class", "");
+            document.getElementById('id_contents_instructions').setAttribute("class", "");
+            document.getElementById('id_contents_models').classList.add('col-6');
+            document.getElementById('id_contents_instructions').classList.add('col-6');
+        } else {
+
+            // chk displaymode
+            if (document.documentElement.clientWidth / document.documentElement.clientHeight > 1) {
+                this.orientation_mode = 1;
+            } else {
+                this.orientation_mode = 0;
+            }
+
+            if (this.orientation_mode == 1) {
+                document.getElementById('id_contents_models').setAttribute("class", "");
+                document.getElementById('id_contents_instructions').setAttribute("class", "");
+                this.width = 0.95 * document.documentElement.clientWidth / 2;
+                this.height = this.width * 9 / 16;
+                document.getElementById('id_contents_models').classList.add('col-6');
+                document.getElementById('id_contents_instructions').classList.add('col-6');
+            } else {
+                document.getElementById('id_contents_models').setAttribute("class", "");
+                document.getElementById('id_contents_instructions').setAttribute("class", "");
+                this.width = 0.95 * document.documentElement.clientWidth;
+                this.height = this.width * 9 / 16;
+                document.getElementById('id_contents_models').classList.add('col-12');
+                document.getElementById('id_contents_instructions').classList.add('col-12');
+
+            }
+
+            document.getElementById('preview_instruction_short_description').style.height =
+                document.documentElement.clientHeight - document.getElementById('preview_instruction_short_description').getBoundingClientRect().top + 'px';
+
+        }
+
+
+        this.camera_main.aspect = this.width / this.height;
+        this.camera_main.updateProjectionMatrix();
+
+        this.renderer.setSize(this.width, this.height);
+
+    }
+
 
     //Setup
     startup() {
@@ -267,6 +326,8 @@ class TDArticle {
 
                             }
 
+                            this.onWindowResize();
+
                             //orbitコントロールモードを有効にし、レンダリングを開始する
                             this.orbit_active = true;
 
@@ -284,6 +345,7 @@ class TDArticle {
                 });
         }.bind(this));
 
+        //this.onWindowResize();
     }
 
 
@@ -857,6 +919,9 @@ class TDArticle {
         //ガンマ値をtrueに。
         //(truee.jsで一部のアイテムが暗くなるのを軽減)
         this.renderer.gammaOutput = _gammaOutput;
+
+
+        this.onWindowResize();
 
     }
 

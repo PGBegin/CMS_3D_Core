@@ -21,7 +21,7 @@
 
 <div class="row">
 
-    <div class="col-md-5">
+    <div class="col-6" id="id_contents_models">
         <h2>@Html.DisplayFor(model => model.title)</h2>
 
         <div id="annotations">
@@ -44,7 +44,7 @@
     </div>
 
 
-    <div class="col-md-6">
+    <div class="col-6" id="id_contents_instructions">
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
                 <a class="nav-link active" id="nav-instruction-tab" data-bs-toggle="tab" href="#nav-instruction">Instruction</a>
@@ -54,10 +54,10 @@
         <div class="tab-content" id="nav-tabContent">
 
 
-            
+
             <div class="tab-pane fade show active" id="nav-instruction">
 
-                <div id="preview_instruction_short_description"></div>
+                <div class="overflow-auto" id="preview_instruction_short_description"></div>
 
             </div>
 
@@ -107,7 +107,15 @@
         adarticle.id_startinst = @((obj.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction() { id_instruct = 0 }).id_instruct);
         adarticle.is_edit_mode = false;
         adarticle.startup();
+
+
+        window.addEventListener("resize", resizewindow, false);
+
+        //adarticle.onWindowResize();
     }
 
+    function resizewindow() {
+        adarticle.onWindowResize();
+    }
 
 </script>

@@ -63,7 +63,8 @@
 </div>
 
 
-
+<div id="div_progressbar_modeldl"></div>
+<div id="id_contents_instructions"></div>
 
 <script src="~/lib/three/three.js"></script>
 <script src="~/lib/three/Loader/GLTFLoader.js"></script>
@@ -90,6 +91,11 @@ window.onload = function () {
     adarticle.is_edit_mode = false;
     adarticle.startup();
 
+    window.addEventListener("resize", resizewindow, false);
+}
+
+function resizewindow() {
+    adarticle.onWindowResize();
 }
 
 </script>

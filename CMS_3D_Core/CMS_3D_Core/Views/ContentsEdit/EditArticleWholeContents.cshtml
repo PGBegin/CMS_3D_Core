@@ -17,7 +17,7 @@
 
 <div class="row">
 
-    <div class="col-md-5">
+    <div class="col-6" id="id_contents_models">
 
         <div id="annotations">
         </div>
@@ -41,7 +41,7 @@
     </div>
 
 
-    <div class="col-md-6">
+    <div class="col-6" id="id_contents_instructions">
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
                 <a class="nav-link active" id="nav-instruction-tab" data-bs-toggle="tab" href="#nav-instruction">Instruction</a>
@@ -122,7 +122,7 @@
         </div>
 
     </div>
-
+    <p id="debugel"></p>
 
 </div>
 
@@ -148,7 +148,7 @@
         'use strict';
 
         @{
-            var obj = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { }); 
+            var obj = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { });
         }
 
 
@@ -157,7 +157,13 @@
         adarticle.is_edit_mode = true;
         adarticle.startup();
 
+        window.addEventListener("resize", resizewindow, false);
+
     }
 
+
+    function resizewindow() {
+        adarticle.onWindowResize();
+    }
 
 </script>

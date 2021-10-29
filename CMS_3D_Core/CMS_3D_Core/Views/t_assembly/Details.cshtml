@@ -68,6 +68,9 @@
 </div>
 
 
+<div id="div_progressbar_modeldl"></div>
+<div id="id_contents_instructions"></div>
+
 <script src="~/lib/three/three.js"></script>
 <script src="~/lib/three/Loader/GLTFLoader.js"></script>
 <script src="~/lib/three/Loader/OBJLoader.js"></script>
@@ -121,15 +124,11 @@
         adarticle.is_mode_assy = true;
         adarticle.is_edit_mode = false;
         adarticle.startup();
+        window.addEventListener("resize", resizewindow, false);
     }
 
-    @*
-    //指定されたIDのインストラクションを表示する
-    function transition_instruction2(id_instruct) {
-        adarticle.transition_instruction(id_instruct);
+    function resizewindow() {
+        adarticle.onWindowResize();
     }
-
-
-            *@
 
 </script>
