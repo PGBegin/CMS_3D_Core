@@ -122,20 +122,28 @@ class TDArticle {
         this.height = 405;
 
         //API URL Base
-        this.str_url_partapi_base = "/ContentsOperatorApis/GetPartObjectFile?";
-        this.str_url_annotation_base = "/ContentsOperatorApis/GetAnnotationObjectList?";
-        this.str_url_annotation_display_base = "/ContentsOperatorApis/GetAnnotationDisplayObjectList?";
+        //this.str_url_partapi_base = "/ContentsOperatorApis/GetPartObjectFile?";
+        this.str_url_partapi_base = "/ContentsOperatorForArticleApis/GetPartObjectFile?";
+
+
+        //this.str_url_annotation_base = "/ContentsOperatorApis/GetAnnotationObjectList?";
+        this.str_url_annotation_base = "/ContentsOperatorForArticleApis/GetAnnotationObjectList?";
+
+
+        //this.str_url_annotation_display_base = "/ContentsOperatorApis/GetAnnotationDisplayObjectList?";
+        this.str_url_annotation_display_base = "/ContentsOperatorForArticleApis/GetAnnotationDisplayObjectList?";
 
         //this.str_url_base_prodobjectapi_articlemode = "/ContentsOperatorApis/GetAssemblyObjectList?";
         this.str_url_base_prodobjectapi_articlemode = "/ContentsOperatorForArticleApis/GetAssemblyObjectList?";
 
 
         //Old API
-        this.str_url_base_prodobjectapi_assymode = "/ContentsOperatorApis/GetAssemblyObjectListOnlyInstance?";
-        //this.str_url_base_prodobjectapi_assymode = "/ContentsOperatorForArticleApis/GetAssemblyObjectListOnlyInstance?";
+        //this.str_url_base_prodobjectapi_assymode = "/ContentsOperatorApis/GetAssemblyObjectListOnlyInstance?";
+        this.str_url_base_prodobjectapi_assymode = "/ContentsOperatorForArticleApis/GetAssemblyObjectListOnlyInstance?";
 
 
-        this.str_url_base_article = "/ContentsOperatorApis/GetArticleObject?";
+        this.str_url_base_article = "/ContentsOperatorForArticleApis/GetArticleObject?";
+        //this.str_url_base_article = "/ContentsOperatorApis/GetArticleObject?";
 
         //ContentsOperatorForArticleApis
 

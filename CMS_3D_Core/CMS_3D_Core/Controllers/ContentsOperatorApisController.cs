@@ -9,7 +9,7 @@ using System.Web;
 using Microsoft.AspNetCore.Mvc;
 using CMS_3D_Core.Models.EDM;
 
-
+/*
 namespace CMS_3D_Core.Controllers
 {
     public class ContentsOperatorApisController : Controller
@@ -281,16 +281,6 @@ namespace CMS_3D_Core.Controllers
     }
 
 
-    public class vm_instruction
-    {
-        public long id_article { get; set; }
-        public long id_instruct { get; set; }
-        public int id_view { get; set; }
-        public string title { get; set; }
-        public string short_description { get; set; }
-        public string memo { get; set; }
-        public long display_order { get; set; }
-    }
 
     public partial class vm_instance_part
     {
@@ -302,3 +292,6 @@ namespace CMS_3D_Core.Controllers
 
 
 }
+
+
+*/

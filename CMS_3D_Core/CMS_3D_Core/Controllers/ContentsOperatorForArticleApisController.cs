@@ -17,7 +17,6 @@ namespace CMS_3D_Core.Controllers
 
     public class ContentsOperatorForArticleApisController : ControllerBase
     {
-        //private db_data_coreContext db = new db_data_coreContext();
 
         private readonly db_data_coreContext _context;
 
@@ -27,49 +26,105 @@ namespace CMS_3D_Core.Controllers
         }
 
 
-        //ContentsOperatorApis2/GetAssemblyObjectList/1
         /// <summary>
-        /// GET: コンテンツのベースデータをJsonで返す
+        /// articleの関連情報を一括のJSONで返す
         /// </summary>
-        /// <param name="id_assy">アセンブリID</param>
-        /// <returns>ファイルのJsonデータ</returns>
+        /// <param name="id_article"></param>
+        /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<vm_instruction>>> GetInstructionList(int id_article)
+        public async Task<IList<object>> GetArticleObjectWholeData(long id_article)
         {
-            var t = await _context.t_instructions
-                        .Where(x => x.id_article == id_article)
-                        .Select(x => vm_instruction(x))
-                        .ToListAsync();
+            var t = await _context.t_articles
+                        .Include(x => x.t_instructions)
+                        .Include(x => x.t_views)
+                        .Include(x => x.id_assyNavigation).ThenInclude(x => x.t_instance_parts)
+                        .Include(x => x.t_annotations)
+                        .FirstOrDefaultAsync(x => x.id_article == id_article);
+
+            IList<object> objCollection = new List<object>();
+
+            //Article
+            objCollection.Add(object_from_t_article(t));
+
+            //Instance
+            foreach (var item in t.id_assyNavigation.t_instance_parts)
+            {
+                objCollection.Add(object_from_t_instance_part(item));
+            }
+
+            //Instruction
+            foreach (var item in t.t_instructions.OrderBy(x => x.display_order))
+            {
+                objCollection.Add(object_from_t_instruction(item));
+            }
+
+            //View
+            foreach (var item in t.t_views)
+            {
+                objCollection.Add(object_from_t_view(item));
+            }
+
+            //annotation
+            foreach (var item in t.t_annotations)
+            {
+                objCollection.Add(object_from_t_annotation(item));
+            }
 
 
-            return t;
+            //annotation disylay
+            var t2 = await _context.t_annotation_displays
+            .Where(x => x.id_article == id_article)
+            .ToListAsync();
+
+
+            foreach (var item in t2)
+            {
+                objCollection.Add(object_from_t_annotation_display(item));
+            }
+
+            return objCollection;
         }
-        //ContentsOperatorApis2/GetAssemblyObjectList/1
+
+
+
         /// <summary>
-        /// GET: コンテンツのベースデータをJsonで返す
+        /// articleの基本情報を返す
         /// </summary>
-        /// <param name="id_assy">アセンブリID</param>
-        /// <returns>ファイルのJsonデータ</returns>
+        /// <param name="id_article"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<object> GetArticleObject(long id_article)
+        {
+            var t = await _context.t_articles
+                        .Include(x => x.t_instructions)
+                        .Include(x => x.t_views)
+                        .Include(x => x.id_assyNavigation).ThenInclude(x => x.t_instance_parts)
+                        .FirstOrDefaultAsync(x => x.id_article == id_article);
+
+
+            return object_from_t_article(t);
+        }
+
+
+
+        /// <summary>
+        /// GET : Return Json of t_instance_part
+        /// </summary>
+        /// <param name="id_article"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<t_instance_part>>> GetInstancePartList(int id_article)
         {
-
-
             var t = await _context.t_instance_parts
-                        //.Where(x => x.id_assyNavigation.t_articles.FirstOrDefault().id_article == id_article)
-                        //                        .Where(x => x.id_assyNavigation.t_articles.Where(m => m.id_article == id_article).)
                         .ToListAsync();
-            //                        .Select(x => vm_instruction(x));
-
-
             return t;
         }
 
 
         /// <summary>
-        /// GET: コンテンツのベースデータをJsonで返す
+        /// GET: Objects of Instruct Data with Json Format
         /// </summary>
-        /// <param name="id_assy">アセンブリID</param>
+        /// <param name="id_article">id_article</param>
         /// <returns>ファイルのJsonデータ</returns>
         [HttpGet]
         public async Task<IList<object>> GetAssemblyObjectList(int id_article)
@@ -84,18 +139,21 @@ namespace CMS_3D_Core.Controllers
 
             foreach (var item in t.id_assyNavigation.t_instance_parts)
             {
-                objCollection.Add(
+                objCollection.Add(object_from_t_instance_part(item));
+                /*objCollection.Add(
                     new
                     {
                         type = "instance_part",
                         id_assy = item.id_assy,
                         id_inst = item.id_inst,
                         id_part = item.id_part
-                    });
+                    });*/
             }
 
             foreach (var item in t.t_instructions.OrderBy(x => x.display_order))
             {
+                objCollection.Add(object_from_t_instruction(item));
+                /*
                 objCollection.Add(
                     new
                     {
@@ -108,39 +166,17 @@ namespace CMS_3D_Core.Controllers
                         memo = item.memo,
                         display_order = item.display_order
                     });
+                */
             }
 
             foreach (var item in t.t_views)
             {
-                objCollection.Add(
-                    new
-                    {
-                        type = "view",
-                        id_article = item.id_article,
-                        id_view = item.id_view,
-                        title = item.title,
-
-                        cam_pos_x = item.cam_pos_x,
-                        cam_pos_y = item.cam_pos_y,
-                        cam_pos_z = item.cam_pos_z,
-
-                        cam_lookat_x = item.cam_lookat_x,
-                        cam_lookat_y = item.cam_lookat_y,
-                        cam_lookat_z = item.cam_lookat_z,
-
-                        cam_quat_x = item.cam_quat_x,
-                        cam_quat_y = item.cam_quat_y,
-                        cam_quat_z = item.cam_quat_z,
-                        cam_quat_w = item.cam_quat_w,
-
-                        obt_target_x = item.obt_target_x,
-                        obt_target_y = item.obt_target_y,
-                        obt_target_z = item.obt_target_z
-                    });
+                objCollection.Add(object_from_t_view(item));
             }
 
             return objCollection;
         }
+
 
 
         /// <summary>
@@ -149,7 +185,6 @@ namespace CMS_3D_Core.Controllers
         /// <param name="id_assy">アセンブリID</param>
         /// <returns>ファイルのJsonデータ</returns>
         [HttpGet]
-        //public JsonResult GetAssemblyObjectListOnlyInstance(int id_assy)
         public async Task<IList<object>> GetAssemblyObjectListOnlyInstance(int id_assy)
         {
             var t = await _context.t_assemblies
@@ -160,6 +195,8 @@ namespace CMS_3D_Core.Controllers
 
             foreach (var item in t.t_instance_parts)
             {
+                objCollection.Add(object_from_t_instance_part(item));
+                /*
                 objCollection.Add(
                     new
                     {
@@ -168,12 +205,90 @@ namespace CMS_3D_Core.Controllers
                         id_inst = item.id_inst,
                         id_part = item.id_part
                     });
+                */
             }
 
 
 
             return objCollection;
         }
+
+
+        /// <summary>
+        /// GET: Rerutn Annotation Data with Json Formats
+        /// </summary>
+        /// <param name="id_article">ArticleID</param>
+        /// <returns>ファイルのJsonデータ</returns>
+        [HttpGet]
+        public async Task<IList<object>> GetAnnotationObjectList(int id_article)
+        {
+            var t = await _context.t_annotations
+                        .Where(x => x.id_article == id_article)
+                        .ToListAsync();
+
+            IList<object> objCollection = new List<object>();
+
+            foreach (var item in t)
+            {
+                objCollection.Add(object_from_t_annotation(item));
+                /*
+                objCollection.Add(
+                    new
+                    {
+                        type = "annotation",
+                        id_article = item.id_article,
+                        id_annotation = item.id_annotation,
+                        title = item.title,
+                        description1 = item.description1,
+                        description2 = item.description2,
+                        status = item.status,
+                        pos_x = item.pos_x,
+                        pos_y = item.pos_y,
+                        pos_z = item.pos_z
+                    });*/
+            }
+
+
+
+            return objCollection;
+        }
+
+
+
+        /// <summary>
+        /// GET: Rerutn Annotation Data with Json Formats
+        /// </summary>
+        /// <param name="id_article">ArticleID</param>
+        /// <returns>ファイルのJsonデータ</returns>
+        [HttpGet]
+        public async Task<IList<object>> GetAnnotationDisplayObjectList(int id_article)
+        {
+            var t = await _context.t_annotation_displays
+                        .Where(x => x.id_article == id_article)
+                        .ToListAsync();
+
+            IList<object> objCollection = new List<object>();
+
+            foreach (var item in t)
+            {
+                objCollection.Add(object_from_t_annotation_display(item));
+                /*
+                objCollection.Add(
+                    new
+                    {
+                        type = "annotation_display",
+                        id_article = item.id_article,
+                        id_instruct = item.id_instruct,
+                        id_annotation = item.id_annotation,
+                        is_display = item.is_display
+                    });*/
+            }
+
+
+
+            return objCollection;
+        }
+
 
         ///ContentsEdit/postTorokuData
         [HttpPost]
@@ -298,10 +413,6 @@ namespace CMS_3D_Core.Controllers
 
 
             return objCollection;
-
-
-            // 更新に失敗した場合、編集画面を再描画
-            //return View(id_article);
         }
 
         [HttpGet]
@@ -311,17 +422,163 @@ namespace CMS_3D_Core.Controllers
 
             return File(t_part.file_data, t_part.type_data, t_part.part_number);
         }
-        private static vm_instruction vm_instruction(t_instruction todoItem) =>
-            new vm_instruction
+
+
+
+
+
+
+
+        /// <summary>
+        /// return object with t_view
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private static object object_from_t_article(t_article t) =>
+            new
             {
-                id_article = todoItem.id_article,
-                id_instruct = todoItem.id_instruct,
-                id_view = todoItem.id_view,
-                title = todoItem.title,
-                short_description = todoItem.short_description,
-                memo = todoItem.memo,
-                display_order = todoItem.display_order
+                type = "article",
+                id_article = t.id_article,
+                id_assy = t.id_assy,
+                title = t.title,
+                short_description = t.short_description,
+                long_description = t.long_description,
+                meta_description = t.meta_description,
+                meta_category = t.meta_category,
+                status = t.status,
+                directional_light_color = t.directional_light_color,
+                directional_light_intensity = t.directional_light_intensity,
+
+                directional_light_px = t.directional_light_px,
+                directional_light_py = t.directional_light_py,
+                directional_light_pz = t.directional_light_pz,
+
+                ambient_light_color = t.ambient_light_color,
+                ambient_light_intensity = t.ambient_light_intensity,
+                gammaOutput = t.gammaOutput,
+
+                id_attachment_for_eye_catch = t.id_attachment_for_eye_catch
             };
+
+
+        /// <summary>
+        /// return object with t_instance_part
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private static object object_from_t_instance_part(t_instance_part item) =>
+            new
+            {
+                type = "instance_part",
+                id_assy = item.id_assy,
+                id_inst = item.id_inst,
+                id_part = item.id_part
+
+            };
+
+
+        /// <summary>
+        /// return object with t_instruction
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private static object object_from_t_instruction(t_instruction item) =>
+            new
+            {
+                type = "instruction",
+                id_article = item.id_article,
+                id_instruct = item.id_instruct,
+                id_view = item.id_view,
+                title = item.title,
+                short_description = item.short_description,
+                memo = item.memo,
+                display_order = item.display_order
+            };
+
+
+        /// <summary>
+        /// return object with t_view
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private static object object_from_t_view(t_view item) =>
+            new
+            {
+                type = "view",
+                id_article = item.id_article,
+                id_view = item.id_view,
+                title = item.title,
+
+                cam_pos_x = item.cam_pos_x,
+                cam_pos_y = item.cam_pos_y,
+                cam_pos_z = item.cam_pos_z,
+
+                cam_lookat_x = item.cam_lookat_x,
+                cam_lookat_y = item.cam_lookat_y,
+                cam_lookat_z = item.cam_lookat_z,
+
+                cam_quat_x = item.cam_quat_x,
+                cam_quat_y = item.cam_quat_y,
+                cam_quat_z = item.cam_quat_z,
+                cam_quat_w = item.cam_quat_w,
+
+                obt_target_x = item.obt_target_x,
+                obt_target_y = item.obt_target_y,
+                obt_target_z = item.obt_target_z
+            };
+
+
+        /// <summary>
+        /// return object with t_view
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private static object object_from_t_annotation(t_annotation item) =>
+            new
+            {
+                type = "annotation",
+                id_article = item.id_article,
+                id_annotation = item.id_annotation,
+                title = item.title,
+                description1 = item.description1,
+                description2 = item.description2,
+                status = item.status,
+                pos_x = item.pos_x,
+                pos_y = item.pos_y,
+                pos_z = item.pos_z
+            };
+
+
+
+            
+        /// <summary>
+        /// return object with t_view
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private static object object_from_t_annotation_display(t_annotation_display item) =>
+            new
+            {
+                type = "annotation_display",
+                id_article = item.id_article,
+                id_instruct = item.id_instruct,
+                id_annotation = item.id_annotation,
+                is_display = item.is_display
+            };
+
+    }
+
+
+
+    public class vm_instruction
+    {
+        public long id_article { get; set; }
+        public long id_instruct { get; set; }
+        public int id_view { get; set; }
+        public string title { get; set; }
+        public string short_description { get; set; }
+        public string memo { get; set; }
+        public long display_order { get; set; }
     }
 
 }
