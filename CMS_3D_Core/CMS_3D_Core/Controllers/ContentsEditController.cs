@@ -189,6 +189,194 @@ namespace CMS_3D_Core.Controllers
             return View(id_article);
         }
 
+
+        ///ContentsEdit/postTorokuData
+        [HttpPost]
+        public async Task<JsonResult> EditProductInstructionApi([FromBody] t_instruction _t_instruction)
+        //public JsonResult postTorokuData([FromBody] t_instruction t_instruction)
+        {
+
+
+            string updatemode;
+            string updateresult;
+
+            var parameter_id_article = new SqlParameter
+            {
+                ParameterName = "id_article",
+                SqlDbType = System.Data.SqlDbType.BigInt,
+                Value = _t_instruction.id_article,
+            };
+
+            var parameter_create_user = new SqlParameter
+            {
+                ParameterName = "create_user",
+                SqlDbType = System.Data.SqlDbType.NVarChar,
+                Value = User.Identity.Name,
+            };
+            var parameter_ans_result = new SqlParameter
+            {
+                ParameterName = "ans_result",
+                SqlDbType = System.Data.SqlDbType.SmallInt,
+                Direction = System.Data.ParameterDirection.Output
+            };
+
+
+
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var target = await _context.t_instructions.FindAsync(_t_instruction.id_article, _t_instruction.id_instruct);
+                    if (target == null)
+                    {
+                        // if object is not in table
+                        // do add new item acrion
+                        t_instruction t_instruction = new t_instruction();
+                        t_instruction.id_article = _t_instruction.id_article;
+                        t_instruction.id_instruct = _t_instruction.id_instruct;
+                        t_instruction.id_view = _t_instruction.id_view;
+                        t_instruction.title = _t_instruction.title;
+                        t_instruction.short_description = _t_instruction.short_description;
+                        t_instruction.display_order = _t_instruction.display_order;
+                        t_instruction.memo = _t_instruction.memo;
+
+                        await _context.AddAsync(t_instruction);
+                        await _context.SaveChangesAsync();
+
+                        await _context.Database
+                            .ExecuteSqlRawAsync("EXEC [dbo].[annotation_display_add] @id_article,@create_user,@ans_result OUTPUT"
+                            , parameter_id_article
+                            , parameter_create_user
+                            , parameter_ans_result);
+
+
+                        //TempData["ResultMsg"] = "AddNew Success";
+                        //return RedirectToAction("EditArticleWholeContents", new { id_article = _t_instruction.id_article });
+                    }
+                    else
+                    {
+                        // if object is in table
+                        // do update new item acrion
+                        target.id_view = _t_instruction.id_view;
+                        target.title = _t_instruction.title;
+                        target.short_description = _t_instruction.short_description;
+                        target.display_order = _t_instruction.display_order;
+                        target.memo = _t_instruction.memo;
+
+                        // Update Db
+                        await _context.SaveChangesAsync();
+
+
+                        //TempData["ResultMsg"] = "Update Success";
+                        //return RedirectToAction("EditArticleWholeContents", new { id_article = id_article });
+                    }
+
+
+                }
+                catch (Exception e)
+                {
+                    TempData["ResultMsg"] = "Update Failed";
+#if DEBUG
+                    TempData["ResultMsg"] = e.Message;
+#endif
+                }
+            }
+            IList<object> objCollection = new List<object>();
+            //foreach (var item in t)
+            //{
+                objCollection.Add(
+                    new
+                    {
+                        updatemode = "add",
+                        updateresult = "sucess",
+                        type = "t_instruction",
+                        id_article = _t_instruction.id_article,
+                        id_instruct = _t_instruction.id_instruct,
+                        id_view = _t_instruction.id_view,
+                        title = _t_instruction.title,
+                        short_description = _t_instruction.short_description,
+                        display_order = _t_instruction.display_order,
+                        memo = _t_instruction.memo
+                    });
+            //}
+
+
+
+            return Json(objCollection);
+
+
+            // 更新に失敗した場合、編集画面を再描画
+            //return View(id_article);
+        }
+        /*
+        public JsonResult postTorokuData([FromBody] t_instruction t_instruction)
+        {
+                var t = _context.t_annotation_displays
+                        .Where(x => x.id_article == 1)
+                        .ToList();
+
+            IList<object> objCollection = new List<object>();
+
+            objCollection.Add(
+                new
+                {
+                    ans = "ok"
+                });
+
+
+            foreach (var item in t)
+            {
+                objCollection.Add(
+                    new
+                    {
+                        type = "annotation_display",
+                        id_article = item.id_article,
+                        id_instruct = item.id_instruct,
+                        id_annotation = item.id_annotation,
+                        is_display = item.is_display
+                    });
+            }
+
+            return Json(objCollection);
+            //データベース接続処理等を記述する。
+        }
+
+
+
+
+        var t = _context.t_annotation_displays
+                    .Where(x => x.id_article == 1)
+                    .ToList();
+
+        IList<object> objCollection = new List<object>();
+
+        objCollection.Add(
+                new
+                {
+                    ans = "ok"
+                });
+
+
+            foreach (var item in t)
+            {
+                objCollection.Add(
+                    new
+                    {
+                        type = "annotation_display",
+                        id_article = item.id_article,
+                        id_instruct = item.id_instruct,
+                        id_annotation = item.id_annotation,
+                        is_display = item.is_display
+});
+            }
+
+            return Json(objCollection);
+            //データベース接続処理等を記述する。
+        }
+*/
+
+
         // POST: Role/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -349,7 +537,7 @@ namespace CMS_3D_Core.Controllers
         public async Task<IActionResult> DeleteProductInstructionConfirmed(long id_article, long id_instruct)
         {
 
-            var x = await _context.t_annotation_displays.Where(y => y.id_article == id_article & y.id_instruct == y.id_instruct).ToListAsync();
+            var x = await _context.t_annotation_displays.Where(y => y.id_article == id_article & y.id_instruct == id_instruct).ToListAsync();
             foreach(var s in x)
             {
                 _context.t_annotation_displays.Remove(s);

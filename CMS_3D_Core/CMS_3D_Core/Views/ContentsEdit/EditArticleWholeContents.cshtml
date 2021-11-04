@@ -10,6 +10,8 @@
 
 
 
+<button class="btn btn-primary" onclick="adarticle.DbUpdateInstruction()" >Save(Ajax)</button>
+
 <p class="text-info">
     @ViewBag.ResultMsg
 </p>
@@ -123,7 +125,6 @@
 
     </div>
     <p id="debugel"></p>
-
 </div>
 
 
@@ -166,4 +167,56 @@
         adarticle.onWindowResize();
     }
 
+    function testup() {
+
+        //str_url_partapi_base = "/ContentsEdit/postTorokuData?";
+        str_url_partapi_base = "/ContentsOperatorForArticleApis/EditProductInstructionApi";
+
+        let str_url_api = str_url_partapi_base;
+
+        //const x = confirm('Are you update Instruction?');
+        if (confirm('Are you update Instruction?')) {
+
+            let updInstrruction = {
+                id_article: document.getElementById('id_article').value,
+                id_instruct: document.getElementById('instruction_id_instruct').value,
+                id_view: document.getElementById('instruction_id_view').value,
+                title: document.getElementById('instruction_title').value,
+                short_description: document.getElementById('instruction_short_description').value,
+                memo: document.getElementById('instruction_memo').value,
+                display_order: document.getElementById('instruction_display_order').value
+            };
+
+
+
+            //指定urlからデータを取得
+            //fetch内の各引数は以下の通り。
+            //第1引数は【アクションメソッドのPath】、
+            //第2引数は【通信方法 例)Get または　Post】、
+            //第3引数は【データの型】
+            //サンプル例：fetch(Path,{method:"POST",body:formData})
+            const response = fetch(str_url_api, { //【重要ポイント】「await」句は削除すること
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updInstrruction)  // リクエスト本文にJSON形式の文字列を設定c
+            })
+                .then(response => {
+
+                    return response.json();
+
+                }).then(data => { // 処理が成功した場合に取得されるJSONデータ
+
+
+                    for (let i in data) {
+                        console.log(data);// + ':' + data[i].ans);
+                    }
+                });
+        }
+        //console.log(x);
+
+
+            //
+    }
 </script>

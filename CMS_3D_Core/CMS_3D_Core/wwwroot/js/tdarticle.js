@@ -126,12 +126,18 @@ class TDArticle {
         this.str_url_annotation_base = "/ContentsOperatorApis/GetAnnotationObjectList?";
         this.str_url_annotation_display_base = "/ContentsOperatorApis/GetAnnotationDisplayObjectList?";
 
-        this.str_url_base_prodobjectapi_articlemode = "/ContentsOperatorApis/GetAssemblyObjectList?";
+        //this.str_url_base_prodobjectapi_articlemode = "/ContentsOperatorApis/GetAssemblyObjectList?";
+        this.str_url_base_prodobjectapi_articlemode = "/ContentsOperatorForArticleApis/GetAssemblyObjectList?";
 
+
+        //Old API
         this.str_url_base_prodobjectapi_assymode = "/ContentsOperatorApis/GetAssemblyObjectListOnlyInstance?";
+        //this.str_url_base_prodobjectapi_assymode = "/ContentsOperatorForArticleApis/GetAssemblyObjectListOnlyInstance?";
 
 
         this.str_url_base_article = "/ContentsOperatorApis/GetArticleObject?";
+
+        //ContentsOperatorForArticleApis
 
         //Model Objects
         this.article;
@@ -326,7 +332,10 @@ class TDArticle {
 
                             }
 
-                            this.onWindowResize();
+                            if (this.is_edit_mode != true && this.is_mode_assy != true) {
+                                this.onWindowResize();
+                            }
+
 
                             //orbitコントロールモードを有効にし、レンダリングを開始する
                             this.orbit_active = true;
@@ -347,8 +356,6 @@ class TDArticle {
 
         //this.onWindowResize();
     }
-
-
 
 
 
@@ -563,9 +570,6 @@ class TDArticle {
 
             });
     }
-
-
-
 
 
     //Loading Annotation Display
@@ -787,10 +791,7 @@ class TDArticle {
 
         }
     }
-
-    
-
-
+      
     //setup view operation panel
     //id_viewpoint_controlpanel
     setup_view_operation_panel() {
@@ -920,8 +921,9 @@ class TDArticle {
         //(truee.jsで一部のアイテムが暗くなるのを軽減)
         this.renderer.gammaOutput = _gammaOutput;
 
-
-        this.onWindowResize();
+        if (this.is_edit_mode != true && this.is_mode_assy != true) {
+            this.onWindowResize();
+        }
 
     }
 
@@ -1018,6 +1020,7 @@ class TDArticle {
     transition_instruction(id_instruct) {
 
 
+
         this.orbit_active = false;
 
         //カメラ位置の変更
@@ -1025,22 +1028,9 @@ class TDArticle {
         let i = this.instruction_gp[id_instruct].id_view;
 
 
-        // 視点のアニメーションによる移行
-        // ------------------------------------------------------------------------------------------------
-
-        this.counter = 0;
-
-        this.pitch_px = (this.view_object[i].cam_pos_x - this.camera_main.position.x) / this.step;
-        this.pitch_py = (this.view_object[i].cam_pos_y - this.camera_main.position.y) / this.step;
-        this.pitch_pz = (this.view_object[i].cam_pos_z - this.camera_main.position.z) / this.step;
-
-        this.pitch_tx = (this.view_object[i].obt_target_x - this.controls.target.x) / this.step;
-        this.pitch_ty = (this.view_object[i].obt_target_y - this.controls.target.y) / this.step;
-        this.pitch_tz = (this.view_object[i].obt_target_z - this.controls.target.z) / this.step;
-
-
-        this.render_trans();
-
+        this.transition_view(
+            new THREE.Vector3(this.view_object[i].cam_pos_x, this.view_object[i].cam_pos_y, this.view_object[i].cam_pos_z),
+            new THREE.Vector3(this.view_object[i].obt_target_x, this.view_object[i].obt_target_y, this.view_object[i].obt_target_z));
 
         if (this.is_edit_mode) {
             this.update_instruction_statements_for_edit(id_instruct);
@@ -1196,6 +1186,7 @@ class TDArticle {
         document.getElementById('obt_target_z').value = Math.floor(this.controls.target.z * 100) / 100;
 
     }
+
     //Update Annotation Position
     update_annotation_position() {
 
@@ -1228,6 +1219,68 @@ class TDArticle {
 
     }
 
+    //Update Instruction with Ajax
+    DbUpdateInstruction() {
+
+        let str_url_api = "/ContentsOperatorForArticleApis/EditProductInstructionApi";
+
+        if (confirm('Are you update Instruction?')) {
+
+            let updInstrruction = {
+                id_article: document.getElementById('id_article').value,
+                id_instruct: document.getElementById('instruction_id_instruct').value,
+                id_view: document.getElementById('instruction_id_view').value,
+                title: document.getElementById('instruction_title').value,
+                short_description: document.getElementById('instruction_short_description').value,
+                memo: document.getElementById('instruction_memo').value,
+                display_order: document.getElementById('instruction_display_order').value
+            };
+
+
+
+            //指定urlからデータを取得
+            //fetch内の各引数は以下の通り。
+            //第1引数は【アクションメソッドのPath】、
+            //第2引数は【通信方法 例)Get または　Post】、
+            //第3引数は【データの型】
+            //サンプル例：fetch(Path,{method:"POST",body:formData})
+            const response = fetch(str_url_api, { //【重要ポイント】「await」句は削除すること
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updInstrruction)  // リクエスト本文にJSON形式の文字列を設定c
+            })
+                .then(response => {
+
+                    return response.json();
+
+                }).then(data => { // 処理が成功した場合に取得されるJSONデータ
+
+                    // data には結果が格納されている
+                    // それに従ってクライアント側の更新を行う
+                    // success updateの場合
+
+                    //updatemode = "Update";
+                    //updateresult = "Success";
+                        //console.log(data);// + ':' + data[i].ans);
+                    if (data[0].updateresult == "Success") {
+                        this.instruction_gp[data[0].id_instruct].id_view = data[0].id_view;
+                        this.instruction_gp[data[0].id_instruct].title = data[0].title;
+                        this.instruction_gp[data[0].id_instruct].short_description = data[0].short_description;
+                        this.instruction_gp[data[0].id_instruct].memo = data[0].memo;
+                        this.instruction_gp[data[0].id_instruct].display_order = data[0].display_order;
+
+                        this.transition_instruction(data[0].id_instruct);
+                    }
+                    /*
+                    for (let i in data) {
+                        //console.log(data);// + ':' + data[i].ans);
+                    }
+                    */
+                });
+        }
+    }
 
 }
 
