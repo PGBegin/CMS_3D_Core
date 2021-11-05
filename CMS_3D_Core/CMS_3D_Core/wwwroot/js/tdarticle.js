@@ -134,7 +134,12 @@ class TDArticle {
         this.str_url_annotation_display_base = "/ContentsOperatorForArticleApis/GetAnnotationDisplayObjectList?";
 
         //this.str_url_base_prodobjectapi_articlemode = "/ContentsOperatorApis/GetAssemblyObjectList?";
-        this.str_url_base_prodobjectapi_articlemode = "/ContentsOperatorForArticleApis/GetAssemblyObjectList?";
+        //this.str_url_base_prodobjectapi_articlemode = "/ContentsOperatorForArticleApis/GetAssemblyObjectList?";
+        this.str_url_base_prodobjectapi_articlemode = "/ContentsOperatorForArticleApis/GetArticleObjectWholeData?";
+
+
+        //変更URL 後で再度消す
+        //str_url_api = "/ContentsOperatorForArticleApis/GetArticleObjectWholeData?" + new URLSearchParams({ id_article: this.id_article }).toString();
 
 
         //Old API
@@ -269,10 +274,381 @@ class TDArticle {
 
     }
 
+    //
+    data_reflesh_without_model() {
+
+        let str_url_api = "/ContentsOperatorForArticleApis/GetArticleObjectWholeData?" + new URLSearchParams({ id_article: this.id_article }).toString();
+        console.log("calxxxxxx");
+        //指定urlからデータを取得
+        fetch(str_url_api)
+            .then(response => {
+
+                return response.json();
+
+            })
+            .then(data => { // 処理が成功した場合に取得されるJSONデータ
+
+                console.log(this.article);
+                console.log(this.view_object);
+                console.log(this.instruction_gp);
+                console.log(this.instance_part);
+                console.log(this.annotation);
+                for (let i in data) {
+
+
+
+
+                    if (data[i].type == "article") {
+                        // 処理が成功した場合に取得されるJSONデータ
+                        this.article = new Aarticle(
+                            data[i].id_article,
+                            data[i].id_assy,
+                            data[i].title,
+                            data[i].short_description,
+                            data[i].long_description,
+                            data[i].meta_description,
+                            data[i].meta_category,
+                            data[i].status,
+                            data[i].directional_light_color,
+                            data[i].directional_light_intensity,
+                            data[i].directional_light_px,
+                            data[i].directional_light_py,
+                            data[i].directional_light_pz,
+                            data[i].ambient_light_color,
+                            data[i].ambient_light_intensity,
+                            data[i].gammaOutput,
+                            data[i].id_attachment_for_eye_catch);
+                    }
+
+                    if (data[i].type == "view") {
+                        this.view_object[data[i].id_view] = new ViewObject(
+
+                            data[i].id_article,
+                            data[i].id_view,
+                            data[i].title,
+
+                            data[i].cam_pos_x,
+                            data[i].cam_pos_y,
+                            data[i].cam_pos_z,
+
+                            data[i].cam_lookat_x,
+                            data[i].cam_lookat_y,
+                            data[i].cam_lookat_z,
+
+                            data[i].cam_quat_x,
+                            data[i].cam_quat_y,
+                            data[i].cam_quat_z,
+                            data[i].cam_quat_w,
+
+                            data[i].obt_target_x,
+                            data[i].obt_target_y,
+                            data[i].obt_target_z
+                        );
+                    }
+
+
+                    if (data[i].type == "instruction") {
+
+                        this.instruction_gp[data[i].id_instruct] = new Instruction(
+                            data[i].id_article,
+                            data[i].id_instruct,
+                            data[i].id_view,
+                            data[i].title,
+                            data[i].short_description,
+                            data[i].display_order,
+                            data[i].memo
+                        );
+
+                    }
+
+
+                    if (data[i].type == "instance_part") {
+
+                        this.instance_part[data[i].id_inst] = new InstancePart(
+                            data[i].id_assy,
+                            data[i].id_inst,
+                            data[i].id_part, null);
+                    }
+
+
+                    if (data[i].type == "annotation") {
+                        this.annotation[data[i].id_annotation] = new Annotation(
+
+                            data[i].id_article,
+                            data[i].id_annotation,
+                            data[i].title,
+
+                            data[i].description1,
+                            data[i].description2,
+
+                            data[i].status,
+
+                            data[i].pos_x,
+                            data[i].pos_y,
+                            data[i].pos_z,
+                            'id_annotation_' + data[i].id_annotation
+                        );
+                    }
+
+                }
+
+
+                this.instruction_gp.forEach(function (element) {
+                    //i = 0;
+                    let i;
+                    let j;
+                    i = element.id_instruct;
+                    this.annotation_display[i] = [];
+                    this.annotation.forEach(function (element) {
+                        j = element.id_annotation;
+                        this.annotation_display[i][j] = new AnnotationDisplay(
+                            this.id_article,
+                            i,
+                            j,
+                            false
+                        );
+                    }.bind(this));
+                }.bind(this));
+
+
+
+                for (let i in data) {
+
+                    if (data[i].type == "annotation_display") {
+                        this.annotation_display[data[i].id_instruct][data[i].id_annotation].is_display = data[i].is_display;
+                        console.log(data[i].is_display);
+                    }
+
+                }
+
+                console.log(this.article);
+                console.log(this.view_object);
+                console.log(this.instruction_gp);
+                console.log(this.instance_part);
+                console.log(this.annotation);
+                console.log(this.annotation_display);
+
+            });
+                
+    }
+
+    data_set_all(data) {
+        for (let i in data) {
+
+            if (data[i].type == "article") {
+                // 処理が成功した場合に取得されるJSONデータ
+                this.article = new Aarticle(
+                    data[i].id_article,
+                    data[i].id_assy,
+                    data[i].title,
+                    data[i].short_description,
+                    data[i].long_description,
+                    data[i].meta_description,
+                    data[i].meta_category,
+                    data[i].status,
+                    data[i].directional_light_color,
+                    data[i].directional_light_intensity,
+                    data[i].directional_light_px,
+                    data[i].directional_light_py,
+                    data[i].directional_light_pz,
+                    data[i].ambient_light_color,
+                    data[i].ambient_light_intensity,
+                    data[i].gammaOutput,
+                    data[i].id_attachment_for_eye_catch);
+            }
+
+            if (data[i].type == "view") {
+                this.view_object[data[i].id_view] = new ViewObject(
+
+                    data[i].id_article,
+                    data[i].id_view,
+                    data[i].title,
+
+                    data[i].cam_pos_x,
+                    data[i].cam_pos_y,
+                    data[i].cam_pos_z,
+
+                    data[i].cam_lookat_x,
+                    data[i].cam_lookat_y,
+                    data[i].cam_lookat_z,
+
+                    data[i].cam_quat_x,
+                    data[i].cam_quat_y,
+                    data[i].cam_quat_z,
+                    data[i].cam_quat_w,
+
+                    data[i].obt_target_x,
+                    data[i].obt_target_y,
+                    data[i].obt_target_z
+                );
+            }
+
+
+            if (data[i].type == "instruction") {
+
+                this.instruction_gp[data[i].id_instruct] = new Instruction(
+                    data[i].id_article,
+                    data[i].id_instruct,
+                    data[i].id_view,
+                    data[i].title,
+                    data[i].short_description,
+                    data[i].display_order,
+                    data[i].memo
+                );
+
+            }
+
+
+            if (data[i].type == "instance_part") {
+
+                this.instance_part[data[i].id_inst] = new InstancePart(
+                    data[i].id_assy,
+                    data[i].id_inst,
+                    data[i].id_part, null);
+            }
+
+
+            if (data[i].type == "annotation") {
+                this.annotation[data[i].id_annotation] = new Annotation(
+
+                    data[i].id_article,
+                    data[i].id_annotation,
+                    data[i].title,
+
+                    data[i].description1,
+                    data[i].description2,
+
+                    data[i].status,
+
+                    data[i].pos_x,
+                    data[i].pos_y,
+                    data[i].pos_z,
+                    'id_annotation_' + data[i].id_annotation
+                );
+            }
+
+        }
+
+
+        this.instruction_gp.forEach(function (element) {
+            //i = 0;
+            let i;
+            let j;
+            i = element.id_instruct;
+            this.annotation_display[i] = [];
+            this.annotation.forEach(function (element) {
+                j = element.id_annotation;
+                this.annotation_display[i][j] = new AnnotationDisplay(
+                    this.id_article,
+                    i,
+                    j,
+                    false
+                );
+            }.bind(this));
+        }.bind(this));
+
+
+
+        for (let i in data) {
+
+            if (data[i].type == "annotation_display") {
+                this.annotation_display[data[i].id_instruct][data[i].id_annotation].is_display = data[i].is_display;
+                console.log(data[i].is_display);
+            }
+
+        }
+
+    }
+
 
     //Setup
     startup() {
 
+
+        //this.setup_article().then(function (value) {
+
+            let str_url_api = this.str_url_base_prodobjectapi_articlemode + new URLSearchParams({ id_article: this.id_article }).toString();
+
+            if (this.is_mode_assy) {
+                str_url_api = this.str_url_base_prodobjectapi_assymode + new URLSearchParams({ id_assy: this.id_assy }).toString();
+            }
+
+
+            //指定urlからデータを取得
+            fetch(str_url_api)
+                .then(response => {
+
+                    return response.json();
+
+                })
+                .then(data => { // 処理が成功した場合に取得されるJSONデータ
+
+                    //JSONのデータを各オブジェクトに詰め替える
+                    this.data_set_all(data);
+
+
+                    //Loading Article
+                    this.setup_article_object();
+
+
+                    //コントロールパネル領域を生成する
+                    this.setup_control_panel_zone();
+
+                    //setup view operation panel
+                    this.setup_view_operation_panel();
+
+                    //Loading Annotations
+                    this.setup_annotations_html_objects();
+
+                    //表示領域を初期化する
+                    this.initial_optional01();
+
+                    //Initialize render
+                    this.initial_setup_and_render(
+                        this.article.directional_light_intensity
+                        , this.article.directional_light_px, this.article.directional_light_py, this.article.directional_light_pz
+                        , this.article.ambient_light_intensity
+                        , this.article.gammaOutput);
+
+
+                    //データモデルを取得する
+                    this.setup_instance_part_model();
+
+
+                    if (this.id_startinst == 0) {
+
+                        this.camera_main.position.copy(this.camera_main_startpos);
+
+                        this.controls.target.copy(this.controls_target_startpos);
+                    }
+                    else {
+                        this.transition_instruction(this.id_startinst);
+                    }
+
+                    if (this.is_edit_mode != true && this.is_mode_assy != true) {
+                        this.onWindowResize();
+                    }
+
+
+                    //orbitコントロールモードを有効にし、レンダリングを開始する
+                    this.orbit_active = true;
+
+                    this.render_orbital();
+
+
+                })
+                .catch(error => { // エラーの場合の処理
+
+                    console.log(error);
+
+                });
+        //}.bind(this));
+
+        //this.onWindowResize();
+    }
+    /*
+    //Setup
+    startup() {
 
 
         this.setup_article().then(function (value) {
@@ -295,6 +671,8 @@ class TDArticle {
 
                     //JSONのデータを各オブジェクトに詰め替える
                     this.data_import(data);
+
+
 
                     //コントロールパネル領域を生成する
                     this.setup_control_panel_zone();
@@ -365,7 +743,7 @@ class TDArticle {
         //this.onWindowResize();
     }
 
-
+    */
 
     //Loading Basic Data
     data_import(data) {
@@ -425,7 +803,7 @@ class TDArticle {
 
     //Loading Article
     async setup_article() {
-
+        /*
         if (this.id_article != 0) {
             let str_url_api = this.str_url_base_article + new URLSearchParams({ id_article: this.id_article }).toString();
 
@@ -441,6 +819,70 @@ class TDArticle {
                         , data.directional_light_color, data.directional_light_intensity, data.directional_light_px, data.directional_light_py, data.directional_light_pz
                         , data.ambient_light_color, data.ambient_light_intensity, data.gammaOutput, data.id_attachment_for_eye_catch);
 
+                })
+                .catch(error => { // エラーの場合の処理
+
+                    console.log(error);
+
+                });
+
+        } else {
+            this.article = new Aarticle(0, 0, "No Article", "", "", "", "", 0
+                , 1 //data.directional_light_color
+                , 1 //data.directional_light_intensity
+                , 30 //data.directional_light_px
+                , 30 //data.directional_light_py
+                , 30 //data.directional_light_pz
+                , 1 //data.ambient_light_color
+                , 1 //data.ambient_light_intensity
+                , true //data.gammaOutput
+                , 0 //data.id_attachment_for_eye_catch
+            );*/
+
+            return Promise.resolve();
+        //}
+    }
+
+
+    //Loading Article
+    setup_article_object() {
+        
+        if (this.id_article == 0) {
+
+            this.article = new Aarticle(0, 0, "No Article", "", "", "", "", 0
+                , 1 //data.directional_light_color
+                , 1 //data.directional_light_intensity
+                , 30 //data.directional_light_px
+                , 30 //data.directional_light_py
+                , 30 //data.directional_light_pz
+                , 1 //data.ambient_light_color
+                , 1 //data.ambient_light_intensity
+                , true //data.gammaOutput
+                , 0 //data.id_attachment_for_eye_catch
+            );
+        }
+    }
+
+
+    /*
+
+    //Loading Article
+    async setup_article() {
+
+        if (this.id_article != 0) {
+            let str_url_api = this.str_url_base_article + new URLSearchParams({ id_article: this.id_article }).toString();
+
+            //指定urlからデータを取得
+            return fetch(str_url_api)
+                .then(response => {
+
+                    return response.json();
+
+                })
+                .then(data => { // 処理が成功した場合に取得されるJSONデータ
+                    this.article = new Aarticle(data.id_article, data.id_assy, data.title, data.short_description, data.long_description, data.meta_description, data.meta_category, data.status
+                        , data.directional_light_color, data.directional_light_intensity, data.directional_light_px, data.directional_light_py, data.directional_light_pz
+                        , data.ambient_light_color, data.ambient_light_intensity, data.gammaOutput, data.id_attachment_for_eye_catch);
 
                 })
                 .catch(error => { // エラーの場合の処理
@@ -465,6 +907,11 @@ class TDArticle {
             return Promise.resolve();
         }
     }
+
+    */
+
+
+
 
     //Loading Models
     setup_instance_part_model() {
@@ -580,6 +1027,55 @@ class TDArticle {
     }
 
 
+    //Loading Annotations
+    //
+    //setup_annotations
+    setup_annotations_html_objects() {
+
+
+        let div_annotations = document.getElementById('annotations');
+        let temp_annotation;
+        let title_annotation;
+        let description1_annotation;
+
+
+
+        this.annotation.forEach(function (element) {
+
+
+            //for (let i in data) {
+
+            temp_annotation = document.createElement('div');
+
+            //temp_annotation.id = this.annotation[data[i].id_annotation].web_id_annotation;
+            temp_annotation.id = element.web_id_annotation;
+
+            temp_annotation.classList.add('annotation');
+
+            title_annotation = document.createElement('p');
+            description1_annotation = document.createElement('p');
+
+
+            //title_annotation.innerHTML = this.annotation[data[i].id_annotation].title;
+            title_annotation.innerHTML = element.title;
+            //description1_annotation.innerHTML = this.annotation[data[i].id_annotation].description1;
+            description1_annotation.innerHTML = element.description1;
+
+            temp_annotation.appendChild(title_annotation);
+            temp_annotation.appendChild(description1_annotation);
+            div_annotations.appendChild(temp_annotation);
+        });
+
+
+        //Create Edit Annotation Selection Panels
+        this.setup_edit_annotation_selection_panels();
+
+        //Create Edit Annotation Position Panels
+        this.setup_edit_annotation_position_panels();
+
+    }
+
+
     //Loading Annotation Display
     async setup_annotation_display() {
 
@@ -619,6 +1115,13 @@ class TDArticle {
                 console.log(error);
 
             });
+    }
+
+
+    //Loading Annotation Display
+    //setup_annotation_display
+    async setup_annotation_display_html_objects() {
+
     }
 
 
@@ -1245,6 +1748,8 @@ class TDArticle {
             };
 
 
+            //データ更新
+            //this.data_reflesh_without_model();
 
             //指定urlからデータを取得
             //fetch内の各引数は以下の通り。
@@ -1273,13 +1778,17 @@ class TDArticle {
                     //updateresult = "Success";
                         //console.log(data);// + ':' + data[i].ans);
                     if (data[0].updateresult == "Success") {
+
+                        //データ更新
+                        this.data_reflesh_without_model();
+                        /*
                         this.instruction_gp[data[0].id_instruct].id_view = data[0].id_view;
                         this.instruction_gp[data[0].id_instruct].title = data[0].title;
                         this.instruction_gp[data[0].id_instruct].short_description = data[0].short_description;
                         this.instruction_gp[data[0].id_instruct].memo = data[0].memo;
                         this.instruction_gp[data[0].id_instruct].display_order = data[0].display_order;
 
-                        this.transition_instruction(data[0].id_instruct);
+                        this.transition_instruction(data[0].id_instruct);*/
                     }
                     /*
                     for (let i in data) {
