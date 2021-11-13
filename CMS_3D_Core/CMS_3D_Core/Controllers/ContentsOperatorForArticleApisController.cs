@@ -9,12 +9,14 @@ using System.Web;
 using Microsoft.AspNetCore.Mvc;
 using CMS_3D_Core.Models.EDM;
 using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CMS_3D_Core.Controllers
 {
 
 
 
+    [Authorize]
     public class ContentsOperatorForArticleApisController : ControllerBase
     {
 
@@ -27,10 +29,11 @@ namespace CMS_3D_Core.Controllers
 
 
         /// <summary>
-        /// articleの関連情報を一括のJSONで返す
+        /// Return a set of related Data of article object in JSON
         /// </summary>
         /// <param name="id_article"></param>
         /// <returns></returns>
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IList<object>> GetArticleObjectWholeData(long id_article)
         {
@@ -88,10 +91,11 @@ namespace CMS_3D_Core.Controllers
 
 
         /// <summary>
-        /// articleの基本情報を返す
+        /// Return Data of article(only article object) object in JSON
         /// </summary>
         /// <param name="id_article"></param>
         /// <returns></returns>
+        [AllowAnonymous]
         [HttpGet]
         public async Task<object> GetArticleObject(long id_article)
         {
@@ -112,6 +116,7 @@ namespace CMS_3D_Core.Controllers
         /// </summary>
         /// <param name="id_article"></param>
         /// <returns></returns>
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<t_instance_part>>> GetInstancePartList(int id_article)
         {
@@ -126,6 +131,7 @@ namespace CMS_3D_Core.Controllers
         /// </summary>
         /// <param name="id_article">id_article</param>
         /// <returns>ファイルのJsonデータ</returns>
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IList<object>> GetAssemblyObjectList(int id_article)
         {
@@ -180,10 +186,11 @@ namespace CMS_3D_Core.Controllers
 
 
         /// <summary>
-        /// GET: インスタンスリストをJsonで返す
+        /// Return Instance Lists with Jeson Formats
         /// </summary>
         /// <param name="id_assy">アセンブリID</param>
         /// <returns>ファイルのJsonデータ</returns>
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IList<object>> GetAssemblyObjectListOnlyInstance(int id_assy)
         {
@@ -218,7 +225,8 @@ namespace CMS_3D_Core.Controllers
         /// GET: Rerutn Annotation Data with Json Formats
         /// </summary>
         /// <param name="id_article">ArticleID</param>
-        /// <returns>ファイルのJsonデータ</returns>
+        /// <returns>Json Data of File</returns>
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IList<object>> GetAnnotationObjectList(int id_article)
         {
@@ -259,7 +267,8 @@ namespace CMS_3D_Core.Controllers
         /// GET: Rerutn Annotation Data with Json Formats
         /// </summary>
         /// <param name="id_article">ArticleID</param>
-        /// <returns>ファイルのJsonデータ</returns>
+        /// <returns>Json Data of Annotation</returns>
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IList<object>> GetAnnotationDisplayObjectList(int id_article)
         {
@@ -290,7 +299,27 @@ namespace CMS_3D_Core.Controllers
         }
 
 
-        ///ContentsEdit/postTorokuData
+        /// <summary>
+        /// GET: Rerutn File Data with File Object Formats
+        /// </summary>
+        /// <param name="id_part"></param>
+        /// <returns>File Data</returns>
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> GetPartObjectFile(long id_part)
+        {
+            t_part t_part = await _context.t_parts.FindAsync(id_part);
+
+            return File(t_part.file_data, t_part.type_data, t_part.part_number);
+        }
+
+
+        /// <summary>
+        /// Update or Add Instruction for Ajax
+        /// </summary>
+        /// <param name="_t_instruction"></param>
+        /// <returns>Result of Api Action with Json</returns>
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IList<object>> EditProductInstructionApi([FromBody] t_instruction _t_instruction)
         {
@@ -415,12 +444,506 @@ namespace CMS_3D_Core.Controllers
             return objCollection;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetPartObjectFile(long id_part)
-        {
-            t_part t_part = await _context.t_parts.FindAsync(id_part);
 
-            return File(t_part.file_data, t_part.type_data, t_part.part_number);
+
+        /// <summary>
+        /// Delete Instruction for Ajax API
+        /// </summary>
+        /// <param name="_t_instruction"></param>
+        /// <returns>Result of Api Action with Json</returns>
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IList<object>> DeleteProductInstructionApi([FromBody] t_instruction _t_instruction)
+        {
+
+            string updatemode = "Delete";
+            string updateresult = "Success";
+            string updateresult_msg = "Delete Success";
+            var x = await _context.t_annotation_displays.Where(y => y.id_article == _t_instruction.id_article & y.id_instruct == _t_instruction.id_instruct).ToListAsync();
+            foreach (var s in x)
+            {
+                _context.t_annotation_displays.Remove(s);
+
+            }
+
+            t_instruction t_instruction = await _context.t_instructions.FindAsync(_t_instruction.id_article, _t_instruction.id_instruct);
+            _context.t_instructions.Remove(t_instruction);
+            await _context.SaveChangesAsync();
+
+
+
+            IList<object> objCollection = new List<object>();
+            //foreach (var item in t)
+            //{
+            objCollection.Add(
+                new
+                {
+                    updatemode = updatemode,
+                    updateresult = updateresult,
+                    updateresult_msg = updateresult_msg,
+                    type = "t_instruction",
+                    id_article = _t_instruction.id_article,
+                    id_instruct = _t_instruction.id_instruct,
+                    id_view = _t_instruction.id_view,
+                    title = _t_instruction.title,
+                    short_description = _t_instruction.short_description,
+                    display_order = _t_instruction.display_order,
+                    memo = _t_instruction.memo
+                });
+            //}
+
+
+
+            return objCollection;
+
+        }
+
+
+
+        /// <summary>
+        /// Update or Add View for Ajax
+        /// </summary>
+        /// <param name="_t_view"></param>
+        /// <returns>Result of Api Action with Json</returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IList<object>> EditProductViewApi([FromBody] t_view _t_view)
+        {
+
+
+
+            string updatemode = "";
+            string updateresult = "";
+            string updateresult_msg = "";
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var target = await _context.t_views.FindAsync(_t_view.id_article, _t_view.id_view);
+                    if (target == null)
+                    {
+                        //if target does not find, update new item
+
+                        t_view t_view = new t_view();
+                        // Key data
+                        t_view.id_article = _t_view.id_article;
+                        t_view.id_view = _t_view.id_view;
+                        t_view.title = _t_view.title;
+                        //Camera Position
+                        t_view.cam_pos_x = _t_view.cam_pos_x;
+                        t_view.cam_pos_y = _t_view.cam_pos_y;
+                        t_view.cam_pos_z = _t_view.cam_pos_z;
+
+                        //Lookat
+                        t_view.cam_lookat_x = _t_view.cam_lookat_x;
+                        t_view.cam_lookat_y = _t_view.cam_lookat_y;
+                        t_view.cam_lookat_z = _t_view.cam_lookat_z;
+
+                        //quatunion of camera
+                        t_view.cam_quat_x = _t_view.cam_quat_x;
+                        t_view.cam_quat_y = _t_view.cam_quat_y;
+                        t_view.cam_quat_z = _t_view.cam_quat_z;
+                        t_view.cam_quat_w = _t_view.cam_quat_w;
+
+                        //OrbitControl Target
+                        t_view.obt_target_x = _t_view.obt_target_x;
+                        t_view.obt_target_y = _t_view.obt_target_y;
+                        t_view.obt_target_z = _t_view.obt_target_z;
+
+                        // Update DB
+
+                        await _context.AddAsync(t_view);
+                        await _context.SaveChangesAsync();
+
+
+                        updatemode = "AddNew";
+                        updateresult = "Success";
+                        updateresult_msg = "AddNew Success";
+
+                        //TempData["ResultMsg"] = "AddNew Success";
+                        //return RedirectToAction("EditArticleWholeContents", "ContentsEdit", new { id_article = id_article });
+                    }
+                    else
+                    {
+
+                        // データ更新
+                        target.title = _t_view.title;
+                        //カメラ位置
+                        target.cam_pos_x = _t_view.cam_pos_x;
+                        target.cam_pos_y = _t_view.cam_pos_y;
+                        target.cam_pos_z = _t_view.cam_pos_z;
+
+                        //Lookat(現状まともに動いていない)
+                        target.cam_lookat_x = _t_view.cam_lookat_x;
+                        target.cam_lookat_y = _t_view.cam_lookat_y;
+                        target.cam_lookat_z = _t_view.cam_lookat_z;
+
+                        //カメラのクオータニオン
+                        target.cam_quat_x = _t_view.cam_quat_x;
+                        target.cam_quat_y = _t_view.cam_quat_y;
+                        target.cam_quat_z = _t_view.cam_quat_z;
+                        target.cam_quat_w = _t_view.cam_quat_w;
+
+                        //OrbitControlのターゲット
+                        target.obt_target_x = _t_view.obt_target_x;
+                        target.obt_target_y = _t_view.obt_target_y;
+                        target.obt_target_z = _t_view.obt_target_z;
+
+                        // DBに更新を反映
+                        await _context.SaveChangesAsync();
+
+                        updatemode = "Update";
+                        updateresult = "Success";
+                        updateresult_msg = "Update Success";
+
+                        //TempData["ResultMsg"] = "Update Success";
+                        //return RedirectToAction("EditArticleWholeContents", "ContentsEdit", new { id_article = id_article });
+
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    updateresult = "Failed";
+                    updateresult_msg = "Update Failed";
+                    //TempData["ResultMsg"] = "Update Failed";
+                }
+            }
+
+            // 更新に失敗した場合、編集画面を再描画
+            // return View(id_article);
+
+
+            IList<object> objCollection = new List<object>();
+
+
+            objCollection.Add(
+                new
+                {
+                    updatemode = updatemode,
+                    updateresult = updateresult,
+                    updateresult_msg = updateresult_msg,
+                    type = "t_view",
+                    // Key data
+                    id_article = _t_view.id_article,
+                    id_view = _t_view.id_view,
+                    title = _t_view.title,
+                    //Camera Position
+                    cam_pos_x = _t_view.cam_pos_x,
+                    cam_pos_y = _t_view.cam_pos_y,
+                    cam_pos_z = _t_view.cam_pos_z,
+
+                    //Lookat
+                    cam_lookat_x = _t_view.cam_lookat_x,
+                    cam_lookat_y = _t_view.cam_lookat_y,
+                    cam_lookat_z = _t_view.cam_lookat_z,
+
+                    //quatunion of camera
+                    cam_quat_x = _t_view.cam_quat_x,
+                    cam_quat_y = _t_view.cam_quat_y,
+                    cam_quat_z = _t_view.cam_quat_z,
+                    cam_quat_w = _t_view.cam_quat_w,
+
+                    //OrbitControl Target
+                    obt_target_x = _t_view.obt_target_x,
+                    obt_target_y = _t_view.obt_target_y,
+                    obt_target_z = _t_view.obt_target_z
+                });
+
+            return objCollection;
+
+
+
+        }
+
+
+
+        /// <summary>
+        /// Delete View for Ajax API
+        /// </summary>
+        /// <param name="_t_view"></param>
+        /// <returns>Result of Api Action with Json</returns>
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IList<object>> DeleteProductViewApi([FromBody] t_view _t_view)
+        {
+
+            string updatemode = "Delete";
+            string updateresult = "Success";
+            string updateresult_msg = "Delete Success";
+
+
+            t_view t_view = await _context.t_views.FindAsync(_t_view.id_article, _t_view.id_view);
+            _context.t_views.Remove(t_view);
+            await _context.SaveChangesAsync();
+
+
+
+            IList<object> objCollection = new List<object>();
+            objCollection.Add(
+                new
+                {
+                    updatemode = updatemode,
+                    updateresult = updateresult,
+                    updateresult_msg = updateresult_msg
+                });
+
+            return objCollection;
+
+        }
+
+
+        /// <summary>
+        /// Update or Add Annotation for Ajax
+        /// </summary>
+        /// <param name="_t_annotation"></param>
+        /// <returns>Result of Api Action with Json</returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IList<object>> EditProductAnnotationApi([FromBody] t_annotation _t_annotation)
+        {
+            /*
+            if (id_article == null | id_instruct == null)
+            {
+                return NotFound();
+            }*/
+
+            string updatemode = "";
+            string updateresult = "";
+            string updateresult_msg = "";
+
+            var parameter_id_article = new SqlParameter
+            {
+                ParameterName = "id_article",
+                SqlDbType = System.Data.SqlDbType.BigInt,
+                Value = _t_annotation.id_article,
+            };
+
+            var parameter_create_user = new SqlParameter
+            {
+                ParameterName = "create_user",
+                SqlDbType = System.Data.SqlDbType.NVarChar,
+                Value = User.Identity.Name,
+            };
+            var parameter_ans_result = new SqlParameter
+            {
+                ParameterName = "ans_result",
+                SqlDbType = System.Data.SqlDbType.SmallInt,
+                Direction = System.Data.ParameterDirection.Output
+            };
+
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    updatemode = "undefined";
+                    var target = await _context.t_annotations.FindAsync(_t_annotation.id_article, _t_annotation.id_annotation);
+                    if (target == null)
+                    {
+                        // if object is not in table
+                        // do add new item acrion
+                        t_annotation t_annotation = new t_annotation();
+                        t_annotation.id_article = _t_annotation.id_article;
+                        t_annotation.id_annotation = _t_annotation.id_annotation;
+                        t_annotation.title = _t_annotation.title;
+                        t_annotation.description1 = _t_annotation.description1;
+                        t_annotation.description2 = _t_annotation.description2;
+                        t_annotation.status = _t_annotation.status;
+                        t_annotation.pos_x = _t_annotation.pos_x;
+                        t_annotation.pos_y = _t_annotation.pos_y;
+                        t_annotation.pos_z = _t_annotation.pos_z;
+
+                        await _context.AddAsync(t_annotation);
+                        await _context.SaveChangesAsync();
+
+                        await _context.Database
+                            .ExecuteSqlRawAsync("EXEC [dbo].[annotation_display_add] @id_article,@create_user,@ans_result OUTPUT"
+                            , parameter_id_article
+                            , parameter_create_user
+                            , parameter_ans_result);
+
+
+
+                        updatemode = "AddNew";
+                        updateresult = "Success";
+                        updateresult_msg = "AddNew Success";
+                    }
+                    else
+                    {
+                        // if object is in table
+                        // do update new item acrion
+                        target.title = _t_annotation.title;
+                        target.description1 = _t_annotation.description1;
+                        target.description2 = _t_annotation.description2;
+                        target.status = _t_annotation.status;
+                        target.pos_x = _t_annotation.pos_x;
+                        target.pos_y = _t_annotation.pos_y;
+                        target.pos_z = _t_annotation.pos_z;
+
+                        // Update Db
+                        await _context.SaveChangesAsync();
+
+
+                        updatemode = "Update";
+                        updateresult = "Success";
+                        updateresult_msg = "Update Success";
+                    }
+
+
+                }
+                catch (Exception e)
+                {
+                    updateresult = "Failed";
+                    updateresult_msg = "Failed";
+#if DEBUG
+                    updateresult_msg = e.Message;
+#endif
+                }
+            }
+
+
+            IList<object> objCollection = new List<object>();
+
+
+            objCollection.Add(
+                new
+                {
+                    updatemode = updatemode,
+                    updateresult = updateresult,
+                    updateresult_msg = updateresult_msg,
+                    type = "t_annotation",
+                    id_article = _t_annotation.id_article,
+                    id_annotation = _t_annotation.id_annotation,
+                    title = _t_annotation.title,
+                    description1 = _t_annotation.description1,
+                    description2 = _t_annotation.description2,
+                    status = _t_annotation.status,
+                    pos_x = _t_annotation.pos_x,
+                    pos_y = _t_annotation.pos_y,
+                    pos_z = _t_annotation.pos_z
+                });
+
+            return objCollection;
+        }
+
+
+        /// <summary>
+        /// Delete Annotation for Ajax API
+        /// </summary>
+        /// <param name="_t_annotation"></param>
+        /// <returns>Result of Api Action with Json</returns>
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IList<object>> DeleteProductAnnotationApi([FromBody] t_annotation _t_annotation)
+        {
+
+            string updatemode = "Delete";
+            string updateresult = "Success";
+            string updateresult_msg = "Delete Success";
+
+
+            var x = await _context.t_annotation_displays.Where(y => y.id_article == _t_annotation.id_article & y.id_annotation == _t_annotation.id_annotation).ToListAsync();
+            foreach (var s in x)
+            {
+                _context.t_annotation_displays.Remove(s);
+            }
+
+            t_annotation t_annotation = await _context.t_annotations.FindAsync(_t_annotation.id_article, _t_annotation.id_annotation);
+            _context.t_annotations.Remove(t_annotation);
+            await _context.SaveChangesAsync();
+
+
+
+            IList<object> objCollection = new List<object>();
+            objCollection.Add(
+                new
+                {
+                    updatemode = updatemode,
+                    updateresult = updateresult,
+                    updateresult_msg = updateresult_msg,
+                    type = "t_annotation",
+                    id_article = _t_annotation.id_article,
+                    id_annotation = _t_annotation.id_annotation,
+                    title = _t_annotation.title,
+                    description1 = _t_annotation.description1,
+                    description2 = _t_annotation.description2,
+                    status = _t_annotation.status,
+                    pos_x = _t_annotation.pos_x,
+                    pos_y = _t_annotation.pos_y,
+                    pos_z = _t_annotation.pos_z
+                });
+
+            return objCollection;
+
+        }
+
+
+        /// <summary>
+        /// Update AnnotationDisplay for Ajax
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns>Result of Api Action with Json</returns>
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IList<object>> EditProductAnnotationDisplayApi([FromBody] IList<t_annotation_display> List)
+        {
+            /*
+            if (id_article == null | id_instruct == null)
+            {
+                return NotFound();
+            }*/
+
+            string updatemode = "Delete";
+            string updateresult = "Success";
+            string updateresult_msg = "Delete Success";
+
+            if (ModelState.IsValid)
+            {
+                updatemode = "undefined";
+                try
+                {
+                    foreach (var m in List)
+                    {
+                        var target = await _context.t_annotation_displays.FindAsync(m.id_article, m.id_instruct, m.id_annotation);
+                        target.is_display = m.is_display;
+                    }
+
+
+
+                    // Update Db
+                    await _context.SaveChangesAsync();
+
+
+                    updatemode = "Update";
+                    updateresult = "Success";
+                    updateresult_msg = "Update Success";
+
+
+                }
+                catch (Exception e)
+                {
+                    updateresult = "Failed";
+                    updateresult_msg = "Failed";
+#if DEBUG
+                    updateresult_msg = e.Message;
+#endif
+                }
+            }
+
+            IList<object> objCollection = new List<object>();
+
+
+            objCollection.Add(
+                new
+                {
+                    updatemode = updatemode,
+                    updateresult = updateresult,
+                    updateresult_msg = updateresult_msg
+                });
+
+            return objCollection;
         }
 
 
@@ -430,9 +953,9 @@ namespace CMS_3D_Core.Controllers
 
 
         /// <summary>
-        /// return object with t_view
+        /// return object with t_article
         /// </summary>
-        /// <param name="item"></param>
+        /// <param name="t"></param>
         /// <returns></returns>
         private static object object_from_t_article(t_article t) =>
             new
@@ -458,22 +981,6 @@ namespace CMS_3D_Core.Controllers
                 gammaOutput = t.gammaOutput,
 
                 id_attachment_for_eye_catch = t.id_attachment_for_eye_catch
-            };
-
-
-        /// <summary>
-        /// return object with t_instance_part
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        private static object object_from_t_instance_part(t_instance_part item) =>
-            new
-            {
-                type = "instance_part",
-                id_assy = item.id_assy,
-                id_inst = item.id_inst,
-                id_part = item.id_part
-
             };
 
 
@@ -529,7 +1036,7 @@ namespace CMS_3D_Core.Controllers
 
 
         /// <summary>
-        /// return object with t_view
+        /// return object with t_annotation
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
@@ -549,10 +1056,8 @@ namespace CMS_3D_Core.Controllers
             };
 
 
-
-            
         /// <summary>
-        /// return object with t_view
+        /// return object with t_annotation_display
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
@@ -566,10 +1071,26 @@ namespace CMS_3D_Core.Controllers
                 is_display = item.is_display
             };
 
+
+        /// <summary>
+        /// return object with t_instance_part
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private static object object_from_t_instance_part(t_instance_part item) =>
+            new
+            {
+                type = "instance_part",
+                id_assy = item.id_assy,
+                id_inst = item.id_inst,
+                id_part = item.id_part
+
+            };
+
     }
 
 
-
+    /*
     public class vm_instruction
     {
         public long id_article { get; set; }
@@ -580,5 +1101,5 @@ namespace CMS_3D_Core.Controllers
         public string memo { get; set; }
         public long display_order { get; set; }
     }
-
+    */
 }

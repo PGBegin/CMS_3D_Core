@@ -106,7 +106,7 @@
         adarticle.id_article = @obj.id_article;
         adarticle.id_startinst = @((obj.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction() { id_instruct = 0 }).id_instruct);
         adarticle.is_edit_mode = false;
-        adarticle.startup();
+        adarticle.ComplexSetupEnvironmentInitial();
 
 
         window.addEventListener("resize", resizewindow, false);

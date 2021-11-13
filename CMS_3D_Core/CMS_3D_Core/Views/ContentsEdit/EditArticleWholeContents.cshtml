@@ -10,7 +10,6 @@
 
 
 
-<button class="btn btn-primary" onclick="adarticle.DbUpdateInstruction()" >Save(Ajax)</button>
 
 <p class="text-info">
     @ViewBag.ResultMsg
@@ -60,6 +59,9 @@
 
             <div class="tab-pane fade show active" id="nav-instruction">
                 @await Component.InvokeAsync("EditProductInstruction", new { id_article = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { id_article = 0 }).id_article })
+
+                <button class="btn btn-primary" onclick="adarticle.DbUpdateInstruction()">Save(Ajax)</button>
+                <button class="btn btn-danger" onclick="adarticle.DbDeleteInstruction()">Delete(Ajax)</button>
             </div>
 
             <div class="tab-pane fade" id="preview-instruction">
@@ -72,9 +74,10 @@
                 @await Component.InvokeAsync("EditProductView", new { id_article = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { id_article = 0 }).id_article })
 
 
-                @await Component.InvokeAsync("ViewList", new { id_article = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { id_article = 0 }).id_article })
+                @*@await Component.InvokeAsync("ViewList", new { id_article = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { id_article = 0 }).id_article })*@
+                @await Component.InvokeAsync("EditListProductView")
 
-
+                
                 @Html.ActionLink("View", "Index", "t_view", new { id_article = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { id_article = 0 }).id_article })
 
             </div>
@@ -85,6 +88,9 @@
 
                 @await Component.InvokeAsync("EditProductAnnotation", new { id_article = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { id_article = 0 }).id_article })
 
+                <button class="btn btn-primary" onclick="adarticle.DbUpdateAnnotation()">Save(Ajax)</button>
+                <button class="btn btn-danger" onclick="adarticle.DbDeleteAnnotation()">Delete(Ajax)</button>
+
                 <div id="id_view_operation_panel"></div>
             </div>
 
@@ -94,6 +100,7 @@
 
                 @await Component.InvokeAsync("EditProductAnnotationDisplay", new { id_article = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { id_article = 0 }).id_article })
 
+                <button class="btn btn-primary" onclick="adarticle.DbUpdateAnnotationDisplay()">Save(Ajax)</button>
 
             </div>
 
@@ -156,7 +163,7 @@
         adarticle.id_article = @obj.id_article;
         adarticle.id_startinst = @((obj.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction() { id_instruct = 0 }).id_instruct);
         adarticle.is_edit_mode = true;
-        adarticle.startup();
+        adarticle.ComplexSetupEnvironmentInitial();
 
         window.addEventListener("resize", resizewindow, false);
 
@@ -167,57 +174,4 @@
         adarticle.onWindowResize();
     }
 
-    function testup() {
-
-        //str_url_partapi_base = "/ContentsEdit/postTorokuData?";
-        str_url_partapi_base = "/ContentsOperatorForArticleApis/EditProductInstructionApi";
-
-        let str_url_api = str_url_partapi_base;
-
-        //const x = confirm('Are you update Instruction?');
-        if (confirm('Are you update Instruction?')) {
-
-            let updInstrruction = {
-                id_article: document.getElementById('id_article').value,
-                id_instruct: document.getElementById('instruction_id_instruct').value,
-                id_view: document.getElementById('instruction_id_view').value,
-                title: document.getElementById('instruction_title').value,
-                short_description: document.getElementById('instruction_short_description').value,
-                memo: document.getElementById('instruction_memo').value,
-                display_order: document.getElementById('instruction_display_order').value
-            };
-
-
-
-
-            //指定urlからデータを取得
-            //fetch内の各引数は以下の通り。
-            //第1引数は【アクションメソッドのPath】、
-            //第2引数は【通信方法 例)Get または　Post】、
-            //第3引数は【データの型】
-            //サンプル例：fetch(Path,{method:"POST",body:formData})
-            const response = fetch(str_url_api, { //【重要ポイント】「await」句は削除すること
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(updInstrruction)  // リクエスト本文にJSON形式の文字列を設定c
-            })
-                .then(response => {
-
-                    return response.json();
-
-                }).then(data => { // 処理が成功した場合に取得されるJSONデータ
-
-
-                    for (let i in data) {
-                        console.log(data);// + ':' + data[i].ans);
-                    }
-                });
-        }
-        //console.log(x);
-
-
-            //
-    }
 </script>

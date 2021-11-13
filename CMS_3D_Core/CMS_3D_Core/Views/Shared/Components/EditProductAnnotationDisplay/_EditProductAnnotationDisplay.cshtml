@@ -16,6 +16,9 @@
         <thead>
             <tr>
                 <th>
+                    No.
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model[0].id_annotation)
                 </th>
                 <th>
@@ -29,7 +32,7 @@
                 </th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="id_edit_annotation_display_tbody">
             @for (int i = 0; i < Model.Count; i++)
             //@foreach (var item in Model)
             {
@@ -40,6 +43,9 @@
                         @Html.HiddenFor(modelItem => Model[i].id_instruct, new { id = key + "id_edit_annotation_display_input_id_instruct" })
                         @Html.HiddenFor(modelItem => Model[i].id_annotation, new { id = key + "id_edit_annotation_display_input_id_annotation" })
                         @Html.DisplayFor(modelItem => Model[i].id_annotation, new { id = key + "id_edit_annotation_display_display_id_annotation" } )
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model[i].id_annotation)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => Model[i].id_a.title, new { id = key + "id_edit_annotation_display_input_title" })

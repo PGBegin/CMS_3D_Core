@@ -557,7 +557,7 @@ namespace CMS_3D_Core.Controllers
         public async Task<IActionResult> DeleteProductAnnotationConfirmed(long id_article, long id_annotation)
         {
 
-            var x = await _context.t_annotation_displays.Where(y => y.id_article == id_article & y.id_annotation == y.id_annotation).ToListAsync();
+            var x = await _context.t_annotation_displays.Where(y => y.id_article == id_article & y.id_annotation == id_annotation).ToListAsync();
             foreach (var s in x)
             {
                 _context.t_annotation_displays.Remove(s);

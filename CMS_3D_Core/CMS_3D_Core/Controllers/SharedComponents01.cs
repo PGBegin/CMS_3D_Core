@@ -85,6 +85,30 @@ namespace CMS_3D_Core.Controllers
         }
     }
 
+    /// <summary>
+    /// t_viewsの中身(視点一覧)を表示する(編集用)
+    /// </summary>
+    public class EditListProductViewViewComponent : ViewComponent
+    {
+        private readonly db_data_coreContext _context;
+
+        public EditListProductViewViewComponent(db_data_coreContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IViewComponentResult> InvokeAsync()// long id_article)
+        {
+        /*
+            var t = await _context.t_views
+                                .Include(x => x.id_articleNavigation)
+                                .Include(x => x.t_instructions)
+                                .Where(x => x.id_article == id_article)
+                                .ToListAsync();*/
+
+            return View("_EditListProductView");//, t);
+        }
+    }
 
     /// <summary>
     /// t_articlesの中身を表示する(編集画面用)
