@@ -69,6 +69,7 @@ namespace CMS_3D_Core.Controllers
         [HttpGet]
         public async Task<IActionResult> EditArticleWholeContents(long? id_article)
         {
+
             if (id_article == null)
             {
                 return NotFound();
@@ -87,7 +88,8 @@ namespace CMS_3D_Core.Controllers
 
 
             ViewBag.ResultMsg = TempData["ResultMsg"];
-            return View(t_article);
+            //return View("EditArticleWholeContentsForAjax", t_article);
+            return View("EditArticleWholeContentsForAjax", t_article);
 
         }
 
@@ -189,11 +191,10 @@ namespace CMS_3D_Core.Controllers
             return View(id_article);
         }
 
-
+        /*
         ///ContentsEdit/postTorokuData
         [HttpPost]
         public async Task<JsonResult> EditProductInstructionApi([FromBody] t_instruction _t_instruction)
-        //public JsonResult postTorokuData([FromBody] t_instruction t_instruction)
         {
 
 
@@ -309,6 +310,8 @@ namespace CMS_3D_Core.Controllers
             // 更新に失敗した場合、編集画面を再描画
             //return View(id_article);
         }
+        */
+
         /*
         public JsonResult postTorokuData([FromBody] t_instruction t_instruction)
         {

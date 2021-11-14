@@ -152,6 +152,31 @@ namespace CMS_3D_Core.Controllers
         }
     }
 
+    /// <summary>
+    /// Edit Instruction
+    /// </summary>
+    public class EditProductInstructionViewComponent : ViewComponent
+    {
+        private readonly db_data_coreContext _context;
+
+        public EditProductInstructionViewComponent(db_data_coreContext context)
+        {
+            _context = context;
+        }
+
+        //If select use_ajax true, then return html dates without value
+        public async Task<IViewComponentResult> InvokeAsync(long id_article, bool? use_ajax)
+        {
+            if (use_ajax ?? false)
+            {
+                return View("_EditProductInstructionAjax");
+            }
+            var t = await _context.t_instructions.Where(m => m.id_article == id_article).OrderBy(m => m.display_order).FirstOrDefaultAsync();
+
+            return View("_EditProductInstruction", t);
+        }
+    }
+
 
     /// <summary>
     /// Edit View
@@ -165,8 +190,13 @@ namespace CMS_3D_Core.Controllers
             _context = context;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(long id_article)
+        public async Task<IViewComponentResult> InvokeAsync(long id_article, bool? use_ajax)
         {
+            
+            if (use_ajax ?? false)
+            {
+                return View("_EditProductViewAjax", new t_view());
+            }
 
             var t = (await _context.t_instructions.Where(m => m.id_article == id_article).OrderBy(m => m.display_order).FirstOrDefaultAsync()) ?? new t_instruction() { id_view = 0 };
             var t2 = await _context.t_views.Where(m => m.id_article == id_article & m.id_view == t.id_view).FirstOrDefaultAsync();
@@ -176,28 +206,7 @@ namespace CMS_3D_Core.Controllers
     }
 
     /// <summary>
-    /// Edit Instruction
-    /// </summary>
-    public class EditProductInstructionViewComponent : ViewComponent
-    {
-        private readonly db_data_coreContext _context;
-
-        public EditProductInstructionViewComponent(db_data_coreContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<IViewComponentResult> InvokeAsync(long id_article)
-        {
-
-            var t = await _context.t_instructions.Where(m => m.id_article == id_article).OrderBy(m => m.display_order).FirstOrDefaultAsync();
-
-            return View("_EditProductInstruction", t);
-        }
-    }
-
-    /// <summary>
-    /// Edit Instruction
+    /// Edit Annotation
     /// </summary>
     public class EditProductAnnotationViewComponent : ViewComponent
     {
@@ -208,8 +217,12 @@ namespace CMS_3D_Core.Controllers
             _context = context;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(long id_article)
+        public async Task<IViewComponentResult> InvokeAsync(long id_article, bool? use_ajax)
         {
+            if (use_ajax ?? false)
+            {
+                return View("_EditProductAnnotationAjax", new t_annotation());
+            }
 
             var t = await _context.t_annotations.Where(m => m.id_article == id_article).OrderBy(m => m.id_annotation).FirstOrDefaultAsync();
 
@@ -278,16 +291,17 @@ namespace CMS_3D_Core.Controllers
             _context = context;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(long id_article)
+
+        public async Task<IViewComponentResult> InvokeAsync(long id_article, bool? use_ajax)
         {
+            if (use_ajax ?? false)
+            {
+                //IList<t_annotation_display> list = new List<t_annotation_display>();
 
+                return View("_EditProductAnnotationDisplayAjax", new List<t_annotation_display>());
+            }
 
-            //var t = (await _context.t_instructions.Where(m => m.id_article == id_article).OrderBy(m => m.display_order).FirstOrDefaultAsync()) ?? new t_instruction() { id_view = 0 };
-
-
-            //if (id_article != 0) { 
             var instfirst = (await _context.t_instructions.Where(m => m.id_article == id_article).FirstOrDefaultAsync()) ?? new t_instruction() { id_instruct = 0 };
-
 
 
             var t = await _context.t_annotation_displays
@@ -296,19 +310,10 @@ namespace CMS_3D_Core.Controllers
                                   .ToListAsync();
 
             return View("_EditProductAnnotationDisplay", t);
-            
-            
-            /*
-            }
-            else
-            {
-                var t = await _context.t_annotation_displays
-                      .Include(m => m.id_a)
-                      .Where(m => m.id_article == id_article)
-                      .ToListAsync();
-                return View("_EditProductAnnotationDisplay", t);
-            }*/
         }
+
+
+
     }
 
 

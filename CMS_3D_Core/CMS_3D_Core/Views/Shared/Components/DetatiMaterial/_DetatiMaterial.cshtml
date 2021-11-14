@@ -35,32 +35,31 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.id_assyNavigation.t_instance_parts)
-        {
-            <tr>
-                <td>
-                    Model Name
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.id_partNavigation.file_name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.id_partNavigation.file_length)
-                </td>
-                <td>
-                    <a href="@item.id_partNavigation.itemlink">Data Source</a>
-                    
-                    @*
-                    @Html.DisplayFor(modelItem => item.id_partNavigation.itemlink)
-                    *@
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.id_partNavigation.author)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.id_partNavigation.license)
-                </td>
-            </tr>
+        @if (Model != null) {
+            @foreach (var item in Model.id_assyNavigation.t_instance_parts)
+            {
+                <tr>
+                    <td>
+                        Model Name
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.id_partNavigation.file_name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.id_partNavigation.file_length)
+                    </td>
+                    <td>
+                        <a href="@item.id_partNavigation.itemlink">Data Source</a>
+
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.id_partNavigation.author)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.id_partNavigation.license)
+                    </td>
+                </tr>
+            }
         }
     </tbody>
 </table>

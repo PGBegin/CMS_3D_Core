@@ -1,0 +1,79 @@
+﻿@model CMS_3D_Core.Models.EDM.t_annotation
+
+
+
+<div id="edit_annotation_selection_panels">
+</div>
+
+<hr />
+
+@*<form asp-action="EditProductAnnotation" asp-controller="ContentsEdit">*@
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<input type="hidden" asp-for="id_article" id="id_edit_annotation_input_id_article" />
+
+
+<div class="form-group row ">
+    <div class="col-sm-3">
+        <label asp-for="id_annotation" class="control-label"></label>
+        <input asp-for="id_annotation" class="form-control" id="id_edit_annotation_input_id_annotation" />
+        <span asp-validation-for="id_annotation" class="text-danger"></span>
+    </div>
+    <div class="col-sm-7">
+        <label asp-for="title" class="control-label"></label>
+        <input asp-for="title" class="form-control" id="id_edit_annotation_input_title" />
+        <span asp-validation-for="title" class="text-danger"></span>
+    </div>
+    <div class="col-sm-2">
+        <label asp-for="status" class="control-label"></label>
+        <input asp-for="status" class="form-control" id="id_edit_annotation_input_status" />
+        <span asp-validation-for="status" class="text-danger"></span>
+    </div>
+    <div class="col-sm-12">
+        <label asp-for="description1" class="control-label"></label>
+        @Html.TextArea("description1", null, new { rows = "2", @class = "form-control", id = "id_edit_annotation_input_description1" })
+        <span asp-validation-for="description1" class="text-danger"></span>
+    </div>
+    <div class="col-sm-12">
+        <label asp-for="description2" class="control-label"></label>
+        @Html.TextArea("description2", null, new { rows = "2", @class = "form-control", id = "id_edit_annotation_input_description2" })
+        <span asp-validation-for="description2" class="text-danger"></span>
+    </div>
+
+    <div class="col-sm-4">
+        <label asp-for="pos_x" class="control-label"></label>
+        <input asp-for="pos_x" class="form-control" id="id_edit_annotation_input_pos_x" />
+        <span asp-validation-for="pos_x" class="text-danger"></span>
+    </div>
+    <div class="col-sm-4">
+        <label asp-for="pos_y" class="control-label"></label>
+        <input asp-for="pos_y" class="form-control" id="id_edit_annotation_input_pos_y" />
+        <span asp-validation-for="pos_y" class="text-danger"></span>
+    </div>
+    <div class="col-sm-4">
+        <label asp-for="pos_z" class="control-label"></label>
+        <input asp-for="pos_z" class="form-control" id="id_edit_annotation_input_pos_z" />
+        <span asp-validation-for="pos_z" class="text-danger"></span>
+    </div>
+</div>
+
+@*
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+    </form>
+*@
+
+<div class="form-group row ">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="id_article" id="id_delete_annotation_input_id_article" />
+    <input type="hidden" asp-for="id_annotation" id="id_delete_annotation_input_id_annotation" />
+</div>
+
+<button class="btn btn-primary" onclick="adarticle.DbUpdateAnnotation()">Save</button>
+<button class="btn btn-danger" onclick="adarticle.DbDeleteAnnotation()">Delete</button>
+
+<hr />
+
+
+<div id="edit_annotation_position_panels">
+</div>

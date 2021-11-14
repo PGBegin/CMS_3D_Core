@@ -319,8 +319,8 @@ namespace CMS_3D_Core.Controllers
         /// </summary>
         /// <param name="_t_instruction"></param>
         /// <returns>Result of Api Action with Json</returns>
-        [ValidateAntiForgeryToken]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IList<object>> EditProductInstructionApi([FromBody] t_instruction _t_instruction)
         {
 
@@ -358,6 +358,9 @@ namespace CMS_3D_Core.Controllers
                 {
                     updatemode = "undefined";
                     var target = await _context.t_instructions.FindAsync(_t_instruction.id_article, _t_instruction.id_instruct);
+
+                    var t_article = await _context.t_articles.FindAsync(_t_instruction.id_article);
+
                     if (target == null)
                     {
                         // if object is not in table
@@ -374,6 +377,10 @@ namespace CMS_3D_Core.Controllers
                         t_instruction.create_datetime = DateTime.Now;
 
                         await _context.AddAsync(t_instruction);
+
+                        t_article.latest_update_user = User.Identity.Name;
+                        t_article.latest_update_datetime = DateTime.Now;
+
                         await _context.SaveChangesAsync();
 
                         await _context.Database
@@ -398,6 +405,9 @@ namespace CMS_3D_Core.Controllers
                         target.memo = _t_instruction.memo;
                         target.latest_update_user = User.Identity.Name;
                         target.latest_update_datetime = DateTime.Now;
+
+                        t_article.latest_update_user = User.Identity.Name;
+                        t_article.latest_update_datetime = DateTime.Now;
 
                         // Update Db
                         await _context.SaveChangesAsync();
@@ -451,8 +461,8 @@ namespace CMS_3D_Core.Controllers
         /// </summary>
         /// <param name="_t_instruction"></param>
         /// <returns>Result of Api Action with Json</returns>
-        [ValidateAntiForgeryToken]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IList<object>> DeleteProductInstructionApi([FromBody] t_instruction _t_instruction)
         {
 
@@ -468,6 +478,13 @@ namespace CMS_3D_Core.Controllers
 
             t_instruction t_instruction = await _context.t_instructions.FindAsync(_t_instruction.id_article, _t_instruction.id_instruct);
             _context.t_instructions.Remove(t_instruction);
+
+
+
+            var t_article = await _context.t_articles.FindAsync(_t_instruction.id_article);
+            t_article.latest_update_user = User.Identity.Name;
+            t_article.latest_update_datetime = DateTime.Now;
+
             await _context.SaveChangesAsync();
 
 
@@ -521,6 +538,9 @@ namespace CMS_3D_Core.Controllers
                 try
                 {
                     var target = await _context.t_views.FindAsync(_t_view.id_article, _t_view.id_view);
+
+                    var t_article = await _context.t_articles.FindAsync(_t_view.id_article);
+
                     if (target == null)
                     {
                         //if target does not find, update new item
@@ -551,9 +571,22 @@ namespace CMS_3D_Core.Controllers
                         t_view.obt_target_y = _t_view.obt_target_y;
                         t_view.obt_target_z = _t_view.obt_target_z;
 
+
+                        t_view.create_user = User.Identity.Name;
+                        t_view.create_datetime = DateTime.Now;
+
+
                         // Update DB
 
                         await _context.AddAsync(t_view);
+
+
+
+                        //Update Article User / datetime
+                        t_article.latest_update_user = User.Identity.Name;
+                        t_article.latest_update_datetime = DateTime.Now;
+
+
                         await _context.SaveChangesAsync();
 
 
@@ -589,6 +622,16 @@ namespace CMS_3D_Core.Controllers
                         target.obt_target_x = _t_view.obt_target_x;
                         target.obt_target_y = _t_view.obt_target_y;
                         target.obt_target_z = _t_view.obt_target_z;
+
+
+
+                        target.latest_update_user = User.Identity.Name;
+                        target.latest_update_datetime = DateTime.Now;
+
+                        //Update Article User / datetime
+                        t_article.latest_update_user = User.Identity.Name;
+                        t_article.latest_update_datetime = DateTime.Now;
+
 
                         // DBに更新を反映
                         await _context.SaveChangesAsync();
@@ -664,8 +707,8 @@ namespace CMS_3D_Core.Controllers
         /// </summary>
         /// <param name="_t_view"></param>
         /// <returns>Result of Api Action with Json</returns>
-        [ValidateAntiForgeryToken]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IList<object>> DeleteProductViewApi([FromBody] t_view _t_view)
         {
 
@@ -676,6 +719,15 @@ namespace CMS_3D_Core.Controllers
 
             t_view t_view = await _context.t_views.FindAsync(_t_view.id_article, _t_view.id_view);
             _context.t_views.Remove(t_view);
+
+
+
+
+            var t_article = await _context.t_articles.FindAsync(_t_view.id_article);
+            t_article.latest_update_user = User.Identity.Name;
+            t_article.latest_update_datetime = DateTime.Now;
+
+
             await _context.SaveChangesAsync();
 
 
@@ -740,6 +792,8 @@ namespace CMS_3D_Core.Controllers
                 {
                     updatemode = "undefined";
                     var target = await _context.t_annotations.FindAsync(_t_annotation.id_article, _t_annotation.id_annotation);
+                    var t_article = await _context.t_articles.FindAsync(_t_annotation.id_article);
+
                     if (target == null)
                     {
                         // if object is not in table
@@ -755,7 +809,17 @@ namespace CMS_3D_Core.Controllers
                         t_annotation.pos_y = _t_annotation.pos_y;
                         t_annotation.pos_z = _t_annotation.pos_z;
 
+
+                        t_annotation.create_user = User.Identity.Name;
+                        t_annotation.create_datetime = DateTime.Now;
+
                         await _context.AddAsync(t_annotation);
+
+
+
+
+                        t_article.latest_update_user = User.Identity.Name;
+                        t_article.latest_update_datetime = DateTime.Now;
                         await _context.SaveChangesAsync();
 
                         await _context.Database
@@ -781,6 +845,14 @@ namespace CMS_3D_Core.Controllers
                         target.pos_x = _t_annotation.pos_x;
                         target.pos_y = _t_annotation.pos_y;
                         target.pos_z = _t_annotation.pos_z;
+
+
+                        target.latest_update_user = User.Identity.Name;
+                        target.latest_update_datetime = DateTime.Now;
+
+
+                        t_article.latest_update_user = User.Identity.Name;
+                        t_article.latest_update_datetime = DateTime.Now;
 
                         // Update Db
                         await _context.SaveChangesAsync();
@@ -834,8 +906,8 @@ namespace CMS_3D_Core.Controllers
         /// </summary>
         /// <param name="_t_annotation"></param>
         /// <returns>Result of Api Action with Json</returns>
-        [ValidateAntiForgeryToken]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IList<object>> DeleteProductAnnotationApi([FromBody] t_annotation _t_annotation)
         {
 
@@ -852,6 +924,13 @@ namespace CMS_3D_Core.Controllers
 
             t_annotation t_annotation = await _context.t_annotations.FindAsync(_t_annotation.id_article, _t_annotation.id_annotation);
             _context.t_annotations.Remove(t_annotation);
+
+
+
+            var t_article = await _context.t_articles.FindAsync(_t_annotation.id_article);
+            t_article.latest_update_user = User.Identity.Name;
+            t_article.latest_update_datetime = DateTime.Now;
+
             await _context.SaveChangesAsync();
 
 
@@ -885,8 +964,8 @@ namespace CMS_3D_Core.Controllers
         /// </summary>
         /// <param name="list"></param>
         /// <returns>Result of Api Action with Json</returns>
-        [ValidateAntiForgeryToken]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IList<object>> EditProductAnnotationDisplayApi([FromBody] IList<t_annotation_display> List)
         {
             /*
@@ -904,13 +983,20 @@ namespace CMS_3D_Core.Controllers
                 updatemode = "undefined";
                 try
                 {
+                    var t_article = await _context.t_articles.FindAsync(List.FirstOrDefault().id_article);
+
                     foreach (var m in List)
                     {
                         var target = await _context.t_annotation_displays.FindAsync(m.id_article, m.id_instruct, m.id_annotation);
                         target.is_display = m.is_display;
+                        target.latest_update_user = User.Identity.Name;
+                        target.latest_update_datetime = DateTime.Now;
                     }
 
 
+
+                    t_article.latest_update_user = User.Identity.Name;
+                    t_article.latest_update_datetime = DateTime.Now;
 
                     // Update Db
                     await _context.SaveChangesAsync();

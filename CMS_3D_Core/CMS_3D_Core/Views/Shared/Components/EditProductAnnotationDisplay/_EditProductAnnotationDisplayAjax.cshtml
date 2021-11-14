@@ -1,0 +1,35 @@
+﻿@*テーブルとして出すのは、instruct毎のdisplayアイテム
+    一回ループが回るたびに、javascriptで書き換える*@
+
+@model IEnumerable<CMS_3D_Core.Models.EDM.t_annotation_display>
+
+<div id="id_edit_annotation_display">
+
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    No.
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.id_annotation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.id_a.title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.id_a.description1)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.is_display)
+                </th>
+            </tr>
+        </thead>
+        <tbody id="id_edit_annotation_display_tbody">
+        </tbody>
+    </table>
+
+
+</div>
