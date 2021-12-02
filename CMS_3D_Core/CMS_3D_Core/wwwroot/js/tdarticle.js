@@ -98,6 +98,7 @@ class Annotation {
         this.pos_y = pos_y;
         this.pos_z = pos_z;
         this.web_id_annotation = web_id_annotation;
+        this.marker = null;
     }
 }
 
@@ -428,36 +429,6 @@ class TDArticle {
 
     }
 
-    //ReSetup
-    ComplexResetEnvironment() {
-
-
-        //Loading Article
-        this.ObjSetupAarticleDefault();
-
-
-        //Setup Instruction Selection Control Panels (for Display and Editor)
-        this.DomSetupInstructionControler();
-
-
-        //setup view operation panel
-        //this.DomSetupLookingControler();
-
-        //DomSetupViewListEditor
-        this.DomSetupViewListEditor();
-
-
-        //Create Edit Annotation Selection Panels
-        this.DomSetupAnnotationEditorSelectControls();
-
-        //Annotation Display Edit Panel
-        this.DomSetupAnnotationDisplayEditor();
-
-        //Loading Annotations
-        this.DomSetupAnnotationScreen();
-
-    }
-
 
 
     //Setup
@@ -559,6 +530,36 @@ class TDArticle {
         //this.onWindowResize();
     }
 
+    //ReSetup
+    ComplexResetEnvironment() {
+
+
+        //Loading Article
+        this.ObjSetupAarticleDefault();
+
+
+        //Setup Instruction Selection Control Panels (for Display and Editor)
+        this.DomSetupInstructionControler();
+
+
+        //setup view operation panel
+        //this.DomSetupLookingControler();
+
+        //DomSetupViewListEditor
+        this.DomSetupViewListEditor();
+
+
+        //Create Edit Annotation Selection Panels
+        this.DomSetupAnnotationEditorSelectControls();
+
+        //Annotation Display Edit Panel
+        this.DomSetupAnnotationDisplayEditor();
+
+        //Loading Annotations
+        this.DomSetupAnnotationScreen();
+
+    }
+
 
 
 
@@ -654,8 +655,17 @@ class TDArticle {
                 temp_annotation.appendChild(title_annotation);
                 temp_annotation.appendChild(description1_annotation);
                 div_annotations.appendChild(temp_annotation);
-            });
 
+
+                const geometry = new THREE.SphereGeometry(0.1, 32, 32);
+                const material = new THREE.MeshBasicMaterial({ color: 0XCD0000 });
+                element.marker = new THREE.Mesh(geometry, material);
+                element.marker.position.set(element.pos_x, element.pos_y, element.pos_z);
+                this.scene.add(element.marker);
+
+
+
+            }.bind(this));
         }
     }
 
@@ -1315,6 +1325,15 @@ class TDArticle {
             document.getElementById('id_edit_annotation_input_pos_y').value = this.annotation[id_annotation].pos_y;
             document.getElementById('id_edit_annotation_input_pos_z').value = this.annotation[id_annotation].pos_z;
 
+
+            //Edit
+            //this.annotation[id_annotation].marker.pos.x += px;
+            //this.annotation[id_annotation].marker.pos.y += py;
+            //this.annotation[id_annotation].marker.pos.z += pz;
+
+            this.annotation[id_annotation].marker.position.add(new THREE.Vector3(px, py, pz));
+
+            //element.marker.position.set(element.pos_x, element.pos_y, element.pos_z);
         }
 
     }
@@ -1349,6 +1368,7 @@ class TDArticle {
         //console.log('called');
         this.annotation.forEach(function (element) {
             document.getElementById(this.annotation[element.id_annotation].web_id_annotation).hidden = !this.annotation_display[id_instruct][element.id_annotation].is_display;
+            element.marker.visible = this.annotation_display[id_instruct][element.id_annotation].is_display;
         }.bind(this));
     }
 
