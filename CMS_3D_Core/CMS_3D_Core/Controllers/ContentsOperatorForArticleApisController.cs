@@ -11,6 +11,8 @@ using CMS_3D_Core.Models.EDM;
 using Microsoft.Data.SqlClient;
 using Microsoft.AspNetCore.Authorization;
 
+
+
 namespace CMS_3D_Core.Controllers
 {
 
@@ -84,6 +86,29 @@ namespace CMS_3D_Core.Controllers
             {
                 objCollection.Add(object_from_t_annotation_display(item));
             }
+
+
+
+
+
+            //-------
+            //Article Rererence
+            //Eventually, I want to change it to a form that does not include the actual data of the model, so I will cut it out for the time being
+            var t3 = await _context.t_articles
+                                .Include(x => x.id_assyNavigation).ThenInclude(x => x.t_instance_parts).ThenInclude(x => x.id_partNavigation)
+                                .Where(m => m.id_article == id_article).FirstOrDefaultAsync();
+
+
+
+            foreach (var item in t3.id_assyNavigation.t_instance_parts)
+            {
+                objCollection.Add(object_from_refelencematerial(item));
+            }
+
+            //-------
+
+
+
 
             return objCollection;
         }
@@ -239,21 +264,6 @@ namespace CMS_3D_Core.Controllers
             foreach (var item in t)
             {
                 objCollection.Add(object_from_t_annotation(item));
-                /*
-                objCollection.Add(
-                    new
-                    {
-                        type = "annotation",
-                        id_article = item.id_article,
-                        id_annotation = item.id_annotation,
-                        title = item.title,
-                        description1 = item.description1,
-                        description2 = item.description2,
-                        status = item.status,
-                        pos_x = item.pos_x,
-                        pos_y = item.pos_y,
-                        pos_z = item.pos_z
-                    });*/
             }
 
 
@@ -312,6 +322,34 @@ namespace CMS_3D_Core.Controllers
 
             return File(t_part.file_data, t_part.type_data, t_part.part_number);
         }
+
+
+        /// <summary>
+        /// Return a set of Model or Picture reference Data of article object in JSON
+        /// </summary>
+        /// <param name="id_article"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IList<object>> GetArticleReferenceData(long id_article)
+        {
+
+            var t = await _context.t_articles
+                                .Include(x => x.id_assyNavigation).ThenInclude(x => x.t_instance_parts).ThenInclude(x => x.id_partNavigation)
+                                .Where(m => m.id_article == id_article).FirstOrDefaultAsync();
+
+            IList<object> objCollection = new List<object>();
+
+            //Article
+
+            foreach(var item in t.id_assyNavigation.t_instance_parts)
+            {
+                objCollection.Add(object_from_refelencematerial(item));
+            }
+            
+            return objCollection;
+        }
+
 
 
         /// <summary>
@@ -761,7 +799,7 @@ namespace CMS_3D_Core.Controllers
                 return NotFound();
             }*/
 
-            string updatemode = "";
+        string updatemode = "";
             string updateresult = "";
             string updateresult_msg = "";
 
@@ -1033,11 +1071,6 @@ namespace CMS_3D_Core.Controllers
         }
 
 
-
-
-
-
-
         /// <summary>
         /// return object with t_article
         /// </summary>
@@ -1171,6 +1204,26 @@ namespace CMS_3D_Core.Controllers
                 id_inst = item.id_inst,
                 id_part = item.id_part
 
+            };
+
+        /// <summary>
+        /// return object from t_instance_part for material list
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private static object object_from_refelencematerial(t_instance_part item) =>
+            new
+            {
+                type = "refelencematerial",
+                model_name = "Model Name",
+                id_assy = item.id_assy,
+                id_inst = item.id_inst,
+                id_part = item.id_part,
+                file_name = item.id_partNavigation.file_name,
+                file_length = item.id_partNavigation.file_length,
+                itemlink = item.id_partNavigation.itemlink,
+                author = item.id_partNavigation.author,
+                license = item.id_partNavigation.license
             };
 
     }
