@@ -94,9 +94,6 @@
 
                 <h4> DisplayItems Info and Edit</h4>
 
-                @*
-        @await Component.InvokeAsync("EditProductAnnotationDisplay", new { id_article = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { id_article = 0 }).id_article })
-                *@
                 @await Component.InvokeAsync("EditProductAnnotationDisplay", new { id_article = (long)0, use_ajax = true })
 
                 <button class="btn btn-primary" onclick="adarticle.DbUpdateAnnotationDisplay()">Save(Ajax)</button>
@@ -124,11 +121,6 @@
             <div class="tab-pane fade" id="nav-materials">
 
                 <h4>Materials</h4>
-
-                @*
-        @await Component.InvokeAsync("DetatiMaterial", new { id_article = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { id_article = 0 }).id_article })
-                *@
-
 
                 <table class="table" id="id_view_refelencematerial_table">
                     <thead id="id_view_refelencematerial_table_thead">
@@ -191,7 +183,6 @@
 
 
         adarticle.id_article = @obj.id_article;
-        adarticle.id_startinst = @((obj.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction() { id_instruct = 0 }).id_instruct);
         adarticle.is_edit_mode = true;
         adarticle.ComplexSetupEnvironmentInitial();
 
