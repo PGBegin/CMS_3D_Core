@@ -113,6 +113,27 @@ class AnnotationDisplay {
         this.is_display = is_display;
     }
 }
+
+
+
+
+class Refelencematerial {
+    constructor(id_assy, id_inst, id_part, model_name, file_name, file_length, itemlink, author, license) {
+        this.id_assy = id_assy;
+            this.id_inst = id_inst;
+            this.id_part = id_part;
+            this.model_name = model_name;
+            this.file_name = file_name;
+            this.file_length = file_length;
+            this.itemlink = itemlink;
+            this.author = author;
+            this.license = license;
+    }
+
+}
+
+
+
 //---------------------------------------------------------------------------
 class TDArticle {
 
@@ -152,6 +173,7 @@ class TDArticle {
         this.annotation = [];
         this.annotation_display = [];
 
+        this.refelencematerial = [];
 
         this.camera_main;
         this.controls;
@@ -276,8 +298,9 @@ class TDArticle {
         let str_url_api = this.str_url_base_prodobjectapi_articlemode + new URLSearchParams({ id_article: this.id_article }).toString();
 
 
+        //cors対策追加
         //指定urlからデータを取得
-        return fetch(str_url_api)
+        return fetch(str_url_api, {mode: 'cors'})
             .then(response => {
 
                 return response.json();
@@ -396,6 +419,21 @@ class TDArticle {
                 );
             }
 
+
+            if (data[i].type == "refelencematerial") {
+                this.refelencematerial[i] = new Refelencematerial(
+                    data[i].id_assy,
+                    data[i].id_inst,
+                    data[i].id_part,
+                    data[i].model_name,
+                    data[i].file_name,                    
+                    data[i].file_length,
+                    data[i].itemlink,
+                    data[i].author,
+                    data[i].license
+                );
+            }
+
         }
 
 
@@ -426,6 +464,46 @@ class TDArticle {
             }
 
         }
+
+
+
+
+        const ar1_map = (this.instruction_gp.filter(x => typeof x.display_order === 'number')).map(x => x.display_order);
+
+
+        this.id_startinst = this.instruction_gp.filter(x => x.display_order == Math.min.apply(null, ar1_map))[0].id_instruct;
+
+        //console.log(this.id_startinst);
+
+    }
+
+    //ReSetup
+    ComplexResetEnvironment() {
+
+
+        //Loading Article
+        this.ObjSetupAarticleDefault();
+
+
+        //Setup Instruction Selection Control Panels (for Display and Editor)
+        this.DomSetupInstructionControler();
+
+
+        //setup view operation panel
+        //this.DomSetupLookingControler();
+
+        //DomSetupViewListEditor
+        this.DomSetupViewListEditor();
+
+
+        //Create Edit Annotation Selection Panels
+        this.DomSetupAnnotationEditorSelectControls();
+
+        //Annotation Display Edit Panel
+        this.DomSetupAnnotationDisplayEditor();
+
+        //Loading Annotations
+        this.DomSetupAnnotationScreen();
 
     }
 
@@ -483,6 +561,9 @@ class TDArticle {
                 //Annotation Display Edit Panel
                 this.DomSetupAnnotationDisplayEditor();
 
+                //RefelencematerialView
+                this.DomSetupRefelencematerialView();
+
                 //表示領域を初期化する
                 this.ComplexSetupRenderOptionalInitial();
 
@@ -528,36 +609,6 @@ class TDArticle {
             });
 
         //this.onWindowResize();
-    }
-
-    //ReSetup
-    ComplexResetEnvironment() {
-
-
-        //Loading Article
-        this.ObjSetupAarticleDefault();
-
-
-        //Setup Instruction Selection Control Panels (for Display and Editor)
-        this.DomSetupInstructionControler();
-
-
-        //setup view operation panel
-        //this.DomSetupLookingControler();
-
-        //DomSetupViewListEditor
-        this.DomSetupViewListEditor();
-
-
-        //Create Edit Annotation Selection Panels
-        this.DomSetupAnnotationEditorSelectControls();
-
-        //Annotation Display Edit Panel
-        this.DomSetupAnnotationDisplayEditor();
-
-        //Loading Annotations
-        this.DomSetupAnnotationScreen();
-
     }
 
 
@@ -666,6 +717,7 @@ class TDArticle {
 
 
             }.bind(this));
+
         }
     }
 
@@ -1145,6 +1197,89 @@ class TDArticle {
             pn.appendChild(temp_bt);
         }
     }
+    
+
+
+
+    //Create Refelencematerial Viewer
+    DomSetupRefelencematerialView() {
+
+        //DomSetupAnnotationDisplayEditor
+        this.id_view_refelencematerial_table_tbody = "id_view_refelencematerial_table_tbody";
+        let tbody = document.getElementById(this.id_view_refelencematerial_table_tbody);
+
+
+        if (tbody != null) {
+
+            while (tbody.firstChild) {
+                tbody.removeChild(tbody.firstChild);
+            }
+
+            let temp_tr;
+            let temp_td;
+            let temp_a;
+            let i = 0;
+
+            this.refelencematerial.forEach(function (element) {
+
+                temp_tr = document.createElement('tr');
+
+
+                // Colomn 01 (Hidden Ids and Low No.)
+
+                temp_td = document.createElement('td');
+
+                temp_td.innerText = element.model_name;
+
+                temp_tr.appendChild(temp_td);
+
+                // Colomn 02 (Annotation Title)
+                temp_td = document.createElement('td');
+
+                temp_td.innerText = element.file_name;
+
+                temp_tr.appendChild(temp_td);
+
+                // Colomn 03 (Annotation Title)
+                temp_td = document.createElement('td');
+
+                temp_td.innerText = element.file_length;
+
+                temp_tr.appendChild(temp_td);
+
+                // Colomn 04 (Annotation Discription)
+                temp_td = document.createElement('td');
+
+                temp_a = document.createElement('a');
+
+                temp_a.innerText = 'Data Source';
+
+                temp_a.href = element.itemlink;
+
+                temp_td.appendChild(temp_a);
+
+                temp_tr.appendChild(temp_td);
+
+                // Colomn 05 (Check box for Display)
+                temp_td = document.createElement('td');
+
+                temp_td.innerText = element.author;
+
+                temp_tr.appendChild(temp_td);
+
+                // Colomn 06 (Check box for Display)
+                temp_td = document.createElement('td');
+
+                temp_td.innerText = element.license;
+
+                temp_tr.appendChild(temp_td);
+
+                tbody.appendChild(temp_tr);
+                i += 1;
+
+            }.bind(this));
+        }
+    }
 
 
     //Initialize Render Objects and Setting for Optional (Like Helpers)
@@ -1325,7 +1460,6 @@ class TDArticle {
             document.getElementById('id_edit_annotation_input_pos_y').value = this.annotation[id_annotation].pos_y;
             document.getElementById('id_edit_annotation_input_pos_z').value = this.annotation[id_annotation].pos_z;
 
-
             //Edit
             //this.annotation[id_annotation].marker.pos.x += px;
             //this.annotation[id_annotation].marker.pos.y += py;
@@ -1334,6 +1468,7 @@ class TDArticle {
             this.annotation[id_annotation].marker.position.add(new THREE.Vector3(px, py, pz));
 
             //element.marker.position.set(element.pos_x, element.pos_y, element.pos_z);
+
         }
 
     }

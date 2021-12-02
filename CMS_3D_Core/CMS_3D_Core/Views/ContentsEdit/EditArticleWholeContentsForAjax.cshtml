@@ -124,7 +124,38 @@
             <div class="tab-pane fade" id="nav-materials">
 
                 <h4>Materials</h4>
-                @await Component.InvokeAsync("DetatiMaterial", new { id_article = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { id_article = 0 }).id_article })
+
+                @*
+        @await Component.InvokeAsync("DetatiMaterial", new { id_article = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { id_article = 0 }).id_article })
+                *@
+
+
+                <table class="table" id="id_view_refelencematerial_table">
+                    <thead id="id_view_refelencematerial_table_thead">
+                        <tr>
+                            <th>
+                                Part Number
+                            </th>
+                            <th>
+                                File Name
+                            </th>
+                            <th>
+                                File Size
+                            </th>
+                            <th>
+                                Item Link
+                            </th>
+                            <th>
+                                Author
+                            </th>
+                            <th>
+                                License
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="id_view_refelencematerial_table_tbody">
+                    </tbody>
+                </table>
 
             </div>
         </div>
