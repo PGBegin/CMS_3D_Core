@@ -2,10 +2,14 @@
 
 
 module.exports = {
-    entry: './Scripts/index.js',
+    entry: {
+        layout: './Scripts/index_layout.js',
+        tdarticle: './Scripts/index_tdarticle.js',
+        testthree: './Scripts/index_testthree.js',
+    },
     output: {
         path: __dirname + '/wwwroot/js',
-        filename: 'main.js'
+        filename: '[name].bundle.js'
     },
     // モード値を production に設定すると最適化された状態で、
     // development に設定するとソースマップ有効でJSファイルが出力される
