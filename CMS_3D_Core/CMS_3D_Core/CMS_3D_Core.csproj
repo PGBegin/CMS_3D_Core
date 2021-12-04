@@ -23,4 +23,8 @@
     <Folder Include="wwwroot\lib\three\Loader\" />
   </ItemGroup>
 
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="&#xD;&#xA;&#xD;&#xA;if $(ConfigurationName) == Debug (&#xD;&#xA;  npm run dev&#xD;&#xA;) ELSE (&#xD;&#xA;  npm run build&#xD;&#xA;)" />
+  </Target>
+
 </Project>
