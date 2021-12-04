@@ -6,6 +6,7 @@ module.exports = {
         layout: './Scripts/entry/index_layout.js',
         tdarticle: './Scripts/entry/index_tdarticle.js',
         testthree: './Scripts/entry/index_testthree.js',
+        testthree2: './Scripts/entry/index_testthree2.js',
     },
     output: {
         path: __dirname + '/wwwroot/js',
