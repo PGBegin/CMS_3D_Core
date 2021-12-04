@@ -3,9 +3,9 @@
 
 module.exports = {
     entry: {
-        layout: './Scripts/index_layout.js',
-        tdarticle: './Scripts/index_tdarticle.js',
-        testthree: './Scripts/index_testthree.js',
+        layout: './Scripts/entry/index_layout.js',
+        tdarticle: './Scripts/entry/index_tdarticle.js',
+        testthree: './Scripts/entry/index_testthree.js',
     },
     output: {
         path: __dirname + '/wwwroot/js',

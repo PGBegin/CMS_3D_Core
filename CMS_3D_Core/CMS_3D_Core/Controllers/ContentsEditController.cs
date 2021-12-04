@@ -31,6 +31,15 @@ namespace CMS_3D_Core.Controllers
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> TestThree()
+        {
+            return View();
+        }
+
+        /// <summary>
         /// Show Index of Edit Items Of Articles
         /// </summary>
         /// <returns></returns>
