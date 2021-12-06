@@ -23,6 +23,8 @@
 
     <div class="col-6" id="id_contents_models">
         <h2>@Html.DisplayFor(model => model.title)</h2>
+        @Html.HiddenFor(model => model.id_article, new { id = "id_article" })
+        <input type="hidden" value="false" id="is_edit_mode" />
 
         <div id="annotations">
         </div>
@@ -105,45 +107,47 @@
 
 
 
+<script type="module" src="~/js/tdarticle.bundle.js"></script>
+
+@*
+    <script src="~/lib/three/three.js"></script>
+    <script src="~/lib/three/Loader/GLTFLoader.js"></script>
+    <script src="~/lib/three/Loader/OBJLoader.js"></script>
+    <script src="~/lib/three/Loader/MTLLoader.js"></script>
+    <script src="~/lib/three/OrbitControls.js"></script>
+    <script src="~/lib/marked/marked.js"></script>
+    <script src="~/js/tdarticle.js"></script>
+    <script src="~/js/GetScreenshotForUpload.js"></script>
 
 
-<script src="~/lib/three/three.js"></script>
-<script src="~/lib/three/Loader/GLTFLoader.js"></script>
-<script src="~/lib/three/Loader/OBJLoader.js"></script>
-<script src="~/lib/three/Loader/MTLLoader.js"></script>
-<script src="~/lib/three/OrbitControls.js"></script>
-<script src="~/lib/marked/marked.js"></script>
-<script src="~/js/tdarticle.js"></script>
-<script src="~/js/GetScreenshotForUpload.js"></script>
+    <script type="text/javascript">
 
 
-<script type="text/javascript">
+        var adarticle = new TDArticle();
 
 
-    var adarticle = new TDArticle();
+        // ロード後に実行される処理
+        window.onload = function () {
+            'use strict';
+
+            @{
+                var obj = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { });
+            }
 
 
-    // ロード後に実行される処理
-    window.onload = function () {
-        'use strict';
+            adarticle.id_article = @obj.id_article;
+            adarticle.is_edit_mode = false;
+            adarticle.ComplexSetupEnvironmentInitial();
 
-        @{
-            var obj = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { });
+
+            window.addEventListener("resize", resizewindow, false);
+
+            //adarticle.onWindowResize();
         }
 
+        function resizewindow() {
+            adarticle.onWindowResize();
+        }
 
-        adarticle.id_article = @obj.id_article;
-        adarticle.is_edit_mode = false;
-        adarticle.ComplexSetupEnvironmentInitial();
-
-
-        window.addEventListener("resize", resizewindow, false);
-
-        //adarticle.onWindowResize();
-    }
-
-    function resizewindow() {
-        adarticle.onWindowResize();
-    }
-
-</script>
+    </script>
+*@
