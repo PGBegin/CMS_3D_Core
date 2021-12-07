@@ -521,6 +521,7 @@ class TDArticle {
         }
 
 
+
         //指定urlからデータを取得
         fetch(str_url_api)
             .then(response => {
