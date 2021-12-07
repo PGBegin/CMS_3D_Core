@@ -2171,7 +2171,11 @@ function startup() {
 
     const id_article = document.getElementById("id_article").value;
     const is_edit_mode = document.getElementById("is_edit_mode").value;
+    //const is_mode_assy = document.getElementById("is_mode_assy").value;
 
+    //if (is_mode_assy) {
+    //const is_edit_mode = document.getElementById("is_edit_mode").value;
+    //}
 
 
     adarticle.id_article = id_article;
@@ -2180,13 +2184,40 @@ function startup() {
 
     adarticle.ComplexSetupEnvironmentInitial();
 
-    //window.addEventListener("resize", resizewindow, false);
     window.addEventListener("resize", function () { adarticle.onWindowResize(); }, false);
 
     if (adarticle.is_edit_mode) {
         document.getElementById("screenshot").addEventListener('click', function () {
             GetScreenshotForUpload('view_capture', 'getimage', 'up_img_input');
         });
+
+        document.getElementById("DbUpdateInstruction").addEventListener('click', function () {
+            adarticle.DbUpdateInstruction();
+        });
+
+        document.getElementById("DbDeleteInstruction").addEventListener('click', function () {
+            adarticle.DbDeleteInstruction();
+        });
+
+        document.getElementById("DbUpdateView").addEventListener('click', function () {
+            adarticle.DbUpdateView();
+        });
+
+
+        document.getElementById("DbUpdateAnnotation").addEventListener('click', function () {
+            adarticle.DbUpdateAnnotation();
+        });
+
+        document.getElementById("DbDeleteAnnotation").addEventListener('click', function () {
+            adarticle.DbDeleteAnnotation();
+        });
+        
+        document.getElementById("DbUpdateAnnotationDisplay").addEventListener('click', function () {
+            adarticle.DbUpdateAnnotationDisplay();
+        });
+
+
+        
     }
     //adarticle.onWindowResize();
 

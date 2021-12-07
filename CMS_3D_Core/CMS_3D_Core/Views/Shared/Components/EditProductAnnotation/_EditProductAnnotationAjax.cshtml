@@ -69,8 +69,12 @@
     <input type="hidden" asp-for="id_annotation" id="id_delete_annotation_input_id_annotation" />
 </div>
 
-<button class="btn btn-primary" onclick="adarticle.DbUpdateAnnotation()">Save</button>
-<button class="btn btn-danger" onclick="adarticle.DbDeleteAnnotation()">Delete</button>
+@*
+    <button class="btn btn-primary" onclick="adarticle.DbUpdateAnnotation()">Save</button>
+    <button class="btn btn-danger" onclick="adarticle.DbDeleteAnnotation()">Delete</button>
+*@
+<button class="btn btn-primary" id="DbUpdateAnnotation">Save</button>
+<button class="btn btn-danger" id="DbDeleteAnnotation">Delete</button>
 
 <hr />
 
