@@ -1,13 +1,19 @@
 ﻿
 
 
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { marked } from 'marked';
+import { Aarticle } from './tdarticle/tdarticle_Aarticle.js';
 
 
 
 
+/*
 class Aarticle {
     constructor(id_article, id_assy, title, short_description, long_description, meta_description, meta_category, status
-        , directional_light_color,  directional_light_intensity, directional_light_px, directional_light_py, directional_light_pz
+        , directional_light_color, directional_light_intensity, directional_light_px, directional_light_py, directional_light_pz
         , ambient_light_color, ambient_light_intensity, gammaOutput, id_attachment_for_eye_catch) {
 
         this.id_article = id_article;
@@ -34,7 +40,7 @@ class Aarticle {
         this.id_attachment_for_eye_catch = id_attachment_for_eye_catch
     }
 }
-
+*/
 class Instruction {
     constructor(id_article, id_instruct, id_view, title, short_description, display_order, memo) {
         this.id_article = id_article;
@@ -120,14 +126,14 @@ class AnnotationDisplay {
 class Refelencematerial {
     constructor(id_assy, id_inst, id_part, model_name, file_name, file_length, itemlink, author, license) {
         this.id_assy = id_assy;
-            this.id_inst = id_inst;
-            this.id_part = id_part;
-            this.model_name = model_name;
-            this.file_name = file_name;
-            this.file_length = file_length;
-            this.itemlink = itemlink;
-            this.author = author;
-            this.license = license;
+        this.id_inst = id_inst;
+        this.id_part = id_part;
+        this.model_name = model_name;
+        this.file_name = file_name;
+        this.file_length = file_length;
+        this.itemlink = itemlink;
+        this.author = author;
+        this.license = license;
     }
 
 }
@@ -135,7 +141,7 @@ class Refelencematerial {
 
 
 //---------------------------------------------------------------------------
-class TDArticle {
+export class TDArticle {
 
     constructor() {
 
@@ -152,7 +158,7 @@ class TDArticle {
 
 
         //Ajax DB Update Apis
-        this.str_url_base_edit_product_instruction = "/ContentsOperatorForArticleApis/EditProductInstructionApi";        
+        this.str_url_base_edit_product_instruction = "/ContentsOperatorForArticleApis/EditProductInstructionApi";
         this.str_url_base_delete_product_instruction = "/ContentsOperatorForArticleApis/DeleteProductInstructionApi";
 
         this.str_url_base_edit_product_view = "/ContentsOperatorForArticleApis/EditProductViewApi";
@@ -163,7 +169,7 @@ class TDArticle {
 
         this.str_url_base_edit_product_annotation_display = "/ContentsOperatorForArticleApis/EditProductAnnotationDisplayApi";
 
-        
+
 
         //Model Objects
         this.article;
@@ -300,7 +306,7 @@ class TDArticle {
 
         //cors対策追加
         //指定urlからデータを取得
-        return fetch(str_url_api, {mode: 'cors'})
+        return fetch(str_url_api, { mode: 'cors' })
             .then(response => {
 
                 return response.json();
@@ -312,7 +318,7 @@ class TDArticle {
 
                 //return Promise.resolve();
             });
-                
+
     }
 
     //Setup Json
@@ -426,7 +432,7 @@ class TDArticle {
                     data[i].id_inst,
                     data[i].id_part,
                     data[i].model_name,
-                    data[i].file_name,                    
+                    data[i].file_name,
                     data[i].file_length,
                     data[i].itemlink,
                     data[i].author,
@@ -467,11 +473,15 @@ class TDArticle {
 
 
 
+        console.log('length : ' + this.instruction_gp.length.toString());
 
-        const ar1_map = (this.instruction_gp.filter(x => typeof x.display_order === 'number')).map(x => x.display_order);
+        if (this.instruction_gp.length > 0) {
+            const ar1_map = (this.instruction_gp.filter(x => typeof x.display_order === 'number')).map(x => x.display_order);
 
 
-        this.id_startinst = this.instruction_gp.filter(x => x.display_order == Math.min.apply(null, ar1_map))[0].id_instruct;
+            this.id_startinst = this.instruction_gp.filter(x => x.display_order == Math.min.apply(null, ar1_map))[0].id_instruct;
+
+        }
 
         //console.log(this.id_startinst);
 
@@ -519,7 +529,6 @@ class TDArticle {
         if (this.is_mode_assy) {
             str_url_api = this.str_url_base_prodobjectapi_assymode + new URLSearchParams({ id_assy: this.id_assy }).toString();
         }
-
 
 
         //指定urlからデータを取得
@@ -617,7 +626,7 @@ class TDArticle {
 
     //Loading Article
     ObjSetupAarticleDefault() {
-        
+
         if (this.id_article == 0) {
 
             this.article = new Aarticle(0, 0, "No Article", "", "", "", "", 0
@@ -640,7 +649,7 @@ class TDArticle {
     //Loading Models
     ObjSetupInstancePartModelFromDb() {
 
-        const glfLoader = new THREE.GLTFLoader();
+        const glfLoader = new GLTFLoader();
 
         let scene = this.scene;
 
@@ -1105,7 +1114,7 @@ class TDArticle {
 
             temp_bt = document.createElement('button');
             temp_bt.type = 'button';
-            temp_bt.onclick = this.DomUpdateAnnotationPositionShift.bind(this, 0,  0, -1);
+            temp_bt.onclick = this.DomUpdateAnnotationPositionShift.bind(this, 0, 0, -1);
             temp_bt.classList.add('btn');
             temp_bt.classList.add('btn-primary');
             temp_bt.textContent = "Z:-1";
@@ -1138,7 +1147,7 @@ class TDArticle {
 
         }
     }
-      
+
     //setup view operation panel
     //id_viewpoint_controlpanel
     DomSetupLookingControler() {
@@ -1146,7 +1155,7 @@ class TDArticle {
         let pn = document.getElementById(this.id_viewpoint_controlpanel);
         if (pn != null) {
             let temp_bt;
-        
+
             temp_bt = document.createElement('button');
             temp_bt.type = 'button';
             temp_bt.onclick = this.ScreenUpdateViewEditor.bind(this, new THREE.Vector3(10, 0, 0), new THREE.Vector3(0, 0, 0));
@@ -1198,7 +1207,7 @@ class TDArticle {
             pn.appendChild(temp_bt);
         }
     }
-    
+
 
 
 
@@ -1332,7 +1341,7 @@ class TDArticle {
         this.renderer.setClearColor(0xefefef);
         this.renderer.setPixelRatio(window.devicePixelRatio);
 
-        this.controls = new THREE.OrbitControls(this.camera_main, this.renderer.domElement);
+        this.controls = new OrbitControls(this.camera_main, this.renderer.domElement);
 
 
 
@@ -1359,7 +1368,7 @@ class TDArticle {
     //transit to the specified viewpoint and camera position
     ScreenUpdateViewEditor(cam_pos, target) {
 
-        
+
         this.counter = 0;
 
         this.pitch_px = (cam_pos.x - this.camera_main.position.x) / this.step;
@@ -2061,7 +2070,7 @@ class TDArticle {
 
                         //データ更新
                         this.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (value) {
-                            
+
                             this.annotation.forEach(function (element) {
                                 let id;
                                 let checked = false;
@@ -2156,13 +2165,5 @@ class TDArticle {
         }
     }
 
-
-
-
-    
-
-
-
 }
 
-//TDArticleここまで

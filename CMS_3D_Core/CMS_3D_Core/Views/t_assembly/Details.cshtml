@@ -77,38 +77,3 @@
 
 
 <script type="module" src="~/js/tdarticle.bundle.js"></script>
-
-@*
-<script src="~/lib/three/three.js"></script>
-<script src="~/lib/three/Loader/GLTFLoader.js"></script>
-<script src="~/lib/three/Loader/OBJLoader.js"></script>
-<script src="~/lib/three/Loader/MTLLoader.js"></script>
-<script src="~/lib/three/OrbitControls.js"></script>
-<script src="~/lib/marked/marked.js"></script>
-<script src="~/js/tdarticle.js"></script>
-<script src="~/js/GetScreenshotForUpload.js"></script>
-
-
-<script type="text/javascript">
-
-
-    var adarticle = new TDArticle();
-
-
-    // ロード後に実行される処理
-    window.onload = function () {
-        'use strict';
-
-        adarticle.id_assy = @Model.id_assy;
-        adarticle.is_mode_assy = true;
-        adarticle.is_edit_mode = false;
-        adarticle.ComplexSetupEnvironmentInitial();
-        window.addEventListener("resize", resizewindow, false);
-    }
-
-    function resizewindow() {
-        adarticle.onWindowResize();
-    }
-
-</script>
-    *@
