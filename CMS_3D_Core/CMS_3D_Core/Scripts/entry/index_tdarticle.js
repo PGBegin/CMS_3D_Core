@@ -469,11 +469,15 @@ class TDArticle {
 
 
 
+        console.log('length : ' + this.instruction_gp.length.toString());
 
-        const ar1_map = (this.instruction_gp.filter(x => typeof x.display_order === 'number')).map(x => x.display_order);
+        if (this.instruction_gp.length > 0) {
+            const ar1_map = (this.instruction_gp.filter(x => typeof x.display_order === 'number')).map(x => x.display_order);
 
 
-        this.id_startinst = this.instruction_gp.filter(x => x.display_order == Math.min.apply(null, ar1_map))[0].id_instruct;
+            this.id_startinst = this.instruction_gp.filter(x => x.display_order == Math.min.apply(null, ar1_map))[0].id_instruct;
+
+        }
 
         //console.log(this.id_startinst);
 
@@ -2169,57 +2173,60 @@ var adarticle = new TDArticle();
 function startup() {
 
 
-    const id_article = document.getElementById("id_article").value;
-    const is_edit_mode = document.getElementById("is_edit_mode").value;
-    //const is_mode_assy = document.getElementById("is_mode_assy").value;
-
-    //if (is_mode_assy) {
-    //const is_edit_mode = document.getElementById("is_edit_mode").value;
-    //}
+    const is_mode_assy = toBoolean(document.getElementById("is_mode_assy").value);
+    const is_edit_mode = toBoolean(document.getElementById("is_edit_mode").value);
 
 
-    adarticle.id_article = id_article;
-//    adarticle.is_edit_mode = is_edit_mode;
-    adarticle.is_edit_mode = toBoolean(is_edit_mode);
+    //let id_article=0;
+    //let id_article;
+
+    if (is_mode_assy) {
+        adarticle.is_mode_assy = is_mode_assy;
+        adarticle.id_assy = Number(document.getElementById("id_assy").value);
+        adarticle.is_edit_mode = is_edit_mode;
+
+    } else {
+
+        adarticle.id_article = Number(document.getElementById("id_article").value);
+        adarticle.is_edit_mode = is_edit_mode;
+
+
+        window.addEventListener("resize", function () { adarticle.onWindowResize(); }, false);
+
+        if (adarticle.is_edit_mode) {
+            document.getElementById("screenshot").addEventListener('click', function () {
+                GetScreenshotForUpload('view_capture', 'getimage', 'up_img_input');
+            });
+
+            document.getElementById("DbUpdateInstruction").addEventListener('click', function () {
+                adarticle.DbUpdateInstruction();
+            });
+
+            document.getElementById("DbDeleteInstruction").addEventListener('click', function () {
+                adarticle.DbDeleteInstruction();
+            });
+
+            document.getElementById("DbUpdateView").addEventListener('click', function () {
+                adarticle.DbUpdateView();
+            });
+
+            document.getElementById("DbUpdateAnnotation").addEventListener('click', function () {
+                adarticle.DbUpdateAnnotation();
+            });
+
+            document.getElementById("DbDeleteAnnotation").addEventListener('click', function () {
+                adarticle.DbDeleteAnnotation();
+            });
+
+            document.getElementById("DbUpdateAnnotationDisplay").addEventListener('click', function () {
+                adarticle.DbUpdateAnnotationDisplay();
+            });
+
+        }
+
+    }
 
     adarticle.ComplexSetupEnvironmentInitial();
-
-    window.addEventListener("resize", function () { adarticle.onWindowResize(); }, false);
-
-    if (adarticle.is_edit_mode) {
-        document.getElementById("screenshot").addEventListener('click', function () {
-            GetScreenshotForUpload('view_capture', 'getimage', 'up_img_input');
-        });
-
-        document.getElementById("DbUpdateInstruction").addEventListener('click', function () {
-            adarticle.DbUpdateInstruction();
-        });
-
-        document.getElementById("DbDeleteInstruction").addEventListener('click', function () {
-            adarticle.DbDeleteInstruction();
-        });
-
-        document.getElementById("DbUpdateView").addEventListener('click', function () {
-            adarticle.DbUpdateView();
-        });
-
-
-        document.getElementById("DbUpdateAnnotation").addEventListener('click', function () {
-            adarticle.DbUpdateAnnotation();
-        });
-
-        document.getElementById("DbDeleteAnnotation").addEventListener('click', function () {
-            adarticle.DbDeleteAnnotation();
-        });
-        
-        document.getElementById("DbUpdateAnnotationDisplay").addEventListener('click', function () {
-            adarticle.DbUpdateAnnotationDisplay();
-        });
-
-
-        
-    }
-    //adarticle.onWindowResize();
 
 
     function toBoolean(data) {
@@ -2227,12 +2234,6 @@ function startup() {
     }
 }
 
-/*
-function resizewindow() {
-    adarticle.onWindowResize();
-}
-
-*/
 
 //Load時のイベントリスナ追加
 window.addEventListener('load', startup);

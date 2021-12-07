@@ -6,6 +6,10 @@
 
 
 
+@Html.HiddenFor(model => model.id_assy, new { id = "id_assy" })
+<input type="hidden" value="true" id="is_mode_assy" />
+<input type="hidden" value="false" id="is_edit_mode" />
+<input type="hidden" value="0" id="id_article" />
 
 <div class="row">
     <div class="col-md-3"></div>
@@ -71,6 +75,10 @@
 <div id="div_progressbar_modeldl"></div>
 <div id="id_contents_instructions"></div>
 
+
+<script type="module" src="~/js/tdarticle.bundle.js"></script>
+
+@*
 <script src="~/lib/three/three.js"></script>
 <script src="~/lib/three/Loader/GLTFLoader.js"></script>
 <script src="~/lib/three/Loader/OBJLoader.js"></script>
@@ -103,3 +111,4 @@
     }
 
 </script>
+    *@
