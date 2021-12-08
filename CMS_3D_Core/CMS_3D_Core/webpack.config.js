@@ -4,6 +4,7 @@
 module.exports = {
     entry: {
         layout: './Scripts/entry/index_layout.js',
+        tdpart: './Scripts/entry/index_tdpart.js',
         tdarticle: './Scripts/entry/index_tdarticle.js',
         testthree: './Scripts/entry/index_testthree.js',
         testthree2: './Scripts/entry/index_testthree2.js',
