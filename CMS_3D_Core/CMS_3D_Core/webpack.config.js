@@ -14,6 +14,9 @@ module.exports = {
     },
     // モード値を production に設定すると最適化された状態で、
     // development に設定するとソースマップ有効でJSファイルが出力される
+    resolve: {
+        extensions: [".ts", ".js"], // Reactの.tsxや.jsxの拡張子も扱いたい場合は配列内に追加する
+    },
     mode: "production",
     module: {
         rules: [
@@ -25,7 +28,16 @@ module.exports = {
                     // スタイルシートをJSからlinkタグに展開する機能
                     "style-loader",
                     // CSSをバンドルするための機能
-                    "css-loader"
+                    "css-loader",
+                ],
+            },
+            {
+                // for .ts
+                test: /\.ts$/,
+                // Sassファイルの読み込みとコンパイル
+                use: [
+                    'ts-loader',
+                    //exclude: /node_modules/,
                 ],
             },
         ],

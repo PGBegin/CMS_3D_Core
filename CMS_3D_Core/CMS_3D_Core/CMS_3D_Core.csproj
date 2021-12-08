@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>aspnet-CMS_3D_Core-4AE6FE6A-4E27-49BF-98B1-E08D01010470</UserSecretsId>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,9 +19,8 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\lib\three\Loader\" />
-  </ItemGroup>
+
+
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
   </Target>
