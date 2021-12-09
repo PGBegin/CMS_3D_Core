@@ -6,96 +6,6 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 
 
-
-class Instruction {
-
-    id_article: number;
-    id_instruct: number;
-    id_view: number;
-
-
-    title: string;
-    short_description: string;
-
-    display_order: number;
-
-    memo: string;
-    constructor(id_article: number, id_instruct: number, id_view: number, title: string, short_description: string, display_order: number, memo: string) {
-        this.id_article = id_article;
-        this.id_instruct = id_instruct;
-        this.id_view = id_view;
-        this.title = title;
-        this.short_description = short_description;
-        this.display_order = display_order;
-        this.memo = memo;
-    }
-}
-
-class ViewObject {
-
-    id_article: number;
-    id_view: number;
-
-    title: string;
-
-    cam_pos_x: number;
-    cam_pos_y: number;
-    cam_pos_z: number;
-
-    cam_lookat_x: number;
-    cam_lookat_y: number;
-    cam_lookat_z: number;
-
-    cam_quat_x: number;
-    cam_quat_y: number;
-    cam_quat_z: number;
-    cam_quat_w: number;
-
-    obt_target_x: number;
-    obt_target_y: number;
-    obt_target_z: number;
-    constructor(id_article: number, id_view: number, title: string,
-        cam_pos_x: number, cam_pos_y: number, cam_pos_z: number, cam_lookat_x: number, cam_lookat_y: number, cam_lookat_z: number,
-        cam_quat_x: number, cam_quat_y: number, cam_quat_z: number, cam_quat_w: number, obt_target_x: number, obt_target_y: number, obt_target_z: number) {
-
-        this.title = title;
-        this.id_article = id_article;
-        this.id_view = id_view;
-
-        this.cam_pos_x = cam_pos_x;
-        this.cam_pos_y = cam_pos_y;
-        this.cam_pos_z = cam_pos_z;
-
-        this.cam_lookat_x = cam_lookat_x;
-        this.cam_lookat_y = cam_lookat_y;
-        this.cam_lookat_z = cam_lookat_z;
-
-        this.cam_quat_x = cam_quat_x;
-        this.cam_quat_y = cam_quat_y;
-        this.cam_quat_z = cam_quat_z;
-        this.cam_quat_w = cam_quat_w;
-
-        this.obt_target_x = obt_target_x;
-        this.obt_target_y = obt_target_y;
-        this.obt_target_z = obt_target_z;
-    }
-}
-
-
-class InstancePart {
-    id_assy: number;
-    id_inst: number;
-    id_part: number;
-    objectdata: any;
-    constructor(id_assy: number, id_inst: number, id_part: number, objectdata: any) {
-        this.id_assy = id_assy;
-        this.id_inst = id_inst;
-        this.id_part = id_part;
-        this.objectdata = objectdata;
-    }
-}
-
-
 var camera_main: any;
 var scene = new THREE.Scene();
 var controls: any;
@@ -110,11 +20,7 @@ var renderer: any;
 var width = 720;
 var height = 405;
 
-/*
-var view_object: ViewObject[];// = [];
-var instruction_gp: any = [];
-var instance_part = [];
-*/
+
 var orbit_active = false;
 
 

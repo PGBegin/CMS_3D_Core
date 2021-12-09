@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { marked } from 'marked';
-import { Aarticle } from './tdarticle/tdarticle_Aarticle.js';
+import { Aarticle, Instruction, ViewObject, InstancePart, Annotation, AnnotationDisplay, Refelencematerial } from './tdarticle/tdarticle_Aarticle';
 
 
 
@@ -40,7 +40,6 @@ class Aarticle {
         this.id_attachment_for_eye_catch = id_attachment_for_eye_catch
     }
 }
-*/
 class Instruction {
     constructor(id_article, id_instruct, id_view, title, short_description, display_order, memo) {
         this.id_article = id_article;
@@ -138,6 +137,7 @@ class Refelencematerial {
 
 }
 
+*/
 
 
 //---------------------------------------------------------------------------

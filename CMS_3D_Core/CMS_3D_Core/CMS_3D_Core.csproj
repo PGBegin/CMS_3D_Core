@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Scripts\src\tdarticle\tdarticle_Aarticle.ts" />
+    <None Remove="Scripts\src\tdarticle_test.ts" />
     <None Remove="Scripts\src\tdpart\tdpart.ts" />
   </ItemGroup>
 
@@ -24,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="Scripts\src\tdarticle\tdarticle_Aarticle.ts" />
     <TypeScriptCompile Include="Scripts\src\tdpart.ts" />
   </ItemGroup>
 

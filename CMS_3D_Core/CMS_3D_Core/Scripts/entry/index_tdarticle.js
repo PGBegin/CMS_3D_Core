@@ -1,5 +1,6 @@
 ﻿
-import { TDArticle } from '../src/tdarticle.js';
+//import { TDArticle } from '../src/tdarticle.js';
+import { TDArticle } from '../src/tdarticle';
 import { GetScreenshotForUpload } from '../src/GetScreenshot.js';
 
 
