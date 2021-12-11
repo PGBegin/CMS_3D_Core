@@ -783,7 +783,7 @@ export class TDArticle {
             let temp_ipt;
             let i = 0;
 
-            this.annotation.forEach(function (element : any) {
+            this.annotation.forEach(function (element: Annotation) {
 
                 temp_tr = document.createElement('tr');
 
@@ -799,7 +799,7 @@ export class TDArticle {
                 temp_ipt.id = "[" + element.id_annotation + "]." + "id_edit_annotation_display_input_id_article";
                 temp_ipt.name = "[" + i + "]." + "id_article";
                 temp_ipt.type = "hidden";
-                temp_ipt.value = element.id_article;
+                temp_ipt.value = element.id_article.toString();
 
                 temp_td.appendChild(temp_ipt);
 
@@ -808,8 +808,9 @@ export class TDArticle {
                 temp_ipt.id = "[" + element.id_annotation + "]." + "id_edit_annotation_display_input_id_instruct";
                 temp_ipt.name = "[" + i + "]." + "id_instruct";
                 temp_ipt.type = "hidden";
-                temp_ipt.value = element.id_instruct;
-                console.log(element.id_instruct);
+                temp_ipt.value = "0";
+                //temp_ipt.value = element.id_instruct;
+                //console.log(element.id_instruct);
 
                 temp_td.appendChild(temp_ipt);
 
@@ -818,7 +819,7 @@ export class TDArticle {
                 temp_ipt.id = "[" + element.id_annotation + "]." + "id_edit_annotation_display_input_id_annotation";
                 temp_ipt.name = "[" + i + "]." + "id_annotation";
                 temp_ipt.type = "hidden";
-                temp_ipt.value = element.id_annotation;
+                temp_ipt.value = element.id_annotation.toString();
 
                 temp_td.appendChild(temp_ipt);
 
@@ -828,7 +829,7 @@ export class TDArticle {
                 // Colomn 02 (Annotation Title)
                 temp_td = document.createElement('td');
 
-                temp_td.innerText = element.id_annotation;
+                temp_td.innerText = element.id_annotation.toString();
 
                 temp_tr.appendChild(temp_td);
 
@@ -983,7 +984,7 @@ export class TDArticle {
                 temp_td.appendChild(temp_bt);
 
 
-                if (!this.instruction_gp.some((item:any) => item.id_view === element.id_view)) {
+                if (!this.instruction_gp.some((item: Instruction) => item.id_view === element.id_view)) {
                     temp_bt = document.createElement('button');
                     temp_bt.type = 'button';
                     temp_bt.onclick = this.DbDeleteView.bind(this, element.id_view);
