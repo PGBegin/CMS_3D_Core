@@ -3,7 +3,15 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>aspnet-CMS_3D_Core-4AE6FE6A-4E27-49BF-98B1-E08D01010470</UserSecretsId>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Scripts\src\GetScreenshot.ts" />
+    <None Remove="Scripts\src\tdarticle\tdarticle_Aarticle.ts" />
+    <None Remove="Scripts\src\tdarticle_test.ts" />
+    <None Remove="Scripts\src\tdpart\tdpart.ts" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Markdig" Version="0.26.0" />
@@ -19,8 +27,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\lib\three\Loader\" />
+    <TypeScriptCompile Include="Scripts\src\GetScreenshot.ts" />
+    <TypeScriptCompile Include="Scripts\src\tdarticle\tdarticle_Aarticle.ts" />
+    <TypeScriptCompile Include="Scripts\src\tdpart.ts" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Scripts\src\tdpart\" />
+  </ItemGroup>
+
+
+
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
   </Target>
