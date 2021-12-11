@@ -402,6 +402,18 @@ export class TDArticle {
 
 
             if (data[i].type == "refelencematerial") {
+                this.refelencematerial.push(new Refelencematerial(
+                    data[i].id_assy,
+                    data[i].id_inst,
+                    data[i].id_part,
+                    data[i].model_name,
+                    data[i].file_name,
+                    data[i].file_length,
+                    data[i].itemlink,
+                    data[i].author,
+                    data[i].license
+                ));
+                /*
                 this.refelencematerial[Number(i)] = new Refelencematerial(
                     data[i].id_assy,
                     data[i].id_inst,
@@ -412,7 +424,7 @@ export class TDArticle {
                     data[i].itemlink,
                     data[i].author,
                     data[i].license
-                );
+                );*/
             }
 
         }
