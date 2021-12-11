@@ -170,7 +170,7 @@ export class Annotation {
     pos_z: number;
 
     web_id_annotation: string;
-    marker: any;
+    marker!: THREE.Mesh;
 
     constructor(id_article: number, id_annotation: number,
         title: string, description1: string, description2: string, status: number,
@@ -188,7 +188,7 @@ export class Annotation {
         this.pos_y = pos_y;
         this.pos_z = pos_z;
         this.web_id_annotation = web_id_annotation;
-        this.marker = null;
+        //this.marker = null;
     }
 }
 

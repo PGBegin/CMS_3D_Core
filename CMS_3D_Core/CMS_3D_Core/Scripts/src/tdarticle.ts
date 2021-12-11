@@ -10,135 +10,6 @@ import { Aarticle, Instruction, ViewObject, InstancePart, Annotation, Annotation
 
 
 
-/*
-class Aarticle {
-    constructor(id_article, id_assy, title, short_description, long_description, meta_description, meta_category, status
-        , directional_light_color, directional_light_intensity, directional_light_px, directional_light_py, directional_light_pz
-        , ambient_light_color, ambient_light_intensity, gammaOutput, id_attachment_for_eye_catch) {
-
-        this.id_article = id_article;
-        this.id_assy = id_assy;
-
-        this.title = title;
-        this.short_description = short_description;
-        this.long_description = long_description;
-        this.meta_description = meta_description;
-        this.meta_category = meta_category;
-
-        this.status = status;
-
-        this.directional_light_color = directional_light_color;
-        this.directional_light_intensity = directional_light_intensity;
-        this.directional_light_px = directional_light_px;
-        this.directional_light_py = directional_light_py;
-        this.directional_light_pz = directional_light_pz;
-
-        this.ambient_light_color = ambient_light_color;
-        this.ambient_light_intensity = ambient_light_intensity;
-        this.gammaOutput = gammaOutput;
-
-        this.id_attachment_for_eye_catch = id_attachment_for_eye_catch
-    }
-}
-class Instruction {
-    constructor(id_article, id_instruct, id_view, title, short_description, display_order, memo) {
-        this.id_article = id_article;
-        this.id_instruct = id_instruct;
-        this.id_view = id_view;
-        this.title = title;
-        this.short_description = short_description;
-        this.display_order = display_order;
-        this.memo = memo;
-    }
-}
-
-class ViewObject {
-    constructor(id_article, id_view, title,
-        cam_pos_x, cam_pos_y, cam_pos_z, cam_lookat_x, cam_lookat_y, cam_lookat_z,
-        cam_quat_x, cam_quat_y, cam_quat_z, cam_quat_w, obt_target_x, obt_target_y, obt_target_z) {
-
-        this.title = title;
-        this.id_article = id_article;
-        this.id_view = id_view;
-
-        this.cam_pos_x = cam_pos_x;
-        this.cam_pos_y = cam_pos_y;
-        this.cam_pos_z = cam_pos_z;
-
-        this.cam_lookat_x = cam_lookat_x;
-        this.cam_lookat_y = cam_lookat_y;
-        this.cam_lookat_z = cam_lookat_z;
-
-        this.cam_quat_x = cam_quat_x;
-        this.cam_quat_y = cam_quat_y;
-        this.cam_quat_z = cam_quat_z;
-        this.cam_quat_w = cam_quat_w;
-
-        this.obt_target_x = obt_target_x;
-        this.obt_target_y = obt_target_y;
-        this.obt_target_z = obt_target_z;
-    }
-}
-
-class InstancePart {
-    constructor(id_assy, id_inst, id_part, objectdata) {
-        this.id_assy = id_assy;
-        this.id_inst = id_inst;
-        this.id_part = id_part;
-        this.objectdata = objectdata;
-    }
-}
-
-class Annotation {
-    constructor(id_article, id_annotation, title, description1, description2, status, pos_x, pos_y, pos_z, web_id_annotation) {
-        this.id_article = id_article;
-        this.id_annotation = id_annotation;
-
-        this.title = title;
-        this.description1 = description1;
-        this.description2 = description2;
-        this.status = status;
-
-        this.pos_x = pos_x;
-        this.pos_y = pos_y;
-        this.pos_z = pos_z;
-        this.web_id_annotation = web_id_annotation;
-        this.marker = null;
-    }
-}
-
-
-
-
-class AnnotationDisplay {
-    constructor(id_article, id_instruct, id_annotation, is_display) {
-        this.id_article = id_article;
-        this.id_instruct = id_instruct;
-        this.id_annotation = id_annotation;
-        this.is_display = is_display;
-    }
-}
-
-
-
-
-class Refelencematerial {
-    constructor(id_assy, id_inst, id_part, model_name, file_name, file_length, itemlink, author, license) {
-        this.id_assy = id_assy;
-        this.id_inst = id_inst;
-        this.id_part = id_part;
-        this.model_name = model_name;
-        this.file_name = file_name;
-        this.file_length = file_length;
-        this.itemlink = itemlink;
-        this.author = author;
-        this.license = license;
-    }
-
-}
-
-*/
-
 
 //---------------------------------------------------------------------------
 export class TDArticle {
@@ -167,26 +38,32 @@ export class TDArticle {
 
 
     //Model Objects
-    article: any;
-    view_object: any;
-    instruction_gp: any;
-    instance_part: any;
-    annotation: any;
-    annotation_display: any;
+    article!: Aarticle;
+    view_object!: ViewObject[];
+    instruction_gp: Instruction[];
+    instance_part: InstancePart[];
+    annotation: Annotation[];
+    annotation_display: AnnotationDisplay[][];
 
-    refelencematerial: any;
+    refelencematerial: Refelencematerial[];
 
-    camera_main: any;
-    controls: any;
+    camera_main!: THREE.PerspectiveCamera;
+    controls!: OrbitControls;
     scene: THREE.Scene;
 
-    gridHelper: any;
-    axisHelper: any;
-    lightHelper: any;
+    gridHelper!: THREE.GridHelper;
+    axisHelper!: THREE.AxesHelper;
+    lightHelper!: THREE.DirectionalLightHelper;
 
-    light: any;
-    ambient: any;
-    renderer: any;
+
+
+
+
+
+    light!: THREE.DirectionalLight;
+    ambient!: THREE.AmbientLight;
+    renderer!: THREE.WebGLRenderer;
+    //renderer: any;
 
 
     id_article: number;
@@ -265,26 +142,25 @@ export class TDArticle {
 
 
         //Model Objects
-        this.article;
+        //this.article;
         this.view_object = [];
         this.instruction_gp = [];
         this.instance_part = [];
         this.annotation = [];
         this.annotation_display = [];
-
         this.refelencematerial = [];
 
-        this.camera_main;
-        this.controls;
+        //this.camera_main;
+        //this.controls;
         this.scene = new THREE.Scene();
 
-        this.gridHelper;
-        this.axisHelper;
-        this.lightHelper;
+        //this.gridHelper;
+        //this.axisHelper;
+        //this.lightHelper;
 
-        this.light;
-        this.ambient;
-        this.renderer;
+        //this.light;
+        //this.ambient;
+        //this.renderer;
 
 
         this.id_article = 0;
@@ -420,8 +296,10 @@ export class TDArticle {
     //Setup Json
     ObjSetupAllObjectsWithoutInstanceModelFromJson(data : any) {
 
+        if (this.view_object) {
+            this.view_object.length = 0;
 
-        this.view_object.length = 0;
+        }
         this.instruction_gp.length = 0;
         this.instance_part.length = 0;
         this.annotation.length = 0;
@@ -524,7 +402,7 @@ export class TDArticle {
 
 
             if (data[i].type == "refelencematerial") {
-                this.refelencematerial[i] = new Refelencematerial(
+                this.refelencematerial[Number(i)] = new Refelencematerial(
                     data[i].id_assy,
                     data[i].id_inst,
                     data[i].id_part,
@@ -540,13 +418,13 @@ export class TDArticle {
         }
 
 
-        this.instruction_gp.forEach(function (this : any, element : any) {
+        this.instruction_gp.forEach(function (this: TDArticle, element: Instruction) {
             //i = 0;
             let i: number;
             let j : number;
             i = element.id_instruct;
             this.annotation_display[i] = [];
-            this.annotation.forEach(function (this: any, element: any) {
+            this.annotation.forEach(function (this: TDArticle, element: Annotation) {
                 j = element.id_annotation;
                 this.annotation_display[i][j] = new AnnotationDisplay(
                     this.id_article,
@@ -573,10 +451,10 @@ export class TDArticle {
         console.log('length : ' + this.instruction_gp.length.toString());
 
         if (this.instruction_gp.length > 0) {
-            const ar1_map = (this.instruction_gp.filter((x:any) => typeof x.display_order === 'number')).map((x:any) => x.display_order);
+            const ar1_map = (this.instruction_gp.filter((x: Instruction) => typeof x.display_order === 'number')).map((x: Instruction) => x.display_order);
 
 
-            this.id_startinst = this.instruction_gp.filter((x:any) => x.display_order == Math.min.apply(null, ar1_map))[0].id_instruct;
+            this.id_startinst = this.instruction_gp.filter((x: Instruction) => x.display_order == Math.min.apply(null, ar1_map))[0].id_instruct;
 
         }
 
@@ -750,8 +628,8 @@ export class TDArticle {
 
         let scene = this.scene;
 
-        this.instance_part.forEach(function (this : any, element:any) {
-            let str_url_partapi = this.str_url_partapi_base + new URLSearchParams({ id_part: element.id_part }).toString();
+        this.instance_part.forEach(function (this: TDArticle, element: InstancePart) {
+            let str_url_partapi = this.str_url_partapi_base + new URLSearchParams({ id_part: element.id_part.toString() }).toString();
 
             glfLoader.load(str_url_partapi, function (gltf) {
 
@@ -779,13 +657,13 @@ export class TDArticle {
 
 
 
-        let div_annotations = document.getElementById('annotations')!;
+        const div_annotations = document.getElementById('annotations')!;
 
         if (div_annotations != null) {
 
-            let temp_annotation;
-            let title_annotation;
-            let description1_annotation;
+            let temp_annotation : any;
+            let title_annotation : any;
+            let description1_annotation : any;
 
             //console.log("setupannotation\n");
             console.log(div_annotations);
@@ -794,7 +672,7 @@ export class TDArticle {
                 div_annotations.removeChild(div_annotations.firstChild);
             }
 
-            this.annotation.forEach(function (this : any, element : any) {
+            this.annotation.forEach(function (this : TDArticle, element : Annotation) {
 
 
                 temp_annotation = document.createElement('div');
@@ -843,7 +721,7 @@ export class TDArticle {
 
         let temp_bt;
 
-        this.instruction_gp.forEach(function (this: any, element: any) {
+        this.instruction_gp.forEach(function (this: TDArticle, element: Instruction) {
 
 
             //console.log("id:" + element.id_instruct);
@@ -872,7 +750,7 @@ export class TDArticle {
             }
             let temp_bt;
 
-            this.annotation.forEach(function (this: any, element: any) {
+            this.annotation.forEach(function (this: TDArticle, element: Annotation) {
 
                 temp_bt = document.createElement('button');
                 temp_bt.type = 'button';
@@ -931,6 +809,7 @@ export class TDArticle {
                 temp_ipt.name = "[" + i + "]." + "id_instruct";
                 temp_ipt.type = "hidden";
                 temp_ipt.value = element.id_instruct;
+                console.log(element.id_instruct);
 
                 temp_td.appendChild(temp_ipt);
 
@@ -1001,15 +880,15 @@ export class TDArticle {
                 tbody.removeChild(tbody.firstChild);
             }
 
-            let temp_tr;
-            let temp_td : any;
-            let temp_ipt;
-            let temp_bt;
+            let temp_tr: HTMLTableRowElement;
+            let temp_td: HTMLTableCellElement;
+            let temp_ipt: HTMLInputElement;
+            let temp_bt: HTMLButtonElement;
             let i = 0;
 
 
             //ID	title	X	Y	Z	REf	Delete
-            this.view_object.forEach(function (this : any , element : any) {
+            this.view_object.forEach(function (this: TDArticle, element: ViewObject) {
 
                 temp_tr = document.createElement('tr');
 
@@ -1025,7 +904,7 @@ export class TDArticle {
                 temp_ipt.id = "[" + element.id_view + "]." + "id_edit_list_view_input_id_article";
                 temp_ipt.name = "[" + i + "]." + "id_article";
                 temp_ipt.type = "hidden";
-                temp_ipt.value = element.id_article;
+                temp_ipt.value = element.id_article.toString();
 
                 temp_td.appendChild(temp_ipt);
 
@@ -1034,7 +913,7 @@ export class TDArticle {
                 temp_ipt.id = "[" + element.id_view + "]." + "id_edit_list_view_input_id_view";
                 temp_ipt.name = "[" + i + "]." + "id_view";
                 temp_ipt.type = "hidden";
-                temp_ipt.value = element.id_view;
+                temp_ipt.value = element.id_view.toString();
 
                 temp_td.appendChild(temp_ipt);
 
@@ -1045,7 +924,7 @@ export class TDArticle {
                 // Colomn 02 (Annotation Title)
                 temp_td = document.createElement('td');
 
-                temp_td.innerText = element.id_view;
+                temp_td.innerText = element.id_view.toString();
 
                 temp_tr.appendChild(temp_td);
 
@@ -1059,21 +938,21 @@ export class TDArticle {
                 // Colomn 03 (Pos X)
                 temp_td = document.createElement('td');
 
-                temp_td.innerText = element.cam_pos_x;
+                temp_td.innerText = element.cam_pos_x.toString();
 
                 temp_tr.appendChild(temp_td);
 
                 // Colomn 04 (Pos Y)
                 temp_td = document.createElement('td');
 
-                temp_td.innerText = element.cam_pos_y;
+                temp_td.innerText = element.cam_pos_y.toString();
 
                 temp_tr.appendChild(temp_td);
 
                 // Colomn 05 (Pos Z)
                 temp_td = document.createElement('td');
 
-                temp_td.innerText = element.cam_pos_z;
+                temp_td.innerText = element.cam_pos_z.toString();
 
                 temp_tr.appendChild(temp_td);
 
@@ -1081,10 +960,10 @@ export class TDArticle {
                 temp_td = document.createElement('td');
 
 
-                let x = this.instruction_gp.filter((item : any) => item.id_view === element.id_view);
+                let x = this.instruction_gp.filter((item : Instruction) => item.id_view === element.id_view);
                 //console.log(x);
 
-                x.forEach(function (element : any) {
+                x.forEach(function (element: Instruction) {
                     temp_td.innerText = temp_td.innerText + "ID:" + element.id_instruct;
                     //temp_td.appendChild(temp_bt);
                 });
@@ -1312,7 +1191,6 @@ export class TDArticle {
     DomSetupRefelencematerialView() {
 
         //DomSetupAnnotationDisplayEditor
-        //this.id_view_refelencematerial_table_tbody = "id_view_refelencematerial_table_tbody";
         let tbody = document.getElementById(this.id_view_refelencematerial_table_tbody)!;
 
 
@@ -1327,7 +1205,7 @@ export class TDArticle {
             let temp_a;
             let i = 0;
 
-            this.refelencematerial.forEach(function (element : any) {
+            this.refelencematerial.forEach(function (element: Refelencematerial) {
 
                 temp_tr = document.createElement('tr');
 
@@ -1350,7 +1228,7 @@ export class TDArticle {
                 // Colomn 03 (Annotation Title)
                 temp_td = document.createElement('td');
 
-                temp_td.innerText = element.file_length;
+                temp_td.innerText = element.file_length.toString();
 
                 temp_tr.appendChild(temp_td);
 
@@ -1391,7 +1269,6 @@ export class TDArticle {
 
     //Initialize Render Objects and Setting for Optional (Like Helpers)
     ComplexSetupRenderOptionalInitial() {
-        'use strict';
 
 
         //helper
@@ -1403,19 +1280,21 @@ export class TDArticle {
         //型が存在しないというエラーになるので一時的にコメントアウト。
         //this.axisHelper = new THREE.AxisHelper(1000);
         //this.scene.add(this.axisHelper);
+        this.axisHelper = new THREE.AxesHelper(1000);
+        this.scene.add(this.axisHelper);
 
 
 
         this.gridHelper.visible = this.is_display_helper;
         //型が存在しないというエラーになるので一時的にコメントアウト。
-        //this.axisHelper.visible = this.is_display_helper;
+        this.axisHelper.visible = this.is_display_helper;
 
         //lightHelper = new THREE.DirectionalLightHelper(light, 20);
         //scene.add(lightHelper);
     }
 
     //Initialize Render Objects and Setting for Optional (Like Helpers)
-    ComplexSetupRenderInitial(lint: any, lpx: any, lpy: any, lpz: any, anbint: any, _gammaOutput : any) {
+    ComplexSetupRenderInitial(lint: number, lpx: number, lpy: number, lpz: number, anbint: number, _gammaOutput: boolean) {
 
         // light
         this.light = new THREE.DirectionalLight(0xffffff, lint);
@@ -1429,6 +1308,7 @@ export class TDArticle {
 
         // main camara
         this.camera_main = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 1000);
+        
 
         // renderer
         //renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -1444,7 +1324,6 @@ export class TDArticle {
         this.controls = new OrbitControls(this.camera_main, this.renderer.domElement);
 
 
-
         this.camera_main.position.x = 10;
         this.camera_main.position.y = 10;
         this.camera_main.position.z = 10;
@@ -1454,9 +1333,14 @@ export class TDArticle {
         this.controls.target.z = 0;
 
 
-        //Setting gammaOutput 
+        //Setting gammaOutput
         //In order to reduce darkening of some items with truee.js
-        this.renderer.gammaOutput = _gammaOutput;
+        //this.renderer.gammaOutput = _gammaOutput;
+        if (_gammaOutput) {
+            this.renderer.outputEncoding = THREE.sRGBEncoding;
+        } else {
+            this.renderer.outputEncoding = THREE.LinearEncoding;
+        }
 
         if (this.is_edit_mode != true && this.is_mode_assy != true) {
             this.onWindowResize();
@@ -1466,7 +1350,7 @@ export class TDArticle {
 
 
     //transit to the specified viewpoint and camera position
-    ScreenUpdateViewEditor(cam_pos: any, target: any) {
+    ScreenUpdateViewEditor(cam_pos: THREE.Vector3, target: THREE.Vector3) {
 
 
         this.counter = 0;
@@ -1505,7 +1389,7 @@ export class TDArticle {
 
 
     //Change Annotation for Edit Window
-    DomUpdateAnnotationEditor(id_annotation: any) {
+    DomUpdateAnnotationEditor(id_annotation: number) {
 
 
         if (this.is_edit_mode) {
@@ -1529,21 +1413,21 @@ export class TDArticle {
             }
 
             //Edit
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_id_annotation')).value = this.annotation[id_annotation].id_annotation;
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_id_annotation')).value = this.annotation[id_annotation].id_annotation.toString();
             (<HTMLInputElement>document.getElementById('id_edit_annotation_input_title')).value = this.annotation[id_annotation].title;
 
             (<HTMLInputElement>document.getElementById('id_edit_annotation_input_description1')).value = this.annotation[id_annotation].description1;
             (<HTMLInputElement>document.getElementById('id_edit_annotation_input_description2')).value = this.annotation[id_annotation].description2;
 
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_status')).value = this.annotation[id_annotation].status;
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_status')).value = this.annotation[id_annotation].status.toString();
 
 
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_x')).value = this.annotation[id_annotation].pos_x;
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_y')).value = this.annotation[id_annotation].pos_y;
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_z')).value = this.annotation[id_annotation].pos_z;
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_x')).value = this.annotation[id_annotation].pos_x.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_y')).value = this.annotation[id_annotation].pos_y.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_z')).value = this.annotation[id_annotation].pos_z.toString();
 
             //Delete
-            (<HTMLInputElement>document.getElementById('id_delete_annotation_input_id_annotation')).value = this.annotation[id_annotation].id_annotation;
+            (<HTMLInputElement>document.getElementById('id_delete_annotation_input_id_annotation')).value = this.annotation[id_annotation].id_annotation.toString();
         }
 
     }
@@ -1551,12 +1435,12 @@ export class TDArticle {
 
 
     //Moves the annotation position relative refer to parameter
-    DomUpdateAnnotationPositionShift(px:any, py:any, pz:any) {
+    DomUpdateAnnotationPositionShift(px: number, py: number, pz: number) {
 
         //Relative
 
 
-        const id_annotation = (<HTMLInputElement>document.getElementById('id_edit_annotation_input_id_annotation')).value;
+        const id_annotation = Number((<HTMLInputElement>document.getElementById('id_edit_annotation_input_id_annotation')).value);
 
         if (this.is_edit_mode) {
 
@@ -1566,9 +1450,9 @@ export class TDArticle {
             this.annotation[id_annotation].pos_z += pz;
 
 
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_x')).value = this.annotation[id_annotation].pos_x;
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_y')).value = this.annotation[id_annotation].pos_y;
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_z')).value = this.annotation[id_annotation].pos_z;
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_x')).value = this.annotation[id_annotation].pos_x.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_y')).value = this.annotation[id_annotation].pos_y.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_z')).value = this.annotation[id_annotation].pos_z.toString();
 
             //Edit
             //this.annotation[id_annotation].marker.pos.x += px;
@@ -1611,7 +1495,8 @@ export class TDArticle {
     DomUpdateAnnotationScreenDisplay(id_instruct: number) {
         //let obj = this;
         //console.log('called');
-        this.annotation.forEach(function (this:any, element:any) {
+        this.annotation.forEach(function (this: TDArticle, element: Annotation)
+        {
             (<HTMLInputElement>document.getElementById(this.annotation[element.id_annotation].web_id_annotation)).hidden = !this.annotation_display[id_instruct][element.id_annotation].is_display;
             element.marker.visible = this.annotation_display[id_instruct][element.id_annotation].is_display;
         }.bind(this));
@@ -1681,25 +1566,25 @@ export class TDArticle {
         let i = this.instruction_gp[id_instruct].id_view;
 
         //Update Instruction for Edit
-        (<HTMLInputElement>document.getElementById('instruction_title')).value = this.instruction_gp[id_instruct].title;
-        (<HTMLInputElement>document.getElementById('instruction_id_view')).value = this.instruction_gp[id_instruct].id_view;
+        (<HTMLInputElement>document.getElementById('instruction_title')).value = this.instruction_gp[id_instruct].title.toString();
+        (<HTMLInputElement>document.getElementById('instruction_id_view')).value = this.instruction_gp[id_instruct].id_view.toString();
         (<HTMLInputElement>document.getElementById('instruction_short_description')).textContent = this.instruction_gp[id_instruct].short_description;
-        (<HTMLInputElement>document.getElementById('instruction_id_article')).value = this.instruction_gp[id_instruct].id_article;
-        (<HTMLInputElement>document.getElementById('instruction_id_instruct')).value = this.instruction_gp[id_instruct].id_instruct;
-        (<HTMLInputElement>document.getElementById('instruction_display_order')).value = this.instruction_gp[id_instruct].display_order;
+        (<HTMLInputElement>document.getElementById('instruction_id_article')).value = this.instruction_gp[id_instruct].id_article.toString();
+        (<HTMLInputElement>document.getElementById('instruction_id_instruct')).value = this.instruction_gp[id_instruct].id_instruct.toString();
+        (<HTMLInputElement>document.getElementById('instruction_display_order')).value = this.instruction_gp[id_instruct].display_order.toString();
         (<HTMLInputElement>document.getElementById('instruction_memo')).value = this.instruction_gp[id_instruct].memo;
         (<HTMLInputElement>document.getElementById('instruction_short_description_length')).innerHTML = '(' + this.instruction_gp[id_instruct].short_description.length + ')';
 
 
         //Update Instruction for Delete
-        (<HTMLInputElement>document.getElementById('instruction_id_article_delete')).value = this.instruction_gp[id_instruct].id_article;
-        (<HTMLInputElement>document.getElementById('instruction_id_instruct_delete')).value = this.instruction_gp[id_instruct].id_instruct;
+        (<HTMLInputElement>document.getElementById('instruction_id_article_delete')).value = this.instruction_gp[id_instruct].id_article.toString();
+        (<HTMLInputElement>document.getElementById('instruction_id_instruct_delete')).value = this.instruction_gp[id_instruct].id_instruct.toString();
 
 
 
         //Update View for Edit
-        (<HTMLInputElement>document.getElementById('id_edit_view_input_id_article')).value = this.view_object[i].id_article;
-        (<HTMLInputElement>document.getElementById('id_edit_view_input_id_view')).value = this.view_object[i].id_view;
+        (<HTMLInputElement>document.getElementById('id_edit_view_input_id_article')).value = this.view_object[i].id_article.toString();
+        (<HTMLInputElement>document.getElementById('id_edit_view_input_id_view')).value = this.view_object[i].id_view.toString();
         (<HTMLInputElement>document.getElementById('id_edit_view_input_title')).value = this.view_object[i].title;
 
         //↓ Ref
@@ -1713,8 +1598,8 @@ export class TDArticle {
 
     DomUpdateAnnotationDisplayEditor(id_instruct : number) {
 
-        this.annotation.forEach(function (this:any, element:any) {
-            (<HTMLInputElement>document.getElementById('[' + element.id_annotation + '].id_edit_annotation_display_input_id_instruct')).value = this[id_instruct][element.id_annotation].id_instruct;
+        this.annotation.forEach(function (this: AnnotationDisplay[][], element: Annotation) {
+            (<HTMLInputElement>document.getElementById('[' + element.id_annotation + '].id_edit_annotation_display_input_id_instruct')).value = this[id_instruct][element.id_annotation].id_instruct.toString();
             (<HTMLInputElement>document.getElementById('[' + element.id_annotation + '].id_edit_annotation_display_input_is_display')).checked = this[id_instruct][element.id_annotation].is_display;
         }.bind(this.annotation_display));
     }
@@ -1770,7 +1655,7 @@ export class TDArticle {
         let ofx = (<HTMLInputElement>document.getElementById('model_screen')).getBoundingClientRect().left;
         let ofy = (<HTMLInputElement>document.getElementById('model_screen')).getBoundingClientRect().top;
 
-        this.annotation.forEach(function (element : any) {
+        this.annotation.forEach(function (element : Annotation) {
 
             const vector = new THREE.Vector3(element.pos_x, element.pos_y, element.pos_z);
             vector.project(cm);
@@ -1834,13 +1719,13 @@ export class TDArticle {
                     if (data[0].updateresult == "Success") {
 
                         //データ更新
-                        this.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : any, value : any) {
+                        this.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : TDArticle, value : any) {
 
                             console.log("viewid : " + this.selected_instruction.toString());
                             this.ComplexResetEnvironment();
                             this.ComplexTransitionInstruction(this.selected_instruction);
 
-                            if (this.annotation.some((item:any) => item.id_annotation === this.selected_annotation)) {
+                            if (this.annotation.some((item:Annotation) => item.id_annotation === this.selected_annotation)) {
                                 this.DomUpdateAnnotationEditor(this.selected_annotation);
                             }
 
@@ -1889,7 +1774,7 @@ export class TDArticle {
                     if (data[0].updateresult == "Success") {
 
                         //データ更新
-                        this.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : any, value : any) {
+                        this.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : TDArticle, value : any) {
 
                             /*
                             this.instruction_gp.forEach(function (element) {
@@ -1908,7 +1793,7 @@ export class TDArticle {
 
                             let id;
                             let checked = false;
-                            this.instruction_gp.forEach(function (this : any, element: any) {
+                            this.instruction_gp.forEach(function (this : TDArticle, element: Instruction) {
                                 id = element.id_instruct;
                                 console.log(checked);
                                 if (typeof id === "undefined") {
@@ -1932,7 +1817,7 @@ export class TDArticle {
                             this.ComplexResetEnvironment();
                             this.ComplexTransitionInstruction(this.selected_instruction);
 
-                            if (this.annotation.some((item:any) => item.id_annotation === this.selected_annotation)) {
+                            if (this.annotation.some((item:Annotation) => item.id_annotation === this.selected_annotation)) {
                                 this.DomUpdateAnnotationEditor(this.selected_annotation);
                             }
 
@@ -2001,11 +1886,11 @@ export class TDArticle {
                         //this.selected_annotation = data[0].id_annotation;
 
                         //データ更新
-                        this.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : any, value:any) {
+                        this.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : TDArticle, value:any) {
                             this.ComplexResetEnvironment();
                             this.ComplexTransitionInstruction(this.selected_instruction);
 
-                            if (this.annotation.some((item:any) => item.id_annotation === this.selected_annotation)) {
+                            if (this.annotation.some((item:Annotation) => item.id_annotation === this.selected_annotation)) {
                                 this.DomUpdateAnnotationEditor(this.selected_annotation);
                             }
 
@@ -2056,11 +1941,11 @@ export class TDArticle {
                         //this.selected_annotation = data[0].id_annotation;
 
                         //データ更新
-                        this.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : any, value:any) {
+                        this.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : TDArticle, value:any) {
                             this.ComplexResetEnvironment();
                             this.ComplexTransitionInstruction(this.selected_instruction);
 
-                            if (this.annotation.some((item:any) => item.id_annotation === this.selected_annotation)) {
+                            if (this.annotation.some((item:Annotation) => item.id_annotation === this.selected_annotation)) {
                                 this.DomUpdateAnnotationEditor(this.selected_annotation);
                             }
 
@@ -2116,11 +2001,11 @@ export class TDArticle {
                         this.selected_annotation = data[0].id_annotation;
 
                         //データ更新
-                        this.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : any, value:any ) {
+                        this.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : TDArticle, value:any ) {
                             this.ComplexResetEnvironment();
                             this.ComplexTransitionInstruction(this.selected_instruction);
 
-                            if (this.annotation.some((item:any) => item.id_annotation === this.selected_annotation)) {
+                            if (this.annotation.some((item:Annotation) => item.id_annotation === this.selected_annotation)) {
                                 this.DomUpdateAnnotationEditor(this.selected_annotation);
                             }
 
@@ -2169,9 +2054,9 @@ export class TDArticle {
                     if (data[0].updateresult == "Success") {
 
                         //データ更新
-                        this.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : any, value:any) {
+                        this.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : TDArticle, value:any) {
 
-                            this.annotation.forEach(function (this : any, element:any) {
+                            this.annotation.forEach(function (this : TDArticle, element:Annotation) {
                                 let id;
                                 let checked = false;
                                 id = element.id_annotation;
@@ -2193,7 +2078,7 @@ export class TDArticle {
                             this.ComplexResetEnvironment();
                             this.ComplexTransitionInstruction(this.selected_instruction);
 
-                            if (this.annotation.some((item:any) => item.id_annotation === this.selected_annotation)) {
+                            if (this.annotation.some((item: Annotation) => item.id_annotation === this.selected_annotation)) {
                                 this.DomUpdateAnnotationEditor(this.selected_annotation);
                             }
 
@@ -2216,10 +2101,11 @@ export class TDArticle {
         if (confirm('Are you update AnnotationDisplay?')) {
 
             let updObject: any;// = [];
+            //let updObject: AnnotationDisplay[];// = [];
 
 
             let i = 0;
-            this.annotation.forEach(function (this : any, element:any ) {
+            this.annotation.forEach(function (this : TDArticle, element:Annotation ) {
                 updObject[i] = new AnnotationDisplay(
                     this.id_article,
                     Number((<HTMLInputElement>document.getElementById('[' + element.id_annotation + '].id_edit_annotation_display_input_id_instruct')).value),
@@ -2250,11 +2136,11 @@ export class TDArticle {
                         this.selected_annotation = data[0].id_annotation;
 
                         //データ更新
-                        this.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : any, value:any) {
+                        this.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : TDArticle, value:any) {
                             this.ComplexResetEnvironment();
                             this.ComplexTransitionInstruction(this.selected_instruction);
 
-                            if (this.annotation.some((item:any) => item.id_annotation === this.selected_annotation)) {
+                            if (this.annotation.some((item:Annotation) => item.id_annotation === this.selected_annotation)) {
                                 this.DomUpdateAnnotationEditor(this.selected_annotation);
                             }
 
