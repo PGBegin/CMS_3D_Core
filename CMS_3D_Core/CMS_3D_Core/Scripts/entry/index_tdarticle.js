@@ -18,12 +18,12 @@ function startup() {
 
     if (is_mode_assy) {
         adarticle.is_mode_assy = is_mode_assy;
-        adarticle.id_assy = Number(document.getElementById("id_assy").value);
+        adarticle.datacontainers.id_assy = Number(document.getElementById("id_assy").value);
         adarticle.is_edit_mode = is_edit_mode;
 
     } else {
 
-        adarticle.id_article = Number(document.getElementById("id_article").value);
+        adarticle.datacontainers.id_article = Number(document.getElementById("id_article").value);
         adarticle.is_edit_mode = is_edit_mode;
 
 
