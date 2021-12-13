@@ -17,7 +17,7 @@ function startup() {
 
 
     if (is_mode_assy) {
-        adarticle.is_mode_assy = is_mode_assy;
+        adarticle.datacontainers.is_mode_assy = is_mode_assy;
         adarticle.datacontainers.id_assy = Number(document.getElementById("id_assy").value);
         adarticle.is_edit_mode = is_edit_mode;
 

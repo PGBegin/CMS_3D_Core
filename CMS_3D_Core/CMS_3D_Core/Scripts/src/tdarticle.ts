@@ -12,8 +12,10 @@ import { Aarticle, Instruction, ViewObject, InstancePart, Annotation, Annotation
 export class DataContainers {
 
 
-    //API URL Base
+    //API URL Base    
     str_url_partapi_base: string;
+
+    url_api_dataget: string ="";
     str_url_base_prodobjectapi_articlemode: string;
     str_url_base_prodobjectapi_assymode: string;
 
@@ -45,6 +47,7 @@ export class DataContainers {
     id_article: number;
     id_startinst: number;
     id_assy: number;
+    is_mode_assy: boolean;
 
     constructor() {
 
@@ -83,12 +86,19 @@ export class DataContainers {
         this.id_article = 0;
         this.id_startinst = 0;
         this.id_assy = 0;
+        this.is_mode_assy = false;
     }
 
     async ObjSetupAllObjectsWithoutInstanceModelFromDb() {
 
 
         let str_url_api = this.str_url_base_prodobjectapi_articlemode + new URLSearchParams({ id_article: this.id_article.toString() }).toString();
+
+        if (this.is_mode_assy) {
+            str_url_api = this.str_url_base_prodobjectapi_assymode + new URLSearchParams({ id_assy: this.id_assy.toString() }).toString();
+        }
+
+
 
 
         //cors対策追加
@@ -315,6 +325,9 @@ export class DataContainers {
 
 
 
+
+
+
 }
 
 
@@ -380,7 +393,6 @@ export class TDArticle {
     // Operation Mode
     is_edit_mode: boolean;
     is_display_helper: boolean;
-    is_mode_assy: boolean;
 
     // 1 : landscape, 0:Portrait
     orientation_mode: number;
@@ -436,7 +448,6 @@ export class TDArticle {
         // Operation Mode
         this.is_edit_mode = true;
         this.is_display_helper = false;
-        this.is_mode_assy = false;
 
         // 1 : landscape, 0:Portrait 
         this.orientation_mode = 1;
@@ -541,104 +552,81 @@ export class TDArticle {
     ComplexSetupEnvironmentInitial() {
 
 
-
-        let str_url_api = this.datacontainers.str_url_base_prodobjectapi_articlemode + new URLSearchParams({ id_article: this.datacontainers.id_article.toString() }).toString();
-
-        if (this.is_mode_assy) {
-            str_url_api = this.datacontainers.str_url_base_prodobjectapi_assymode + new URLSearchParams({ id_assy: this.datacontainers.id_assy.toString() }).toString();
-        }
-
-
-        //指定urlからデータを取得
-        fetch(str_url_api)
-            .then(response => {
-
-                return response.json();
-
-            })
-            .then(data => { // 処理が成功した場合に取得されるJSONデータ
+        //DBからデータを取得する
+        this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
 
 
 
-                //JSONのデータを各オブジェクトに詰め替える
-                this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromJson(data);
+            //Loading Article
+            this.ObjSetupAarticleDefault();
 
 
-                //Loading Article
-                this.ObjSetupAarticleDefault();
+            //コントロールパネル領域を生成する
+            this.DomSetupInstructionControler();
+
+            //setup view operation panel
+            this.DomSetupLookingControler();
+
+            //DomSetupViewListEditor
+            this.DomSetupViewListEditor();
 
 
-                //コントロールパネル領域を生成する
-                this.DomSetupInstructionControler();
-
-                //setup view operation panel
-                this.DomSetupLookingControler();
-
-                //DomSetupViewListEditor
-                this.DomSetupViewListEditor();
+            //Loading Annotations
+            this.DomSetupAnnotationScreen();
 
 
-                //Loading Annotations
-                this.DomSetupAnnotationScreen();
+            //Create Edit Annotation Selection Panels
+            this.DomSetupAnnotationEditorSelectControls();
+
+            //Create Edit Annotation Position Panels
+            this.DomSetupAnnotationPositionEditButton();
+
+            //Annotation Display Edit Panel
+            this.DomSetupAnnotationDisplayEditor();
+
+            //RefelencematerialView
+            this.DomSetupRefelencematerialView();
+
+            //表示領域を初期化する
+            this.ComplexSetupRenderOptionalInitial();
 
 
-                //Create Edit Annotation Selection Panels
-                this.DomSetupAnnotationEditorSelectControls();
-
-                //Create Edit Annotation Position Panels
-                this.DomSetupAnnotationPositionEditButton();
-
-                //Annotation Display Edit Panel
-                this.DomSetupAnnotationDisplayEditor();
-
-                //RefelencematerialView
-                this.DomSetupRefelencematerialView();
-
-                //表示領域を初期化する
-                this.ComplexSetupRenderOptionalInitial();
+            //Initialize render
+            this.ComplexSetupRenderInitial(
+                this.datacontainers.article.directional_light_intensity
+                , this.datacontainers.article.directional_light_px, this.datacontainers.article.directional_light_py, this.datacontainers.article.directional_light_pz
+                , this.datacontainers.article.ambient_light_intensity
+                , this.datacontainers.article.gammaOutput);
 
 
-                //Initialize render
-                this.ComplexSetupRenderInitial(
-                    this.datacontainers.article.directional_light_intensity
-                    , this.datacontainers.article.directional_light_px, this.datacontainers.article.directional_light_py, this.datacontainers.article.directional_light_pz
-                    , this.datacontainers.article.ambient_light_intensity
-                    , this.datacontainers.article.gammaOutput);
+            //データモデルを取得する
+            this.datacontainers.ObjSetupInstancePartModelFromDb(this.scene);
 
 
-                //データモデルを取得する
-                this.datacontainers.ObjSetupInstancePartModelFromDb(this.scene);
+            if (this.datacontainers.id_startinst == 0) {
+
+                this.camera_main.position.copy(this.camera_main_startpos);
+
+                this.controls.target.copy(this.controls_target_startpos);
+            }
+            else {
+                this.ComplexTransitionInstruction(this.datacontainers.id_startinst);
+            }
+
+            if (this.is_edit_mode != true && this.datacontainers.is_mode_assy != true) {
+                this.onWindowResize();
+            }
 
 
-                if (this.datacontainers.id_startinst == 0) {
+            //orbitコントロールモードを有効にし、レンダリングを開始する
+            this.orbit_active = true;
 
-                    this.camera_main.position.copy(this.camera_main_startpos);
-
-                    this.controls.target.copy(this.controls_target_startpos);
-                }
-                else {
-                    this.ComplexTransitionInstruction(this.datacontainers.id_startinst);
-                }
-
-                if (this.is_edit_mode != true && this.is_mode_assy != true) {
-                    this.onWindowResize();
-                }
+            this.ScreenControlOrbital();
 
 
-                //orbitコントロールモードを有効にし、レンダリングを開始する
-                this.orbit_active = true;
-
-                this.ScreenControlOrbital();
+        }.bind(this));
 
 
-            })
-            .catch(error => { // エラーの場合の処理
-
-                console.log(error);
-
-            });
-
-        //this.onWindowResize();
     }
 
 
@@ -1356,7 +1344,7 @@ export class TDArticle {
             this.renderer.outputEncoding = THREE.LinearEncoding;
         }
 
-        if (this.is_edit_mode != true && this.is_mode_assy != true) {
+        if (this.is_edit_mode != true && this.datacontainers.is_mode_assy != true) {
             this.onWindowResize();
         }
 
