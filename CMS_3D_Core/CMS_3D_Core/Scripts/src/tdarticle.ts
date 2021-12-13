@@ -325,8 +325,59 @@ export class DataContainers {
 
 
 
+    //Update Instruction with Ajax
+    async dbUpdEditProductInstructionApi(updInstrruction: any, token: string) {
 
 
+        //データ更新
+        //this.data_reflesh_without_model();
+
+        //指定urlからデータを取得
+        //fetch内の各引数は以下の通り。
+        //第1引数は【アクションメソッドのPath】、
+        //第2引数は【通信方法 例)Get または　Post】、
+        //第3引数は【データの型】
+        //サンプル例：fetch(Path,{method:"POST",body:formData})
+
+        const response = await fetch(this.str_url_base_edit_product_instruction, { //【重要ポイント】「await」句は削除すること
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "RequestVerificationToken": token
+            },
+            body: JSON.stringify(updInstrruction)  // リクエスト本文にJSON形式の文字列を設定c
+        });
+        const data = await response.json();
+        return data;
+
+    }
+
+    //Delete Instruction with Ajax
+    async dbUpdDeleteProductInstructionApi(updInstrruction: any, token: string) {
+
+
+        //データ更新
+        //this.data_reflesh_without_model();
+
+        //指定urlからデータを取得
+        //fetch内の各引数は以下の通り。
+        //第1引数は【アクションメソッドのPath】、
+        //第2引数は【通信方法 例)Get または　Post】、
+        //第3引数は【データの型】
+        //サンプル例：fetch(Path,{method:"POST",body:formData})
+
+        const response = await fetch(this.str_url_base_delete_product_instruction, { //【重要ポイント】「await」句は削除すること
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "RequestVerificationToken": token
+            },
+            body: JSON.stringify(updInstrruction)  // リクエスト本文にJSON形式の文字列を設定c
+        });
+        const data = await response.json();
+        return data;
+
+    }
 
 }
 
@@ -1697,7 +1748,7 @@ export class TDArticle {
     }
 
     //Update Instruction with Ajax
-    DbUpdateInstruction() {
+    async DbUpdateInstruction() {
 
 
         if (confirm('Are you update Instruction?')) {
@@ -1714,53 +1765,36 @@ export class TDArticle {
             this.selected_instruction = Number((<HTMLInputElement>document.getElementById('instruction_id_instruct')).value);
 
             let token = (<HTMLInputElement>document.getElementsByName("__RequestVerificationToken").item(0)).value;
-            //データ更新
-            //this.data_reflesh_without_model();
 
-            //指定urlからデータを取得
-            //fetch内の各引数は以下の通り。
-            //第1引数は【アクションメソッドのPath】、
-            //第2引数は【通信方法 例)Get または　Post】、
-            //第3引数は【データの型】
-            //サンプル例：fetch(Path,{method:"POST",body:formData})
-            const response = fetch(this.datacontainers.str_url_base_edit_product_instruction, { //【重要ポイント】「await」句は削除すること
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    "RequestVerificationToken": token
-                },
-                body: JSON.stringify(updInstrruction)  // リクエスト本文にJSON形式の文字列を設定c
-            })
-                .then(response => {
 
-                    return response.json();
 
-                }).then(data => { // 処理が成功した場合に取得されるJSONデータ
+            const data = await this.datacontainers.dbUpdEditProductInstructionApi(updInstrruction, token);
 
-                    if (data[0].updateresult == "Success") {
+            if (data[0].updateresult == "Success") {
 
-                        //データ更新
-                        this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : TDArticle, value : any) {
+                //データ更新
+                this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
 
-                            console.log("viewid : " + this.selected_instruction.toString());
-                            this.ComplexResetEnvironment();
-                            this.ComplexTransitionInstruction(this.selected_instruction);
+                    console.log("viewid : " + this.selected_instruction.toString());
 
-                            if (this.datacontainers.annotation.some((item:Annotation) => item.id_annotation === this.selected_annotation)) {
-                                this.DomUpdateAnnotationEditor(this.selected_annotation);
-                            }
+                    this.ComplexResetEnvironment();
+                    this.ComplexTransitionInstruction(this.selected_instruction);
 
-                            alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
-                        }.bind(this));
-
+                    if (this.datacontainers.annotation.some((item: Annotation) => item.id_annotation === this.selected_annotation)) {
+                        this.DomUpdateAnnotationEditor(this.selected_annotation);
                     }
-                });
+
+                    alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
+                }.bind(this));
+
+            }
+
         }
     }
 
 
     //Update Instruction with Ajax
-    DbDeleteInstruction() {
+    async DbDeleteInstruction() {
 
         if (confirm('Are you delete Instruction?')) {
 
@@ -1771,6 +1805,52 @@ export class TDArticle {
 
             let token = (<HTMLInputElement>document.getElementsByName("__RequestVerificationToken").item(0)).value;
 
+
+
+
+
+            const data = await this.datacontainers.dbUpdDeleteProductInstructionApi(updInstrruction, token);
+
+
+            if (data[0].updateresult == "Success") {
+
+                //データ更新
+                this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
+
+
+                    let id;
+                    let checked = false;
+                    this.datacontainers.instruction_gp.forEach(function (this: TDArticle, element: Instruction) {
+                        id = element.id_instruct;
+                        console.log(checked);
+                        if (typeof id === "undefined") {
+
+                        } else {
+                            if (checked) {
+
+                            } else {
+                                this.selected_instruction = id;
+                                checked = true;
+                            }
+                        }
+
+                    }.bind(this));
+
+
+
+                    this.ComplexResetEnvironment();
+                    this.ComplexTransitionInstruction(this.selected_instruction);
+
+                    if (this.datacontainers.annotation.some((item: Annotation) => item.id_annotation === this.selected_annotation)) {
+                        this.DomUpdateAnnotationEditor(this.selected_annotation);
+                    }
+
+
+                    alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
+                }.bind(this));
+
+            }
+            /*
             //指定urlからデータを取得
             //fetch内の各引数は以下の通り。
             //第1引数は【アクションメソッドのPath】、
@@ -1797,20 +1877,6 @@ export class TDArticle {
                         //データ更新
                         this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : TDArticle, value : any) {
 
-                            /*
-                            this.instruction_gp.forEach(function (element) {
-                                let id;
-                                id = element.id_instruct;
-
-                                if (typeof id === "undefined") {
-
-                                } else {
-                                    this.selected_instruction = id;
-
-                                }
-
-                            }.bind(this));
-                            */
 
                             let id;
                             let checked = false;
@@ -1852,6 +1918,7 @@ export class TDArticle {
                     }
 
                 });
+            */
         }
     }
 
