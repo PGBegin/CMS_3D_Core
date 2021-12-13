@@ -325,44 +325,6 @@ export class TDArticle {
     width: number;
     height: number;
 
-    // ↓ to DataContainers ---------------------------------------------------------------------------------------
-    /*
-    //API URL Base
-    str_url_partapi_base: string;
-    str_url_base_prodobjectapi_articlemode: string;
-    str_url_base_prodobjectapi_assymode: string;
-
-
-    //Ajax DB Update Apis
-    str_url_base_edit_product_instruction: string;
-    str_url_base_delete_product_instruction: string;
-
-    str_url_base_edit_product_view: string;
-    str_url_base_delete_product_view: string;
-
-    str_url_base_edit_product_annotation: string;
-    str_url_base_delete_product_annotation: string;
-
-    str_url_base_edit_product_annotation_display: string;
-    */
-
-    // ↑ to DataContainers ---------------------------------------------------------------------------------------
-
-
-
-    // ↓ to DataContainers ---------------------------------------------------------------------------------------
-    /*
-    //Model Objects
-    article!: Aarticle;
-    view_object!: ViewObject[];
-    instruction_gp: Instruction[];
-    instance_part: InstancePart[];
-    annotation: Annotation[];
-    annotation_display: AnnotationDisplay[][];
-
-    refelencematerial: Refelencematerial[];
-    */
-    // ↑ to DataContainers ---------------------------------------------------------------------------------------
 
     datacontainers!: DataContainers;
 
@@ -375,26 +337,10 @@ export class TDArticle {
     lightHelper!: THREE.DirectionalLightHelper;
 
 
-
-
-
-
     light!: THREE.DirectionalLight;
     ambient!: THREE.AmbientLight;
     renderer!: THREE.WebGLRenderer;
-    //renderer: any;
 
-
-
-
-
-    // ↓ to DataContainers ---------------------------------------------------------------------------------------
-    /*
-    id_article: number;
-    id_startinst: number;
-    id_assy: number;
-    */
-    // ↑ to DataContainers ---------------------------------------------------------------------------------------
 
     camera_main_startpos: THREE.Vector3;
     controls_target_startpos: THREE.Vector3;
@@ -448,64 +394,8 @@ export class TDArticle {
 
         this.datacontainers = new DataContainers();
 
-    // ↓ to DataContainers ---------------------------------------------------------------------------------------
-
-    /*
-        //API URL Base
-        this.str_url_partapi_base = "/ContentsOperatorForArticleApis/GetPartObjectFile?";
-
-        this.str_url_base_prodobjectapi_articlemode = "/ContentsOperatorForArticleApis/GetArticleObjectWholeData?";
-
-        this.str_url_base_prodobjectapi_assymode = "/ContentsOperatorForArticleApis/GetAssemblyObjectListOnlyInstance?";
-
-
-        //Ajax DB Update Apis
-        this.str_url_base_edit_product_instruction = "/ContentsOperatorForArticleApis/EditProductInstructionApi";
-        this.str_url_base_delete_product_instruction = "/ContentsOperatorForArticleApis/DeleteProductInstructionApi";
-
-        this.str_url_base_edit_product_view = "/ContentsOperatorForArticleApis/EditProductViewApi";
-        this.str_url_base_delete_product_view = "/ContentsOperatorForArticleApis/DeleteProductViewApi";
-
-        this.str_url_base_edit_product_annotation = "/ContentsOperatorForArticleApis/EditProductAnnotationApi";
-        this.str_url_base_delete_product_annotation = "/ContentsOperatorForArticleApis/DeleteProductAnnotationApi";
-
-        this.str_url_base_edit_product_annotation_display = "/ContentsOperatorForArticleApis/EditProductAnnotationDisplayApi";
-
-
-
-        //Model Objects
-        //this.article;
-        this.view_object = [];
-        this.instruction_gp = [];
-        this.instance_part = [];
-        this.annotation = [];
-        this.annotation_display = [];
-        this.refelencematerial = [];
-        */
-    // ↑ to DataContainers ---------------------------------------------------------------------------------------
-
-
-
-        //this.camera_main;
-        //this.controls;
         this.scene = new THREE.Scene();
 
-        //this.gridHelper;
-        //this.axisHelper;
-        //this.lightHelper;
-
-        //this.light;
-        //this.ambient;
-        //this.renderer;
-
-
-    // ↓ to DataContainers ---------------------------------------------------------------------------------------
-        /*
-        this.id_article = 0;
-        this.id_startinst = 0;
-        this.id_assy = 0;
-        */
-    // ↑ to DataContainers ---------------------------------------------------------------------------------------
 
         this.camera_main_startpos = new THREE.Vector3(30, 30, 30);
         this.controls_target_startpos = new THREE.Vector3(0, 0, 0);
@@ -614,211 +504,7 @@ export class TDArticle {
 
     // ↓ to DataContainers ---------------------------------------------------------------------------------------
     // ↑ to DataContainers ---------------------------------------------------------------------------------------
-    // ↓ to DataContainers ---------------------------------------------------------------------------------------
-    /*
-    async ObjSetupAllObjectsWithoutInstanceModelFromDb() {
 
-
-        let str_url_api = this.str_url_base_prodobjectapi_articlemode + new URLSearchParams({ id_article: this.id_article.toString() }).toString();
-
-
-        //cors対策追加
-        //指定urlからデータを取得
-        return fetch(str_url_api, { mode: 'cors' })
-            .then(response => {
-
-                return response.json();
-
-            })
-            .then(data => { // 処理が成功した場合に取得されるJSONデータ
-                //console.log(data);
-                this.ObjSetupAllObjectsWithoutInstanceModelFromJson(data);
-
-                //return Promise.resolve();
-            });
-
-    }
-    */
-    // ↑ to DataContainers ---------------------------------------------------------------------------------------
-
-
-    // ↓ to DataContainers ---------------------------------------------------------------------------------------
-    /*
-    //Setup Json
-    ObjSetupAllObjectsWithoutInstanceModelFromJson(data : any) {
-
-        if (this.view_object) {
-            this.view_object.length = 0;
-
-        }
-        this.instruction_gp.length = 0;
-        this.instance_part.length = 0;
-        this.annotation.length = 0;
-        this.annotation_display.length = 0;
-        //let i: number;
-
-        for (let i in data) {
-
-            if (data[i].type == "article") {
-                // 処理が成功した場合に取得されるJSONデータ
-                this.article = new Aarticle(
-                    data[i].id_article,
-                    data[i].id_assy,
-                    data[i].title,
-                    data[i].short_description,
-                    data[i].long_description,
-                    data[i].meta_description,
-                    data[i].meta_category,
-                    data[i].status,
-                    data[i].directional_light_color,
-                    data[i].directional_light_intensity,
-                    data[i].directional_light_px,
-                    data[i].directional_light_py,
-                    data[i].directional_light_pz,
-                    data[i].ambient_light_color,
-                    data[i].ambient_light_intensity,
-                    data[i].gammaOutput,
-                    data[i].id_attachment_for_eye_catch);
-            }
-
-            if (data[i].type == "view") {
-                this.view_object.push(new ViewObject(
-
-                    data[i].id_article,
-                    data[i].id_view,
-                    data[i].title,
-
-                    data[i].cam_pos_x,
-                    data[i].cam_pos_y,
-                    data[i].cam_pos_z,
-
-                    data[i].cam_lookat_x,
-                    data[i].cam_lookat_y,
-                    data[i].cam_lookat_z,
-
-                    data[i].cam_quat_x,
-                    data[i].cam_quat_y,
-                    data[i].cam_quat_z,
-                    data[i].cam_quat_w,
-
-                    data[i].obt_target_x,
-                    data[i].obt_target_y,
-                    data[i].obt_target_z
-                ));
-            }
-
-
-            if (data[i].type == "instruction") {
-
-                this.instruction_gp.push(new Instruction(
-                    data[i].id_article,
-                    data[i].id_instruct,
-                    data[i].id_view,
-                    data[i].title,
-                    data[i].short_description,
-                    data[i].display_order,
-                    data[i].memo
-                ));
-
-            }
-
-
-            if (data[i].type == "instance_part") {
-
-                this.instance_part[data[i].id_inst] = new InstancePart(
-                    data[i].id_assy,
-                    data[i].id_inst,
-                    data[i].id_part, null);
-            }
-
-
-            if (data[i].type == "annotation") {
-                this.annotation.push(new Annotation(
-
-                    data[i].id_article,
-                    data[i].id_annotation,
-                    data[i].title,
-
-                    data[i].description1,
-                    data[i].description2,
-
-                    data[i].status,
-
-                    data[i].pos_x,
-                    data[i].pos_y,
-                    data[i].pos_z,
-                    'id_annotation_' + data[i].id_annotation
-                ));
-            }
-
-
-            if (data[i].type == "refelencematerial") {
-                this.refelencematerial.push(new Refelencematerial(
-                    data[i].id_assy,
-                    data[i].id_inst,
-                    data[i].id_part,
-                    data[i].model_name,
-                    data[i].file_name,
-                    data[i].file_length,
-                    data[i].itemlink,
-                    data[i].author,
-                    data[i].license
-                ));
-            }
-
-        }
-
-
-        this.instruction_gp.forEach(function (this: TDArticle, obj_instruction: Instruction, index: number) {
-
-            //console.log("celled : " + i.toString() + "|" + index.toString());
-            this.annotation_display[index] = [];
-            this.annotation.forEach(function (this: TDArticle, obj_annotation: Annotation, index2: number) {
-
-
-                this.annotation_display[index].push(new AnnotationDisplay(
-                    this.id_article,
-                    obj_instruction.id_instruct,
-                    obj_annotation.id_annotation,
-                    false
-                ));
-            }.bind(this));
-        }.bind(this));
-
-        console.log(this.annotation_display);
-
-        let index_1st: number;
-        let index_2nd: number;
-
-        for (let i in data) {
-
-            if (data[i].type == "annotation_display") {
-
-                index_1st = this.instruction_gp.findIndex(x => x.id_instruct == data[i].id_instruct);
-                index_2nd = this.annotation_display[index_1st].findIndex(x => x.id_annotation == data[i].id_annotation);
-
-                this.annotation_display[index_1st][index_2nd].is_display = data[i].is_display;
-            }
-
-        }
-
-
-
-        console.log('length : ' + this.instruction_gp.length.toString());
-
-        if (this.instruction_gp.length > 0) {
-            const ar1_map = (this.instruction_gp.filter((x: Instruction) => typeof x.display_order === 'number')).map((x: Instruction) => x.display_order);
-
-
-            this.id_startinst = this.instruction_gp.filter((x: Instruction) => x.display_order == Math.min.apply(null, ar1_map))[0].id_instruct;
-
-        }
-
-        //console.log(this.id_startinst);
-
-    }
-    */
-    // ↑ to DataContainers ---------------------------------------------------------------------------------------
     //ReSetup
     ComplexResetEnvironment() {
 
@@ -876,7 +562,6 @@ export class TDArticle {
 
                 //JSONのデータを各オブジェクトに詰め替える
                 this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromJson(data);
-//                this.ObjSetupAllObjectsWithoutInstanceModelFromJson(data);
 
 
                 //Loading Article
@@ -978,40 +663,6 @@ export class TDArticle {
         }
     }
 
-
-
-    // ↓ to DataContainers ---------------------------------------------------------------------------------------
-    /*
-    //Loading Models
-    ObjSetupInstancePartModelFromDb() {
-
-        const glfLoader = new GLTFLoader();
-
-        let scene = this.scene;
-
-        this.instance_part.forEach(function (this: TDArticle, obj_instance_part: InstancePart) {
-            let str_url_partapi = this.str_url_partapi_base + new URLSearchParams({ id_part: obj_instance_part.id_part.toString() }).toString();
-
-            glfLoader.load(str_url_partapi, function (gltf) {
-
-
-
-                document.getElementById('div_progressbar_modeldl')!.setAttribute('hidden', '');
-                scene.add(gltf.scene);
-
-            }, function (xhr) {
-
-                document.getElementById('progressbar_modeldl')!.setAttribute('style', 'width: ' + Math.floor(xhr.loaded / xhr.total * 100) + '%');
-
-            }, function (error) {
-
-                console.error(error);
-
-            });
-        }.bind(this));
-    }
-    */
-    // ↑ to DataContainers ---------------------------------------------------------------------------------------
 
 
     //Loading Annotations
