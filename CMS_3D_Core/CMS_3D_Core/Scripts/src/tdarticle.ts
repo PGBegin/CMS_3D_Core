@@ -35,13 +35,13 @@ export class DataContainers {
 
     //Model Objects
     article!: Aarticle;
-    view_object!: ViewObject[];
-    instruction_gp: Instruction[];
-    instance_part: InstancePart[];
-    annotation: Annotation[];
+    view_object: ViewObject[]=[];
+    instruction_gp: Instruction[]=[];
+    instance_part: InstancePart[]=[];
+    annotation: Annotation[]=[];
     annotation_display: AnnotationDisplay[][];
 
-    refelencematerial: Refelencematerial[];
+    refelencematerial: Refelencematerial[]=[];
 
 
     id_article: number;
@@ -75,12 +75,12 @@ export class DataContainers {
 
         //Model Objects
         //this.article;
-        this.view_object = [];
-        this.instruction_gp = [];
-        this.instance_part = [];
-        this.annotation = [];
+        //this.view_object = [];
+        //this.instruction_gp = [];
+        //this.instance_part = [];
+        //this.annotation = [];
         this.annotation_display = [];
-        this.refelencematerial = [];
+        //this.refelencematerial = [];
 
 
         this.id_article = 0;
@@ -326,7 +326,7 @@ export class DataContainers {
 
 
     //Update Instruction with Ajax
-    async dbUpdEditProductInstructionApi(updInstrruction: any, token: string) {
+    async dbUpdEditProductInstructionApi(updObject: any, token: string) {
 
 
         //データ更新
@@ -345,7 +345,7 @@ export class DataContainers {
                 'Content-Type': 'application/json',
                 "RequestVerificationToken": token
             },
-            body: JSON.stringify(updInstrruction)  // リクエスト本文にJSON形式の文字列を設定c
+            body: JSON.stringify(updObject)  // リクエスト本文にJSON形式の文字列を設定c
         });
         const data = await response.json();
         return data;
@@ -353,32 +353,110 @@ export class DataContainers {
     }
 
     //Delete Instruction with Ajax
-    async dbUpdDeleteProductInstructionApi(updInstrruction: any, token: string) {
+    async dbUpdDeleteProductInstructionApi(updObject: any, token: string) {
 
 
-        //データ更新
-        //this.data_reflesh_without_model();
-
-        //指定urlからデータを取得
-        //fetch内の各引数は以下の通り。
-        //第1引数は【アクションメソッドのPath】、
-        //第2引数は【通信方法 例)Get または　Post】、
-        //第3引数は【データの型】
-        //サンプル例：fetch(Path,{method:"POST",body:formData})
-
-        const response = await fetch(this.str_url_base_delete_product_instruction, { //【重要ポイント】「await」句は削除すること
+        const response = await fetch(this.str_url_base_delete_product_instruction, { 
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
                 "RequestVerificationToken": token
             },
-            body: JSON.stringify(updInstrruction)  // リクエスト本文にJSON形式の文字列を設定c
+            body: JSON.stringify(updObject)
         });
         const data = await response.json();
         return data;
 
     }
 
+
+    //dbUpdEditProductViewApi
+    async dbUpdEditProductViewApi(updObject: any, token: string) {
+
+
+        const response = await fetch(this.str_url_base_edit_product_view, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "RequestVerificationToken": token
+            },
+            body: JSON.stringify(updObject)  // リクエスト本文にJSON形式の文字列を設定c
+        });
+        const data = await response.json();
+        return data;
+
+    }
+
+    //dbUpdDeleteProductViewApi
+    async dbUpdDeleteProductViewApi(updObject: any, token: string) {
+
+
+        const response = await fetch(this.str_url_base_delete_product_view, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "RequestVerificationToken": token
+            },
+            body: JSON.stringify(updObject)  // リクエスト本文にJSON形式の文字列を設定c
+        });
+        const data = await response.json();
+        return data;
+
+    }
+
+
+
+
+    //dbUpdEditProductAnnotationApi
+    async dbUpdEditProductAnnotationApi(updObject: any, token: string) {
+
+
+        const response = await fetch(this.str_url_base_edit_product_annotation, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "RequestVerificationToken": token
+            },
+            body: JSON.stringify(updObject)  // リクエスト本文にJSON形式の文字列を設定c
+        });
+        const data = await response.json();
+        return data;
+
+    }
+
+    //dbUpdDeleteProductAnnotationApi
+    async dbUpdDeleteProductAnnotationApi(updObject: any, token: string) {
+
+
+        const response = await fetch(this.str_url_base_delete_product_annotation, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "RequestVerificationToken": token
+            },
+            body: JSON.stringify(updObject)  // リクエスト本文にJSON形式の文字列を設定c
+        });
+        const data = await response.json();
+        return data;
+
+    }
+
+    //dbUpdEditProductAnnotationDisplayApi
+    async dbUpdEditProductAnnotationDisplayApi(updObject: any, token: string) {
+
+
+        const response = await fetch(this.str_url_base_edit_product_annotation_display, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "RequestVerificationToken": token
+            },
+            body: JSON.stringify(updObject)  // リクエスト本文にJSON形式の文字列を設定c
+        });
+        const data = await response.json();
+        return data;
+
+    }
 }
 
 
@@ -1806,9 +1884,6 @@ export class TDArticle {
             let token = (<HTMLInputElement>document.getElementsByName("__RequestVerificationToken").item(0)).value;
 
 
-
-
-
             const data = await this.datacontainers.dbUpdDeleteProductInstructionApi(updInstrruction, token);
 
 
@@ -1855,7 +1930,7 @@ export class TDArticle {
 
 
     //Update View with Ajax
-    DbUpdateView() {
+    async DbUpdateView() {
 
 
         //console.log("id_instruct_out:" + this.selected_instruction);
@@ -1885,45 +1960,30 @@ export class TDArticle {
             };
 
             let token = (<HTMLInputElement>document.getElementsByName("__RequestVerificationToken").item(0)).value;
-            //データ更新
-            const response = fetch(this.datacontainers.str_url_base_edit_product_view, {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    "RequestVerificationToken": token
-                },
-                body: JSON.stringify(updObject)  // リクエスト本文にJSON形式の文字列を設定c
-            })
-                .then(response => {
-
-                    return response.json();
-
-                }).then(data => { // 処理が成功した場合に取得されるJSONデータ
-                    console.log(data[0].updateresult);
-
-                    if (data[0].updateresult == "Success") {
-                        //this.selected_annotation = data[0].id_annotation;
-
-                        //データ更新
-                        this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : TDArticle, value:any) {
-                            this.ComplexResetEnvironment();
-                            this.ComplexTransitionInstruction(this.selected_instruction);
-
-                            if (this.datacontainers.annotation.some((item:Annotation) => item.id_annotation === this.selected_annotation)) {
-                                this.DomUpdateAnnotationEditor(this.selected_annotation);
-                            }
 
 
-                            alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
-                        }.bind(this));
+            const data = await this.datacontainers.dbUpdEditProductViewApi(updObject, token);
+
+            if (data[0].updateresult == "Success") {
+                //データ更新
+                this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
+                    this.ComplexResetEnvironment();
+                    this.ComplexTransitionInstruction(this.selected_instruction);
+
+                    if (this.datacontainers.annotation.some((item: Annotation) => item.id_annotation === this.selected_annotation)) {
+                        this.DomUpdateAnnotationEditor(this.selected_annotation);
                     }
-                });
+
+
+                    alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
+                }.bind(this));
+            }
         }
     }
 
 
     //Delete View with Ajax
-    DbDeleteView(id_view: number) {
+    async DbDeleteView(id_view: number) {
 
 
         //console.log("id_instruct_out:" + this.selected_instruction);
@@ -1940,45 +2000,31 @@ export class TDArticle {
 
             let token = (<HTMLInputElement>document.getElementsByName("__RequestVerificationToken").item(0)).value;
 
-            //データ更新
-            const response = fetch(this.datacontainers.str_url_base_delete_product_view, {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    "RequestVerificationToken": token
-                },
-                body: JSON.stringify(updObject)  // リクエスト本文にJSON形式の文字列を設定c
-            })
-                .then(response => {
 
-                    return response.json();
+            const data = await this.datacontainers.dbUpdDeleteProductViewApi(updObject, token);
 
-                }).then(data => { // 処理が成功した場合に取得されるJSONデータ
-                    console.log(data[0].updateresult);
+            if (data[0].updateresult == "Success") {
+                //this.selected_annotation = data[0].id_annotation;
 
-                    if (data[0].updateresult == "Success") {
-                        //this.selected_annotation = data[0].id_annotation;
+                //データ更新
+                this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
+                    this.ComplexResetEnvironment();
+                    this.ComplexTransitionInstruction(this.selected_instruction);
 
-                        //データ更新
-                        this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : TDArticle, value:any) {
-                            this.ComplexResetEnvironment();
-                            this.ComplexTransitionInstruction(this.selected_instruction);
-
-                            if (this.datacontainers.annotation.some((item:Annotation) => item.id_annotation === this.selected_annotation)) {
-                                this.DomUpdateAnnotationEditor(this.selected_annotation);
-                            }
-
-
-                            alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
-                        }.bind(this));
+                    if (this.datacontainers.annotation.some((item: Annotation) => item.id_annotation === this.selected_annotation)) {
+                        this.DomUpdateAnnotationEditor(this.selected_annotation);
                     }
-                });
+
+
+                    alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
+                }.bind(this));
+            }
         }
     }
 
 
     //Update Annotation with Ajax
-    DbUpdateAnnotation() {
+    async DbUpdateAnnotation() {
 
 
         console.log("id_instruct_out:" + this.selected_instruction);
@@ -2001,44 +2047,32 @@ export class TDArticle {
             };
 
             let token = (<HTMLInputElement>document.getElementsByName("__RequestVerificationToken").item(0)).value;
-            //データ更新
-            const response = fetch(this.datacontainers.str_url_base_edit_product_annotation, {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    "RequestVerificationToken": token
-                },
-                body: JSON.stringify(updObject)  // リクエスト本文にJSON形式の文字列を設定c
-            })
-                .then(response => {
 
-                    return response.json();
+            const data = await this.datacontainers.dbUpdEditProductAnnotationApi(updObject, token);
 
-                }).then(data => { // 処理が成功した場合に取得されるJSONデータ
+            if (data[0].updateresult == "Success") {
+                this.selected_annotation = data[0].id_annotation;
 
-                    if (data[0].updateresult == "Success") {
-                        this.selected_annotation = data[0].id_annotation;
+                //データ更新
+                this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
+                    this.ComplexResetEnvironment();
+                    this.ComplexTransitionInstruction(this.selected_instruction);
 
-                        //データ更新
-                        this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : TDArticle, value:any ) {
-                            this.ComplexResetEnvironment();
-                            this.ComplexTransitionInstruction(this.selected_instruction);
-
-                            if (this.datacontainers.annotation.some((item:Annotation) => item.id_annotation === this.selected_annotation)) {
-                                this.DomUpdateAnnotationEditor(this.selected_annotation);
-                            }
-
-
-                            alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
-                        }.bind(this));
+                    if (this.datacontainers.annotation.some((item: Annotation) => item.id_annotation === this.selected_annotation)) {
+                        this.DomUpdateAnnotationEditor(this.selected_annotation);
                     }
-                });
+
+
+                    alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
+                }.bind(this));
+            }
+
         }
     }
 
 
     //Delete Annotation with Ajax
-    DbDeleteAnnotation() {
+    async DbDeleteAnnotation() {
 
         if (confirm('Are you delete Annotation?')) {
 
@@ -2048,72 +2082,51 @@ export class TDArticle {
             };
 
             let token = (<HTMLInputElement>document.getElementsByName("__RequestVerificationToken").item(0)).value;
-            console.log(token);
-            //指定urlからデータを取得
-            //fetch内の各引数は以下の通り。
-            //第1引数は【アクションメソッドのPath】、
-            //第2引数は【通信方法 例)Get または　Post】、
-            //第3引数は【データの型】
-            //サンプル例：fetch(Path,{method:"POST",body:formData})
-            const response = fetch(this.datacontainers.str_url_base_delete_product_annotation, { //【重要ポイント】「await」句は削除すること
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    "RequestVerificationToken": token
-                },
-                body: JSON.stringify(updObject)  // リクエスト本文にJSON形式の文字列を設定
-            })
-                .then(response => {
 
-                    return response.json();
+            const data = await this.datacontainers.dbUpdDeleteProductAnnotationApi(updObject, token);
 
-                }).then(data => { // 処理が成功した場合に取得されるJSONデータ
+            if (data[0].updateresult == "Success") {
 
+                //データ更新
+                this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
 
-                    if (data[0].updateresult == "Success") {
+                    this.datacontainers.annotation.forEach(function (this: TDArticle, element: Annotation) {
+                        let id;
+                        let checked = false;
+                        id = element.id_annotation;
 
-                        //データ更新
-                        this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : TDArticle, value:any) {
+                        if (typeof id === "undefined") {
 
-                            this.datacontainers.annotation.forEach(function (this : TDArticle, element:Annotation) {
-                                let id;
-                                let checked = false;
-                                id = element.id_annotation;
+                        } else {
+                            if (checked) {
 
-                                if (typeof id === "undefined") {
-
-                                } else {
-                                    if (checked) {
-
-                                    } else {
-                                        this.selected_annotation = id;
-                                        checked = true;
-                                    }
-                                }
-
-                            }.bind(this));
-
-
-                            this.ComplexResetEnvironment();
-                            this.ComplexTransitionInstruction(this.selected_instruction);
-
-                            if (this.datacontainers.annotation.some((item: Annotation) => item.id_annotation === this.selected_annotation)) {
-                                this.DomUpdateAnnotationEditor(this.selected_annotation);
+                            } else {
+                                this.selected_annotation = id;
+                                checked = true;
                             }
+                        }
+
+                    }.bind(this));
 
 
-                            alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
-                        }.bind(this));
+                    this.ComplexResetEnvironment();
+                    this.ComplexTransitionInstruction(this.selected_instruction);
 
+                    if (this.datacontainers.annotation.some((item: Annotation) => item.id_annotation === this.selected_annotation)) {
+                        this.DomUpdateAnnotationEditor(this.selected_annotation);
                     }
 
-                });
+
+                    alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
+                }.bind(this));
+
+            }
         }
     }
 
 
     //Update AnnotationDisplay with Ajax
-    DbUpdateAnnotationDisplay() {
+    async DbUpdateAnnotationDisplay() {
 
 
 
@@ -2136,37 +2149,25 @@ export class TDArticle {
 
 
             let token = (<HTMLInputElement>document.getElementsByName("__RequestVerificationToken").item(0)).value;
-            //データ更新
-            const response = fetch(this.datacontainers.str_url_base_edit_product_annotation_display, {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    "RequestVerificationToken": token
-                },
-                body: JSON.stringify(updObject)  // リクエスト本文にJSON形式の文字列を設定
-            })
-                .then(response => {
 
-                    return response.json();
 
-                }).then(data => { // 処理が成功した場合に取得されるJSONデータ
+            const data = await this.datacontainers.dbUpdEditProductAnnotationDisplayApi(updObject, token);
 
-                    if (data[0].updateresult == "Success") {
-                        this.selected_annotation = data[0].id_annotation;
+            if (data[0].updateresult == "Success") {
+                this.selected_annotation = data[0].id_annotation;
 
-                        //データ更新
-                        this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : TDArticle, value:any) {
-                            this.ComplexResetEnvironment();
-                            this.ComplexTransitionInstruction(this.selected_instruction);
+                //データ更新
+                this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
+                    this.ComplexResetEnvironment();
+                    this.ComplexTransitionInstruction(this.selected_instruction);
 
-                            if (this.datacontainers.annotation.some((item:Annotation) => item.id_annotation === this.selected_annotation)) {
-                                this.DomUpdateAnnotationEditor(this.selected_annotation);
-                            }
-
-                            alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
-                        }.bind(this));
+                    if (this.datacontainers.annotation.some((item: Annotation) => item.id_annotation === this.selected_annotation)) {
+                        this.DomUpdateAnnotationEditor(this.selected_annotation);
                     }
-                });
+
+                    alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
+                }.bind(this));
+            }
         }
     }
 
