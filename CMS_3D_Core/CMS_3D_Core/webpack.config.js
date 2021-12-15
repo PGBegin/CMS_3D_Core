@@ -5,9 +5,9 @@ module.exports = {
     entry: {
         layout: './Scripts/entry/index_layout.js',
         tdpart: './Scripts/entry/index_tdpart.js',
-        tdarticle: './Scripts/entry/index_tdarticle.js',
+        tdarticle: './Scripts/entry/index_tdarticle.ts',
         testthree: './Scripts/entry/index_testthree.js',
-        testthree2: './Scripts/entry/index_testthree2.js',
+        testthree2: './Scripts/entry/index_testthree2.ts',
     },
     output: {
         path: __dirname + '/wwwroot/js',

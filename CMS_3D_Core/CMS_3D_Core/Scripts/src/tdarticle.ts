@@ -9,17 +9,13 @@ import { Aarticle, Instruction, ViewObject, InstancePart, Annotation, Annotation
 
 
 
+export class DataContainers {
 
 
-//---------------------------------------------------------------------------
-export class TDArticle {
-
-    //Screen Size
-    width: number;
-    height: number;
-
-    //API URL Base
+    //API URL Base    
     str_url_partapi_base: string;
+
+    url_api_dataget: string ="";
     str_url_base_prodobjectapi_articlemode: string;
     str_url_base_prodobjectapi_assymode: string;
 
@@ -39,13 +35,440 @@ export class TDArticle {
 
     //Model Objects
     article!: Aarticle;
-    view_object!: ViewObject[];
-    instruction_gp: Instruction[];
-    instance_part: InstancePart[];
-    annotation: Annotation[];
+    view_object: ViewObject[]=[];
+    instruction_gp: Instruction[]=[];
+    instance_part: InstancePart[]=[];
+    annotation: Annotation[]=[];
     annotation_display: AnnotationDisplay[][];
 
-    refelencematerial: Refelencematerial[];
+    refelencematerial: Refelencematerial[]=[];
+
+
+    id_article: number;
+    id_startinst: number;
+    id_assy: number;
+    is_mode_assy: boolean;
+
+    constructor() {
+
+        //API URL Base
+        this.str_url_partapi_base = "/ContentsOperatorForArticleApis/GetPartObjectFile?";
+
+        this.str_url_base_prodobjectapi_articlemode = "/ContentsOperatorForArticleApis/GetArticleObjectWholeData?";
+
+        this.str_url_base_prodobjectapi_assymode = "/ContentsOperatorForArticleApis/GetAssemblyObjectListOnlyInstance?";
+
+
+        //Ajax DB Update Apis
+        this.str_url_base_edit_product_instruction = "/ContentsOperatorForArticleApis/EditProductInstructionApi";
+        this.str_url_base_delete_product_instruction = "/ContentsOperatorForArticleApis/DeleteProductInstructionApi";
+
+        this.str_url_base_edit_product_view = "/ContentsOperatorForArticleApis/EditProductViewApi";
+        this.str_url_base_delete_product_view = "/ContentsOperatorForArticleApis/DeleteProductViewApi";
+
+        this.str_url_base_edit_product_annotation = "/ContentsOperatorForArticleApis/EditProductAnnotationApi";
+        this.str_url_base_delete_product_annotation = "/ContentsOperatorForArticleApis/DeleteProductAnnotationApi";
+
+        this.str_url_base_edit_product_annotation_display = "/ContentsOperatorForArticleApis/EditProductAnnotationDisplayApi";
+
+
+
+        //Model Objects
+        //this.article;
+        //this.view_object = [];
+        //this.instruction_gp = [];
+        //this.instance_part = [];
+        //this.annotation = [];
+        this.annotation_display = [];
+        //this.refelencematerial = [];
+
+
+        this.id_article = 0;
+        this.id_startinst = 0;
+        this.id_assy = 0;
+        this.is_mode_assy = false;
+    }
+
+    async ObjSetupAllObjectsWithoutInstanceModelFromDb() {
+
+
+        let str_url_api = this.str_url_base_prodobjectapi_articlemode + new URLSearchParams({ id_article: this.id_article.toString() }).toString();
+
+        if (this.is_mode_assy) {
+            str_url_api = this.str_url_base_prodobjectapi_assymode + new URLSearchParams({ id_assy: this.id_assy.toString() }).toString();
+        }
+
+
+
+
+        //cors対策追加
+        //指定urlからデータを取得
+        return fetch(str_url_api, { mode: 'cors' })
+            .then(response => {
+
+                return response.json();
+
+            })
+            .then(data => { // 処理が成功した場合に取得されるJSONデータ
+                //console.log(data);
+                this.ObjSetupAllObjectsWithoutInstanceModelFromJson(data);
+
+                //return Promise.resolve();
+            });
+
+    }
+
+
+    //Setup Json
+    ObjSetupAllObjectsWithoutInstanceModelFromJson(data: any) {
+
+        if (this.view_object) {
+            this.view_object.length = 0;
+
+        }
+        this.instruction_gp.length = 0;
+        this.instance_part.length = 0;
+        this.annotation.length = 0;
+        this.annotation_display.length = 0;
+        //let i: number;
+
+        for (let i in data) {
+
+            if (data[i].type == "article") {
+                // 処理が成功した場合に取得されるJSONデータ
+                this.article = new Aarticle(
+                    data[i].id_article,
+                    data[i].id_assy,
+                    data[i].title,
+                    data[i].short_description,
+                    data[i].long_description,
+                    data[i].meta_description,
+                    data[i].meta_category,
+                    data[i].status,
+                    data[i].directional_light_color,
+                    data[i].directional_light_intensity,
+                    data[i].directional_light_px,
+                    data[i].directional_light_py,
+                    data[i].directional_light_pz,
+                    data[i].ambient_light_color,
+                    data[i].ambient_light_intensity,
+                    data[i].gammaOutput,
+                    data[i].id_attachment_for_eye_catch);
+            }
+
+            if (data[i].type == "view") {
+                this.view_object.push(new ViewObject(
+
+                    data[i].id_article,
+                    data[i].id_view,
+                    data[i].title,
+
+                    data[i].cam_pos_x,
+                    data[i].cam_pos_y,
+                    data[i].cam_pos_z,
+
+                    data[i].cam_lookat_x,
+                    data[i].cam_lookat_y,
+                    data[i].cam_lookat_z,
+
+                    data[i].cam_quat_x,
+                    data[i].cam_quat_y,
+                    data[i].cam_quat_z,
+                    data[i].cam_quat_w,
+
+                    data[i].obt_target_x,
+                    data[i].obt_target_y,
+                    data[i].obt_target_z
+                ));
+            }
+
+
+            if (data[i].type == "instruction") {
+
+                this.instruction_gp.push(new Instruction(
+                    data[i].id_article,
+                    data[i].id_instruct,
+                    data[i].id_view,
+                    data[i].title,
+                    data[i].short_description,
+                    data[i].display_order,
+                    data[i].memo
+                ));
+
+            }
+
+
+            if (data[i].type == "instance_part") {
+
+                this.instance_part[data[i].id_inst] = new InstancePart(
+                    data[i].id_assy,
+                    data[i].id_inst,
+                    data[i].id_part, null);
+            }
+
+
+            if (data[i].type == "annotation") {
+                this.annotation.push(new Annotation(
+
+                    data[i].id_article,
+                    data[i].id_annotation,
+                    data[i].title,
+
+                    data[i].description1,
+                    data[i].description2,
+
+                    data[i].status,
+
+                    data[i].pos_x,
+                    data[i].pos_y,
+                    data[i].pos_z,
+                    'id_annotation_' + data[i].id_annotation
+                ));
+            }
+
+
+            if (data[i].type == "refelencematerial") {
+                this.refelencematerial.push(new Refelencematerial(
+                    data[i].id_assy,
+                    data[i].id_inst,
+                    data[i].id_part,
+                    data[i].model_name,
+                    data[i].file_name,
+                    data[i].file_length,
+                    data[i].itemlink,
+                    data[i].author,
+                    data[i].license
+                ));
+            }
+
+        }
+
+
+        this.instruction_gp.forEach(function (this: DataContainers, obj_instruction: Instruction, index: number) {
+
+            //console.log("celled : " + i.toString() + "|" + index.toString());
+            this.annotation_display[index] = [];
+            this.annotation.forEach(function (this: DataContainers, obj_annotation: Annotation, index2: number) {
+
+
+                this.annotation_display[index].push(new AnnotationDisplay(
+                    this.id_article,
+                    obj_instruction.id_instruct,
+                    obj_annotation.id_annotation,
+                    false
+                ));
+            }.bind(this));
+        }.bind(this));
+
+        console.log(this.annotation_display);
+
+        let index_1st: number;
+        let index_2nd: number;
+
+        for (let i in data) {
+
+            if (data[i].type == "annotation_display") {
+
+                index_1st = this.instruction_gp.findIndex(x => x.id_instruct == data[i].id_instruct);
+                index_2nd = this.annotation_display[index_1st].findIndex(x => x.id_annotation == data[i].id_annotation);
+
+                this.annotation_display[index_1st][index_2nd].is_display = data[i].is_display;
+            }
+
+        }
+
+
+
+        console.log('length : ' + this.instruction_gp.length.toString());
+
+        if (this.instruction_gp.length > 0) {
+            const ar1_map = (this.instruction_gp.filter((x: Instruction) => typeof x.display_order === 'number')).map((x: Instruction) => x.display_order);
+
+
+            this.id_startinst = this.instruction_gp.filter((x: Instruction) => x.display_order == Math.min.apply(null, ar1_map))[0].id_instruct;
+
+        }
+
+        //console.log(this.id_startinst);
+
+    }
+
+
+    //Loading Models
+    ObjSetupInstancePartModelFromDb(scene: THREE.Scene) {
+
+        const glfLoader = new GLTFLoader();
+
+        //let scene = this.scene;
+
+        this.instance_part.forEach(function (this: DataContainers, obj_instance_part: InstancePart) {
+            let str_url_partapi = this.str_url_partapi_base + new URLSearchParams({ id_part: obj_instance_part.id_part.toString() }).toString();
+
+            glfLoader.load(str_url_partapi, function (gltf) {
+
+
+
+                document.getElementById('div_progressbar_modeldl')!.setAttribute('hidden', '');
+                scene.add(gltf.scene);
+
+            }, function (xhr) {
+
+                document.getElementById('progressbar_modeldl')!.setAttribute('style', 'width: ' + Math.floor(xhr.loaded / xhr.total * 100) + '%');
+
+            }, function (error) {
+
+                console.error(error);
+
+            });
+        }.bind(this));
+    }
+
+
+
+    //Update Instruction with Ajax
+    async dbUpdEditProductInstructionApi(updObject: any, token: string) {
+
+
+        //データ更新
+        //this.data_reflesh_without_model();
+
+        //指定urlからデータを取得
+        //fetch内の各引数は以下の通り。
+        //第1引数は【アクションメソッドのPath】、
+        //第2引数は【通信方法 例)Get または　Post】、
+        //第3引数は【データの型】
+        //サンプル例：fetch(Path,{method:"POST",body:formData})
+
+        const response = await fetch(this.str_url_base_edit_product_instruction, { //【重要ポイント】「await」句は削除すること
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "RequestVerificationToken": token
+            },
+            body: JSON.stringify(updObject)  // リクエスト本文にJSON形式の文字列を設定c
+        });
+        const data = await response.json();
+        return data;
+
+    }
+
+    //Delete Instruction with Ajax
+    async dbUpdDeleteProductInstructionApi(updObject: any, token: string) {
+
+
+        const response = await fetch(this.str_url_base_delete_product_instruction, { 
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "RequestVerificationToken": token
+            },
+            body: JSON.stringify(updObject)
+        });
+        const data = await response.json();
+        return data;
+
+    }
+
+
+    //dbUpdEditProductViewApi
+    async dbUpdEditProductViewApi(updObject: any, token: string) {
+
+
+        const response = await fetch(this.str_url_base_edit_product_view, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "RequestVerificationToken": token
+            },
+            body: JSON.stringify(updObject)  // リクエスト本文にJSON形式の文字列を設定c
+        });
+        const data = await response.json();
+        return data;
+
+    }
+
+    //dbUpdDeleteProductViewApi
+    async dbUpdDeleteProductViewApi(updObject: any, token: string) {
+
+
+        const response = await fetch(this.str_url_base_delete_product_view, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "RequestVerificationToken": token
+            },
+            body: JSON.stringify(updObject)  // リクエスト本文にJSON形式の文字列を設定c
+        });
+        const data = await response.json();
+        return data;
+
+    }
+
+
+
+
+    //dbUpdEditProductAnnotationApi
+    async dbUpdEditProductAnnotationApi(updObject: any, token: string) {
+
+
+        const response = await fetch(this.str_url_base_edit_product_annotation, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "RequestVerificationToken": token
+            },
+            body: JSON.stringify(updObject)  // リクエスト本文にJSON形式の文字列を設定c
+        });
+        const data = await response.json();
+        return data;
+
+    }
+
+    //dbUpdDeleteProductAnnotationApi
+    async dbUpdDeleteProductAnnotationApi(updObject: any, token: string) {
+
+
+        const response = await fetch(this.str_url_base_delete_product_annotation, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "RequestVerificationToken": token
+            },
+            body: JSON.stringify(updObject)  // リクエスト本文にJSON形式の文字列を設定c
+        });
+        const data = await response.json();
+        return data;
+
+    }
+
+    //dbUpdEditProductAnnotationDisplayApi
+    async dbUpdEditProductAnnotationDisplayApi(updObject: any, token: string) {
+
+
+        const response = await fetch(this.str_url_base_edit_product_annotation_display, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "RequestVerificationToken": token
+            },
+            body: JSON.stringify(updObject)  // リクエスト本文にJSON形式の文字列を設定c
+        });
+        const data = await response.json();
+        return data;
+
+    }
+}
+
+
+//---------------------------------------------------------------------------
+export class TDArticle {
+
+    //Screen Size
+    width: number;
+    height: number;
+
+
+    datacontainers!: DataContainers;
 
     camera_main!: THREE.PerspectiveCamera;
     controls!: OrbitControls;
@@ -56,19 +479,10 @@ export class TDArticle {
     lightHelper!: THREE.DirectionalLightHelper;
 
 
-
-
-
-
     light!: THREE.DirectionalLight;
     ambient!: THREE.AmbientLight;
     renderer!: THREE.WebGLRenderer;
-    //renderer: any;
 
-
-    id_article: number;
-    id_startinst: number;
-    id_assy: number;
 
     camera_main_startpos: THREE.Vector3;
     controls_target_startpos: THREE.Vector3;
@@ -108,7 +522,6 @@ export class TDArticle {
     // Operation Mode
     is_edit_mode: boolean;
     is_display_helper: boolean;
-    is_mode_assy: boolean;
 
     // 1 : landscape, 0:Portrait
     orientation_mode: number;
@@ -118,54 +531,12 @@ export class TDArticle {
         //Screen Size
         this.width = 720;
         this.height = 405;
-        
-        //API URL Base
-        this.str_url_partapi_base = "/ContentsOperatorForArticleApis/GetPartObjectFile?";
-
-        this.str_url_base_prodobjectapi_articlemode = "/ContentsOperatorForArticleApis/GetArticleObjectWholeData?";
-
-        this.str_url_base_prodobjectapi_assymode = "/ContentsOperatorForArticleApis/GetAssemblyObjectListOnlyInstance?";
 
 
-        //Ajax DB Update Apis
-        this.str_url_base_edit_product_instruction = "/ContentsOperatorForArticleApis/EditProductInstructionApi";
-        this.str_url_base_delete_product_instruction = "/ContentsOperatorForArticleApis/DeleteProductInstructionApi";
+        this.datacontainers = new DataContainers();
 
-        this.str_url_base_edit_product_view = "/ContentsOperatorForArticleApis/EditProductViewApi";
-        this.str_url_base_delete_product_view = "/ContentsOperatorForArticleApis/DeleteProductViewApi";
-
-        this.str_url_base_edit_product_annotation = "/ContentsOperatorForArticleApis/EditProductAnnotationApi";
-        this.str_url_base_delete_product_annotation = "/ContentsOperatorForArticleApis/DeleteProductAnnotationApi";
-
-        this.str_url_base_edit_product_annotation_display = "/ContentsOperatorForArticleApis/EditProductAnnotationDisplayApi";
-        
-
-
-        //Model Objects
-        //this.article;
-        this.view_object = [];
-        this.instruction_gp = [];
-        this.instance_part = [];
-        this.annotation = [];
-        this.annotation_display = [];
-        this.refelencematerial = [];
-
-        //this.camera_main;
-        //this.controls;
         this.scene = new THREE.Scene();
 
-        //this.gridHelper;
-        //this.axisHelper;
-        //this.lightHelper;
-
-        //this.light;
-        //this.ambient;
-        //this.renderer;
-
-
-        this.id_article = 0;
-        this.id_startinst = 0;
-        this.id_assy = 0;
 
         this.camera_main_startpos = new THREE.Vector3(30, 30, 30);
         this.controls_target_startpos = new THREE.Vector3(0, 0, 0);
@@ -206,7 +577,6 @@ export class TDArticle {
         // Operation Mode
         this.is_edit_mode = true;
         this.is_display_helper = false;
-        this.is_mode_assy = false;
 
         // 1 : landscape, 0:Portrait 
         this.orientation_mode = 1;
@@ -269,198 +639,11 @@ export class TDArticle {
 
     }
 
-    //
-    async ObjSetupAllObjectsWithoutInstanceModelFromDb() {
-
-
-        let str_url_api = this.str_url_base_prodobjectapi_articlemode + new URLSearchParams({ id_article: this.id_article.toString() }).toString();
-
-
-        //cors対策追加
-        //指定urlからデータを取得
-        return fetch(str_url_api, { mode: 'cors' })
-            .then(response => {
-
-                return response.json();
-
-            })
-            .then(data => { // 処理が成功した場合に取得されるJSONデータ
-                //console.log(data);
-                this.ObjSetupAllObjectsWithoutInstanceModelFromJson(data);
-
-                //return Promise.resolve();
-            });
-
-    }
-
-    //Setup Json
-    ObjSetupAllObjectsWithoutInstanceModelFromJson(data : any) {
-
-        if (this.view_object) {
-            this.view_object.length = 0;
-
-        }
-        this.instruction_gp.length = 0;
-        this.instance_part.length = 0;
-        this.annotation.length = 0;
-        this.annotation_display.length = 0;
-        //let i: number;
-
-        for (let i in data) {
-
-            if (data[i].type == "article") {
-                // 処理が成功した場合に取得されるJSONデータ
-                this.article = new Aarticle(
-                    data[i].id_article,
-                    data[i].id_assy,
-                    data[i].title,
-                    data[i].short_description,
-                    data[i].long_description,
-                    data[i].meta_description,
-                    data[i].meta_category,
-                    data[i].status,
-                    data[i].directional_light_color,
-                    data[i].directional_light_intensity,
-                    data[i].directional_light_px,
-                    data[i].directional_light_py,
-                    data[i].directional_light_pz,
-                    data[i].ambient_light_color,
-                    data[i].ambient_light_intensity,
-                    data[i].gammaOutput,
-                    data[i].id_attachment_for_eye_catch);
-            }
-
-            if (data[i].type == "view") {
-                this.view_object[data[i].id_view] = new ViewObject(
-
-                    data[i].id_article,
-                    data[i].id_view,
-                    data[i].title,
-
-                    data[i].cam_pos_x,
-                    data[i].cam_pos_y,
-                    data[i].cam_pos_z,
-
-                    data[i].cam_lookat_x,
-                    data[i].cam_lookat_y,
-                    data[i].cam_lookat_z,
-
-                    data[i].cam_quat_x,
-                    data[i].cam_quat_y,
-                    data[i].cam_quat_z,
-                    data[i].cam_quat_w,
-
-                    data[i].obt_target_x,
-                    data[i].obt_target_y,
-                    data[i].obt_target_z
-                );
-            }
-
-
-            if (data[i].type == "instruction") {
-
-                this.instruction_gp[data[i].id_instruct] = new Instruction(
-                    data[i].id_article,
-                    data[i].id_instruct,
-                    data[i].id_view,
-                    data[i].title,
-                    data[i].short_description,
-                    data[i].display_order,
-                    data[i].memo
-                );
-
-            }
-
-
-            if (data[i].type == "instance_part") {
-
-                this.instance_part[data[i].id_inst] = new InstancePart(
-                    data[i].id_assy,
-                    data[i].id_inst,
-                    data[i].id_part, null);
-            }
-
-
-            if (data[i].type == "annotation") {
-                this.annotation[data[i].id_annotation] = new Annotation(
-
-                    data[i].id_article,
-                    data[i].id_annotation,
-                    data[i].title,
-
-                    data[i].description1,
-                    data[i].description2,
-
-                    data[i].status,
-
-                    data[i].pos_x,
-                    data[i].pos_y,
-                    data[i].pos_z,
-                    'id_annotation_' + data[i].id_annotation
-                );
-            }
-
-
-            if (data[i].type == "refelencematerial") {
-                this.refelencematerial[Number(i)] = new Refelencematerial(
-                    data[i].id_assy,
-                    data[i].id_inst,
-                    data[i].id_part,
-                    data[i].model_name,
-                    data[i].file_name,
-                    data[i].file_length,
-                    data[i].itemlink,
-                    data[i].author,
-                    data[i].license
-                );
-            }
-
-        }
-
-
-        this.instruction_gp.forEach(function (this: TDArticle, element: Instruction) {
-            //i = 0;
-            let i: number;
-            let j : number;
-            i = element.id_instruct;
-            this.annotation_display[i] = [];
-            this.annotation.forEach(function (this: TDArticle, element: Annotation) {
-                j = element.id_annotation;
-                this.annotation_display[i][j] = new AnnotationDisplay(
-                    this.id_article,
-                    i,
-                    j,
-                    false
-                );
-            }.bind(this));
-        }.bind(this));
 
 
 
-        for (let i in data) {
-
-            if (data[i].type == "annotation_display") {
-                this.annotation_display[data[i].id_instruct][data[i].id_annotation].is_display = data[i].is_display;
-                //console.log(data[i].is_display);
-            }
-
-        }
-
-
-
-        console.log('length : ' + this.instruction_gp.length.toString());
-
-        if (this.instruction_gp.length > 0) {
-            const ar1_map = (this.instruction_gp.filter((x: Instruction) => typeof x.display_order === 'number')).map((x: Instruction) => x.display_order);
-
-
-            this.id_startinst = this.instruction_gp.filter((x: Instruction) => x.display_order == Math.min.apply(null, ar1_map))[0].id_instruct;
-
-        }
-
-        //console.log(this.id_startinst);
-
-    }
+    // ↓ to DataContainers ---------------------------------------------------------------------------------------
+    // ↑ to DataContainers ---------------------------------------------------------------------------------------
 
     //ReSetup
     ComplexResetEnvironment() {
@@ -498,102 +681,81 @@ export class TDArticle {
     ComplexSetupEnvironmentInitial() {
 
 
-
-        let str_url_api = this.str_url_base_prodobjectapi_articlemode + new URLSearchParams({ id_article: this.id_article.toString() }).toString();
-
-        if (this.is_mode_assy) {
-            str_url_api = this.str_url_base_prodobjectapi_assymode + new URLSearchParams({ id_assy: this.id_assy.toString() }).toString();
-        }
+        //DBからデータを取得する
+        this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
 
 
-        //指定urlからデータを取得
-        fetch(str_url_api)
-            .then(response => {
 
-                return response.json();
-
-            })
-            .then(data => { // 処理が成功した場合に取得されるJSONデータ
-
-                //JSONのデータを各オブジェクトに詰め替える
-                this.ObjSetupAllObjectsWithoutInstanceModelFromJson(data);
+            //Loading Article
+            this.ObjSetupAarticleDefault();
 
 
-                //Loading Article
-                this.ObjSetupAarticleDefault();
+            //コントロールパネル領域を生成する
+            this.DomSetupInstructionControler();
+
+            //setup view operation panel
+            this.DomSetupLookingControler();
+
+            //DomSetupViewListEditor
+            this.DomSetupViewListEditor();
 
 
-                //コントロールパネル領域を生成する
-                this.DomSetupInstructionControler();
-
-                //setup view operation panel
-                this.DomSetupLookingControler();
-
-                //DomSetupViewListEditor
-                this.DomSetupViewListEditor();
+            //Loading Annotations
+            this.DomSetupAnnotationScreen();
 
 
-                //Loading Annotations
-                this.DomSetupAnnotationScreen();
+            //Create Edit Annotation Selection Panels
+            this.DomSetupAnnotationEditorSelectControls();
+
+            //Create Edit Annotation Position Panels
+            this.DomSetupAnnotationPositionEditButton();
+
+            //Annotation Display Edit Panel
+            this.DomSetupAnnotationDisplayEditor();
+
+            //RefelencematerialView
+            this.DomSetupRefelencematerialView();
+
+            //表示領域を初期化する
+            this.ComplexSetupRenderOptionalInitial();
 
 
-                //Create Edit Annotation Selection Panels
-                this.DomSetupAnnotationEditorSelectControls();
-
-                //Create Edit Annotation Position Panels
-                this.DomSetupAnnotationPositionEditButton();
-
-                //Annotation Display Edit Panel
-                this.DomSetupAnnotationDisplayEditor();
-
-                //RefelencematerialView
-                this.DomSetupRefelencematerialView();
-
-                //表示領域を初期化する
-                this.ComplexSetupRenderOptionalInitial();
+            //Initialize render
+            this.ComplexSetupRenderInitial(
+                this.datacontainers.article.directional_light_intensity
+                , this.datacontainers.article.directional_light_px, this.datacontainers.article.directional_light_py, this.datacontainers.article.directional_light_pz
+                , this.datacontainers.article.ambient_light_intensity
+                , this.datacontainers.article.gammaOutput);
 
 
-                //Initialize render
-                this.ComplexSetupRenderInitial(
-                    this.article.directional_light_intensity
-                    , this.article.directional_light_px, this.article.directional_light_py, this.article.directional_light_pz
-                    , this.article.ambient_light_intensity
-                    , this.article.gammaOutput);
+            //データモデルを取得する
+            this.datacontainers.ObjSetupInstancePartModelFromDb(this.scene);
 
 
-                //データモデルを取得する
-                this.ObjSetupInstancePartModelFromDb();
+            if (this.datacontainers.id_startinst == 0) {
+
+                this.camera_main.position.copy(this.camera_main_startpos);
+
+                this.controls.target.copy(this.controls_target_startpos);
+            }
+            else {
+                this.ComplexTransitionInstruction(this.datacontainers.id_startinst);
+            }
+
+            if (this.is_edit_mode != true && this.datacontainers.is_mode_assy != true) {
+                this.onWindowResize();
+            }
 
 
-                if (this.id_startinst == 0) {
+            //orbitコントロールモードを有効にし、レンダリングを開始する
+            this.orbit_active = true;
 
-                    this.camera_main.position.copy(this.camera_main_startpos);
-
-                    this.controls.target.copy(this.controls_target_startpos);
-                }
-                else {
-                    this.ComplexTransitionInstruction(this.id_startinst);
-                }
-
-                if (this.is_edit_mode != true && this.is_mode_assy != true) {
-                    this.onWindowResize();
-                }
+            this.ScreenControlOrbital();
 
 
-                //orbitコントロールモードを有効にし、レンダリングを開始する
-                this.orbit_active = true;
-
-                this.ScreenControlOrbital();
+        }.bind(this));
 
 
-            })
-            .catch(error => { // エラーの場合の処理
-
-                console.log(error);
-
-            });
-
-        //this.onWindowResize();
     }
 
 
@@ -602,9 +764,9 @@ export class TDArticle {
     //Loading Article
     ObjSetupAarticleDefault() {
 
-        if (this.id_article == 0) {
+        if (this.datacontainers.id_article == 0) {
 
-            this.article = new Aarticle(0, 0, "No Article", "", "", "", "", 0
+            this.datacontainers.article = new Aarticle(0, 0, "No Article", "", "", "", "", 0
                 , 1 //data.directional_light_color
                 , 1 //data.directional_light_intensity
                 , 30 //data.directional_light_px
@@ -616,38 +778,6 @@ export class TDArticle {
                 , 0 //data.id_attachment_for_eye_catch
             );
         }
-    }
-
-
-
-
-    //Loading Models
-    ObjSetupInstancePartModelFromDb() {
-
-        const glfLoader = new GLTFLoader();
-
-        let scene = this.scene;
-
-        this.instance_part.forEach(function (this: TDArticle, element: InstancePart) {
-            let str_url_partapi = this.str_url_partapi_base + new URLSearchParams({ id_part: element.id_part.toString() }).toString();
-
-            glfLoader.load(str_url_partapi, function (gltf) {
-
-
-
-                document.getElementById('div_progressbar_modeldl')!.setAttribute('hidden', '');
-                scene.add(gltf.scene);
-
-            }, function (xhr) {
-
-                document.getElementById('progressbar_modeldl')!.setAttribute('style', 'width: ' + Math.floor(xhr.loaded / xhr.total * 100) + '%');
-
-            }, function (error) {
-
-                console.error(error);
-
-            });
-        }.bind(this));
     }
 
 
@@ -672,12 +802,12 @@ export class TDArticle {
                 div_annotations.removeChild(div_annotations.firstChild);
             }
 
-            this.annotation.forEach(function (this : TDArticle, element : Annotation) {
+            this.datacontainers.annotation.forEach(function (this: TDArticle, obj_annotation : Annotation) {
 
 
                 temp_annotation = document.createElement('div');
 
-                temp_annotation.id = element.web_id_annotation;
+                temp_annotation.id = obj_annotation.web_id_annotation;
 
                 temp_annotation.classList.add('annotation');
 
@@ -685,8 +815,8 @@ export class TDArticle {
                 description1_annotation = document.createElement('p');
 
 
-                title_annotation.innerHTML = element.title;
-                description1_annotation.innerHTML = element.description1;
+                title_annotation.innerHTML = obj_annotation.title;
+                description1_annotation.innerHTML = obj_annotation.description1;
 
                 temp_annotation.appendChild(title_annotation);
                 temp_annotation.appendChild(description1_annotation);
@@ -695,9 +825,9 @@ export class TDArticle {
 
                 const geometry = new THREE.SphereGeometry(0.1, 32, 32);
                 const material = new THREE.MeshBasicMaterial({ color: 0XCD0000 });
-                element.marker = new THREE.Mesh(geometry, material);
-                element.marker.position.set(element.pos_x, element.pos_y, element.pos_z);
-                this.scene.add(element.marker);
+                obj_annotation.marker = new THREE.Mesh(geometry, material);
+                obj_annotation.marker.position.set(obj_annotation.pos_x, obj_annotation.pos_y, obj_annotation.pos_z);
+                this.scene.add(obj_annotation.marker);
 
 
 
@@ -721,18 +851,18 @@ export class TDArticle {
 
         let temp_bt;
 
-        this.instruction_gp.forEach(function (this: TDArticle, element: Instruction) {
+        this.datacontainers.instruction_gp.forEach(function (this: TDArticle, obj_instruction: Instruction) {
 
 
             //console.log("id:" + element.id_instruct);
 
             temp_bt = document.createElement('button');
             temp_bt.type = 'button';
-            temp_bt.onclick = this.ComplexTransitionInstruction.bind(this, element.id_instruct);
-            temp_bt.id = "btn_inst" + element.id_instruct;
+            temp_bt.onclick = this.ComplexTransitionInstruction.bind(this, obj_instruction.id_instruct);
+            temp_bt.id = "btn_inst" + obj_instruction.id_instruct;
             temp_bt.classList.add('btn');
             temp_bt.classList.add('btn-outline-primary');
-            temp_bt.textContent = element.title;
+            temp_bt.textContent = obj_instruction.title;
 
             pn.appendChild(temp_bt);
 
@@ -750,15 +880,15 @@ export class TDArticle {
             }
             let temp_bt;
 
-            this.annotation.forEach(function (this: TDArticle, element: Annotation) {
+            this.datacontainers.annotation.forEach(function (this: TDArticle, obj_annotation: Annotation) {
 
                 temp_bt = document.createElement('button');
                 temp_bt.type = 'button';
-                temp_bt.onclick = this.DomUpdateAnnotationEditor.bind(this, element.id_annotation);
-                temp_bt.id = "btn_annotation" + element.id_annotation;
+                temp_bt.onclick = this.DomUpdateAnnotationEditor.bind(this, obj_annotation.id_annotation);
+                temp_bt.id = "btn_annotation" + obj_annotation.id_annotation;
                 temp_bt.classList.add('btn');
                 temp_bt.classList.add('btn-outline-primary');
-                temp_bt.textContent = element.title;
+                temp_bt.textContent = obj_annotation.title;
 
                 pn.appendChild(temp_bt);
             }.bind(this));
@@ -783,7 +913,7 @@ export class TDArticle {
             let temp_ipt;
             let i = 0;
 
-            this.annotation.forEach(function (element: Annotation) {
+            this.datacontainers.annotation.forEach(function (obj_annotation: Annotation) {
 
                 temp_tr = document.createElement('tr');
 
@@ -796,16 +926,16 @@ export class TDArticle {
 
 
                 temp_ipt = document.createElement('input');
-                temp_ipt.id = "[" + element.id_annotation + "]." + "id_edit_annotation_display_input_id_article";
+                temp_ipt.id = "[" + obj_annotation.id_annotation + "]." + "id_edit_annotation_display_input_id_article";
                 temp_ipt.name = "[" + i + "]." + "id_article";
                 temp_ipt.type = "hidden";
-                temp_ipt.value = element.id_article.toString();
+                temp_ipt.value = obj_annotation.id_article.toString();
 
                 temp_td.appendChild(temp_ipt);
 
 
                 temp_ipt = document.createElement('input');
-                temp_ipt.id = "[" + element.id_annotation + "]." + "id_edit_annotation_display_input_id_instruct";
+                temp_ipt.id = "[" + obj_annotation.id_annotation + "]." + "id_edit_annotation_display_input_id_instruct";
                 temp_ipt.name = "[" + i + "]." + "id_instruct";
                 temp_ipt.type = "hidden";
                 temp_ipt.value = "0";
@@ -816,10 +946,10 @@ export class TDArticle {
 
 
                 temp_ipt = document.createElement('input');
-                temp_ipt.id = "[" + element.id_annotation + "]." + "id_edit_annotation_display_input_id_annotation";
+                temp_ipt.id = "[" + obj_annotation.id_annotation + "]." + "id_edit_annotation_display_input_id_annotation";
                 temp_ipt.name = "[" + i + "]." + "id_annotation";
                 temp_ipt.type = "hidden";
-                temp_ipt.value = element.id_annotation.toString();
+                temp_ipt.value = obj_annotation.id_annotation.toString();
 
                 temp_td.appendChild(temp_ipt);
 
@@ -829,28 +959,28 @@ export class TDArticle {
                 // Colomn 02 (Annotation Title)
                 temp_td = document.createElement('td');
 
-                temp_td.innerText = element.id_annotation.toString();
+                temp_td.innerText = obj_annotation.id_annotation.toString();
 
                 temp_tr.appendChild(temp_td);
 
                 // Colomn 03 (Annotation Title)
                 temp_td = document.createElement('td');
 
-                temp_td.innerText = element.title;
+                temp_td.innerText = obj_annotation.title;
 
                 temp_tr.appendChild(temp_td);
 
                 // Colomn 04 (Annotation Discription)
                 temp_td = document.createElement('td');
 
-                temp_td.innerText = element.description1;
+                temp_td.innerText = obj_annotation.description1;
 
                 temp_tr.appendChild(temp_td);
 
                 // Colomn 05 (Check box for Display)
                 temp_td = document.createElement('td');
                 temp_ipt = document.createElement('input');
-                temp_ipt.id = "[" + element.id_annotation + "]." + "id_edit_annotation_display_input_is_display";
+                temp_ipt.id = "[" + obj_annotation.id_annotation + "]." + "id_edit_annotation_display_input_is_display";
                 temp_ipt.name = "[" + i + "]." + "is_display";
                 temp_ipt.type = "checkbox";
                 //temp_ipt.value = true;
@@ -889,7 +1019,7 @@ export class TDArticle {
 
 
             //ID	title	X	Y	Z	REf	Delete
-            this.view_object.forEach(function (this: TDArticle, element: ViewObject) {
+            this.datacontainers.view_object.forEach(function (this: TDArticle, obj_view: ViewObject) {
 
                 temp_tr = document.createElement('tr');
 
@@ -902,19 +1032,19 @@ export class TDArticle {
 
 
                 temp_ipt = document.createElement('input');
-                temp_ipt.id = "[" + element.id_view + "]." + "id_edit_list_view_input_id_article";
+                temp_ipt.id = "[" + obj_view.id_view + "]." + "id_edit_list_view_input_id_article";
                 temp_ipt.name = "[" + i + "]." + "id_article";
                 temp_ipt.type = "hidden";
-                temp_ipt.value = element.id_article.toString();
+                temp_ipt.value = obj_view.id_article.toString();
 
                 temp_td.appendChild(temp_ipt);
 
 
                 temp_ipt = document.createElement('input');
-                temp_ipt.id = "[" + element.id_view + "]." + "id_edit_list_view_input_id_view";
+                temp_ipt.id = "[" + obj_view.id_view + "]." + "id_edit_list_view_input_id_view";
                 temp_ipt.name = "[" + i + "]." + "id_view";
                 temp_ipt.type = "hidden";
-                temp_ipt.value = element.id_view.toString();
+                temp_ipt.value = obj_view.id_view.toString();
 
                 temp_td.appendChild(temp_ipt);
 
@@ -925,35 +1055,35 @@ export class TDArticle {
                 // Colomn 02 (Annotation Title)
                 temp_td = document.createElement('td');
 
-                temp_td.innerText = element.id_view.toString();
+                temp_td.innerText = obj_view.id_view.toString();
 
                 temp_tr.appendChild(temp_td);
 
                 // Colomn 02 (Annotation Title)
                 temp_td = document.createElement('td');
 
-                temp_td.innerText = element.title;
+                temp_td.innerText = obj_view.title;
 
                 temp_tr.appendChild(temp_td);
 
                 // Colomn 03 (Pos X)
                 temp_td = document.createElement('td');
 
-                temp_td.innerText = element.cam_pos_x.toString();
+                temp_td.innerText = obj_view.cam_pos_x.toString();
 
                 temp_tr.appendChild(temp_td);
 
                 // Colomn 04 (Pos Y)
                 temp_td = document.createElement('td');
 
-                temp_td.innerText = element.cam_pos_y.toString();
+                temp_td.innerText = obj_view.cam_pos_y.toString();
 
                 temp_tr.appendChild(temp_td);
 
                 // Colomn 05 (Pos Z)
                 temp_td = document.createElement('td');
 
-                temp_td.innerText = element.cam_pos_z.toString();
+                temp_td.innerText = obj_view.cam_pos_z.toString();
 
                 temp_tr.appendChild(temp_td);
 
@@ -961,11 +1091,11 @@ export class TDArticle {
                 temp_td = document.createElement('td');
 
 
-                let x = this.instruction_gp.filter((item : Instruction) => item.id_view === element.id_view);
+                let x = this.datacontainers.instruction_gp.filter((item: Instruction) => item.id_view === obj_view.id_view);
                 //console.log(x);
 
-                x.forEach(function (element: Instruction) {
-                    temp_td.innerText = temp_td.innerText + "ID:" + element.id_instruct;
+                x.forEach(function (obj_instruction: Instruction) {
+                    temp_td.innerText = temp_td.innerText + "ID:" + obj_instruction.id_instruct;
                     //temp_td.appendChild(temp_bt);
                 });
 
@@ -977,17 +1107,17 @@ export class TDArticle {
 
                 temp_bt = document.createElement('button');
                 temp_bt.type = 'button';
-                temp_bt.onclick = this.ScreenUpdateViewEditor.bind(this, new THREE.Vector3(element.cam_pos_x, element.cam_pos_y, element.cam_pos_z), new THREE.Vector3(element.obt_target_x, element.obt_target_y, element.obt_target_z));
+                temp_bt.onclick = this.ScreenUpdateViewEditor.bind(this, new THREE.Vector3(obj_view.cam_pos_x, obj_view.cam_pos_y, obj_view.cam_pos_z), new THREE.Vector3(obj_view.obt_target_x, obj_view.obt_target_y, obj_view.obt_target_z));
                 temp_bt.classList.add('btn');
                 temp_bt.classList.add('btn-primary');
                 temp_bt.textContent = "Show";
                 temp_td.appendChild(temp_bt);
 
 
-                if (!this.instruction_gp.some((item: Instruction) => item.id_view === element.id_view)) {
+                if (!this.datacontainers.instruction_gp.some((item: Instruction) => item.id_view === obj_view.id_view)) {
                     temp_bt = document.createElement('button');
                     temp_bt.type = 'button';
-                    temp_bt.onclick = this.DbDeleteView.bind(this, element.id_view);
+                    temp_bt.onclick = this.DbDeleteView.bind(this, obj_view.id_view);
                     temp_bt.classList.add('btn');
                     temp_bt.classList.add('btn-danger');
                     temp_bt.textContent = "Delete";
@@ -1206,7 +1336,7 @@ export class TDArticle {
             let temp_a;
             let i = 0;
 
-            this.refelencematerial.forEach(function (element: Refelencematerial) {
+            this.datacontainers.refelencematerial.forEach(function (element: Refelencematerial) {
 
                 temp_tr = document.createElement('tr');
 
@@ -1343,7 +1473,7 @@ export class TDArticle {
             this.renderer.outputEncoding = THREE.LinearEncoding;
         }
 
-        if (this.is_edit_mode != true && this.is_mode_assy != true) {
+        if (this.is_edit_mode != true && this.datacontainers.is_mode_assy != true) {
             this.onWindowResize();
         }
 
@@ -1396,6 +1526,7 @@ export class TDArticle {
         if (this.is_edit_mode) {
 
             this.selected_annotation = id_annotation;
+            const index_annotation = this.datacontainers.annotation.findIndex(x => x.id_annotation == id_annotation);
 
             //Set Color of button
             let children = document.getElementById('edit_annotation_selection_panels')!.children;
@@ -1414,21 +1545,21 @@ export class TDArticle {
             }
 
             //Edit
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_id_annotation')).value = this.annotation[id_annotation].id_annotation.toString();
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_title')).value = this.annotation[id_annotation].title;
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_id_annotation')).value = this.datacontainers.annotation[index_annotation].id_annotation.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_title')).value = this.datacontainers.annotation[index_annotation].title;
 
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_description1')).value = this.annotation[id_annotation].description1;
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_description2')).value = this.annotation[id_annotation].description2;
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_description1')).value = this.datacontainers.annotation[index_annotation].description1;
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_description2')).value = this.datacontainers.annotation[index_annotation].description2;
 
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_status')).value = this.annotation[id_annotation].status.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_status')).value = this.datacontainers.annotation[index_annotation].status.toString();
 
 
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_x')).value = this.annotation[id_annotation].pos_x.toString();
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_y')).value = this.annotation[id_annotation].pos_y.toString();
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_z')).value = this.annotation[id_annotation].pos_z.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_x')).value = this.datacontainers.annotation[index_annotation].pos_x.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_y')).value = this.datacontainers.annotation[index_annotation].pos_y.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_z')).value = this.datacontainers.annotation[index_annotation].pos_z.toString();
 
             //Delete
-            (<HTMLInputElement>document.getElementById('id_delete_annotation_input_id_annotation')).value = this.annotation[id_annotation].id_annotation.toString();
+            (<HTMLInputElement>document.getElementById('id_delete_annotation_input_id_annotation')).value = this.datacontainers.annotation[index_annotation].id_annotation.toString();
         }
 
     }
@@ -1442,25 +1573,26 @@ export class TDArticle {
 
 
         const id_annotation = Number((<HTMLInputElement>document.getElementById('id_edit_annotation_input_id_annotation')).value);
+        const index_annotation = this.datacontainers.annotation.findIndex(x => x.id_annotation == id_annotation);
 
         if (this.is_edit_mode) {
 
             //Edit
-            this.annotation[id_annotation].pos_x += px;
-            this.annotation[id_annotation].pos_y += py;
-            this.annotation[id_annotation].pos_z += pz;
+            this.datacontainers.annotation[index_annotation].pos_x += px;
+            this.datacontainers.annotation[index_annotation].pos_y += py;
+            this.datacontainers.annotation[index_annotation].pos_z += pz;
 
 
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_x')).value = this.annotation[id_annotation].pos_x.toString();
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_y')).value = this.annotation[id_annotation].pos_y.toString();
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_z')).value = this.annotation[id_annotation].pos_z.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_x')).value = this.datacontainers.annotation[index_annotation].pos_x.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_y')).value = this.datacontainers.annotation[index_annotation].pos_y.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_z')).value = this.datacontainers.annotation[index_annotation].pos_z.toString();
 
             //Edit
             //this.annotation[id_annotation].marker.pos.x += px;
             //this.annotation[id_annotation].marker.pos.y += py;
             //this.annotation[id_annotation].marker.pos.z += pz;
 
-            this.annotation[id_annotation].marker.position.add(new THREE.Vector3(px, py, pz));
+            this.datacontainers.annotation[index_annotation].marker.position.add(new THREE.Vector3(px, py, pz));
 
             //element.marker.position.set(element.pos_x, element.pos_y, element.pos_z);
 
@@ -1478,11 +1610,13 @@ export class TDArticle {
 
         //カメラ位置の変更
         //---------------------
-        let i = this.instruction_gp[id_instruct].id_view;
+        let id_view = this.datacontainers.instruction_gp.find(x => x.id_instruct == id_instruct)!.id_view;
+        let index_view = this.datacontainers.view_object.findIndex(x => x.id_view == id_view);
+        console.log("No:" + index_view.toString());
 
         this.ScreenUpdateViewEditor(
-            new THREE.Vector3(this.view_object[i].cam_pos_x, this.view_object[i].cam_pos_y, this.view_object[i].cam_pos_z),
-            new THREE.Vector3(this.view_object[i].obt_target_x, this.view_object[i].obt_target_y, this.view_object[i].obt_target_z));
+            new THREE.Vector3(this.datacontainers.view_object[index_view].cam_pos_x, this.datacontainers.view_object[index_view].cam_pos_y, this.datacontainers.view_object[index_view].cam_pos_z),
+            new THREE.Vector3(this.datacontainers.view_object[index_view].obt_target_x, this.datacontainers.view_object[index_view].obt_target_y, this.datacontainers.view_object[index_view].obt_target_z));
 
         if (this.is_edit_mode) {
             this.DomUpdateInstructionEditor(id_instruct);
@@ -1496,10 +1630,13 @@ export class TDArticle {
     DomUpdateAnnotationScreenDisplay(id_instruct: number) {
         //let obj = this;
         //console.log('called');
-        this.annotation.forEach(function (this: TDArticle, element: Annotation)
+        let index_instruction = this.datacontainers.instruction_gp.findIndex(x => x.id_instruct == id_instruct);
+
+        this.datacontainers.annotation.forEach(function (this: TDArticle, element: Annotation, index : number)
         {
-            (<HTMLInputElement>document.getElementById(this.annotation[element.id_annotation].web_id_annotation)).hidden = !this.annotation_display[id_instruct][element.id_annotation].is_display;
-            element.marker.visible = this.annotation_display[id_instruct][element.id_annotation].is_display;
+            (<HTMLInputElement>document.getElementById(element.web_id_annotation)).hidden = !this.datacontainers.annotation_display[index_instruction][index].is_display;
+            element.marker.visible = this.datacontainers.annotation_display[index_instruction][index].is_display;
+            console.log("[" + index_instruction + "]" + "[" + index + "]" + "\n");
         }.bind(this));
     }
 
@@ -1533,12 +1670,13 @@ export class TDArticle {
 
     //Update Instruction Statement and buttuns for Display
     DomUpdateInstructionViewer(id_instruct:number) {
-        let i = this.instruction_gp[id_instruct].id_view;
+        //let i = this.instruction_gp[id_instruct].id_view;
+        let index_instruct = this.datacontainers.instruction_gp.findIndex(x => x.id_instruct == id_instruct);
 
         //console.log(window.innerWidth);
 
         //Update Instruction for Preview
-        (<HTMLInputElement>document.getElementById('preview_instruction_short_description')).innerHTML = marked(this.instruction_gp[id_instruct].short_description);
+        (<HTMLInputElement>document.getElementById('preview_instruction_short_description')).innerHTML = marked(this.datacontainers.instruction_gp[index_instruct].short_description);
 
         //Set Color of button
         let children = document.getElementById('control_panel_zone')!.children;
@@ -1564,29 +1702,32 @@ export class TDArticle {
 
 
 
-        let i = this.instruction_gp[id_instruct].id_view;
+        //let i = this.instruction_gp[id_instruct].id_view;
+        let index_inst = this.datacontainers.instruction_gp.findIndex(x => x.id_instruct == id_instruct);
+
+        let index_view = this.datacontainers.view_object.findIndex(x => x.id_view == this.datacontainers.instruction_gp[index_inst].id_view);
 
         //Update Instruction for Edit
-        (<HTMLInputElement>document.getElementById('instruction_title')).value = this.instruction_gp[id_instruct].title.toString();
-        (<HTMLInputElement>document.getElementById('instruction_id_view')).value = this.instruction_gp[id_instruct].id_view.toString();
-        (<HTMLInputElement>document.getElementById('instruction_short_description')).textContent = this.instruction_gp[id_instruct].short_description;
-        (<HTMLInputElement>document.getElementById('instruction_id_article')).value = this.instruction_gp[id_instruct].id_article.toString();
-        (<HTMLInputElement>document.getElementById('instruction_id_instruct')).value = this.instruction_gp[id_instruct].id_instruct.toString();
-        (<HTMLInputElement>document.getElementById('instruction_display_order')).value = this.instruction_gp[id_instruct].display_order.toString();
-        (<HTMLInputElement>document.getElementById('instruction_memo')).value = this.instruction_gp[id_instruct].memo;
-        (<HTMLInputElement>document.getElementById('instruction_short_description_length')).innerHTML = '(' + this.instruction_gp[id_instruct].short_description.length + ')';
+        (<HTMLInputElement>document.getElementById('instruction_title')).value = this.datacontainers.instruction_gp[index_inst].title.toString();
+        (<HTMLInputElement>document.getElementById('instruction_id_view')).value = this.datacontainers.instruction_gp[index_inst].id_view.toString();
+        (<HTMLInputElement>document.getElementById('instruction_short_description')).textContent = this.datacontainers.instruction_gp[index_inst].short_description;
+        (<HTMLInputElement>document.getElementById('instruction_id_article')).value = this.datacontainers.instruction_gp[index_inst].id_article.toString();
+        (<HTMLInputElement>document.getElementById('instruction_id_instruct')).value = this.datacontainers.instruction_gp[index_inst].id_instruct.toString();
+        (<HTMLInputElement>document.getElementById('instruction_display_order')).value = this.datacontainers.instruction_gp[index_inst].display_order.toString();
+        (<HTMLInputElement>document.getElementById('instruction_memo')).value = this.datacontainers.instruction_gp[index_inst].memo;
+        (<HTMLInputElement>document.getElementById('instruction_short_description_length')).innerHTML = '(' + this.datacontainers.instruction_gp[index_inst].short_description.length + ')';
 
 
         //Update Instruction for Delete
-        (<HTMLInputElement>document.getElementById('instruction_id_article_delete')).value = this.instruction_gp[id_instruct].id_article.toString();
-        (<HTMLInputElement>document.getElementById('instruction_id_instruct_delete')).value = this.instruction_gp[id_instruct].id_instruct.toString();
+        (<HTMLInputElement>document.getElementById('instruction_id_article_delete')).value = this.datacontainers.instruction_gp[index_inst].id_article.toString();
+        (<HTMLInputElement>document.getElementById('instruction_id_instruct_delete')).value = this.datacontainers.instruction_gp[index_inst].id_instruct.toString();
 
 
 
         //Update View for Edit
-        (<HTMLInputElement>document.getElementById('id_edit_view_input_id_article')).value = this.view_object[i].id_article.toString();
-        (<HTMLInputElement>document.getElementById('id_edit_view_input_id_view')).value = this.view_object[i].id_view.toString();
-        (<HTMLInputElement>document.getElementById('id_edit_view_input_title')).value = this.view_object[i].title;
+        (<HTMLInputElement>document.getElementById('id_edit_view_input_id_article')).value = this.datacontainers.view_object[index_view].id_article.toString();
+        (<HTMLInputElement>document.getElementById('id_edit_view_input_id_view')).value = this.datacontainers.view_object[index_view].id_view.toString();
+        (<HTMLInputElement>document.getElementById('id_edit_view_input_title')).value = this.datacontainers.view_object[index_view].title;
 
         //↓ Ref
         //https://qiita.com/diescake/items/70d9b0cbd4e3d5cc6fce
@@ -1599,10 +1740,18 @@ export class TDArticle {
 
     DomUpdateAnnotationDisplayEditor(id_instruct : number) {
 
-        this.annotation.forEach(function (this: AnnotationDisplay[][], element: Annotation) {
-            (<HTMLInputElement>document.getElementById('[' + element.id_annotation + '].id_edit_annotation_display_input_id_instruct')).value = this[id_instruct][element.id_annotation].id_instruct.toString();
-            (<HTMLInputElement>document.getElementById('[' + element.id_annotation + '].id_edit_annotation_display_input_is_display')).checked = this[id_instruct][element.id_annotation].is_display;
-        }.bind(this.annotation_display));
+        let index_instruction = this.datacontainers.instruction_gp.findIndex(x => x.id_instruct == id_instruct);
+
+        this.datacontainers.annotation.forEach(function (this: AnnotationDisplay[][], element: Annotation, index_annotation: number) {
+            //(<HTMLInputElement>document.getElementById('[' + element.id_annotation + '].id_edit_annotation_display_input_id_instruct')).value = this[id_instruct][element.id_annotation].id_instruct.toString();
+            //(<HTMLInputElement>document.getElementById('[' + element.id_annotation + '].id_edit_annotation_display_input_is_display')).checked = this[id_instruct][element.id_annotation].is_display;
+
+            (<HTMLInputElement>document.getElementById('[' + element.id_annotation + '].id_edit_annotation_display_input_id_instruct')).value = this[index_instruction][index_annotation].id_instruct.toString();
+            (<HTMLInputElement>document.getElementById('[' + element.id_annotation + '].id_edit_annotation_display_input_is_display')).checked = this[index_instruction][index_annotation].is_display;
+
+
+
+        }.bind(this.datacontainers.annotation_display));
     }
 
 
@@ -1656,7 +1805,7 @@ export class TDArticle {
         let ofx = (<HTMLInputElement>document.getElementById('model_screen')).getBoundingClientRect().left;
         let ofy = (<HTMLInputElement>document.getElementById('model_screen')).getBoundingClientRect().top;
 
-        this.annotation.forEach(function (element : Annotation) {
+        this.datacontainers.annotation.forEach(function (element : Annotation) {
 
             const vector = new THREE.Vector3(element.pos_x, element.pos_y, element.pos_z);
             vector.project(cm);
@@ -1677,7 +1826,7 @@ export class TDArticle {
     }
 
     //Update Instruction with Ajax
-    DbUpdateInstruction() {
+    async DbUpdateInstruction() {
 
 
         if (confirm('Are you update Instruction?')) {
@@ -1694,53 +1843,36 @@ export class TDArticle {
             this.selected_instruction = Number((<HTMLInputElement>document.getElementById('instruction_id_instruct')).value);
 
             let token = (<HTMLInputElement>document.getElementsByName("__RequestVerificationToken").item(0)).value;
-            //データ更新
-            //this.data_reflesh_without_model();
 
-            //指定urlからデータを取得
-            //fetch内の各引数は以下の通り。
-            //第1引数は【アクションメソッドのPath】、
-            //第2引数は【通信方法 例)Get または　Post】、
-            //第3引数は【データの型】
-            //サンプル例：fetch(Path,{method:"POST",body:formData})
-            const response = fetch(this.str_url_base_edit_product_instruction, { //【重要ポイント】「await」句は削除すること
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    "RequestVerificationToken": token
-                },
-                body: JSON.stringify(updInstrruction)  // リクエスト本文にJSON形式の文字列を設定c
-            })
-                .then(response => {
 
-                    return response.json();
 
-                }).then(data => { // 処理が成功した場合に取得されるJSONデータ
+            const data = await this.datacontainers.dbUpdEditProductInstructionApi(updInstrruction, token);
 
-                    if (data[0].updateresult == "Success") {
+            if (data[0].updateresult == "Success") {
 
-                        //データ更新
-                        this.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : TDArticle, value : any) {
+                //データ更新
+                this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
 
-                            console.log("viewid : " + this.selected_instruction.toString());
-                            this.ComplexResetEnvironment();
-                            this.ComplexTransitionInstruction(this.selected_instruction);
+                    console.log("viewid : " + this.selected_instruction.toString());
 
-                            if (this.annotation.some((item:Annotation) => item.id_annotation === this.selected_annotation)) {
-                                this.DomUpdateAnnotationEditor(this.selected_annotation);
-                            }
+                    this.ComplexResetEnvironment();
+                    this.ComplexTransitionInstruction(this.selected_instruction);
 
-                            alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
-                        }.bind(this));
-
+                    if (this.datacontainers.annotation.some((item: Annotation) => item.id_annotation === this.selected_annotation)) {
+                        this.DomUpdateAnnotationEditor(this.selected_annotation);
                     }
-                });
+
+                    alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
+                }.bind(this));
+
+            }
+
         }
     }
 
 
     //Update Instruction with Ajax
-    DbDeleteInstruction() {
+    async DbDeleteInstruction() {
 
         if (confirm('Are you delete Instruction?')) {
 
@@ -1751,93 +1883,54 @@ export class TDArticle {
 
             let token = (<HTMLInputElement>document.getElementsByName("__RequestVerificationToken").item(0)).value;
 
-            //指定urlからデータを取得
-            //fetch内の各引数は以下の通り。
-            //第1引数は【アクションメソッドのPath】、
-            //第2引数は【通信方法 例)Get または　Post】、
-            //第3引数は【データの型】
-            //サンプル例：fetch(Path,{method:"POST",body:formData})
-            const response = fetch(this.str_url_base_delete_product_instruction, { //【重要ポイント】「await」句は削除すること
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    "RequestVerificationToken": token
-                },
-                body: JSON.stringify(updInstrruction)  // リクエスト本文にJSON形式の文字列を設定c
-            })
-                .then(response => {
 
-                    return response.json();
-
-                }).then(data => { // 処理が成功した場合に取得されるJSONデータ
+            const data = await this.datacontainers.dbUpdDeleteProductInstructionApi(updInstrruction, token);
 
 
-                    if (data[0].updateresult == "Success") {
+            if (data[0].updateresult == "Success") {
 
-                        //データ更新
-                        this.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : TDArticle, value : any) {
-
-                            /*
-                            this.instruction_gp.forEach(function (element) {
-                                let id;
-                                id = element.id_instruct;
-
-                                if (typeof id === "undefined") {
-
-                                } else {
-                                    this.selected_instruction = id;
-
-                                }
-
-                            }.bind(this));
-                            */
-
-                            let id;
-                            let checked = false;
-                            this.instruction_gp.forEach(function (this : TDArticle, element: Instruction) {
-                                id = element.id_instruct;
-                                console.log(checked);
-                                if (typeof id === "undefined") {
-
-                                } else {
-                                    if (checked) {
-
-                                    } else {
-                                        this.selected_instruction = id;
-                                        checked = true;
-                                    }
-                                }
-
-                            }.bind(this));
+                //データ更新
+                this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
 
 
-                            //this.instruction_gp.forEach
-                            //console.log("Instruct Id : " + this.selected_instruction.toString());
+                    let id;
+                    let checked = false;
+                    this.datacontainers.instruction_gp.forEach(function (this: TDArticle, element: Instruction) {
+                        id = element.id_instruct;
+                        console.log(checked);
+                        if (typeof id === "undefined") {
 
+                        } else {
+                            if (checked) {
 
-                            this.ComplexResetEnvironment();
-                            this.ComplexTransitionInstruction(this.selected_instruction);
-
-                            if (this.annotation.some((item:Annotation) => item.id_annotation === this.selected_annotation)) {
-                                this.DomUpdateAnnotationEditor(this.selected_annotation);
+                            } else {
+                                this.selected_instruction = id;
+                                checked = true;
                             }
+                        }
 
-                            //if (this.annotationthis.selected_annotation)
-                            //this.DomUpdateAnnotationEditor(this.selected_annotation);
+                    }.bind(this));
 
-                            alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
-                        }.bind(this));
 
-                        //console.log(this.instruction_gp);
+
+                    this.ComplexResetEnvironment();
+                    this.ComplexTransitionInstruction(this.selected_instruction);
+
+                    if (this.datacontainers.annotation.some((item: Annotation) => item.id_annotation === this.selected_annotation)) {
+                        this.DomUpdateAnnotationEditor(this.selected_annotation);
                     }
 
-                });
+
+                    alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
+                }.bind(this));
+
+            }
         }
     }
 
 
     //Update View with Ajax
-    DbUpdateView() {
+    async DbUpdateView() {
 
 
         //console.log("id_instruct_out:" + this.selected_instruction);
@@ -1867,45 +1960,30 @@ export class TDArticle {
             };
 
             let token = (<HTMLInputElement>document.getElementsByName("__RequestVerificationToken").item(0)).value;
-            //データ更新
-            const response = fetch(this.str_url_base_edit_product_view, {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    "RequestVerificationToken": token
-                },
-                body: JSON.stringify(updObject)  // リクエスト本文にJSON形式の文字列を設定c
-            })
-                .then(response => {
-
-                    return response.json();
-
-                }).then(data => { // 処理が成功した場合に取得されるJSONデータ
-                    console.log(data[0].updateresult);
-
-                    if (data[0].updateresult == "Success") {
-                        //this.selected_annotation = data[0].id_annotation;
-
-                        //データ更新
-                        this.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : TDArticle, value:any) {
-                            this.ComplexResetEnvironment();
-                            this.ComplexTransitionInstruction(this.selected_instruction);
-
-                            if (this.annotation.some((item:Annotation) => item.id_annotation === this.selected_annotation)) {
-                                this.DomUpdateAnnotationEditor(this.selected_annotation);
-                            }
 
 
-                            alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
-                        }.bind(this));
+            const data = await this.datacontainers.dbUpdEditProductViewApi(updObject, token);
+
+            if (data[0].updateresult == "Success") {
+                //データ更新
+                this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
+                    this.ComplexResetEnvironment();
+                    this.ComplexTransitionInstruction(this.selected_instruction);
+
+                    if (this.datacontainers.annotation.some((item: Annotation) => item.id_annotation === this.selected_annotation)) {
+                        this.DomUpdateAnnotationEditor(this.selected_annotation);
                     }
-                });
+
+
+                    alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
+                }.bind(this));
+            }
         }
     }
 
 
     //Delete View with Ajax
-    DbDeleteView(id_view: number) {
+    async DbDeleteView(id_view: number) {
 
 
         //console.log("id_instruct_out:" + this.selected_instruction);
@@ -1916,57 +1994,43 @@ export class TDArticle {
         if (confirm('Are you update View?')) {
 
             let updObject = {
-                id_article: this.id_article,
+                id_article: this.datacontainers.id_article,
                 id_view: id_view
             };
 
             let token = (<HTMLInputElement>document.getElementsByName("__RequestVerificationToken").item(0)).value;
 
-            //データ更新
-            const response = fetch(this.str_url_base_delete_product_view, {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    "RequestVerificationToken": token
-                },
-                body: JSON.stringify(updObject)  // リクエスト本文にJSON形式の文字列を設定c
-            })
-                .then(response => {
 
-                    return response.json();
+            const data = await this.datacontainers.dbUpdDeleteProductViewApi(updObject, token);
 
-                }).then(data => { // 処理が成功した場合に取得されるJSONデータ
-                    console.log(data[0].updateresult);
+            if (data[0].updateresult == "Success") {
+                //this.selected_annotation = data[0].id_annotation;
 
-                    if (data[0].updateresult == "Success") {
-                        //this.selected_annotation = data[0].id_annotation;
+                //データ更新
+                this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
+                    this.ComplexResetEnvironment();
+                    this.ComplexTransitionInstruction(this.selected_instruction);
 
-                        //データ更新
-                        this.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : TDArticle, value:any) {
-                            this.ComplexResetEnvironment();
-                            this.ComplexTransitionInstruction(this.selected_instruction);
-
-                            if (this.annotation.some((item:Annotation) => item.id_annotation === this.selected_annotation)) {
-                                this.DomUpdateAnnotationEditor(this.selected_annotation);
-                            }
-
-
-                            alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
-                        }.bind(this));
+                    if (this.datacontainers.annotation.some((item: Annotation) => item.id_annotation === this.selected_annotation)) {
+                        this.DomUpdateAnnotationEditor(this.selected_annotation);
                     }
-                });
+
+
+                    alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
+                }.bind(this));
+            }
         }
     }
 
 
     //Update Annotation with Ajax
-    DbUpdateAnnotation() {
+    async DbUpdateAnnotation() {
 
 
         console.log("id_instruct_out:" + this.selected_instruction);
         console.log("id_annotation_out:" + this.selected_annotation);
 
-        console.log(this.str_url_base_edit_product_annotation);
+        console.log(this.datacontainers.str_url_base_edit_product_annotation);
 
         if (confirm('Are you update Annotation?')) {
 
@@ -1983,44 +2047,32 @@ export class TDArticle {
             };
 
             let token = (<HTMLInputElement>document.getElementsByName("__RequestVerificationToken").item(0)).value;
-            //データ更新
-            const response = fetch(this.str_url_base_edit_product_annotation, {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    "RequestVerificationToken": token
-                },
-                body: JSON.stringify(updObject)  // リクエスト本文にJSON形式の文字列を設定c
-            })
-                .then(response => {
 
-                    return response.json();
+            const data = await this.datacontainers.dbUpdEditProductAnnotationApi(updObject, token);
 
-                }).then(data => { // 処理が成功した場合に取得されるJSONデータ
+            if (data[0].updateresult == "Success") {
+                this.selected_annotation = data[0].id_annotation;
 
-                    if (data[0].updateresult == "Success") {
-                        this.selected_annotation = data[0].id_annotation;
+                //データ更新
+                this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
+                    this.ComplexResetEnvironment();
+                    this.ComplexTransitionInstruction(this.selected_instruction);
 
-                        //データ更新
-                        this.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : TDArticle, value:any ) {
-                            this.ComplexResetEnvironment();
-                            this.ComplexTransitionInstruction(this.selected_instruction);
-
-                            if (this.annotation.some((item:Annotation) => item.id_annotation === this.selected_annotation)) {
-                                this.DomUpdateAnnotationEditor(this.selected_annotation);
-                            }
-
-
-                            alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
-                        }.bind(this));
+                    if (this.datacontainers.annotation.some((item: Annotation) => item.id_annotation === this.selected_annotation)) {
+                        this.DomUpdateAnnotationEditor(this.selected_annotation);
                     }
-                });
+
+
+                    alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
+                }.bind(this));
+            }
+
         }
     }
 
 
     //Delete Annotation with Ajax
-    DbDeleteAnnotation() {
+    async DbDeleteAnnotation() {
 
         if (confirm('Are you delete Annotation?')) {
 
@@ -2030,125 +2082,92 @@ export class TDArticle {
             };
 
             let token = (<HTMLInputElement>document.getElementsByName("__RequestVerificationToken").item(0)).value;
-            console.log(token);
-            //指定urlからデータを取得
-            //fetch内の各引数は以下の通り。
-            //第1引数は【アクションメソッドのPath】、
-            //第2引数は【通信方法 例)Get または　Post】、
-            //第3引数は【データの型】
-            //サンプル例：fetch(Path,{method:"POST",body:formData})
-            const response = fetch(this.str_url_base_delete_product_annotation, { //【重要ポイント】「await」句は削除すること
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    "RequestVerificationToken": token
-                },
-                body: JSON.stringify(updObject)  // リクエスト本文にJSON形式の文字列を設定
-            })
-                .then(response => {
 
-                    return response.json();
+            const data = await this.datacontainers.dbUpdDeleteProductAnnotationApi(updObject, token);
 
-                }).then(data => { // 処理が成功した場合に取得されるJSONデータ
+            if (data[0].updateresult == "Success") {
 
+                //データ更新
+                this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
 
-                    if (data[0].updateresult == "Success") {
+                    this.datacontainers.annotation.forEach(function (this: TDArticle, element: Annotation) {
+                        let id;
+                        let checked = false;
+                        id = element.id_annotation;
 
-                        //データ更新
-                        this.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : TDArticle, value:any) {
+                        if (typeof id === "undefined") {
 
-                            this.annotation.forEach(function (this : TDArticle, element:Annotation) {
-                                let id;
-                                let checked = false;
-                                id = element.id_annotation;
+                        } else {
+                            if (checked) {
 
-                                if (typeof id === "undefined") {
-
-                                } else {
-                                    if (checked) {
-
-                                    } else {
-                                        this.selected_annotation = id;
-                                        checked = true;
-                                    }
-                                }
-
-                            }.bind(this));
-
-
-                            this.ComplexResetEnvironment();
-                            this.ComplexTransitionInstruction(this.selected_instruction);
-
-                            if (this.annotation.some((item: Annotation) => item.id_annotation === this.selected_annotation)) {
-                                this.DomUpdateAnnotationEditor(this.selected_annotation);
+                            } else {
+                                this.selected_annotation = id;
+                                checked = true;
                             }
+                        }
+
+                    }.bind(this));
 
 
-                            alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
-                        }.bind(this));
+                    this.ComplexResetEnvironment();
+                    this.ComplexTransitionInstruction(this.selected_instruction);
 
+                    if (this.datacontainers.annotation.some((item: Annotation) => item.id_annotation === this.selected_annotation)) {
+                        this.DomUpdateAnnotationEditor(this.selected_annotation);
                     }
 
-                });
+
+                    alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
+                }.bind(this));
+
+            }
         }
     }
 
 
     //Update AnnotationDisplay with Ajax
-    DbUpdateAnnotationDisplay() {
+    async DbUpdateAnnotationDisplay() {
 
 
 
         if (confirm('Are you update AnnotationDisplay?')) {
 
-            let updObject: any;// = [];
-            //let updObject: AnnotationDisplay[];// = [];
-
-
+            let updObject: AnnotationDisplay[] = [];
+            console.log('DbUpdateAnnotationDisplay');
+            
             let i = 0;
-            this.annotation.forEach(function (this : TDArticle, element:Annotation ) {
+            this.datacontainers.annotation.forEach(function (this: TDArticle, obj_annotation: Annotation) {
+                console.log('DbUpdateAnnotationDisplay' + i.toString());
                 updObject[i] = new AnnotationDisplay(
-                    this.id_article,
-                    Number((<HTMLInputElement>document.getElementById('[' + element.id_annotation + '].id_edit_annotation_display_input_id_instruct')).value),
-                    element.id_annotation,
-                    (<HTMLInputElement>document.getElementById('[' + element.id_annotation + '].id_edit_annotation_display_input_is_display')).checked
+                    this.datacontainers.id_article,
+                    Number((<HTMLInputElement>document.getElementById('[' + obj_annotation.id_annotation + '].id_edit_annotation_display_input_id_instruct')).value),
+                    obj_annotation.id_annotation,
+                    (<HTMLInputElement>document.getElementById('[' + obj_annotation.id_annotation + '].id_edit_annotation_display_input_is_display')).checked
                 );
                 i += 1;
             }.bind(this));
 
 
             let token = (<HTMLInputElement>document.getElementsByName("__RequestVerificationToken").item(0)).value;
-            //データ更新
-            const response = fetch(this.str_url_base_edit_product_annotation_display, {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    "RequestVerificationToken": token
-                },
-                body: JSON.stringify(updObject)  // リクエスト本文にJSON形式の文字列を設定
-            })
-                .then(response => {
 
-                    return response.json();
 
-                }).then(data => { // 処理が成功した場合に取得されるJSONデータ
+            const data = await this.datacontainers.dbUpdEditProductAnnotationDisplayApi(updObject, token);
 
-                    if (data[0].updateresult == "Success") {
-                        this.selected_annotation = data[0].id_annotation;
+            if (data[0].updateresult == "Success") {
+                this.selected_annotation = data[0].id_annotation;
 
-                        //データ更新
-                        this.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this : TDArticle, value:any) {
-                            this.ComplexResetEnvironment();
-                            this.ComplexTransitionInstruction(this.selected_instruction);
+                //データ更新
+                this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
+                    this.ComplexResetEnvironment();
+                    this.ComplexTransitionInstruction(this.selected_instruction);
 
-                            if (this.annotation.some((item:Annotation) => item.id_annotation === this.selected_annotation)) {
-                                this.DomUpdateAnnotationEditor(this.selected_annotation);
-                            }
-
-                            alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
-                        }.bind(this));
+                    if (this.datacontainers.annotation.some((item: Annotation) => item.id_annotation === this.selected_annotation)) {
+                        this.DomUpdateAnnotationEditor(this.selected_annotation);
                     }
-                });
+
+                    alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
+                }.bind(this));
+            }
         }
     }
 
