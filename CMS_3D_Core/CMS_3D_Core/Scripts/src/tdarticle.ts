@@ -39,7 +39,7 @@ export class DataContainers {
     instruction_gp: Instruction[]=[];
     instance_part: InstancePart[]=[];
     annotation: Annotation[]=[];
-    annotation_display: AnnotationDisplay[][];
+    annotation_display: AnnotationDisplay[]=[];
 
     refelencematerial: Refelencematerial[]=[];
 
@@ -79,7 +79,7 @@ export class DataContainers {
         //this.instruction_gp = [];
         //this.instance_part = [];
         //this.annotation = [];
-        this.annotation_display = [];
+        //this.annotation_display = [];
         //this.refelencematerial = [];
 
 
@@ -122,10 +122,8 @@ export class DataContainers {
     //Setup Json
     ObjSetupAllObjectsWithoutInstanceModelFromJson(data: any) {
 
-        if (this.view_object) {
-            this.view_object.length = 0;
 
-        }
+        this.view_object.length = 0;
         this.instruction_gp.length = 0;
         this.instance_part.length = 0;
         this.annotation.length = 0;
@@ -226,6 +224,15 @@ export class DataContainers {
                 ));
             }
 
+            if (data[i].type == "annotation_display") {
+                this.annotation_display.push(new AnnotationDisplay(
+
+                    data[i].id_article,
+                    data[i].id_instruct,
+                    data[i].id_annotation,
+                    data[i].is_display
+                ));
+            }
 
             if (data[i].type == "refelencematerial") {
                 this.refelencematerial.push(new Refelencematerial(
@@ -242,6 +249,9 @@ export class DataContainers {
             }
 
         }
+
+        /*
+        console.log(this.annotation_display2);
 
 
         this.instruction_gp.forEach(function (this: DataContainers, obj_instruction: Instruction, index: number) {
@@ -280,6 +290,8 @@ export class DataContainers {
 
 
         console.log('length : ' + this.instruction_gp.length.toString());
+        */
+
 
         if (this.instruction_gp.length > 0) {
             const ar1_map = (this.instruction_gp.filter((x: Instruction) => typeof x.display_order === 'number')).map((x: Instruction) => x.display_order);
@@ -1634,9 +1646,12 @@ export class TDArticle {
 
         this.datacontainers.annotation.forEach(function (this: TDArticle, element: Annotation, index : number)
         {
-            (<HTMLInputElement>document.getElementById(element.web_id_annotation)).hidden = !this.datacontainers.annotation_display[index_instruction][index].is_display;
-            element.marker.visible = this.datacontainers.annotation_display[index_instruction][index].is_display;
-            console.log("[" + index_instruction + "]" + "[" + index + "]" + "\n");
+
+            const is_display = this.datacontainers.annotation_display.find(item => item.id_instruct == id_instruct && item.id_annotation == element.id_annotation)!.is_display;
+            (<HTMLInputElement>document.getElementById(element.web_id_annotation)).hidden = !is_display;
+            element.marker.visible = is_display;
+
+            //console.log("[" + index_instruction + "]" + "[" + index + "]" + "\n");
         }.bind(this));
     }
 
@@ -1740,14 +1755,14 @@ export class TDArticle {
 
     DomUpdateAnnotationDisplayEditor(id_instruct : number) {
 
-        let index_instruction = this.datacontainers.instruction_gp.findIndex(x => x.id_instruct == id_instruct);
+        this.datacontainers.annotation.forEach(function (this: AnnotationDisplay[], element: Annotation, index_annotation: number) {
 
-        this.datacontainers.annotation.forEach(function (this: AnnotationDisplay[][], element: Annotation, index_annotation: number) {
-            //(<HTMLInputElement>document.getElementById('[' + element.id_annotation + '].id_edit_annotation_display_input_id_instruct')).value = this[id_instruct][element.id_annotation].id_instruct.toString();
-            //(<HTMLInputElement>document.getElementById('[' + element.id_annotation + '].id_edit_annotation_display_input_is_display')).checked = this[id_instruct][element.id_annotation].is_display;
+            const annotation_display = this.find(item => item.id_instruct == id_instruct && item.id_annotation == element.id_annotation)!;
 
-            (<HTMLInputElement>document.getElementById('[' + element.id_annotation + '].id_edit_annotation_display_input_id_instruct')).value = this[index_instruction][index_annotation].id_instruct.toString();
-            (<HTMLInputElement>document.getElementById('[' + element.id_annotation + '].id_edit_annotation_display_input_is_display')).checked = this[index_instruction][index_annotation].is_display;
+
+
+            (<HTMLInputElement>document.getElementById('[' + element.id_annotation + '].id_edit_annotation_display_input_id_instruct')).value = annotation_display.id_instruct.toString();
+            (<HTMLInputElement>document.getElementById('[' + element.id_annotation + '].id_edit_annotation_display_input_is_display')).checked = annotation_display.is_display;
 
 
 
@@ -2149,7 +2164,7 @@ export class TDArticle {
 
 
             let token = (<HTMLInputElement>document.getElementsByName("__RequestVerificationToken").item(0)).value;
-
+            console.log(updObject);
 
             const data = await this.datacontainers.dbUpdEditProductAnnotationDisplayApi(updObject, token);
 
