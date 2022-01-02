@@ -250,47 +250,6 @@ export class DataContainers {
 
         }
 
-        /*
-        console.log(this.annotation_display2);
-
-
-        this.instruction_gp.forEach(function (this: DataContainers, obj_instruction: Instruction, index: number) {
-
-            //console.log("celled : " + i.toString() + "|" + index.toString());
-            this.annotation_display[index] = [];
-            this.annotation.forEach(function (this: DataContainers, obj_annotation: Annotation, index2: number) {
-
-
-                this.annotation_display[index].push(new AnnotationDisplay(
-                    this.id_article,
-                    obj_instruction.id_instruct,
-                    obj_annotation.id_annotation,
-                    false
-                ));
-            }.bind(this));
-        }.bind(this));
-
-        console.log(this.annotation_display);
-
-        let index_1st: number;
-        let index_2nd: number;
-
-        for (let i in data) {
-
-            if (data[i].type == "annotation_display") {
-
-                index_1st = this.instruction_gp.findIndex(x => x.id_instruct == data[i].id_instruct);
-                index_2nd = this.annotation_display[index_1st].findIndex(x => x.id_annotation == data[i].id_annotation);
-
-                this.annotation_display[index_1st][index_2nd].is_display = data[i].is_display;
-            }
-
-        }
-
-
-
-        console.log('length : ' + this.instruction_gp.length.toString());
-        */
 
 
         if (this.instruction_gp.length > 0) {
@@ -299,6 +258,8 @@ export class DataContainers {
 
             this.id_startinst = this.instruction_gp.filter((x: Instruction) => x.display_order == Math.min.apply(null, ar1_map))[0].id_instruct;
 
+            //this.id_startinst = this.instruction_gp.find(x => x.display_order == Math.min.apply(null, this.instruction_gp.map(x => x.display_order));
+            //this.id_startinst = this.instruction_gp.filter((x: Instruction) => x.display_order == Math.min.apply(null, this.instruction_gp))[0].id_instruct;
         }
 
         //console.log(this.id_startinst);
@@ -501,9 +462,9 @@ export class TDArticle {
 
 
     //
-    selected_instruction: number;
-    selected_view: number;
-    selected_annotation: number;
+    selected_instruction: number=0;
+    selected_view: number=0;
+    selected_annotation: number=0;
 
     //Element Names for HTML TAGS
     idhead_edit_annotation_display: string;
@@ -520,13 +481,8 @@ export class TDArticle {
     counter: number;
     step: number;
 
-    pitch_px: number;
-    pitch_py: number;
-    pitch_pz: number;
-
-    pitch_tx: number;
-    pitch_ty: number;
-    pitch_tz: number;
+    pitch_pos: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
+    pitch_target: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
 
     orbit_active: boolean;
 
@@ -554,10 +510,6 @@ export class TDArticle {
         this.controls_target_startpos = new THREE.Vector3(0, 0, 0);
 
 
-        //
-        this.selected_instruction = 0;
-        this.selected_view = 0;
-        this.selected_annotation = 0;
 
         //Element Names for HTML TAGS
         this.idhead_edit_annotation_display = "id_edit_annotation_display_";
@@ -575,13 +527,6 @@ export class TDArticle {
         this.counter = 0;
         this.step = 75;
 
-        this.pitch_px = 0;
-        this.pitch_py = 0;
-        this.pitch_pz = 0;
-
-        this.pitch_tx = 0;
-        this.pitch_ty = 0;
-        this.pitch_tz = 0;
 
         this.orbit_active = false;
 
@@ -938,8 +883,8 @@ export class TDArticle {
 
 
                 temp_ipt = document.createElement('input');
-                temp_ipt.id = "[" + obj_annotation.id_annotation + "]." + "id_edit_annotation_display_input_id_article";
-                temp_ipt.name = "[" + i + "]." + "id_article";
+                temp_ipt.id = `[${obj_annotation.id_annotation}].id_edit_annotation_display_input_id_article`; 
+                temp_ipt.name = `[${i}].id_article`;
                 temp_ipt.type = "hidden";
                 temp_ipt.value = obj_annotation.id_article.toString();
 
@@ -951,8 +896,6 @@ export class TDArticle {
                 temp_ipt.name = "[" + i + "]." + "id_instruct";
                 temp_ipt.type = "hidden";
                 temp_ipt.value = "0";
-                //temp_ipt.value = element.id_instruct;
-                //console.log(element.id_instruct);
 
                 temp_td.appendChild(temp_ipt);
 
@@ -993,9 +936,8 @@ export class TDArticle {
                 temp_td = document.createElement('td');
                 temp_ipt = document.createElement('input');
                 temp_ipt.id = "[" + obj_annotation.id_annotation + "]." + "id_edit_annotation_display_input_is_display";
-                temp_ipt.name = "[" + i + "]." + "is_display";
+                temp_ipt.name = `[${i}].is_display`;
                 temp_ipt.type = "checkbox";
-                //temp_ipt.value = true;
                 temp_ipt.value = 'true';
 
                 temp_td.appendChild(temp_ipt);
@@ -1498,26 +1440,24 @@ export class TDArticle {
 
         this.counter = 0;
 
-        this.pitch_px = (cam_pos.x - this.camera_main.position.x) / this.step;
-        this.pitch_py = (cam_pos.y - this.camera_main.position.y) / this.step;
-        this.pitch_pz = (cam_pos.z - this.camera_main.position.z) / this.step;
 
-        this.pitch_tx = (target.x - this.controls.target.x) / this.step;
-        this.pitch_ty = (target.y - this.controls.target.y) / this.step;
-        this.pitch_tz = (target.z - this.controls.target.z) / this.step;
+        this.pitch_pos.set((cam_pos.x - this.camera_main.position.x) / this.step, (cam_pos.y - this.camera_main.position.y) / this.step, (cam_pos.z - this.camera_main.position.z) / this.step);
+
+
+        this.pitch_target.set((target.x - this.controls.target.x) / this.step, (target.y - this.controls.target.y) / this.step, (target.z - this.controls.target.z) / this.step);
 
 
         if (this.counter >= this.step) { return; }
 
         this.counter = this.counter + 1;
-        this.camera_main.position.x += this.pitch_px;
-        this.camera_main.position.y += this.pitch_py;
-        this.camera_main.position.z += this.pitch_pz;
+        this.camera_main.position.x += this.pitch_pos.x;
+        this.camera_main.position.y += this.pitch_pos.y;
+        this.camera_main.position.z += this.pitch_pos.z;
 
 
-        this.controls.target.x += this.pitch_tx;
-        this.controls.target.y += this.pitch_ty;
-        this.controls.target.z += this.pitch_tz;
+        this.controls.target.x += this.pitch_target.x;
+        this.controls.target.y += this.pitch_target.y;
+        this.controls.target.z += this.pitch_target.z;
 
         this.controls.update();
         this.renderer.render(this.scene, this.camera_main);
@@ -1663,14 +1603,14 @@ export class TDArticle {
 
         this.counter += 1;
 
-        this.camera_main.position.x += this.pitch_px;
-        this.camera_main.position.y += this.pitch_py;
-        this.camera_main.position.z += this.pitch_pz;
+        this.camera_main.position.x += this.pitch_pos.x;
+        this.camera_main.position.y += this.pitch_pos.y;
+        this.camera_main.position.z += this.pitch_pos.z;
 
 
-        this.controls.target.x += this.pitch_tx;
-        this.controls.target.y += this.pitch_ty;
-        this.controls.target.z += this.pitch_tz;
+        this.controls.target.x += this.pitch_target.x;
+        this.controls.target.y += this.pitch_target.y;
+        this.controls.target.z += this.pitch_target.z;
 
         this.controls.update();
         this.renderer.render(this.scene, this.camera_main);
@@ -2158,6 +2098,8 @@ export class TDArticle {
                     Number((<HTMLInputElement>document.getElementById('[' + obj_annotation.id_annotation + '].id_edit_annotation_display_input_id_instruct')).value),
                     obj_annotation.id_annotation,
                     (<HTMLInputElement>document.getElementById('[' + obj_annotation.id_annotation + '].id_edit_annotation_display_input_is_display')).checked
+//                    (<HTMLInputElement>document.getElementById('[${obj_annotation.id_annotation}].id_edit_annotation_display_input_is_display')).checked
+                    //`${vector.x}px`;
                 );
                 i += 1;
             }.bind(this));

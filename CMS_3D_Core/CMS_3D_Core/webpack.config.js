@@ -8,6 +8,7 @@ module.exports = {
         tdarticle: './Scripts/entry/index_tdarticle.ts',
         testthree: './Scripts/entry/index_testthree.js',
         testthree2: './Scripts/entry/index_testthree2.ts',
+        tdarticle_wp: './Scripts/entry/index_tdarticle_wp.ts',
     },
     output: {
         path: __dirname + '/wwwroot/js',
