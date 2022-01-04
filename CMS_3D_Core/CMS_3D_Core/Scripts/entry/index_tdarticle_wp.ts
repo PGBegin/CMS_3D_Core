@@ -15,7 +15,9 @@ function startup() {
     const is_mode_assy = false;
     const is_edit_mode = false;
 
-    adarticle.datacontainers.str_url_base_prodobjectapi_articlemode = "https://aptdaerospacemuseumstaging.azurewebsites.net//ContentsOperatorForArticleApis/GetArticleObjectWholeData?";
+
+    adarticle.datacontainers.str_url_partapi_base = "https://aptdaerospacemuseumstaging.azurewebsites.net/ContentsOperatorForArticleApis/GetPartObjectFile?";
+    adarticle.datacontainers.str_url_base_prodobjectapi_articlemode = "https://aptdaerospacemuseumstaging.azurewebsites.net/ContentsOperatorForArticleApis/GetArticleObjectWholeData?";
 
     if (is_mode_assy) {
         adarticle.datacontainers.is_mode_assy = is_mode_assy;
