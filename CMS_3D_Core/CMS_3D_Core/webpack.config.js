@@ -11,7 +11,7 @@ module.exports = {
         tdarticle_wp: './Scripts/entry/index_tdarticle_wp.ts',
     },
     output: {
-        path: __dirname + '/wwwroot/js',
+        path: __dirname + '/wwwroot/js/dist',
         filename: '[name].bundle.js'
     },
     // モード値を production に設定すると最適化された状態で、
