@@ -466,7 +466,9 @@ export class TDArticle {
     selected_view: number=0;
     selected_annotation: number=0;
 
-    //Element Names for HTML TAGS
+    //Element Names for HTML TAGS    
+    id_div_row_article: string;
+
     idhead_edit_annotation_display: string;
 
     id_instruction_controlpanel: string;
@@ -512,6 +514,8 @@ export class TDArticle {
 
 
         //Element Names for HTML TAGS
+        this.id_div_row_article = "id_div_row_article";
+
         this.idhead_edit_annotation_display = "id_edit_annotation_display_";
 
         this.id_instruction_controlpanel = "control_panel_zone";
@@ -529,6 +533,7 @@ export class TDArticle {
 
 
         this.orbit_active = false;
+
 
 
         // Operation Mode
@@ -550,7 +555,8 @@ export class TDArticle {
 
         if (this.is_edit_mode) {
 
-            this.width = 0.95 * document.documentElement.clientWidth / 2;
+            this.width = 0.95 * document.getElementById(this.id_div_row_article)!.clientWidth / 2;
+            //this.width = 0.95 * document.documentElement.clientWidth / 2;
             this.height = this.width * 9 / 16;
 
             document.getElementById('id_contents_models')!.setAttribute("class", "");
@@ -560,7 +566,8 @@ export class TDArticle {
         } else {
 
             // chk displaymode
-            if (document.documentElement.clientWidth / document.documentElement.clientHeight > 1) {
+            if (document.getElementById(this.id_div_row_article)!.clientWidth / document.getElementById(this.id_div_row_article)!.clientHeight > 1) {
+//            if (document.documentElement.clientWidth / document.documentElement.clientHeight > 1) {
                 this.orientation_mode = 1;
             } else {
                 this.orientation_mode = 0;
@@ -569,14 +576,16 @@ export class TDArticle {
             if (this.orientation_mode == 1) {
                 document.getElementById('id_contents_models')!.setAttribute("class", "");
                 document.getElementById('id_contents_instructions')!.setAttribute("class", "");
-                this.width = 0.95 * document.documentElement.clientWidth / 2;
+                this.width = 0.95 * document.getElementById(this.id_div_row_article)!.clientWidth / 2;
+//                this.width = 0.95 * document.documentElement.clientWidth / 2;
                 this.height = this.width * 9 / 16;
                 document.getElementById('id_contents_models')!.classList.add('col-6');
                 document.getElementById('id_contents_instructions')!.classList.add('col-6');
             } else {
                 document.getElementById('id_contents_models')!.setAttribute("class", "");
                 document.getElementById('id_contents_instructions')!.setAttribute("class", "");
-                this.width = 0.95 * document.documentElement.clientWidth;
+                this.width = 0.95 * document.getElementById(this.id_div_row_article)!.clientWidth;
+//                this.width = 0.95 * document.documentElement.clientWidth;
                 this.height = this.width * 9 / 16;
                 document.getElementById('id_contents_models')!.classList.add('col-12');
                 document.getElementById('id_contents_instructions')!.classList.add('col-12');
