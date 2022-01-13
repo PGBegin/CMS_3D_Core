@@ -1766,8 +1766,8 @@ export class TDArticle {
         const canvas = this.renderer.domElement;
         const cm = this.camera_main;
 
-        let ofx = (<HTMLInputElement>document.getElementById('model_screen')).getBoundingClientRect().left;
-        let ofy = (<HTMLInputElement>document.getElementById('model_screen')).getBoundingClientRect().top;
+        let ofx = 0;// (<HTMLInputElement>document.getElementById('model_screen')).getBoundingClientRect().left;
+        let ofy = 0;//(<HTMLInputElement>document.getElementById('model_screen')).getBoundingClientRect().top;
 
         this.datacontainers.annotation.forEach(function (element : Annotation) {
 
