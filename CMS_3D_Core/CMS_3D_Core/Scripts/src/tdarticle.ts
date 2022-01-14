@@ -762,7 +762,7 @@ export class TDArticle {
             let description1_annotation : any;
 
             //console.log("setupannotation\n");
-            console.log(div_annotations);
+            //console.log(div_annotations);
 
             while (div_annotations.firstChild) {
                 div_annotations.removeChild(div_annotations.firstChild);
@@ -1573,7 +1573,7 @@ export class TDArticle {
         //---------------------
         let id_view = this.datacontainers.instruction_gp.find(x => x.id_instruct == id_instruct)!.id_view;
         let index_view = this.datacontainers.view_object.findIndex(x => x.id_view == id_view);
-        console.log("No:" + index_view.toString());
+        //console.log("No:" + index_view.toString());
 
         this.ScreenUpdateViewEditor(
             new THREE.Vector3(this.datacontainers.view_object[index_view].cam_pos_x, this.datacontainers.view_object[index_view].cam_pos_y, this.datacontainers.view_object[index_view].cam_pos_z),
@@ -1780,7 +1780,7 @@ export class TDArticle {
 
             vector.x = vector.x + ofx;// + window.pageXOffset;
             vector.y = vector.y + ofy;// + window.pageYOffset;
-            console.log(window.pageYOffset);
+            //console.log(window.pageYOffset);
 
             web_annotation = document.getElementById(element.web_id_annotation)!;
             web_annotation.style.top = `${vector.y}px`;
@@ -1818,7 +1818,7 @@ export class TDArticle {
                 //データ更新
                 this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
 
-                    console.log("viewid : " + this.selected_instruction.toString());
+                    //console.log("viewid : " + this.selected_instruction.toString());
 
                     this.ComplexResetEnvironment();
                     this.ComplexTransitionInstruction(this.selected_instruction);
@@ -1862,7 +1862,7 @@ export class TDArticle {
                     let checked = false;
                     this.datacontainers.instruction_gp.forEach(function (this: TDArticle, element: Instruction) {
                         id = element.id_instruct;
-                        console.log(checked);
+                        //console.log(checked);
                         if (typeof id === "undefined") {
 
                         } else {
@@ -1992,10 +1992,10 @@ export class TDArticle {
     async DbUpdateAnnotation() {
 
 
-        console.log("id_instruct_out:" + this.selected_instruction);
-        console.log("id_annotation_out:" + this.selected_annotation);
+        //console.log("id_instruct_out:" + this.selected_instruction);
+        //console.log("id_annotation_out:" + this.selected_annotation);
 
-        console.log(this.datacontainers.str_url_base_edit_product_annotation);
+        //console.log(this.datacontainers.str_url_base_edit_product_annotation);
 
         if (confirm('Are you update Annotation?')) {
 
@@ -2098,11 +2098,11 @@ export class TDArticle {
         if (confirm('Are you update AnnotationDisplay?')) {
 
             let updObject: AnnotationDisplay[] = [];
-            console.log('DbUpdateAnnotationDisplay');
+            //console.log('DbUpdateAnnotationDisplay');
             
             let i = 0;
             this.datacontainers.annotation.forEach(function (this: TDArticle, obj_annotation: Annotation) {
-                console.log('DbUpdateAnnotationDisplay' + i.toString());
+                //console.log('DbUpdateAnnotationDisplay' + i.toString());
                 updObject[i] = new AnnotationDisplay(
                     this.datacontainers.id_article,
                     Number((<HTMLInputElement>document.getElementById('[' + obj_annotation.id_annotation + '].id_edit_annotation_display_input_id_instruct')).value),
@@ -2116,7 +2116,7 @@ export class TDArticle {
 
 
             let token = (<HTMLInputElement>document.getElementsByName("__RequestVerificationToken").item(0)).value;
-            console.log(updObject);
+            //console.log(updObject);
 
             const data = await this.datacontainers.dbUpdEditProductAnnotationDisplayApi(updObject, token);
 
