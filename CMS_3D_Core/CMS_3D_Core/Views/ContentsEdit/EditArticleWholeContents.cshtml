@@ -16,7 +16,7 @@
 </p>
 
 
-<div class="row">
+<div class="row" id="id_div_row_article">
 
     <div class="col-6" id="id_contents_models">
 
@@ -77,7 +77,7 @@
                 @*@await Component.InvokeAsync("ViewList", new { id_article = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { id_article = 0 }).id_article })*@
                 @await Component.InvokeAsync("EditListProductView")
 
-                
+
                 @Html.ActionLink("View", "Index", "t_view", new { id_article = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { id_article = 0 }).id_article })
 
             </div>

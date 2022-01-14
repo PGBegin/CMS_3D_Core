@@ -19,9 +19,9 @@
 <link rel="stylesheet" href="~/css/annotation.css" />
 
 
-<div class="row">
+<div class="row" id="id_div_row_article">
 
-    <div class="col-6" id="id_contents_models">
+    <div class="col-6" id="id_contents_models" style="position: relative">
         <h2>@Html.DisplayFor(model => model.title)</h2>
         @Html.HiddenFor(model => model.id_article, new { id = "id_article" })
         <input type="hidden" value="false" id="is_mode_assy" />
@@ -108,4 +108,4 @@
 
 
 
-<script type="module" src="~/js/tdarticle.bundle.js"></script>
+<script type="module" src="~/js/dist/tdarticle.bundle.js"></script>

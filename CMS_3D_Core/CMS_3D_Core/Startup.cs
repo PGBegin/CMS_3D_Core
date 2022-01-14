@@ -25,6 +25,8 @@ namespace CMS_3D_Core
 
         public IConfiguration Configuration { get; }
 
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -45,6 +47,14 @@ namespace CMS_3D_Core
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
+
+
+            services.AddCors(o => o.AddPolicy(MyAllowSpecificOrigins, builder =>
+            {
+                builder.AllowAnyOrigin()    // Allow CORS Recest from all Origin
+                       .AllowAnyMethod()    // Allow All Http method
+                       .AllowAnyHeader();   // Allow All request header
+            }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,6 +75,8 @@ namespace CMS_3D_Core
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseCors(MyAllowSpecificOrigins);   // Add For CORS
 
             app.UseAuthentication();
             app.UseAuthorization();
