@@ -452,6 +452,9 @@ export class TDArticle {
     lightHelper!: THREE.DirectionalLightHelper;
 
 
+    arrow_base: THREE.Vector3;
+
+
     light!: THREE.DirectionalLight;
     ambient!: THREE.AmbientLight;
     renderer!: THREE.WebGLRenderer;
@@ -511,7 +514,7 @@ export class TDArticle {
         this.camera_main_startpos = new THREE.Vector3(30, 30, 30);
         this.controls_target_startpos = new THREE.Vector3(0, 0, 0);
 
-
+        this.arrow_base = new THREE.Vector3(-1, -1, -1);
 
         //Element Names for HTML TAGS
         this.id_div_row_article = "id_div_row_article";
@@ -792,9 +795,13 @@ export class TDArticle {
                 const geometry = new THREE.SphereGeometry(0.1, 32, 32);
                 const material = new THREE.MeshBasicMaterial({ color: 0XCD0000 });
                 obj_annotation.marker = new THREE.Mesh(geometry, material);
-                obj_annotation.marker.position.set(obj_annotation.pos_x, obj_annotation.pos_y, obj_annotation.pos_z);
+                //obj_annotation.marker.position.set(obj_annotation.pos_x, obj_annotation.pos_y, obj_annotation.pos_z);
+                obj_annotation.marker.position.copy(obj_annotation.pos_pointing);
+                obj_annotation.marker.visible = false;
                 this.scene.add(obj_annotation.marker);
 
+                obj_annotation.arrow = new THREE.ArrowHelper(this.arrow_base.normalize(), obj_annotation.pos_pointing.clone().sub(this.arrow_base), this.arrow_base.length(), 0xff0000);
+                this.scene.add(obj_annotation.arrow);
 
 
             }.bind(this));
@@ -1515,9 +1522,9 @@ export class TDArticle {
             (<HTMLInputElement>document.getElementById('id_edit_annotation_input_status')).value = this.datacontainers.annotation[index_annotation].status.toString();
 
 
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_x')).value = this.datacontainers.annotation[index_annotation].pos_x.toString();
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_y')).value = this.datacontainers.annotation[index_annotation].pos_y.toString();
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_z')).value = this.datacontainers.annotation[index_annotation].pos_z.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_x')).value = this.datacontainers.annotation[index_annotation].pos_pointing.x.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_y')).value = this.datacontainers.annotation[index_annotation].pos_pointing.y.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_z')).value = this.datacontainers.annotation[index_annotation].pos_pointing.z.toString();
 
             //Delete
             (<HTMLInputElement>document.getElementById('id_delete_annotation_input_id_annotation')).value = this.datacontainers.annotation[index_annotation].id_annotation.toString();
@@ -1539,14 +1546,12 @@ export class TDArticle {
         if (this.is_edit_mode) {
 
             //Edit
-            this.datacontainers.annotation[index_annotation].pos_x += px;
-            this.datacontainers.annotation[index_annotation].pos_y += py;
-            this.datacontainers.annotation[index_annotation].pos_z += pz;
+            this.datacontainers.annotation[index_annotation].pos_pointing.add(new THREE.Vector3(px, py, pz));
 
 
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_x')).value = this.datacontainers.annotation[index_annotation].pos_x.toString();
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_y')).value = this.datacontainers.annotation[index_annotation].pos_y.toString();
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_z')).value = this.datacontainers.annotation[index_annotation].pos_z.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_x')).value = this.datacontainers.annotation[index_annotation].pos_pointing.x.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_y')).value = this.datacontainers.annotation[index_annotation].pos_pointing.y.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_z')).value = this.datacontainers.annotation[index_annotation].pos_pointing.z.toString();
 
             //Edit
             //this.annotation[id_annotation].marker.pos.x += px;
@@ -1554,6 +1559,7 @@ export class TDArticle {
             //this.annotation[id_annotation].marker.pos.z += pz;
 
             this.datacontainers.annotation[index_annotation].marker.position.add(new THREE.Vector3(px, py, pz));
+            this.datacontainers.annotation[index_annotation].arrow.position.add(new THREE.Vector3(px, py, pz));
 
             //element.marker.position.set(element.pos_x, element.pos_y, element.pos_z);
 
@@ -1598,7 +1604,8 @@ export class TDArticle {
 
             const is_display = this.datacontainers.annotation_display.find(item => item.id_instruct == id_instruct && item.id_annotation == element.id_annotation)!.is_display;
             (<HTMLInputElement>document.getElementById(element.web_id_annotation)).hidden = !is_display;
-            element.marker.visible = is_display;
+            //element.marker.visible = is_display;
+            element.arrow.visible = is_display;
 
             //console.log("[" + index_instruction + "]" + "[" + index + "]" + "\n");
         }.bind(this));
@@ -1765,13 +1772,14 @@ export class TDArticle {
         let web_annotation;
         const canvas = this.renderer.domElement;
         const cm = this.camera_main;
+        const ab = this.arrow_base;
 
         let ofx = 0;// (<HTMLInputElement>document.getElementById('model_screen')).getBoundingClientRect().left;
         let ofy = 0;//(<HTMLInputElement>document.getElementById('model_screen')).getBoundingClientRect().top;
 
         this.datacontainers.annotation.forEach(function (element : Annotation) {
 
-            const vector = new THREE.Vector3(element.pos_x, element.pos_y, element.pos_z);
+            const vector = element.pos_pointing.clone().sub(ab);
             vector.project(cm);
 
 
