@@ -1681,7 +1681,7 @@ export class TDArticle {
         //Update Instruction for Edit
         (<HTMLInputElement>document.getElementById('instruction_title')).value = this.datacontainers.instruction_gp[index_inst].title.toString();
         (<HTMLInputElement>document.getElementById('instruction_id_view')).value = this.datacontainers.instruction_gp[index_inst].id_view.toString();
-        (<HTMLInputElement>document.getElementById('instruction_short_description')).textContent = this.datacontainers.instruction_gp[index_inst].short_description;
+        (<HTMLInputElement>document.getElementById('instruction_short_description')).value = this.datacontainers.instruction_gp[index_inst].short_description;
         (<HTMLInputElement>document.getElementById('instruction_id_article')).value = this.datacontainers.instruction_gp[index_inst].id_article.toString();
         (<HTMLInputElement>document.getElementById('instruction_id_instruct')).value = this.datacontainers.instruction_gp[index_inst].id_instruct.toString();
         (<HTMLInputElement>document.getElementById('instruction_display_order')).value = this.datacontainers.instruction_gp[index_inst].display_order.toString();
