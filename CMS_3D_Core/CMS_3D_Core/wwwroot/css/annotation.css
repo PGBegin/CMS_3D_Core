@@ -18,7 +18,7 @@ annotations {
     margin-left: 15px;
     margin-top: -10px;
     padding: 1em;
-    width: 200px;
+    max-width: 200px;
     color: #fff;
     background: rgba(0, 0, 0, 0.8);
     border-radius: .5em;
