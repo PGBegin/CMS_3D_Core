@@ -781,8 +781,12 @@ export class TDArticle {
                 temp_annotation.classList.add('annotation');
 
                 title_annotation = document.createElement('p');
-                description1_annotation = document.createElement('p');
+                title_annotation.classList.add('p_annotation');
 
+                description1_annotation = document.createElement('p');
+                description1_annotation.classList.add('p_annotation');
+
+                
 
                 title_annotation.innerHTML = obj_annotation.title;
                 description1_annotation.innerHTML = obj_annotation.description1;
