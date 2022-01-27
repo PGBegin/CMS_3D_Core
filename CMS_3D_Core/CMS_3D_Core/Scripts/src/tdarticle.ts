@@ -8,6 +8,19 @@ import { marked } from 'marked';
 import { Aarticle, Instruction, ViewObject, InstancePart, Annotation, AnnotationDisplay, Refelencematerial } from './tdarticle/tdarticle_Aarticle';
 
 
+/*
+ 
+ Basic Rule
+ 
+    DbXxxx      : Operation DB
+    DomXxxxx    : Operation Dom html内のdomを指す
+    ObjXxx      : Operation Object (データオブジェクト・シーンオブジェクト等)
+    ScreenXxx   : 
+    ComplexXxx  : 上記が組み合わさっているもの
+    
+ 
+ 
+ */
 
 export class DataContainers {
 
@@ -749,6 +762,16 @@ export class TDArticle {
         }
     }
 
+    //SceneからAnnotation用のオブジェクトを取り除く
+    ObjRemoveObjectScene() {
+
+        this.datacontainers.annotation.forEach(function (this: TDArticle, obj_annotation: Annotation) {
+
+            this.scene.remove(obj_annotation.marker);
+            this.scene.remove(obj_annotation.arrow);
+
+        }.bind(this));
+    }
 
 
     //Loading Annotations
@@ -1827,6 +1850,9 @@ export class TDArticle {
 
             if (data[0].updateresult == "Success") {
 
+                //remove scene
+                this.ObjRemoveObjectScene();
+
                 //データ更新
                 this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
 
@@ -1865,6 +1891,9 @@ export class TDArticle {
 
 
             if (data[0].updateresult == "Success") {
+
+                //remove scene
+                this.ObjRemoveObjectScene();
 
                 //データ更新
                 this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
@@ -1942,6 +1971,10 @@ export class TDArticle {
             const data = await this.datacontainers.dbUpdEditProductViewApi(updObject, token);
 
             if (data[0].updateresult == "Success") {
+
+                //remove scene
+                this.ObjRemoveObjectScene();
+
                 //データ更新
                 this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
                     this.ComplexResetEnvironment();
@@ -1982,6 +2015,9 @@ export class TDArticle {
 
             if (data[0].updateresult == "Success") {
                 //this.selected_annotation = data[0].id_annotation;
+
+                //remove scene
+                this.ObjRemoveObjectScene();
 
                 //データ更新
                 this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
@@ -2030,6 +2066,9 @@ export class TDArticle {
             if (data[0].updateresult == "Success") {
                 this.selected_annotation = data[0].id_annotation;
 
+                //remove scene
+                this.ObjRemoveObjectScene();
+
                 //データ更新
                 this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
                     this.ComplexResetEnvironment();
@@ -2063,6 +2102,9 @@ export class TDArticle {
             const data = await this.datacontainers.dbUpdDeleteProductAnnotationApi(updObject, token);
 
             if (data[0].updateresult == "Success") {
+
+                //remove scene
+                this.ObjRemoveObjectScene();
 
                 //データ更新
                 this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
@@ -2134,6 +2176,9 @@ export class TDArticle {
 
             if (data[0].updateresult == "Success") {
                 this.selected_annotation = data[0].id_annotation;
+
+                //remove scene
+                this.ObjRemoveObjectScene();
 
                 //データ更新
                 this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
