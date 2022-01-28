@@ -1539,6 +1539,18 @@ export class TDArticle {
                 }
             }
 
+
+            //Hilighting Annotation
+            this.datacontainers.annotation.forEach(function (this: TDArticle, obj_annotation: Annotation) {
+
+                (<HTMLInputElement>document.getElementById(obj_annotation.web_id_annotation)).classList.remove("annotation_editmode");
+
+            }.bind(this));
+            (<HTMLInputElement>document.getElementById(this.datacontainers.annotation[index_annotation].web_id_annotation)).classList.add("annotation_editmode");
+
+
+
+
             //Edit
             (<HTMLInputElement>document.getElementById('id_edit_annotation_input_id_annotation')).value = this.datacontainers.annotation[index_annotation].id_annotation.toString();
             (<HTMLInputElement>document.getElementById('id_edit_annotation_input_title')).value = this.datacontainers.annotation[index_annotation].title;

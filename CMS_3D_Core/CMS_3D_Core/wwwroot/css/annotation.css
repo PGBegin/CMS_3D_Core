@@ -30,6 +30,11 @@ annotations {
     &::before
 }
 
+.annotation_editmode {
+    outline-color: red;
+    background: rgba(0, 0, 255, 0.8);
+}
+
 .p_annotation {
     margin-bottom: 0.5em;
 }
