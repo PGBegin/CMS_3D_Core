@@ -1027,6 +1027,7 @@ namespace CMS_3D_Core.Controllers
                     {
                         var target = await _context.t_annotation_displays.FindAsync(m.id_article, m.id_instruct, m.id_annotation);
                         target.is_display = m.is_display;
+                        target.is_display_description = m.is_display_description;
                         target.latest_update_user = User.Identity.Name;
                         target.latest_update_datetime = DateTime.Now;
                     }
@@ -1187,7 +1188,8 @@ namespace CMS_3D_Core.Controllers
                 id_article = item.id_article,
                 id_instruct = item.id_instruct,
                 id_annotation = item.id_annotation,
-                is_display = item.is_display
+                is_display = item.is_display,
+                is_display_description = item.is_display_description
             };
 
 

@@ -233,7 +233,8 @@ export class DataContainers {
                     data[i].pos_x,
                     data[i].pos_y,
                     data[i].pos_z,
-                    'id_annotation_' + data[i].id_annotation
+                    'id_annotation_' + data[i].id_annotation,
+                    'id_annotation_description_' + data[i].id_annotation
                 ));
             }
 
@@ -243,7 +244,8 @@ export class DataContainers {
                     data[i].id_article,
                     data[i].id_instruct,
                     data[i].id_annotation,
-                    data[i].is_display
+                    data[i].is_display,
+                    data[i].is_display_description
                 ));
             }
 
@@ -785,7 +787,7 @@ export class TDArticle {
 
             let temp_annotation : any;
             let title_annotation : any;
-            let description1_annotation : any;
+            //let description1_annotation : any;
 
             //console.log("setupannotation\n");
             //console.log(div_annotations);
@@ -806,8 +808,9 @@ export class TDArticle {
                 title_annotation = document.createElement('p');
                 title_annotation.classList.add('p_annotation');
 
-                description1_annotation = document.createElement('p');
+                const description1_annotation = document.createElement('p');
                 description1_annotation.classList.add('p_annotation');
+                description1_annotation.id = obj_annotation.web_id_annotation_description;
 
                 
 
@@ -980,6 +983,18 @@ export class TDArticle {
                 temp_ipt = document.createElement('input');
                 temp_ipt.id = "[" + obj_annotation.id_annotation + "]." + "id_edit_annotation_display_input_is_display";
                 temp_ipt.name = `[${i}].is_display`;
+                temp_ipt.type = "checkbox";
+                temp_ipt.value = 'true';
+
+                temp_td.appendChild(temp_ipt);
+
+                temp_tr.appendChild(temp_td);
+                
+                // Colomn 06 (Check box for Display Description)
+                temp_td = document.createElement('td');
+                temp_ipt = document.createElement('input');
+                temp_ipt.id = "[" + obj_annotation.id_annotation + "]." + "id_edit_annotation_display_input_is_display_description";
+                temp_ipt.name = `[${i}].is_display_description`;
                 temp_ipt.type = "checkbox";
                 temp_ipt.value = 'true';
 
@@ -1640,11 +1655,19 @@ export class TDArticle {
 
         this.datacontainers.annotation.forEach(function (this: TDArticle, element: Annotation, index : number)
         {
-
-            const is_display = this.datacontainers.annotation_display.find(item => item.id_instruct == id_instruct && item.id_annotation == element.id_annotation)!.is_display;
+            const annotation_display = this.datacontainers.annotation_display.find(item => item.id_instruct == id_instruct && item.id_annotation == element.id_annotation);
+            const is_display = annotation_display!.is_display;
+//            const is_display = this.datacontainers.annotation_display.find(item => item.id_instruct == id_instruct && item.id_annotation == element.id_annotation)!.is_display;
             (<HTMLInputElement>document.getElementById(element.web_id_annotation)).hidden = !is_display;
             //element.marker.visible = is_display;
             element.arrow.visible = is_display;
+
+            //control display description
+            if (annotation_display!.is_display_description) {
+                (<HTMLInputElement>document.getElementById(element.web_id_annotation_description)).style.display = 'inherit';
+            } else {
+                (<HTMLInputElement>document.getElementById(element.web_id_annotation_description)).style.display = 'none';
+            }
 
             //console.log("[" + index_instruction + "]" + "[" + index + "]" + "\n");
         }.bind(this));
@@ -1758,6 +1781,7 @@ export class TDArticle {
 
             (<HTMLInputElement>document.getElementById('[' + element.id_annotation + '].id_edit_annotation_display_input_id_instruct')).value = annotation_display.id_instruct.toString();
             (<HTMLInputElement>document.getElementById('[' + element.id_annotation + '].id_edit_annotation_display_input_is_display')).checked = annotation_display.is_display;
+            (<HTMLInputElement>document.getElementById('[' + element.id_annotation + '].id_edit_annotation_display_input_is_display_description')).checked = annotation_display.is_display_description;
 
 
 
@@ -2168,14 +2192,13 @@ export class TDArticle {
             
             let i = 0;
             this.datacontainers.annotation.forEach(function (this: TDArticle, obj_annotation: Annotation) {
-                //console.log('DbUpdateAnnotationDisplay' + i.toString());
+
                 updObject[i] = new AnnotationDisplay(
                     this.datacontainers.id_article,
                     Number((<HTMLInputElement>document.getElementById('[' + obj_annotation.id_annotation + '].id_edit_annotation_display_input_id_instruct')).value),
                     obj_annotation.id_annotation,
-                    (<HTMLInputElement>document.getElementById('[' + obj_annotation.id_annotation + '].id_edit_annotation_display_input_is_display')).checked
-//                    (<HTMLInputElement>document.getElementById('[${obj_annotation.id_annotation}].id_edit_annotation_display_input_is_display')).checked
-                    //`${vector.x}px`;
+                    (<HTMLInputElement>document.getElementById('[' + obj_annotation.id_annotation + '].id_edit_annotation_display_input_is_display')).checked,
+                    (<HTMLInputElement>document.getElementById('[' + obj_annotation.id_annotation + '].id_edit_annotation_display_input_is_display_description')).checked //IDの決定から必要
                 );
                 i += 1;
             }.bind(this));
