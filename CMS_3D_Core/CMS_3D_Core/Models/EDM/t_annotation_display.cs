@@ -11,6 +11,7 @@ namespace CMS_3D_Core.Models.EDM
         public long id_instruct { get; set; }
         public long id_annotation { get; set; }
         public bool is_display { get; set; }
+        public bool is_display_description { get; set; }
         public string create_user { get; set; }
         public DateTime? create_datetime { get; set; }
         public string latest_update_user { get; set; }

@@ -40,7 +40,7 @@ export function GetScreenshotForUpload(adarticle: TDArticle, id_parent_element: 
 
 
     } catch (e) {
-        console.log(e);
+        //console.log(e);
         return;
     }
 

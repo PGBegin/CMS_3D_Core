@@ -1,5 +1,7 @@
 ﻿//
 
+import { Vector3 } from "three";
+
 
 
 
@@ -165,16 +167,16 @@ export class Annotation {
 
     status: number;
 
-    pos_x: number;
-    pos_y: number;
-    pos_z: number;
+    pos_pointing: THREE.Vector3;
 
     web_id_annotation: string;
+    web_id_annotation_description: string;
     marker!: THREE.Mesh;
+    arrow!: THREE.ArrowHelper;
 
     constructor(id_article: number, id_annotation: number,
         title: string, description1: string, description2: string, status: number,
-        pos_x: number, pos_y: number, pos_z: number, web_id_annotation: string) {
+        pos_x: number, pos_y: number, pos_z: number, web_id_annotation: string, web_id_annotation_description: string) {
 
         this.id_article = id_article;
         this.id_annotation = id_annotation;
@@ -184,10 +186,9 @@ export class Annotation {
         this.description2 = description2;
         this.status = status;
 
-        this.pos_x = pos_x;
-        this.pos_y = pos_y;
-        this.pos_z = pos_z;
+        this.pos_pointing = new Vector3(pos_x, pos_y, pos_z);
         this.web_id_annotation = web_id_annotation;
+        this.web_id_annotation_description = web_id_annotation_description;
         //this.marker = null;
     }
 }
@@ -200,12 +201,14 @@ export class AnnotationDisplay {
     id_instruct: number;
     id_annotation: number;
     is_display: boolean;
+    is_display_description: boolean;
 
-    constructor(id_article: number, id_instruct: number, id_annotation: number, is_display: boolean) {
+    constructor(id_article: number, id_instruct: number, id_annotation: number, is_display: boolean, is_display_description: boolean) {
         this.id_article = id_article;
         this.id_instruct = id_instruct;
         this.id_annotation = id_annotation;
         this.is_display = is_display;
+        this.is_display_description = is_display_description;
     }
 }
 

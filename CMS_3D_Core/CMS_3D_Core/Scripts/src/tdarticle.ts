@@ -8,6 +8,19 @@ import { marked } from 'marked';
 import { Aarticle, Instruction, ViewObject, InstancePart, Annotation, AnnotationDisplay, Refelencematerial } from './tdarticle/tdarticle_Aarticle';
 
 
+/*
+ 
+ Basic Rule
+ 
+    DbXxxx      : Operation DB
+    DomXxxxx    : Operation Dom html内のdomを指す
+    ObjXxx      : Operation Object (データオブジェクト・シーンオブジェクト等)
+    ScreenXxx   : 
+    ComplexXxx  : 上記が組み合わさっているもの
+    
+ 
+ 
+ */
 
 export class DataContainers {
 
@@ -220,7 +233,8 @@ export class DataContainers {
                     data[i].pos_x,
                     data[i].pos_y,
                     data[i].pos_z,
-                    'id_annotation_' + data[i].id_annotation
+                    'id_annotation_' + data[i].id_annotation,
+                    'id_annotation_description_' + data[i].id_annotation
                 ));
             }
 
@@ -230,7 +244,8 @@ export class DataContainers {
                     data[i].id_article,
                     data[i].id_instruct,
                     data[i].id_annotation,
-                    data[i].is_display
+                    data[i].is_display,
+                    data[i].is_display_description
                 ));
             }
 
@@ -452,6 +467,9 @@ export class TDArticle {
     lightHelper!: THREE.DirectionalLightHelper;
 
 
+    arrow_base: THREE.Vector3;
+
+
     light!: THREE.DirectionalLight;
     ambient!: THREE.AmbientLight;
     renderer!: THREE.WebGLRenderer;
@@ -511,7 +529,7 @@ export class TDArticle {
         this.camera_main_startpos = new THREE.Vector3(30, 30, 30);
         this.controls_target_startpos = new THREE.Vector3(0, 0, 0);
 
-
+        this.arrow_base = new THREE.Vector3(-1, -1, -1);
 
         //Element Names for HTML TAGS
         this.id_div_row_article = "id_div_row_article";
@@ -746,6 +764,16 @@ export class TDArticle {
         }
     }
 
+    //SceneからAnnotation用のオブジェクトを取り除く
+    ObjRemoveObjectScene() {
+
+        this.datacontainers.annotation.forEach(function (this: TDArticle, obj_annotation: Annotation) {
+
+            this.scene.remove(obj_annotation.marker);
+            this.scene.remove(obj_annotation.arrow);
+
+        }.bind(this));
+    }
 
 
     //Loading Annotations
@@ -759,10 +787,10 @@ export class TDArticle {
 
             let temp_annotation : any;
             let title_annotation : any;
-            let description1_annotation : any;
+            //let description1_annotation : any;
 
             //console.log("setupannotation\n");
-            console.log(div_annotations);
+            //console.log(div_annotations);
 
             while (div_annotations.firstChild) {
                 div_annotations.removeChild(div_annotations.firstChild);
@@ -778,8 +806,13 @@ export class TDArticle {
                 temp_annotation.classList.add('annotation');
 
                 title_annotation = document.createElement('p');
-                description1_annotation = document.createElement('p');
+                title_annotation.classList.add('p_annotation');
 
+                const description1_annotation = document.createElement('p');
+                description1_annotation.classList.add('p_annotation');
+                description1_annotation.id = obj_annotation.web_id_annotation_description;
+
+                
 
                 title_annotation.innerHTML = obj_annotation.title;
                 description1_annotation.innerHTML = obj_annotation.description1;
@@ -792,9 +825,13 @@ export class TDArticle {
                 const geometry = new THREE.SphereGeometry(0.1, 32, 32);
                 const material = new THREE.MeshBasicMaterial({ color: 0XCD0000 });
                 obj_annotation.marker = new THREE.Mesh(geometry, material);
-                obj_annotation.marker.position.set(obj_annotation.pos_x, obj_annotation.pos_y, obj_annotation.pos_z);
+
+                obj_annotation.marker.position.copy(obj_annotation.pos_pointing);
+                obj_annotation.marker.visible = false;
                 this.scene.add(obj_annotation.marker);
 
+                obj_annotation.arrow = new THREE.ArrowHelper(this.arrow_base.normalize(), obj_annotation.pos_pointing.clone().sub(this.arrow_base), this.arrow_base.length(), 0xff0000);
+                this.scene.add(obj_annotation.arrow);
 
 
             }.bind(this));
@@ -946,6 +983,18 @@ export class TDArticle {
                 temp_ipt = document.createElement('input');
                 temp_ipt.id = "[" + obj_annotation.id_annotation + "]." + "id_edit_annotation_display_input_is_display";
                 temp_ipt.name = `[${i}].is_display`;
+                temp_ipt.type = "checkbox";
+                temp_ipt.value = 'true';
+
+                temp_td.appendChild(temp_ipt);
+
+                temp_tr.appendChild(temp_td);
+                
+                // Colomn 06 (Check box for Display Description)
+                temp_td = document.createElement('td');
+                temp_ipt = document.createElement('input');
+                temp_ipt.id = "[" + obj_annotation.id_annotation + "]." + "id_edit_annotation_display_input_is_display_description";
+                temp_ipt.name = `[${i}].is_display_description`;
                 temp_ipt.type = "checkbox";
                 temp_ipt.value = 'true';
 
@@ -1402,7 +1451,9 @@ export class TDArticle {
 
         // main camara
         this.camera_main = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 1000);
-        
+
+        //background
+//        this.scene.background = new THREE.Color(0x000000);
 
         // renderer
         //renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -1429,7 +1480,6 @@ export class TDArticle {
 
         //Setting gammaOutput
         //In order to reduce darkening of some items with truee.js
-        //this.renderer.gammaOutput = _gammaOutput;
         if (_gammaOutput) {
             this.renderer.outputEncoding = THREE.sRGBEncoding;
         } else {
@@ -1505,6 +1555,18 @@ export class TDArticle {
                 }
             }
 
+
+            //Hilighting Annotation
+            this.datacontainers.annotation.forEach(function (this: TDArticle, obj_annotation: Annotation) {
+
+                (<HTMLInputElement>document.getElementById(obj_annotation.web_id_annotation)).classList.remove("annotation_editmode");
+
+            }.bind(this));
+            (<HTMLInputElement>document.getElementById(this.datacontainers.annotation[index_annotation].web_id_annotation)).classList.add("annotation_editmode");
+
+
+
+
             //Edit
             (<HTMLInputElement>document.getElementById('id_edit_annotation_input_id_annotation')).value = this.datacontainers.annotation[index_annotation].id_annotation.toString();
             (<HTMLInputElement>document.getElementById('id_edit_annotation_input_title')).value = this.datacontainers.annotation[index_annotation].title;
@@ -1515,9 +1577,9 @@ export class TDArticle {
             (<HTMLInputElement>document.getElementById('id_edit_annotation_input_status')).value = this.datacontainers.annotation[index_annotation].status.toString();
 
 
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_x')).value = this.datacontainers.annotation[index_annotation].pos_x.toString();
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_y')).value = this.datacontainers.annotation[index_annotation].pos_y.toString();
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_z')).value = this.datacontainers.annotation[index_annotation].pos_z.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_x')).value = this.datacontainers.annotation[index_annotation].pos_pointing.x.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_y')).value = this.datacontainers.annotation[index_annotation].pos_pointing.y.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_z')).value = this.datacontainers.annotation[index_annotation].pos_pointing.z.toString();
 
             //Delete
             (<HTMLInputElement>document.getElementById('id_delete_annotation_input_id_annotation')).value = this.datacontainers.annotation[index_annotation].id_annotation.toString();
@@ -1539,21 +1601,17 @@ export class TDArticle {
         if (this.is_edit_mode) {
 
             //Edit
-            this.datacontainers.annotation[index_annotation].pos_x += px;
-            this.datacontainers.annotation[index_annotation].pos_y += py;
-            this.datacontainers.annotation[index_annotation].pos_z += pz;
+            this.datacontainers.annotation[index_annotation].pos_pointing.add(new THREE.Vector3(px, py, pz));
 
 
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_x')).value = this.datacontainers.annotation[index_annotation].pos_x.toString();
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_y')).value = this.datacontainers.annotation[index_annotation].pos_y.toString();
-            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_z')).value = this.datacontainers.annotation[index_annotation].pos_z.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_x')).value = this.datacontainers.annotation[index_annotation].pos_pointing.x.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_y')).value = this.datacontainers.annotation[index_annotation].pos_pointing.y.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_z')).value = this.datacontainers.annotation[index_annotation].pos_pointing.z.toString();
 
             //Edit
-            //this.annotation[id_annotation].marker.pos.x += px;
-            //this.annotation[id_annotation].marker.pos.y += py;
-            //this.annotation[id_annotation].marker.pos.z += pz;
 
             this.datacontainers.annotation[index_annotation].marker.position.add(new THREE.Vector3(px, py, pz));
+            this.datacontainers.annotation[index_annotation].arrow.position.add(new THREE.Vector3(px, py, pz));
 
             //element.marker.position.set(element.pos_x, element.pos_y, element.pos_z);
 
@@ -1573,7 +1631,7 @@ export class TDArticle {
         //---------------------
         let id_view = this.datacontainers.instruction_gp.find(x => x.id_instruct == id_instruct)!.id_view;
         let index_view = this.datacontainers.view_object.findIndex(x => x.id_view == id_view);
-        console.log("No:" + index_view.toString());
+        //console.log("No:" + index_view.toString());
 
         this.ScreenUpdateViewEditor(
             new THREE.Vector3(this.datacontainers.view_object[index_view].cam_pos_x, this.datacontainers.view_object[index_view].cam_pos_y, this.datacontainers.view_object[index_view].cam_pos_z),
@@ -1595,10 +1653,19 @@ export class TDArticle {
 
         this.datacontainers.annotation.forEach(function (this: TDArticle, element: Annotation, index : number)
         {
+            const annotation_display = this.datacontainers.annotation_display.find(item => item.id_instruct == id_instruct && item.id_annotation == element.id_annotation);
+            const is_display = annotation_display!.is_display;
 
-            const is_display = this.datacontainers.annotation_display.find(item => item.id_instruct == id_instruct && item.id_annotation == element.id_annotation)!.is_display;
             (<HTMLInputElement>document.getElementById(element.web_id_annotation)).hidden = !is_display;
-            element.marker.visible = is_display;
+            //element.marker.visible = is_display;
+            element.arrow.visible = is_display;
+
+            //control display description
+            if (annotation_display!.is_display_description) {
+                (<HTMLInputElement>document.getElementById(element.web_id_annotation_description)).style.display = 'inherit';
+            } else {
+                (<HTMLInputElement>document.getElementById(element.web_id_annotation_description)).style.display = 'none';
+            }
 
             //console.log("[" + index_instruction + "]" + "[" + index + "]" + "\n");
         }.bind(this));
@@ -1674,7 +1741,7 @@ export class TDArticle {
         //Update Instruction for Edit
         (<HTMLInputElement>document.getElementById('instruction_title')).value = this.datacontainers.instruction_gp[index_inst].title.toString();
         (<HTMLInputElement>document.getElementById('instruction_id_view')).value = this.datacontainers.instruction_gp[index_inst].id_view.toString();
-        (<HTMLInputElement>document.getElementById('instruction_short_description')).textContent = this.datacontainers.instruction_gp[index_inst].short_description;
+        (<HTMLInputElement>document.getElementById('instruction_short_description')).value = this.datacontainers.instruction_gp[index_inst].short_description;
         (<HTMLInputElement>document.getElementById('instruction_id_article')).value = this.datacontainers.instruction_gp[index_inst].id_article.toString();
         (<HTMLInputElement>document.getElementById('instruction_id_instruct')).value = this.datacontainers.instruction_gp[index_inst].id_instruct.toString();
         (<HTMLInputElement>document.getElementById('instruction_display_order')).value = this.datacontainers.instruction_gp[index_inst].display_order.toString();
@@ -1712,6 +1779,7 @@ export class TDArticle {
 
             (<HTMLInputElement>document.getElementById('[' + element.id_annotation + '].id_edit_annotation_display_input_id_instruct')).value = annotation_display.id_instruct.toString();
             (<HTMLInputElement>document.getElementById('[' + element.id_annotation + '].id_edit_annotation_display_input_is_display')).checked = annotation_display.is_display;
+            (<HTMLInputElement>document.getElementById('[' + element.id_annotation + '].id_edit_annotation_display_input_is_display_description')).checked = annotation_display.is_display_description;
 
 
 
@@ -1765,13 +1833,14 @@ export class TDArticle {
         let web_annotation;
         const canvas = this.renderer.domElement;
         const cm = this.camera_main;
+        const ab = this.arrow_base;
 
         let ofx = 0;// (<HTMLInputElement>document.getElementById('model_screen')).getBoundingClientRect().left;
         let ofy = 0;//(<HTMLInputElement>document.getElementById('model_screen')).getBoundingClientRect().top;
 
         this.datacontainers.annotation.forEach(function (element : Annotation) {
 
-            const vector = new THREE.Vector3(element.pos_x, element.pos_y, element.pos_z);
+            const vector = element.pos_pointing.clone().sub(ab);
             vector.project(cm);
 
 
@@ -1780,7 +1849,7 @@ export class TDArticle {
 
             vector.x = vector.x + ofx;// + window.pageXOffset;
             vector.y = vector.y + ofy;// + window.pageYOffset;
-            console.log(window.pageYOffset);
+            //console.log(window.pageYOffset);
 
             web_annotation = document.getElementById(element.web_id_annotation)!;
             web_annotation.style.top = `${vector.y}px`;
@@ -1815,10 +1884,13 @@ export class TDArticle {
 
             if (data[0].updateresult == "Success") {
 
+                //remove scene
+                this.ObjRemoveObjectScene();
+
                 //データ更新
                 this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
 
-                    console.log("viewid : " + this.selected_instruction.toString());
+                    //console.log("viewid : " + this.selected_instruction.toString());
 
                     this.ComplexResetEnvironment();
                     this.ComplexTransitionInstruction(this.selected_instruction);
@@ -1854,6 +1926,9 @@ export class TDArticle {
 
             if (data[0].updateresult == "Success") {
 
+                //remove scene
+                this.ObjRemoveObjectScene();
+
                 //データ更新
                 this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
 
@@ -1862,7 +1937,7 @@ export class TDArticle {
                     let checked = false;
                     this.datacontainers.instruction_gp.forEach(function (this: TDArticle, element: Instruction) {
                         id = element.id_instruct;
-                        console.log(checked);
+                        //console.log(checked);
                         if (typeof id === "undefined") {
 
                         } else {
@@ -1930,6 +2005,10 @@ export class TDArticle {
             const data = await this.datacontainers.dbUpdEditProductViewApi(updObject, token);
 
             if (data[0].updateresult == "Success") {
+
+                //remove scene
+                this.ObjRemoveObjectScene();
+
                 //データ更新
                 this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
                     this.ComplexResetEnvironment();
@@ -1951,10 +2030,6 @@ export class TDArticle {
     async DbDeleteView(id_view: number) {
 
 
-        //console.log("id_instruct_out:" + this.selected_instruction);
-        //console.log("id_annotation_out:" + this.selected_annotation);
-
-        //console.log(this.str_url_base_edit_product_annotation);
 
         if (confirm('Are you update View?')) {
 
@@ -1969,7 +2044,9 @@ export class TDArticle {
             const data = await this.datacontainers.dbUpdDeleteProductViewApi(updObject, token);
 
             if (data[0].updateresult == "Success") {
-                //this.selected_annotation = data[0].id_annotation;
+
+                //remove scene
+                this.ObjRemoveObjectScene();
 
                 //データ更新
                 this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
@@ -1991,12 +2068,6 @@ export class TDArticle {
     //Update Annotation with Ajax
     async DbUpdateAnnotation() {
 
-
-        console.log("id_instruct_out:" + this.selected_instruction);
-        console.log("id_annotation_out:" + this.selected_annotation);
-
-        console.log(this.datacontainers.str_url_base_edit_product_annotation);
-
         if (confirm('Are you update Annotation?')) {
 
             let updObject = {
@@ -2017,6 +2088,9 @@ export class TDArticle {
 
             if (data[0].updateresult == "Success") {
                 this.selected_annotation = data[0].id_annotation;
+
+                //remove scene
+                this.ObjRemoveObjectScene();
 
                 //データ更新
                 this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
@@ -2051,6 +2125,9 @@ export class TDArticle {
             const data = await this.datacontainers.dbUpdDeleteProductAnnotationApi(updObject, token);
 
             if (data[0].updateresult == "Success") {
+
+                //remove scene
+                this.ObjRemoveObjectScene();
 
                 //データ更新
                 this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
@@ -2098,30 +2175,30 @@ export class TDArticle {
         if (confirm('Are you update AnnotationDisplay?')) {
 
             let updObject: AnnotationDisplay[] = [];
-            console.log('DbUpdateAnnotationDisplay');
             
             let i = 0;
             this.datacontainers.annotation.forEach(function (this: TDArticle, obj_annotation: Annotation) {
-                console.log('DbUpdateAnnotationDisplay' + i.toString());
+
                 updObject[i] = new AnnotationDisplay(
                     this.datacontainers.id_article,
                     Number((<HTMLInputElement>document.getElementById('[' + obj_annotation.id_annotation + '].id_edit_annotation_display_input_id_instruct')).value),
                     obj_annotation.id_annotation,
-                    (<HTMLInputElement>document.getElementById('[' + obj_annotation.id_annotation + '].id_edit_annotation_display_input_is_display')).checked
-//                    (<HTMLInputElement>document.getElementById('[${obj_annotation.id_annotation}].id_edit_annotation_display_input_is_display')).checked
-                    //`${vector.x}px`;
+                    (<HTMLInputElement>document.getElementById('[' + obj_annotation.id_annotation + '].id_edit_annotation_display_input_is_display')).checked,
+                    (<HTMLInputElement>document.getElementById('[' + obj_annotation.id_annotation + '].id_edit_annotation_display_input_is_display_description')).checked //IDの決定から必要
                 );
                 i += 1;
             }.bind(this));
 
 
             let token = (<HTMLInputElement>document.getElementsByName("__RequestVerificationToken").item(0)).value;
-            console.log(updObject);
 
             const data = await this.datacontainers.dbUpdEditProductAnnotationDisplayApi(updObject, token);
 
             if (data[0].updateresult == "Success") {
                 this.selected_annotation = data[0].id_annotation;
+
+                //remove scene
+                this.ObjRemoveObjectScene();
 
                 //データ更新
                 this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
