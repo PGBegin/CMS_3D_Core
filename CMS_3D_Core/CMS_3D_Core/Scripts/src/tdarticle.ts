@@ -825,7 +825,7 @@ export class TDArticle {
                 const geometry = new THREE.SphereGeometry(0.1, 32, 32);
                 const material = new THREE.MeshBasicMaterial({ color: 0XCD0000 });
                 obj_annotation.marker = new THREE.Mesh(geometry, material);
-                //obj_annotation.marker.position.set(obj_annotation.pos_x, obj_annotation.pos_y, obj_annotation.pos_z);
+
                 obj_annotation.marker.position.copy(obj_annotation.pos_pointing);
                 obj_annotation.marker.visible = false;
                 this.scene.add(obj_annotation.marker);
@@ -1451,7 +1451,9 @@ export class TDArticle {
 
         // main camara
         this.camera_main = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 1000);
-        
+
+        //background
+//        this.scene.background = new THREE.Color(0x000000);
 
         // renderer
         //renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -1478,7 +1480,6 @@ export class TDArticle {
 
         //Setting gammaOutput
         //In order to reduce darkening of some items with truee.js
-        //this.renderer.gammaOutput = _gammaOutput;
         if (_gammaOutput) {
             this.renderer.outputEncoding = THREE.sRGBEncoding;
         } else {
@@ -1608,9 +1609,6 @@ export class TDArticle {
             (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_z')).value = this.datacontainers.annotation[index_annotation].pos_pointing.z.toString();
 
             //Edit
-            //this.annotation[id_annotation].marker.pos.x += px;
-            //this.annotation[id_annotation].marker.pos.y += py;
-            //this.annotation[id_annotation].marker.pos.z += pz;
 
             this.datacontainers.annotation[index_annotation].marker.position.add(new THREE.Vector3(px, py, pz));
             this.datacontainers.annotation[index_annotation].arrow.position.add(new THREE.Vector3(px, py, pz));
@@ -1657,7 +1655,7 @@ export class TDArticle {
         {
             const annotation_display = this.datacontainers.annotation_display.find(item => item.id_instruct == id_instruct && item.id_annotation == element.id_annotation);
             const is_display = annotation_display!.is_display;
-//            const is_display = this.datacontainers.annotation_display.find(item => item.id_instruct == id_instruct && item.id_annotation == element.id_annotation)!.is_display;
+
             (<HTMLInputElement>document.getElementById(element.web_id_annotation)).hidden = !is_display;
             //element.marker.visible = is_display;
             element.arrow.visible = is_display;
@@ -2032,10 +2030,6 @@ export class TDArticle {
     async DbDeleteView(id_view: number) {
 
 
-        //console.log("id_instruct_out:" + this.selected_instruction);
-        //console.log("id_annotation_out:" + this.selected_annotation);
-
-        //console.log(this.str_url_base_edit_product_annotation);
 
         if (confirm('Are you update View?')) {
 
@@ -2050,7 +2044,6 @@ export class TDArticle {
             const data = await this.datacontainers.dbUpdDeleteProductViewApi(updObject, token);
 
             if (data[0].updateresult == "Success") {
-                //this.selected_annotation = data[0].id_annotation;
 
                 //remove scene
                 this.ObjRemoveObjectScene();
@@ -2074,12 +2067,6 @@ export class TDArticle {
 
     //Update Annotation with Ajax
     async DbUpdateAnnotation() {
-
-
-        //console.log("id_instruct_out:" + this.selected_instruction);
-        //console.log("id_annotation_out:" + this.selected_annotation);
-
-        //console.log(this.datacontainers.str_url_base_edit_product_annotation);
 
         if (confirm('Are you update Annotation?')) {
 
@@ -2188,7 +2175,6 @@ export class TDArticle {
         if (confirm('Are you update AnnotationDisplay?')) {
 
             let updObject: AnnotationDisplay[] = [];
-            //console.log('DbUpdateAnnotationDisplay');
             
             let i = 0;
             this.datacontainers.annotation.forEach(function (this: TDArticle, obj_annotation: Annotation) {
@@ -2205,7 +2191,6 @@ export class TDArticle {
 
 
             let token = (<HTMLInputElement>document.getElementsByName("__RequestVerificationToken").item(0)).value;
-            //console.log(updObject);
 
             const data = await this.datacontainers.dbUpdEditProductAnnotationDisplayApi(updObject, token);
 
