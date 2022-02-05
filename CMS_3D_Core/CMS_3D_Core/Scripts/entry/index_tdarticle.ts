@@ -27,9 +27,14 @@ function startup() {
         adarticle.is_edit_mode = is_edit_mode;
 
 
+
+
         window.addEventListener("resize", function () { adarticle.onWindowResize(); }, false);
 
         if (adarticle.is_edit_mode) {
+
+            adarticle.is_display_helper = true;
+
             document.getElementById("screenshot")!.addEventListener('click', function () {
                 GetScreenshotForUpload(adarticle, 'view_capture', 'getimage', 'up_img_input');
             });

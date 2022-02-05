@@ -1204,7 +1204,10 @@ namespace CMS_3D_Core.Controllers
                 type = "instance_part",
                 id_assy = item.id_assy,
                 id_inst = item.id_inst,
-                id_part = item.id_part
+                id_part = item.id_part,
+                pos_x = item.pos_x,
+                pos_y = item.pos_y,
+                pos_z = item.pos_z
 
             };
 

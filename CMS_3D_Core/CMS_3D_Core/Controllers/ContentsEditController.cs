@@ -841,15 +841,19 @@ namespace CMS_3D_Core.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateInstancePart([Bind("id_assy,id_inst,id_part")] t_instance_part t_instance_part)
+        public async Task<IActionResult> CreateInstancePart([Bind("id_assy,id_inst,id_part, pos_x, pos_y, pos_z")] t_instance_part t_instance_part)
         {
             if (ModelState.IsValid)
             {
                 long id = 1 + (await _context.t_instance_parts
                                         .Where(t => t.id_assy == t.id_assy)
-                                        .MaxAsync(t => (long?)t.id_assy) ?? 0);
+                                        .MaxAsync(t => (long?)t.id_inst) ?? 0);
 
                 t_instance_part.id_inst = id;
+
+                t_instance_part.create_user = User.Identity.Name;
+                t_instance_part.create_datetime = DateTime.Now;
+
                 await _context.AddAsync(t_instance_part);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

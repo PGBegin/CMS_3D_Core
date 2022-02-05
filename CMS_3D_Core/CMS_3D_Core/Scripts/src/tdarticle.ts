@@ -5,7 +5,12 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { marked } from 'marked';
+
+import { Lensflare, LensflareElement } from 'three/examples/jsm/objects/Lensflare';
+
+
 import { Aarticle, Instruction, ViewObject, InstancePart, Annotation, AnnotationDisplay, Refelencematerial } from './tdarticle/tdarticle_Aarticle';
+import { Vector3 } from 'three';
 
 
 /*
@@ -214,7 +219,11 @@ export class DataContainers {
                 this.instance_part[data[i].id_inst] = new InstancePart(
                     data[i].id_assy,
                     data[i].id_inst,
-                    data[i].id_part, null);
+                    data[i].id_part,
+                    data[i].pos_x,
+                    data[i].pos_y,
+                    data[i].pos_z,
+                    null);
             }
 
 
@@ -295,6 +304,8 @@ export class DataContainers {
             glfLoader.load(str_url_partapi, function (gltf) {
 
 
+                gltf.scene.position.add(obj_instance_part.pos);
+                //console.log(gltf.scene.position);
 
                 document.getElementById('div_progressbar_modeldl')!.setAttribute('hidden', '');
                 scene.add(gltf.scene);
@@ -1416,7 +1427,7 @@ export class TDArticle {
 
         //helper
 
-        this.gridHelper = new THREE.GridHelper(200, 50);
+        this.gridHelper = new THREE.GridHelper(200, 200);
         this.scene.add(this.gridHelper);
 
 
@@ -1450,20 +1461,26 @@ export class TDArticle {
         this.scene.add(this.ambient);
 
         // main camara
-        this.camera_main = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 1000);
+        this.camera_main = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 6350000);
 
         //background
 //        this.scene.background = new THREE.Color(0x000000);
+        this.scene.background = new THREE.Color().setHSL(0.51, 0.4, 0.01);
+
+
+        //------------------------------------------------------------------------------------------------
+        this.addLight(1, 1, 1, 0, 0, 149600);
 
         // renderer
         //renderer = new THREE.WebGLRenderer({ antialias: true });
 
         this.renderer = new THREE.WebGLRenderer({
-            canvas: document.querySelector('#model_screen'), antialias: true
+            canvas: document.querySelector('#model_screen'), antialias: true,  alpha: true 
         });
 
         this.renderer.setSize(this.width, this.height);
         this.renderer.setClearColor(0xefefef);
+        //this.renderer.setClearColor(0x000000, 0); //default
         this.renderer.setPixelRatio(window.devicePixelRatio);
 
         this.controls = new OrbitControls(this.camera_main, this.renderer.domElement);
@@ -1492,6 +1509,30 @@ export class TDArticle {
 
     }
 
+    
+    addLight(h: number, s: number, l: number, x: number, y: number, z: number) {
+
+
+
+        //------------------------------------------------------------
+        //このローダーは本来はもっと別の場所にあるが、暫定的にここに移した
+        // lensflares
+        const textureLoader = new THREE.TextureLoader();
+
+        const textureFlare0 = textureLoader.load('https://threejs.org/examples/textures/lensflare/lensflare0.png');
+        //-------------------------------------------------------------
+
+
+        const light = new THREE.PointLight(0xffffff, 0.5, 20000, 2);
+        light.color.setHSL(h, s, l);
+        light.position.set(x, y, z);
+        this.scene.add(light);
+
+        const lensflare = new Lensflare();
+        lensflare.addElement(new LensflareElement(textureFlare0, 500, 0, light.color));
+        light.add(lensflare);
+
+    }
 
     //transit to the specified viewpoint and camera position
     ScreenUpdateViewEditor(cam_pos: THREE.Vector3, target: THREE.Vector3) {
@@ -2216,4 +2257,3 @@ export class TDArticle {
     }
 
 }
-

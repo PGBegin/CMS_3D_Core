@@ -147,12 +147,17 @@ export class InstancePart {
     id_assy: number;
     id_inst: number;
     id_part: number;
+    pos: Vector3 = new Vector3(0, 0, 0);
     objectdata: any;
 
-    constructor(id_assy: number, id_inst: number, id_part: number, objectdata: any) {
+
+    constructor(id_assy: number, id_inst: number, id_part: number, pos_x: number, pos_y: number, pos_z: number, objectdata: any) {
         this.id_assy = id_assy;
         this.id_inst = id_inst;
         this.id_part = id_part;
+
+        this.pos.set(pos_x, pos_y, pos_z);
+
         this.objectdata = objectdata;
     }
 }
