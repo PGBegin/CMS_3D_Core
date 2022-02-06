@@ -44,6 +44,7 @@ namespace CMS_3D_Core.Controllers
                         .Include(x => x.t_views)
                         .Include(x => x.id_assyNavigation).ThenInclude(x => x.t_instance_parts)
                         .Include(x => x.t_annotations)
+                        .Include(x => x.t_lights)
                         .FirstOrDefaultAsync(x => x.id_article == id_article);
 
             IList<object> objCollection = new List<object>();
@@ -88,6 +89,11 @@ namespace CMS_3D_Core.Controllers
             }
 
 
+            //light
+            foreach (var item in t.t_lights)
+            {
+                objCollection.Add(object_from_t_light(item));
+            }
 
 
 
@@ -1072,6 +1078,216 @@ namespace CMS_3D_Core.Controllers
         }
 
 
+
+        /// <summary>
+        /// Update or Add Light for Ajax
+        /// </summary>
+        /// <param name="_t_light"></param>
+        /// <returns>Result of Api Action with Json</returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IList<object>> EditProductLightApi([FromBody] t_light _t_light)
+        {
+
+
+
+            string updatemode = "";
+            string updateresult = "";
+            string updateresult_msg = "";
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var target = await _context.t_lights.FindAsync(_t_light.id_article, _t_light.id_light);
+
+                    var t_article = await _context.t_articles.FindAsync(_t_light.id_article);
+
+                    if (target == null)
+                    {
+                        //if target does not find, update new item
+
+                        t_light t_light = new t_light();
+
+                        // Key data
+                        t_light.id_article = _t_light.id_article;
+                        t_light.id_light = _t_light.id_light;
+                        t_light.light_type = _t_light.light_type;
+                        t_light.title = _t_light.title;
+                        t_light.short_description = _t_light.short_description;
+
+                        //Camera Position
+
+                        t_light.color = _t_light.color;
+                        t_light.intensity = _t_light.intensity;
+
+                        t_light.px = _t_light.px;
+                        t_light.py = _t_light.py;
+                        t_light.pz = _t_light.pz;
+
+
+                        t_light.distance = _t_light.distance;
+                        t_light.decay = _t_light.decay;
+                        t_light.power = _t_light.power;
+                        t_light.shadow = _t_light.shadow;
+
+                        t_light.tx = _t_light.tx;
+                        t_light.ty = _t_light.ty;
+                        t_light.tz = _t_light.tz;
+
+                        t_light.skycolor = _t_light.skycolor;
+                        t_light.groundcolor = _t_light.groundcolor;
+
+                        t_light.is_lensflare = _t_light.is_lensflare;
+                        t_light.lfsize = _t_light.lfsize;
+                        t_light.file_data = _t_light.file_data;
+
+
+
+                        t_light.create_user = User.Identity.Name;
+                        t_light.create_datetime = DateTime.Now;
+
+
+                        // Update DB
+
+                        await _context.AddAsync(t_light);
+
+
+
+                        //Update Article User / datetime
+                        t_article.latest_update_user = User.Identity.Name;
+                        t_article.latest_update_datetime = DateTime.Now;
+
+
+                        await _context.SaveChangesAsync();
+
+
+                        updatemode = "AddNew";
+                        updateresult = "Success";
+                        updateresult_msg = "AddNew Success";
+
+                    }
+                    else
+                    {
+
+                        target.light_type = _t_light.light_type;
+                        target.title = _t_light.title;
+                        target.short_description = _t_light.short_description;
+
+                        //Camera Position
+
+                        target.color = _t_light.color;
+                        target.intensity = _t_light.intensity;
+
+                        target.px = _t_light.px;
+                        target.py = _t_light.py;
+                        target.pz = _t_light.pz;
+
+
+                        target.distance = _t_light.distance;
+                        target.decay = _t_light.decay;
+                        target.power = _t_light.power;
+                        target.shadow = _t_light.shadow;
+
+                        target.tx = _t_light.tx;
+                        target.ty = _t_light.ty;
+                        target.tz = _t_light.tz;
+
+                        target.skycolor = _t_light.skycolor;
+                        target.groundcolor = _t_light.groundcolor;
+
+                        target.is_lensflare = _t_light.is_lensflare;
+                        target.lfsize = _t_light.lfsize;
+                        target.file_data = _t_light.file_data;
+
+
+
+                        target.latest_update_user = User.Identity.Name;
+                        target.latest_update_datetime = DateTime.Now;
+
+                        //Update Article User / datetime
+                        t_article.latest_update_user = User.Identity.Name;
+                        t_article.latest_update_datetime = DateTime.Now;
+
+
+                        // DBに更新を反映
+                        await _context.SaveChangesAsync();
+
+                        updatemode = "Update";
+                        updateresult = "Success";
+                        updateresult_msg = "Update Success";
+
+
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    updateresult = "Failed";
+                    updateresult_msg = "Update Failed";
+                    //TempData["ResultMsg"] = "Update Failed";
+                }
+            }
+
+            // 更新に失敗した場合、編集画面を再描画
+            // return View(id_article);
+
+
+            IList<object> objCollection = new List<object>();
+
+
+
+
+
+
+
+            objCollection.Add(
+                new
+                {
+                    updatemode = updatemode,
+                    updateresult = updateresult,
+                    updateresult_msg = updateresult_msg,
+                    type = "t_view",
+                    // Key data
+                    id_article = _t_light.id_article,
+                    id_light = _t_light.id_light,
+                    light_type = _t_light.light_type,
+                    title = _t_light.title,
+                    short_description = _t_light.short_description,
+
+                    //Camera Position
+                    color = _t_light.color,
+                    intensity = _t_light.intensity,
+
+                    px = _t_light.px,
+                    py = _t_light.py,
+                    pz = _t_light.pz,
+
+                    //Lookat
+                    distance = _t_light.distance,
+                    decay = _t_light.decay,
+                    power = _t_light.power,
+                    shadow = _t_light.shadow,
+
+                    tx = _t_light.tx,
+                    ty = _t_light.ty,
+                    tz = _t_light.tz,
+
+                    //quatunion of camera
+                    skycolor = _t_light.skycolor,
+                    groundcolor = _t_light.groundcolor,
+                    lfsize = _t_light.lfsize,
+                    file_data = _t_light.file_data,
+
+                });
+
+            return objCollection;
+
+
+
+        }
+
+
         /// <summary>
         /// return object with t_article
         /// </summary>
@@ -1216,6 +1432,43 @@ namespace CMS_3D_Core.Controllers
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
+        private static object object_from_t_light(t_light item) =>
+            new
+            {
+                type = "light",
+                model_name = "Model Name",
+
+
+                id_article = item.id_article,
+                id_light = item.id_light,
+                light_type = item.light_type,
+                title = item.title,
+                short_description = item.short_description,
+                color = item.color,
+                intensity = item.intensity,
+                px = item.px,
+                py = item.py,
+                pz = item.pz,
+                distance = item.distance,
+                decay = item.decay,
+                power = item.power,
+                shadow = item.shadow,
+                tx = item.tx,
+                ty = item.ty,
+                tz = item.tz,
+                skycolor = item.groundcolor,
+                groundcolor = item.groundcolor,
+                is_lensflare = item.is_lensflare,
+                lfsize = item.lfsize,
+                file_data = item.file_data
+
+            };
+
+        /// <summary>
+        /// return object from t_instance_part for material list
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         private static object object_from_refelencematerial(t_instance_part item) =>
             new
             {
@@ -1230,20 +1483,9 @@ namespace CMS_3D_Core.Controllers
                 author = item.id_partNavigation.author,
                 license = item.id_partNavigation.license
             };
-
     }
 
 
-    /*
-    public class vm_instruction
-    {
-        public long id_article { get; set; }
-        public long id_instruct { get; set; }
-        public int id_view { get; set; }
-        public string title { get; set; }
-        public string short_description { get; set; }
-        public string memo { get; set; }
-        public long display_order { get; set; }
-    }
-    */
+
 }
+ 

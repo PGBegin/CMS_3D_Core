@@ -9,7 +9,7 @@ import { marked } from 'marked';
 import { Lensflare, LensflareElement } from 'three/examples/jsm/objects/Lensflare';
 
 
-import { Aarticle, Instruction, ViewObject, InstancePart, Annotation, AnnotationDisplay, Refelencematerial } from './tdarticle/tdarticle_Aarticle';
+import { Aarticle, Instruction, ViewObject, InstancePart, Annotation, AnnotationDisplay, Refelencematerial, Light } from './tdarticle/tdarticle_Aarticle';
 import { Vector3 } from 'three';
 
 
@@ -57,7 +57,8 @@ export class DataContainers {
     instruction_gp: Instruction[]=[];
     instance_part: InstancePart[]=[];
     annotation: Annotation[]=[];
-    annotation_display: AnnotationDisplay[]=[];
+    annotation_display: AnnotationDisplay[] = [];
+    light: Light[] = [];
 
     refelencematerial: Refelencematerial[]=[];
 
@@ -258,6 +259,33 @@ export class DataContainers {
                 ));
             }
 
+
+            if (data[i].type == "light") {
+                this.light.push(new Light(
+                    data[i].id_article,
+                    data[i].id_light,
+                    data[i].light_type,
+                    data[i].title,
+                    data[i].short_description,
+                    data[i].color,
+                    data[i].intensity,
+                    data[i].px,
+                    data[i].py,
+                    data[i].pz,
+                    data[i].distance,
+                    data[i].decay,
+                    data[i].power,
+                    data[i].shadow,
+                    data[i].tx,
+                    data[i].ty,
+                    data[i].tz,
+                    data[i].skycolor,
+                    data[i].groundcolor,
+                    data[i].is_lensflare,
+                    data[i].lfsize
+                ));
+            }
+
             if (data[i].type == "refelencematerial") {
                 this.refelencematerial.push(new Refelencematerial(
                     data[i].id_assy,
@@ -274,6 +302,7 @@ export class DataContainers {
 
         }
 
+        console.log(this.light);
 
 
         if (this.instruction_gp.length > 0) {
@@ -1451,14 +1480,16 @@ export class TDArticle {
     ComplexSetupRenderInitial(lint: number, lpx: number, lpy: number, lpz: number, anbint: number, _gammaOutput: boolean) {
 
         // light
-        this.light = new THREE.DirectionalLight(0xffffff, lint);
-        this.light.position.set(lpx, lpy, lpz);
-        this.scene.add(this.light);
+        //this.light = new THREE.DirectionalLight(0xffffff, lint);
+        //this.light.position.set(lpx, lpy, lpz);
+        //this.scene.add(this.light);
 
 
+        //this.ambient = new THREE.AmbientLight(0x404040, anbint);
+        //this.scene.add(this.ambient);
 
-        this.ambient = new THREE.AmbientLight(0x404040, anbint);
-        this.scene.add(this.ambient);
+
+        this.setupLight();
 
         // main camara
         this.camera_main = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 6350000);
@@ -1469,7 +1500,7 @@ export class TDArticle {
 
 
         //------------------------------------------------------------------------------------------------
-        this.addLight(1, 1, 1, 0, 0, 149600);
+        //this.addLight(1, 1, 1, 0, 0, 149600);
 
         // renderer
         //renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -1509,7 +1540,51 @@ export class TDArticle {
 
     }
 
-    
+    //Lightを設定する。
+    setupLight() {
+
+        this.datacontainers.light.forEach(function (this: TDArticle, obj_light: Light) {
+
+            if (obj_light.light_type == "DirectionalLight") {
+
+//                obj_light.light_object = new THREE.DirectionalLight(obj_light.color, obj_light.intensity);
+                obj_light.light_object = new THREE.DirectionalLight(0xffffff, obj_light.intensity);
+                obj_light.light_object.position.set(obj_light.px, obj_light.py, obj_light.pz);
+                this.scene.add(obj_light.light_object);
+//                console.log(obj_light.light_object);
+            }
+            else if (obj_light.light_type == "AmbientLight") {
+                // light
+                obj_light.light_object = new THREE.AmbientLight(0x404040, obj_light.intensity);
+                this.scene.add(obj_light.light_object);
+            }
+            else if (obj_light.light_type == "PointLight") {
+                // light
+                obj_light.light_object = new THREE.PointLight(0xffffff, obj_light.intensity, obj_light.distance, obj_light.decay);
+                obj_light.light_object.position.set(obj_light.px, obj_light.py, obj_light.pz);
+                this.scene.add(obj_light.light_object);
+
+                if (obj_light.is_lensflare) {
+                    //------------------------------------------------------------
+                    //このローダーは本来はもっと別の場所にあるが、暫定的にここに移した
+                    // lensflares
+                    const textureLoader = new THREE.TextureLoader();
+
+                    //const textureFlare0 = textureLoader.load('https://threejs.org/examples/textures/lensflare/lensflare0.png');
+
+                    const textureFlare0 = textureLoader.load('/ContentsEditAttachment/GetAttachmentFile/28');
+
+                    const lensflare = new Lensflare();
+                    lensflare.addElement(new LensflareElement(textureFlare0, obj_light.lfsize, 0, obj_light.light_object.color));
+                    obj_light.light_object.add(lensflare);
+                    //-------------------------------------------------------------
+
+                }
+            }
+        }.bind(this));
+    }
+
+
     addLight(h: number, s: number, l: number, x: number, y: number, z: number) {
 
 
@@ -1524,7 +1599,7 @@ export class TDArticle {
 
 
         const light = new THREE.PointLight(0xffffff, 0.5, 20000, 2);
-        light.color.setHSL(h, s, l);
+        //light.color.setHSL(h, s, l);
         light.position.set(x, y, z);
         this.scene.add(light);
 

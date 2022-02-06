@@ -218,6 +218,85 @@ export class AnnotationDisplay {
 }
 
 
+export class Light {
+    id_article: number;
+    id_light: number;
+    light_type: string;
+    title!: string;
+    short_description!: string;
+    color!: number;
+    intensity!: number;
+    px!: number;
+    py!: number;
+    pz!: number;
+    distance!: number;
+    decay!: number;
+    power!: number;
+    shadow!: number;
+    tx!: number;
+    ty!: number;
+    tz!: number;
+    skycolor!: number;
+    groundcolor!: number;
+    is_lensflare: boolean;
+    lfsize!: number;
+    file_data!: any;
+
+    light_object!: any;
+
+
+
+    constructor(
+        id_article: number,
+        id_light: number,
+        light_type: string,
+        title: string,
+        short_description: string,
+        color: number,
+        intensity: number,
+        px: number,
+        py: number,
+        pz: number,
+        distance: number,
+        decay: number,
+        power: number,
+        shadow: number,
+        tx: number,
+        ty: number,
+        tz: number,
+        skycolor: number,
+        groundcolor: number,
+        is_lensflare: boolean,
+        lfsize: number) {
+
+        this.id_article = id_article;
+        this.id_light = id_light;
+        this.light_type = light_type;
+
+
+        this.light_type = light_type;
+        this.title = title;
+        this.short_description = short_description;
+        this.color = color;
+        this.intensity = intensity;
+        this.px = px;
+        this.py=py;
+        this.pz=pz;
+        this.distance = distance;
+        this.decay = decay;
+        this.power = power;
+        this.shadow = shadow;
+        this.tx = tx;
+        this.ty=ty;
+        this.tz=tz;
+        this.skycolor = skycolor;
+        this.groundcolor = groundcolor;
+        this.is_lensflare = is_lensflare;
+        this.lfsize = lfsize;
+        //this.file_data!: any;
+    }
+}
+
 
 
 export class Refelencematerial {

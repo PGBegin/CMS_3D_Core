@@ -11,6 +11,7 @@ namespace CMS_3D_Core.Models.EDM
         {
             t_annotations = new HashSet<t_annotation>();
             t_instructions = new HashSet<t_instruction>();
+            t_lights = new HashSet<t_light>();
             t_views = new HashSet<t_view>();
         }
 
@@ -40,6 +41,7 @@ namespace CMS_3D_Core.Models.EDM
         public virtual m_status_article statusNavigation { get; set; }
         public virtual ICollection<t_annotation> t_annotations { get; set; }
         public virtual ICollection<t_instruction> t_instructions { get; set; }
+        public virtual ICollection<t_light> t_lights { get; set; }
         public virtual ICollection<t_view> t_views { get; set; }
     }
 }
