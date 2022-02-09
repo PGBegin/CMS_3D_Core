@@ -39,6 +39,8 @@ export class DataContainers {
 
 
     //Ajax DB Update Apis
+    str_url_base_edit_product_article: string;
+
     str_url_base_edit_product_instruction: string;
     str_url_base_delete_product_instruction: string;
 
@@ -79,6 +81,7 @@ export class DataContainers {
 
 
         //Ajax DB Update Apis
+        this.str_url_base_edit_product_article = "/ContentsOperatorForArticleApis/EditProductArticleApi";
         this.str_url_base_edit_product_instruction = "/ContentsOperatorForArticleApis/EditProductInstructionApi";
         this.str_url_base_delete_product_instruction = "/ContentsOperatorForArticleApis/DeleteProductInstructionApi";
 
@@ -170,7 +173,12 @@ export class DataContainers {
                     data[i].ambient_light_color,
                     data[i].ambient_light_intensity,
                     data[i].gammaOutput,
-                    data[i].id_attachment_for_eye_catch);
+                    data[i].id_attachment_for_eye_catch,
+                    data[i].bg_c,
+                    data[i].bg_h,
+                    data[i].bg_s,
+                    data[i].bg_l
+                );
             }
 
             if (data[i].type == "view") {
@@ -352,6 +360,32 @@ export class DataContainers {
     }
 
 
+    //Update Article with Ajax
+    async dbUpdEditProductArticleApi(updObject: any, token: string) {
+        console.log(JSON.stringify(updObject));
+
+        //データ更新
+        //this.data_reflesh_without_model();
+
+        //指定urlからデータを取得
+        //fetch内の各引数は以下の通り。
+        //第1引数は【アクションメソッドのPath】、
+        //第2引数は【通信方法 例)Get または　Post】、
+        //第3引数は【データの型】
+        //サンプル例：fetch(Path,{method:"POST",body:formData})
+
+        const response = await fetch(this.str_url_base_edit_product_article, { //【重要ポイント】「await」句は削除すること
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "RequestVerificationToken": token
+            },
+            body: JSON.stringify(updObject)  // リクエスト本文にJSON形式の文字列を設定c
+        });
+        const data = await response.json();
+        return data;
+
+    }
 
     //Update Instruction with Ajax
     async dbUpdEditProductInstructionApi(updObject: any, token: string) {
@@ -677,6 +711,10 @@ export class TDArticle {
         this.ObjSetupAarticleDefault();
 
 
+        //Serup Article Editor
+        this.DomUpdateArticleEditor();
+
+
         //Setup Instruction Selection Control Panels (for Display and Editor)
         this.DomSetupInstructionControler();
 
@@ -712,6 +750,9 @@ export class TDArticle {
 
             //Loading Article
             this.ObjSetupAarticleDefault();
+
+            //Serup Article Editor
+            this.DomUpdateArticleEditor();
 
 
             //コントロールパネル領域を生成する
@@ -800,6 +841,10 @@ export class TDArticle {
                 , 1 //data.ambient_light_intensity
                 , true //data.gammaOutput
                 , 0 //data.id_attachment_for_eye_catch
+                , 0
+                , 0
+                , 0
+                , 0
             );
         }
     }
@@ -1495,10 +1540,14 @@ export class TDArticle {
         this.camera_main = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 6350000);
 
         //background
-//        this.scene.background = new THREE.Color(0x000000);
-        this.scene.background = new THREE.Color().setHSL(0.51, 0.4, 0.01);
-
-
+        //this.scene.background = new THREE.Color(0xffffff);
+        //        this.scene.background = new THREE.Color().setHSL(0.51, 0.4, 0.01);
+        //        this.scene.background = new THREE.Color().setHSL(this.datacontainers.article.bg_h, this.datacontainers.article.bg_s, this.datacontainers.article.bg_l);
+        this.scene.background = new THREE.Color(this.datacontainers.article.bg_c);
+        //let xx = { h: 0, s: 0, l: 0 };
+        //new THREE.Color(0xffffff).getHSL(xx);
+        //console.log(xx);
+//        console.log(new THREE.Color(0xffffff).getHSL(xx));
         //------------------------------------------------------------------------------------------------
         //this.addLight(1, 1, 1, 0, 0, 149600);
 
@@ -1608,6 +1657,42 @@ export class TDArticle {
         light.add(lensflare);
 
     }
+
+
+    //Change Article for Edit Window
+    DomUpdateArticleEditor() {
+
+
+        if (this.is_edit_mode) {
+
+
+            console.log(this.datacontainers.article.title.toString());
+            //Edit
+            (<HTMLInputElement>document.getElementById('article_id_id_article')).value = this.datacontainers.article.id_article.toString();
+            (<HTMLInputElement>document.getElementById('article_id_id_assy')).value = this.datacontainers.article.id_assy.toString();
+
+            (<HTMLInputElement>document.getElementById('article_id_status')).value = this.datacontainers.article.status.toString();
+
+
+
+            (<HTMLInputElement>document.getElementById('article_id_title')).value = this.datacontainers.article.title.toString();
+            (<HTMLInputElement>document.getElementById('article_id_short_description')).value = this.datacontainers.article.short_description;
+            (<HTMLInputElement>document.getElementById('article_id_long_description')).value = this.datacontainers.article.long_description;
+            (<HTMLInputElement>document.getElementById('article_id_meta_description')).value = this.datacontainers.article.meta_description;
+            (<HTMLInputElement>document.getElementById('article_id_meta_category')).value = this.datacontainers.article.meta_category;
+
+
+            (<HTMLInputElement>document.getElementById('article_id_gammaOutput')).checked = this.datacontainers.article.gammaOutput;
+
+            (<HTMLInputElement>document.getElementById('article_id_bg_c')).value = this.datacontainers.article.bg_c.toString();
+            (<HTMLInputElement>document.getElementById('article_id_bg_h')).value = this.datacontainers.article.bg_h.toString();
+            (<HTMLInputElement>document.getElementById('article_id_bg_s')).value = this.datacontainers.article.bg_s.toString();
+            (<HTMLInputElement>document.getElementById('article_id_bg_l')).value = this.datacontainers.article.bg_l.toString();
+        }
+
+    }
+
+
 
     //transit to the specified viewpoint and camera position
     ScreenUpdateViewEditor(cam_pos: THREE.Vector3, target: THREE.Vector3) {
@@ -1975,6 +2060,74 @@ export class TDArticle {
 
     }
 
+
+
+
+
+    //Update Instruction with Ajax
+    async DbUpdateArticle() {
+
+
+        if (confirm('Are you update Article?')) {
+
+            let updObject = {
+                id_article: (<HTMLInputElement>document.getElementById('article_id_id_article')).value,
+                id_assy: (<HTMLInputElement>document.getElementById('article_id_id_assy')).value,
+                title: (<HTMLInputElement>document.getElementById('article_id_title')).value,
+                short_description: (<HTMLInputElement>document.getElementById('article_id_short_description')).value,
+                long_description: (<HTMLInputElement>document.getElementById('article_id_long_description')).value,
+                meta_description: (<HTMLInputElement>document.getElementById('article_id_meta_description')).value,
+                meta_category: (<HTMLInputElement>document.getElementById('article_id_meta_category')).value,
+
+                status: (<HTMLInputElement>document.getElementById('article_id_status')).value,
+
+                gammaOutput: (<HTMLInputElement>document.getElementById('article_id_gammaOutput')).checked,
+                
+                bg_c: (<HTMLInputElement>document.getElementById('article_id_bg_c')).value,
+                bg_h: (<HTMLInputElement>document.getElementById('article_id_bg_h')).value,
+                bg_s: (<HTMLInputElement>document.getElementById('article_id_bg_s')).value,
+                bg_l: (<HTMLInputElement>document.getElementById('article_id_bg_l')).value
+
+            };
+            this.selected_instruction = Number((<HTMLInputElement>document.getElementById('instruction_id_instruct')).value);
+
+            let token = (<HTMLInputElement>document.getElementsByName("__RequestVerificationToken").item(0)).value;
+
+
+            //console.log(updObject);
+            const data = await this.datacontainers.dbUpdEditProductArticleApi(updObject, token);
+
+            if (data[0].updateresult == "Success") {
+
+                //remove scene
+                this.ObjRemoveObjectScene();
+
+                //データ更新
+                this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
+
+                    //console.log("viewid : " + this.selected_instruction.toString());
+
+                    this.ComplexResetEnvironment();
+                    this.ComplexTransitionInstruction(this.selected_instruction);
+
+                    if (this.datacontainers.annotation.some((item: Annotation) => item.id_annotation === this.selected_annotation)) {
+                        this.DomUpdateAnnotationEditor(this.selected_annotation);
+                    }
+
+                    alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
+                }.bind(this));
+
+            }
+
+        }
+    }
+
+
+
+
+
+
+
     //Update Instruction with Ajax
     async DbUpdateInstruction() {
 
@@ -2024,7 +2177,7 @@ export class TDArticle {
     }
 
 
-    //Update Instruction with Ajax
+    //Delete Instruction with Ajax
     async DbDeleteInstruction() {
 
         if (confirm('Are you delete Instruction?')) {

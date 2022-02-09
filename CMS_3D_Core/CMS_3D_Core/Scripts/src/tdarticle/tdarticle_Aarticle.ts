@@ -29,9 +29,17 @@ export class Aarticle {
     gammaOutput: boolean;
 
     id_attachment_for_eye_catch: number;
+
+    bg_c: number;
+    bg_h: number;
+    bg_s: number;
+    bg_l: number;
+
     constructor(id_article: number, id_assy: number, title: string, short_description: string, long_description: string, meta_description: string, meta_category: string, status: number
         , directional_light_color: number, directional_light_intensity: number, directional_light_px: number, directional_light_py: number, directional_light_pz: number
-        , ambient_light_color: number, ambient_light_intensity: number, gammaOutput: boolean, id_attachment_for_eye_catch: number) {
+        , ambient_light_color: number, ambient_light_intensity: number, gammaOutput: boolean, id_attachment_for_eye_catch: number,
+        bg_c: number, bg_h: number, bg_s: number, bg_l: number
+    ) {
 
         this.id_article = id_article;
         this.id_assy = id_assy;
@@ -54,7 +62,13 @@ export class Aarticle {
         this.ambient_light_intensity = ambient_light_intensity;
         this.gammaOutput = gammaOutput;
 
-        this.id_attachment_for_eye_catch = id_attachment_for_eye_catch
+        this.id_attachment_for_eye_catch = id_attachment_for_eye_catch;
+
+        this.bg_c = bg_c;
+        this.bg_h = bg_h;
+        this.bg_s = bg_s;
+        this.bg_l = bg_l;
+
     }
 }
 

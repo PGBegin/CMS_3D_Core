@@ -358,6 +358,146 @@ namespace CMS_3D_Core.Controllers
 
 
 
+
+
+        /// <summary>
+        /// Update AnnotationDisplay for Ajax
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns>Result of Api Action with Json</returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IList<object>> EditProductArticleApi([FromBody] t_article _t_article)
+        {
+            /*
+            if (id_article == null | id_instruct == null)
+            {
+                return NotFound();
+            }*/
+
+            string updatemode = "Undefined";
+            string updateresult = "Failed";
+            string updateresult_msg = "Failed";
+
+
+
+
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    updatemode = "undefined";
+                    var target = await _context.t_articles.FindAsync(_t_article.id_article);
+
+
+                    if (target == null)
+                    {
+                        // if object is not in table
+                        // do add new item acrion
+                        t_article t_article = new t_article();
+
+
+                        t_article.id_article = _t_article.id_article;
+                        t_article.title = _t_article.title;
+                        t_article.short_description = _t_article.short_description;
+
+
+                        t_article.long_description = _t_article.long_description;
+                        t_article.meta_description = _t_article.meta_description;
+                        t_article.meta_category = _t_article.meta_category;
+
+                        t_article.status = _t_article.status;
+
+                        t_article.gammaOutput = _t_article.gammaOutput;
+                        t_article.id_attachment_for_eye_catch = _t_article.id_attachment_for_eye_catch;
+
+
+                        t_article.bg_c = _t_article.bg_c;
+                        t_article.bg_h = _t_article.bg_h;
+                        t_article.bg_s = _t_article.bg_s;
+                        t_article.bg_l = _t_article.bg_l;
+
+
+                        t_article.create_user = User.Identity.Name;
+                        t_article.create_datetime = DateTime.Now;
+
+                        await _context.AddAsync(t_article);
+
+                        await _context.SaveChangesAsync();
+
+                        updatemode = "AddNew";
+                        updateresult = "Success";
+                        updateresult_msg = "AddNew Success";
+                    }
+                    else
+                    {
+                        // if object is in table
+                        // do update new item acrion
+                        target.title = _t_article.title;
+                        target.short_description = _t_article.short_description;
+
+
+                        target.long_description = _t_article.long_description;
+                        target.meta_description = _t_article.meta_description;
+                        target.meta_category = _t_article.meta_category;
+
+                        target.status = _t_article.status;
+
+                        target.gammaOutput = _t_article.gammaOutput;
+                        target.id_attachment_for_eye_catch = _t_article.id_attachment_for_eye_catch;
+
+
+                        target.bg_c = _t_article.bg_c;
+                        target.bg_h = _t_article.bg_h;
+                        target.bg_s = _t_article.bg_s;
+                        target.bg_l = _t_article.bg_l;
+
+
+
+                        target.latest_update_user = User.Identity.Name;
+                        target.latest_update_datetime = DateTime.Now;
+
+                        // Update Db
+                        await _context.SaveChangesAsync();
+
+
+                        updatemode = "Update";
+                        updateresult = "Success";
+                        updateresult_msg = "Update Success";
+                    }
+
+
+                }
+                catch (Exception e)
+                {
+                    updateresult = "Failed";
+                    updateresult_msg = "Failed";
+#if DEBUG
+                    updateresult_msg = e.Message;
+#endif
+                }
+            }
+
+
+            IList<object> objCollection = new List<object>();
+
+
+            objCollection.Add(
+                new
+                {
+                    updatemode = updatemode,
+                    updateresult = updateresult,
+                    updateresult_msg = updateresult_msg
+                });
+
+            return objCollection;
+        }
+
+
+
+
+
         /// <summary>
         /// Update or Add Instruction for Ajax
         /// </summary>
@@ -1315,6 +1455,12 @@ namespace CMS_3D_Core.Controllers
                 ambient_light_color = t.ambient_light_color,
                 ambient_light_intensity = t.ambient_light_intensity,
                 gammaOutput = t.gammaOutput,
+
+
+                bg_c = t.bg_c,
+                bg_h = t.bg_h,
+                bg_s = t.bg_s,
+                bg_l = t.bg_l,
 
                 id_attachment_for_eye_catch = t.id_attachment_for_eye_catch
             };

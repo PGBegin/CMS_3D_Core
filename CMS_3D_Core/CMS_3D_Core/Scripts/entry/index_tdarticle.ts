@@ -63,6 +63,10 @@ function startup() {
                 adarticle.DbUpdateAnnotationDisplay();
             });
 
+            document.getElementById("DbUpdateArticle")!.addEventListener('click', function () {
+                adarticle.DbUpdateArticle();
+            });
+
         }
 
     }

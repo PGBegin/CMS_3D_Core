@@ -88,6 +88,12 @@ namespace CMS_3D_Core.Controllers
                                         .MaxAsync(t => (long?)t.id_article) ?? 0);
 
                 t_article.id_article = id;
+
+                t_article.bg_c = 0;
+                t_article.bg_h = 0;
+                t_article.bg_s = 0;
+                t_article.bg_l = 0;
+
                 await _context.AddAsync(t_article);
                 await _context.SaveChangesAsync();
                 //return RedirectToAction(nameof(Index));
@@ -131,7 +137,10 @@ namespace CMS_3D_Core.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([Bind("id_article,id_assy,title,short_description,long_description,meta_description,meta_category,status,directional_light_color,directional_light_intensity,directional_light_px,directional_light_py,directional_light_pz,ambient_light_color,ambient_light_intensity,gammaOutput")] t_article t_article)
+        public async Task<IActionResult> Edit([Bind("id_article,id_assy,title," +
+            "short_description,long_description,meta_description,meta_category,status," +
+            "directional_light_color,directional_light_intensity,directional_light_px,directional_light_py,directional_light_pz,ambient_light_color,ambient_light_intensity," +
+            "gammaOutput,bg_c,bg_h,bg_s,bg_l")] t_article t_article)
         {
 
             if (ModelState.IsValid)

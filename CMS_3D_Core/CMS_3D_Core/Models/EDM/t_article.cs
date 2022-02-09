@@ -36,6 +36,10 @@ namespace CMS_3D_Core.Models.EDM
         public string latest_update_user { get; set; }
         public DateTime? latest_update_datetime { get; set; }
         public long? id_attachment_for_eye_catch { get; set; }
+        public long bg_c { get; set; }
+        public double bg_h { get; set; }
+        public double bg_s { get; set; }
+        public double bg_l { get; set; }
 
         public virtual t_assembly id_assyNavigation { get; set; }
         public virtual m_status_article statusNavigation { get; set; }
