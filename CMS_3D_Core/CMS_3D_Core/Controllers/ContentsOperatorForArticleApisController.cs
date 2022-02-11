@@ -1462,37 +1462,6 @@ namespace CMS_3D_Core.Controllers
                     updatemode = updatemode,
                     updateresult = updateresult,
                     updateresult_msg = updateresult_msg,
-                    type = "t_view",
-                    // Key data
-                    id_article = _t_light.id_article,
-                    id_light = _t_light.id_light,
-                    light_type = _t_light.light_type,
-                    title = _t_light.title,
-                    short_description = _t_light.short_description,
-
-                    //Camera Position
-                    color = _t_light.color,
-                    intensity = _t_light.intensity,
-
-                    px = _t_light.px,
-                    py = _t_light.py,
-                    pz = _t_light.pz,
-
-                    //Lookat
-                    distance = _t_light.distance,
-                    decay = _t_light.decay,
-                    power = _t_light.power,
-                    shadow = _t_light.shadow,
-
-                    tx = _t_light.tx,
-                    ty = _t_light.ty,
-                    tz = _t_light.tz,
-
-                    //quatunion of camera
-                    skycolor = _t_light.skycolor,
-                    groundcolor = _t_light.groundcolor,
-                    lfsize = _t_light.lfsize,
-                    file_data = _t_light.file_data,
 
                 });
 

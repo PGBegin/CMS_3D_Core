@@ -52,6 +52,7 @@ export class DataContainers {
     str_url_base_delete_product_annotation: string;
 
     str_url_base_edit_product_annotation_display: string;
+    str_url_base_edit_product_light: string;
 
     str_url_base_edit_product_instance: string;
 
@@ -95,6 +96,8 @@ export class DataContainers {
         this.str_url_base_delete_product_annotation = "/ContentsOperatorForArticleApis/DeleteProductAnnotationApi";
 
         this.str_url_base_edit_product_annotation_display = "/ContentsOperatorForArticleApis/EditProductAnnotationDisplayApi";
+
+        this.str_url_base_edit_product_light ="/ContentsOperatorForArticleApis/EditProductLightApi"
 
         this.str_url_base_edit_product_instance = "/ContentsOperatorForArticleApis/EditProductInstanceApi";
 
@@ -525,6 +528,25 @@ export class DataContainers {
 
     }
 
+    //dbUpdEditProductLightApi
+    async dbUpdEditProductLightApi(updObject: any, token: string) {
+
+
+        //console.log("dbUpdEditProductLightApi");
+        console.log(updObject);
+        const response = await fetch(this.str_url_base_edit_product_light, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "RequestVerificationToken": token
+            },
+            body: JSON.stringify(updObject)  // リクエスト本文にJSON形式の文字列を設定c
+        });
+        const data = await response.json();
+        return data;
+
+    }
+
     //dbUpdEditProductInstanceApi
     async dbUpdEditProductInstanceApi(updObject: any, token: string) {
 
@@ -578,7 +600,8 @@ export class TDArticle {
     //
     selected_instruction: number=0;
     selected_view: number=0;
-    selected_annotation: number=0;
+    selected_annotation: number = 0;
+    selected_id_light: number = 0;
 
     //Element Names for HTML TAGS    
     id_div_row_article: string;
@@ -592,6 +615,7 @@ export class TDArticle {
     id_edit_annotation_display_tbody: string;
     id_edit_instance_tbody: string;
     id_edit_list_view_tbody: string;
+    id_edit_light_list_tbody: string;
     id_view_refelencematerial_table_tbody: string;
 
     // Parameter for View Transition
@@ -644,6 +668,9 @@ export class TDArticle {
         this.id_edit_instance_tbody = "id_edit_instance_tbody";
 
         this.id_edit_list_view_tbody = "id_edit_list_view_tbody";
+
+        this.id_edit_light_list_tbody = "id_edit_light_list_tbody";
+
         this.id_view_refelencematerial_table_tbody = "id_view_refelencematerial_table_tbody";
         // Parameter for View Transition
         this.counter = 0;
@@ -761,6 +788,9 @@ export class TDArticle {
         //Update Instance Editor
         this.DomUpdateInstanceEditor();
 
+        //Update LightList Editor
+        this.DomUpdateLightListEditor();
+
         //Loading Annotations
         this.DomSetupAnnotationScreen();
 
@@ -809,6 +839,9 @@ export class TDArticle {
 
             //Update Instance Editor
             this.DomUpdateInstanceEditor();
+
+            //Update LightList Editor
+            this.DomUpdateLightListEditor();
 
             //RefelencematerialView
             this.DomSetupRefelencematerialView();
@@ -1376,6 +1409,168 @@ export class TDArticle {
     }
 
 
+
+    //Create LightList Editor Panel
+    DomUpdateLightListEditor() {
+
+        //this.id_edit_list_view_tbody = "id_edit_list_view_tbody";
+        let tbody = document.getElementById(this.id_edit_light_list_tbody)!;
+
+
+        if (tbody != null) {
+
+            while (tbody.firstChild) {
+                tbody.removeChild(tbody.firstChild);
+            }
+
+            let temp_tr: HTMLTableRowElement;
+            let temp_td: HTMLTableCellElement;
+            let temp_ipt: HTMLInputElement;
+            let temp_bt: HTMLButtonElement;
+            let i = 0;
+
+            //DomUpdateInstanceEditor
+
+            //ID	title	X	Y	Z	REf	Delete
+            this.datacontainers.light.forEach(function (this: TDArticle, light: Light) {
+
+                temp_tr = document.createElement('tr');
+
+
+                // Colomn 01 (Hidden Ids and ID No.)
+
+                temp_td = document.createElement('td');
+
+                temp_td.innerText = (i + 1).toString();
+
+
+                temp_ipt = document.createElement('input');
+                temp_ipt.id = `[${light.id_light}].id_edit_light_list_tbody_input_id_id_article`;
+                temp_ipt.name = `[${i}].id_article`;
+                temp_ipt.type = "hidden";
+                temp_ipt.value = light.id_article.toString();
+
+                temp_td.appendChild(temp_ipt);
+
+
+                temp_ipt = document.createElement('input');
+                temp_ipt.id = `[${light.id_light}].id_edit_light_list_tbody_input_id_id_light`;
+                temp_ipt.name = `[${i}].id_light`;
+                temp_ipt.type = "hidden";
+                temp_ipt.value = light.id_light.toString();
+
+                temp_td.appendChild(temp_ipt);
+
+
+
+                temp_tr.appendChild(temp_td);
+
+                // Colomn 02 (Light Type)
+                temp_td = document.createElement('td');
+
+                temp_td.innerText = light.light_type;
+
+                temp_tr.appendChild(temp_td);
+
+                // Colomn 03 (Light Title)
+                temp_td = document.createElement('td');
+
+                temp_td.innerText = light.title;
+
+                temp_tr.appendChild(temp_td);
+
+                // Colomn 04 (Light short_description)
+                temp_td = document.createElement('td');
+
+                temp_td.innerText = light.short_description;
+
+                temp_tr.appendChild(temp_td);
+
+                // Colomn 05 (Light color)
+                temp_td = document.createElement('td');
+
+                temp_td.innerText = light.color.toString();
+
+                temp_tr.appendChild(temp_td);
+
+                // Colomn 06 (Light intensity)
+                temp_td = document.createElement('td');
+
+                temp_td.innerText = light.intensity.toString();
+
+                temp_tr.appendChild(temp_td);
+
+                // Colomn 07 (Pos X)
+                temp_td = document.createElement('td');
+
+                //temp_td.innerText = light.px.toString();
+                temp_td.innerText = (light.px ?? "").toString();
+
+                temp_tr.appendChild(temp_td);
+
+                // Colomn 08 (Pos Y)
+                temp_td = document.createElement('td');
+
+                //temp_td.innerText = light.py.toString();
+                temp_td.innerText = (light.py ?? "").toString();
+
+                temp_tr.appendChild(temp_td);
+
+                // Colomn 09 (Pos Z)
+                temp_td = document.createElement('td');
+
+                //temp_td.innerText = light.pz.toString();
+                temp_td.innerText = (light.pz ?? "").toString();
+
+                temp_tr.appendChild(temp_td);
+
+
+                // Colomn 10 (Check box for IsLensFlare)
+                temp_td = document.createElement('td');
+                temp_ipt = document.createElement('input');
+                temp_ipt.type = "checkbox";
+                temp_ipt.disabled = true;
+                temp_ipt.checked = light.is_lensflare;
+
+                temp_td.appendChild(temp_ipt);
+
+                temp_tr.appendChild(temp_td);
+
+                // Colomn 11 (LF size)
+                temp_td = document.createElement('td');
+                temp_td.innerText = (light.lfsize ?? "").toString();
+
+                temp_tr.appendChild(temp_td);
+
+
+                // Colomn 12 (Edit Bottun)
+
+                temp_td = document.createElement('td');
+
+
+                temp_bt = document.createElement('button');
+                temp_bt.type = 'button';
+                temp_bt.onclick = this.DomUpdateLightEditor.bind(this, light.id_light);
+                temp_bt.id = `[${light.id_light}].id_edit_light_list_tbody_input_edit`;
+                temp_bt.classList.add('btn');
+                temp_bt.classList.add('btn-outline-primary');
+                temp_bt.textContent = "Edit";
+
+                temp_td.appendChild(temp_bt);
+
+
+
+
+                temp_tr.appendChild(temp_td);
+                
+
+                tbody.appendChild(temp_tr);
+                i += 1;
+            }.bind(this));
+        }
+    }
+
+
     //Create Edit Annotation Selection Panels
     DomSetupAnnotationPositionEditButton() {
 
@@ -1928,6 +2123,65 @@ export class TDArticle {
 
             //Delete
             (<HTMLInputElement>document.getElementById('id_delete_annotation_input_id_annotation')).value = this.datacontainers.annotation[index_annotation].id_annotation.toString();
+        }
+
+    }
+
+
+    //Change Annotation for Edit Window
+    DomUpdateLightEditor(id_light: number) {
+
+
+        if (this.is_edit_mode) {
+
+            this.selected_id_light = id_light;
+            const index_light = this.datacontainers.light.findIndex(x => x.id_light == id_light);
+
+            //Set Color of button
+
+            this.datacontainers.light.forEach(function (this: TDArticle, light: Light) {                
+
+                (<HTMLInputElement>document.getElementById(`[${light.id_light}].id_edit_light_list_tbody_input_edit`)).classList.replace('btn-primary', 'btn-outline-primary');
+
+            }.bind(this));
+
+
+            (<HTMLInputElement>document.getElementById(`[${this.selected_id_light}].id_edit_light_list_tbody_input_edit`)).classList.replace('btn-outline-primary', 'btn-primary');
+
+            /*
+            //Hilighting Annotation
+            this.datacontainers.light.forEach(function (this: TDArticle, obj_light: Light) {
+
+                (<HTMLInputElement>document.getElementById(obj_annotation.web_id_annotation)).classList.remove("annotation_editmode");
+
+            }.bind(this));
+            (<HTMLInputElement>document.getElementById(this.datacontainers.annotation[index_annotation].web_id_annotation)).classList.add("annotation_editmode");
+            */
+
+
+            
+            //Edit
+            (<HTMLInputElement>document.getElementById('id_edit_light_id_article')).value = this.datacontainers.light[index_light].id_article.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_light_id_light')).value = this.datacontainers.light[index_light].id_light.toString();
+            (<HTMLInputElement>document.getElementById('id_edit_light_id_light_type')).value = this.datacontainers.light[index_light].light_type;
+
+            (<HTMLInputElement>document.getElementById('id_edit_light_title')).value = this.datacontainers.light[index_light].title;
+            (<HTMLInputElement>document.getElementById('id_edit_light_short_description')).value = this.datacontainers.light[index_light].short_description;
+
+            (<HTMLInputElement>document.getElementById('id_edit_light_color')).value = (this.datacontainers.light[index_light].color ?? "").toString();
+            (<HTMLInputElement>document.getElementById('id_edit_light_intensity')).value = (this.datacontainers.light[index_light].intensity ?? "").toString();
+
+
+            (<HTMLInputElement>document.getElementById('id_edit_light_px')).value = (this.datacontainers.light[index_light].px ?? "").toString();
+            (<HTMLInputElement>document.getElementById('id_edit_light_py')).value = (this.datacontainers.light[index_light].py ?? "").toString();
+            (<HTMLInputElement>document.getElementById('id_edit_light_pz')).value = (this.datacontainers.light[index_light].pz ?? "").toString();
+
+
+            (<HTMLInputElement>document.getElementById('id_edit_light_distance')).value = (this.datacontainers.light[index_light].distance ?? "").toString();
+            (<HTMLInputElement>document.getElementById('id_edit_light_decay')).value = (this.datacontainers.light[index_light].decay ?? "").toString();
+
+            (<HTMLInputElement>document.getElementById('id_edit_light_is_lensflare')).checked = this.datacontainers.light[index_light].is_lensflare ?? false;
+            (<HTMLInputElement>document.getElementById('id_edit_light_lfsize')).value = (this.datacontainers.light[index_light].lfsize ?? "").toString();
         }
 
     }
@@ -2628,6 +2882,74 @@ export class TDArticle {
         }
     }
 
+
+
+    //Update Light with Ajax
+    async DbUpdateLight() {
+
+        if (confirm('Are you update Light?')) {
+
+            let updObject = {
+                id_article: this.datacontainers.id_article,
+                id_light: Number((<HTMLInputElement>document.getElementById('id_edit_light_id_light')).value ?? null),
+                light_type:(<HTMLInputElement>document.getElementById('id_edit_light_id_light_type')).value,
+
+                title: (<HTMLInputElement>document.getElementById('id_edit_light_title')).value,
+                short_description: (<HTMLInputElement>document.getElementById('id_edit_light_short_description')).value,
+
+                color: Number((<HTMLInputElement>document.getElementById('id_edit_light_color')).value ?? null),
+                intensity: Number((<HTMLInputElement>document.getElementById('id_edit_light_intensity')).value ?? null),
+
+
+                px: Number((<HTMLInputElement>document.getElementById('id_edit_light_px')).value ?? null),
+                py: Number((<HTMLInputElement>document.getElementById('id_edit_light_py')).value ?? null),
+                pz: Number((<HTMLInputElement>document.getElementById('id_edit_light_pz')).value ?? null),
+
+
+                distance: Number((<HTMLInputElement>document.getElementById('id_edit_light_distance')).value ?? null),
+                decay: Number((<HTMLInputElement>document.getElementById('id_edit_light_decay')).value ?? null),
+
+                is_lensflare: (<HTMLInputElement>document.getElementById('id_edit_light_is_lensflare')).checked ?? null,
+                lfsize: Number((<HTMLInputElement>document.getElementById('id_edit_light_lfsize')).value ?? null)
+            };
+
+            this.selected_instruction = Number((<HTMLInputElement>document.getElementById('instruction_id_instruct')).value);
+
+            let token = (<HTMLInputElement>document.getElementsByName("__RequestVerificationToken").item(0)).value;
+
+            console.log("DbUpdateLight");
+            console.log(updObject);
+            const data = await this.datacontainers.dbUpdEditProductLightApi(updObject, token);
+
+            if (data[0].updateresult == "Success") {
+
+                //remove scene
+                this.ObjRemoveObjectScene();
+
+                //データ更新
+                this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
+
+                    //console.log("viewid : " + this.selected_instruction.toString());
+
+                    this.ComplexResetEnvironment();
+                    this.ComplexTransitionInstruction(this.selected_instruction);
+
+                    if (this.datacontainers.annotation.some((item: Annotation) => item.id_annotation === this.selected_annotation)) {
+                        this.DomUpdateAnnotationEditor(this.selected_annotation);
+                    }
+
+                    alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
+                }.bind(this));
+
+            } else {
+                alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
+            }
+
+        }
+    }
+
+
+
     //Update AnnotationDisplay with Ajax
     async DbUpdateInstance() {
 
@@ -2651,16 +2973,6 @@ export class TDArticle {
                 };
 
 
-                /*
-                updObject[i] = new InstancePart(
-                    Number((<HTMLInputElement>document.getElementById(`[${obj_instance_part.id_inst}].id_edit_instance_input_id_assy`)).value),
-                    Number((<HTMLInputElement>document.getElementById(`[${obj_instance_part.id_inst}].id_edit_instance_input_id_inst`)).value),
-                    Number((<HTMLInputElement>document.getElementById(`[${obj_instance_part.id_inst}].id_edit_instance_input_id_part`)).value),
-                    Number((<HTMLInputElement>document.getElementById(`[${obj_instance_part.id_inst}].id_edit_instance_input_pos_x`)).value),
-                    Number((<HTMLInputElement>document.getElementById(`[${obj_instance_part.id_inst}].id_edit_instance_input_pos_y`)).value),
-                    Number((<HTMLInputElement>document.getElementById(`[${obj_instance_part.id_inst}].id_edit_instance_input_pos_z`)).value),
-                    null
-                );*/
                 i += 1;
             }.bind(this));
 

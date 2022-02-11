@@ -71,6 +71,10 @@ function startup() {
                 adarticle.DbUpdateInstance();
             });
 
+            document.getElementById("DbUpdateLight")!.addEventListener('click', function () {
+                adarticle.DbUpdateLight();
+            });
+
         }
 
     }
