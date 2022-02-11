@@ -63,10 +63,9 @@
         <div class="tab-content" id="nav-tabContent">
 
             <div class="tab-pane fade show active" id="nav-instruction">
-                @await Component.InvokeAsync("EditProductInstruction", new { id_article = (long)0, use_ajax = true })
+                @*    @await Component.InvokeAsync("EditProductInstruction", new { id_article = (long)0, use_ajax = true })*@
+                @await Html.PartialAsync("Shared/_EditProductInstruction")
 
-                <button class="btn btn-primary" id="DbUpdateInstruction">Save</button>
-                <button class="btn btn-danger" id="DbDeleteInstruction">Delete</button>
             </div>
 
             <div class="tab-pane fade" id="preview-instruction">
@@ -79,10 +78,10 @@
                 @await Component.InvokeAsync("EditProductView", new { id_article = (long)0, use_ajax = true })
 
 
-                @await Component.InvokeAsync("EditListProductView")
 
+                @*@await Component.InvokeAsync("EditListProductView")*@
+                @await Html.PartialAsync("Shared/_EditListProductView")
 
-                @Html.ActionLink("View", "Index", "t_view", new { id_article = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { id_article = 0 }).id_article })
 
             </div>
 
@@ -98,8 +97,9 @@
             <div class="tab-pane fade" id="nav-displayitemsinfo">
 
                 <h4> DisplayItems Info and Edit</h4>
-
-                @await Component.InvokeAsync("EditProductAnnotationDisplay", new { id_article = (long)0, use_ajax = true })
+                @*
+        @await Component.InvokeAsync("EditProductAnnotationDisplay", new { id_article = (long)0, use_ajax = true })*@
+                @await Html.PartialAsync("Shared/_EditProductAnnotationDisplay")
 
                 <button class="btn btn-primary" id="DbUpdateAnnotationDisplay">Save</button>
 
@@ -125,7 +125,8 @@
 
                 <h4> View Info and Edit</h4>
 
-                @await Component.InvokeAsync("EditArticle", new { id_article = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { id_article = 0 }).id_article })
+                @*@await Component.InvokeAsync("EditArticle", new { id_article = (Model ?? new CMS_3D_Core.Models.EDM.t_article() { id_article = 0 }).id_article })*@
+                @await Html.PartialAsync("Shared/_EditArticle")
 
             </div>
             <div class="tab-pane fade" id="nav-thumbnail">
