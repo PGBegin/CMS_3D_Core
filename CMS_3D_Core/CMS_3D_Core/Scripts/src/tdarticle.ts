@@ -618,6 +618,8 @@ export class TDArticle {
     id_edit_light_list_tbody: string;
     id_view_refelencematerial_table_tbody: string;
 
+    path_lf_png: string;
+
     // Parameter for View Transition
     counter: number;
     step: number;
@@ -672,6 +674,11 @@ export class TDArticle {
         this.id_edit_light_list_tbody = "id_edit_light_list_tbody";
 
         this.id_view_refelencematerial_table_tbody = "id_view_refelencematerial_table_tbody";
+
+        //path of png file
+        this.path_lf_png = "/ContentsEditAttachment/GetAttachmentFile/28";
+
+
         // Parameter for View Transition
         this.counter = 0;
         this.step = 75;
@@ -1960,7 +1967,10 @@ export class TDArticle {
 
                     //const textureFlare0 = textureLoader.load('https://threejs.org/examples/textures/lensflare/lensflare0.png');
 
-                    const textureFlare0 = textureLoader.load('/ContentsEditAttachment/GetAttachmentFile/28');
+                    //const textureFlare0 = textureLoader.load('');
+
+                    const textureFlare0 = textureLoader.load(this.path_lf_png);
+
 
                     const lensflare = new Lensflare();
                     lensflare.addElement(new LensflareElement(textureFlare0, obj_light.lfsize, 0, obj_light.light_object.color));
@@ -1972,30 +1982,6 @@ export class TDArticle {
         }.bind(this));
     }
 
-
-    addLight(h: number, s: number, l: number, x: number, y: number, z: number) {
-
-
-
-        //------------------------------------------------------------
-        //このローダーは本来はもっと別の場所にあるが、暫定的にここに移した
-        // lensflares
-        const textureLoader = new THREE.TextureLoader();
-
-        const textureFlare0 = textureLoader.load('https://threejs.org/examples/textures/lensflare/lensflare0.png');
-        //-------------------------------------------------------------
-
-
-        const light = new THREE.PointLight(0xffffff, 0.5, 20000, 2);
-        //light.color.setHSL(h, s, l);
-        light.position.set(x, y, z);
-        this.scene.add(light);
-
-        const lensflare = new Lensflare();
-        lensflare.addElement(new LensflareElement(textureFlare0, 500, 0, light.color));
-        light.add(lensflare);
-
-    }
 
 
     //Change Article for Edit Window
