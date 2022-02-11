@@ -617,6 +617,7 @@ export class TDArticle {
     id_edit_list_view_tbody: string;
     id_edit_light_list_tbody: string;
     id_view_refelencematerial_table_tbody: string;
+    id_editor_base_controls: string;
 
     path_lf_png: string;
 
@@ -674,6 +675,8 @@ export class TDArticle {
         this.id_edit_light_list_tbody = "id_edit_light_list_tbody";
 
         this.id_view_refelencematerial_table_tbody = "id_view_refelencematerial_table_tbody";
+
+        this.id_editor_base_controls = "id_editor_base_controls";
 
         //path of png file
         this.path_lf_png = "/ContentsEditAttachment/GetAttachmentFile/28";
@@ -779,6 +782,10 @@ export class TDArticle {
         this.DomSetupInstructionControler();
 
 
+        //Setup Control Panel of Editor Base
+        this.DomSetupEditorBaseControls();
+
+
         //setup view operation panel
         //this.DomSetupLookingControler();
 
@@ -821,8 +828,12 @@ export class TDArticle {
             this.DomUpdateArticleEditor();
 
 
-            //コントロールパネル領域を生成する
+            //Setup Control Panel of Instruction
             this.DomSetupInstructionControler();
+
+
+            //Setup Control Panel of Editor Base
+            this.DomSetupEditorBaseControls();
 
             //setup view operation panel
             this.DomSetupLookingControler();
@@ -1053,6 +1064,47 @@ export class TDArticle {
                 pn.appendChild(temp_bt);
             }.bind(this));
         }
+    }
+
+    //Create Edit Annotation Selection Panels
+    DomSetupEditorBaseControls() {
+
+        let pn = document.getElementById(this.id_editor_base_controls)!;
+
+        if (pn != null) {
+            while (pn.firstChild) {
+                pn.removeChild(pn.firstChild);
+            }
+            let temp_bt;
+
+
+            temp_bt = document.createElement('button');
+            temp_bt.type = 'button';
+            temp_bt.onclick = this.DomCngHelper.bind(this);
+            temp_bt.id = "btn_chg_helper";
+            temp_bt.classList.add('btn');
+            if (this.is_display_helper) {
+                temp_bt.classList.add('btn-primary');
+                temp_bt.textContent = "HIDE HELPER";
+            } else {
+                temp_bt.classList.add('btn-outline-primary');
+                temp_bt.textContent = "SHOW HELPER";
+            }
+
+            pn.appendChild(temp_bt);
+        }
+    }
+
+
+
+    //Initialize Render Objects and Setting for Optional (Like Helpers)
+    DomCngHelper() {
+
+        this.is_display_helper = !this.is_display_helper;
+        this.gridHelper.visible = this.is_display_helper;
+        this.axisHelper.visible = this.is_display_helper;
+        this.DomSetupEditorBaseControls();
+
     }
 
 
