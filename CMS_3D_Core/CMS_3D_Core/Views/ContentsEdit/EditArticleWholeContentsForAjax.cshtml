@@ -53,6 +53,7 @@
                 <a class="nav-link" id="nav-viewinfo-tab" data-bs-toggle="tab" href="#nav-viewinfo">View</a>
                 <a class="nav-link" id="nav-annotationinfo-tab" data-bs-toggle="tab" href="#nav-annotationinfo">Annotation</a>
                 <a class="nav-link" id="nav-displayitemsinfo-tab" data-bs-toggle="tab" href="#nav-displayitemsinfo">Display Items Info</a>
+                <a class="nav-link" id="nav-editinstance-tab" data-bs-toggle="tab" href="#nav-editinstance">Instance</a>
                 <a class="nav-link" id="nav-articlebase-tab" data-bs-toggle="tab" href="#nav-articlebase">Article Base</a>
                 <a class="nav-link" id="nav-thumbnail-tab" data-bs-toggle="tab" href="#nav-thumbnail">Thumbnail</a>
                 <a class="nav-link" id="nav-materials-tab" data-bs-toggle="tab" href="#nav-materials">Materials</a>
@@ -100,6 +101,13 @@
                 @await Component.InvokeAsync("EditProductAnnotationDisplay", new { id_article = (long)0, use_ajax = true })
 
                 <button class="btn btn-primary" id="DbUpdateAnnotationDisplay">Save</button>
+
+            </div>
+
+            <div class="tab-pane fade" id="nav-editinstance">
+
+                <h4>Edit Instance</h4>
+                @await Html.PartialAsync("Shared/_EditInstance")
 
             </div>
 

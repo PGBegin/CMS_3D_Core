@@ -231,7 +231,7 @@ namespace CMS_3D_Core.Controllers
     }
 
     /// <summary>
-    /// Edit Instruction
+    /// Detati Material View
     /// </summary>
     public class DetatiMaterialViewComponent : ViewComponent
     {

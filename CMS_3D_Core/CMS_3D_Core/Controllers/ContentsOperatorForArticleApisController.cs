@@ -1218,6 +1218,81 @@ namespace CMS_3D_Core.Controllers
         }
 
 
+        /// <summary>
+        /// Update Instance for Ajax
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns>Result of Api Action with Json</returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IList<object>> EditProductInstanceApi([FromBody] IList<t_instance_part> List)
+        {
+            /*
+            if (id_article == null | id_instruct == null)
+            {
+                return NotFound();
+            }*/
+
+            string updatemode = "undefined";
+            string updateresult = "Failed";
+            string updateresult_msg = "Failed";
+
+            if (ModelState.IsValid)
+            {
+                updatemode = "undefined";
+                try
+                {
+                    var t_assembly = await _context.t_assemblies.FindAsync(List.FirstOrDefault().id_assy);
+
+                    foreach (var m in List)
+                    {
+                        var target = await _context.t_instance_parts.FindAsync(m.id_assy, m.id_inst);
+                        target.pos_x = m.pos_x;
+                        target.pos_y = m.pos_y;
+                        target.pos_z = m.pos_z;
+                        target.latest_update_user = User.Identity.Name;
+                        target.latest_update_datetime = DateTime.Now;
+                    }
+
+
+
+                    t_assembly.latest_update_user = User.Identity.Name;
+                    t_assembly.latest_update_datetime = DateTime.Now;
+
+                    // Update Db
+                    await _context.SaveChangesAsync();
+
+
+                    updatemode = "Update";
+                    updateresult = "Success";
+                    updateresult_msg = "Update Success";
+
+
+                }
+                catch (Exception e)
+                {
+                    updateresult = "Failed";
+                    updateresult_msg = "Failed";
+#if DEBUG
+                    updateresult_msg = e.Message;
+#endif
+                }
+            }
+
+            IList<object> objCollection = new List<object>();
+
+
+            objCollection.Add(
+                new
+                {
+                    updatemode = updatemode,
+                    updateresult = updateresult,
+                    updateresult_msg = updateresult_msg
+                });
+
+            return objCollection;
+        }
+
 
         /// <summary>
         /// Update or Add Light for Ajax

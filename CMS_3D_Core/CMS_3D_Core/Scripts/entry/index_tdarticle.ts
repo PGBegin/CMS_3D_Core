@@ -67,6 +67,10 @@ function startup() {
                 adarticle.DbUpdateArticle();
             });
 
+            document.getElementById("DbUpdateInstance")!.addEventListener('click', function () {
+                adarticle.DbUpdateInstance();
+            });
+
         }
 
     }

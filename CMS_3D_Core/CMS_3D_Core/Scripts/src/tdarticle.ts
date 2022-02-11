@@ -11,6 +11,7 @@ import { Lensflare, LensflareElement } from 'three/examples/jsm/objects/Lensflar
 
 import { Aarticle, Instruction, ViewObject, InstancePart, Annotation, AnnotationDisplay, Refelencematerial, Light } from './tdarticle/tdarticle_Aarticle';
 import { Vector3 } from 'three';
+import { Instance } from '@popperjs/core';
 
 
 /*
@@ -52,6 +53,8 @@ export class DataContainers {
 
     str_url_base_edit_product_annotation_display: string;
 
+    str_url_base_edit_product_instance: string;
+
 
     //Model Objects
     article!: Aarticle;
@@ -92,6 +95,8 @@ export class DataContainers {
         this.str_url_base_delete_product_annotation = "/ContentsOperatorForArticleApis/DeleteProductAnnotationApi";
 
         this.str_url_base_edit_product_annotation_display = "/ContentsOperatorForArticleApis/EditProductAnnotationDisplayApi";
+
+        this.str_url_base_edit_product_instance = "/ContentsOperatorForArticleApis/EditProductInstanceApi";
 
 
 
@@ -519,6 +524,23 @@ export class DataContainers {
         return data;
 
     }
+
+    //dbUpdEditProductInstanceApi
+    async dbUpdEditProductInstanceApi(updObject: any, token: string) {
+
+        console.log(updObject);
+        const response = await fetch(this.str_url_base_edit_product_instance, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "RequestVerificationToken": token
+            },
+            body: JSON.stringify(updObject)  // リクエスト本文にJSON形式の文字列を設定c
+        });
+        const data = await response.json();
+        return data;
+
+    }
 }
 
 
@@ -568,6 +590,7 @@ export class TDArticle {
     id_edit_annotation_position_panels: string;
     id_viewpoint_controlpanel: string;
     id_edit_annotation_display_tbody: string;
+    id_edit_instance_tbody: string;
     id_edit_list_view_tbody: string;
     id_view_refelencematerial_table_tbody: string;
 
@@ -616,6 +639,9 @@ export class TDArticle {
         this.id_viewpoint_controlpanel = "id_view_operation_panel";
 
         this.id_edit_annotation_display_tbody = "id_edit_annotation_display_tbody";
+
+
+        this.id_edit_instance_tbody = "id_edit_instance_tbody";
 
         this.id_edit_list_view_tbody = "id_edit_list_view_tbody";
         this.id_view_refelencematerial_table_tbody = "id_view_refelencematerial_table_tbody";
@@ -732,6 +758,9 @@ export class TDArticle {
         //Annotation Display Edit Panel
         this.DomSetupAnnotationDisplayEditor();
 
+        //Update Instance Editor
+        this.DomUpdateInstanceEditor();
+
         //Loading Annotations
         this.DomSetupAnnotationScreen();
 
@@ -777,6 +806,9 @@ export class TDArticle {
 
             //Annotation Display Edit Panel
             this.DomSetupAnnotationDisplayEditor();
+
+            //Update Instance Editor
+            this.DomUpdateInstanceEditor();
 
             //RefelencematerialView
             this.DomSetupRefelencematerialView();
@@ -982,6 +1014,118 @@ export class TDArticle {
             }.bind(this));
         }
     }
+
+
+    //Create Instance Editor
+    DomUpdateInstanceEditor() {
+
+
+        let tbody = document.getElementById(this.id_edit_instance_tbody)!;
+
+
+        if (tbody != null) {
+
+            while (tbody.firstChild) {
+                tbody.removeChild(tbody.firstChild);
+            }
+
+            let temp_tr;
+            let temp_td;
+            let temp_ipt;
+            let i = 0;
+
+            this.datacontainers.instance_part.forEach(function (obj_instance_part: InstancePart) {
+
+                temp_tr = document.createElement('tr');
+
+
+                // Colomn 01 (Hidden Ids and Low No.)
+
+                temp_td = document.createElement('td');
+
+                temp_td.innerText = (i + 1).toString();
+
+
+                temp_ipt = document.createElement('input');
+                temp_ipt.id = `[${obj_instance_part.id_inst}].id_edit_instance_input_id_assy`;
+                temp_ipt.name = `[${i}].id_assy`;
+                temp_ipt.type = "hidden";
+                temp_ipt.value = obj_instance_part.id_assy.toString();
+
+                temp_td.appendChild(temp_ipt);
+
+
+                temp_ipt = document.createElement('input');
+                temp_ipt.id = `[${obj_instance_part.id_inst}].id_edit_instance_input_id_inst`;
+                temp_ipt.name = `[${i}].id_inst`;
+                temp_ipt.type = "hidden";
+                temp_ipt.value = obj_instance_part.id_inst.toString();
+
+                temp_td.appendChild(temp_ipt);
+
+
+                temp_ipt = document.createElement('input');
+                temp_ipt.id = `[${obj_instance_part.id_inst}].id_edit_instance_input_id_part`;
+                temp_ipt.name = `[${i}].id_part`;
+                temp_ipt.type = "hidden";
+                temp_ipt.value = obj_instance_part.id_part.toString();
+
+                temp_td.appendChild(temp_ipt);
+
+
+                temp_tr.appendChild(temp_td);
+
+                // Colomn 02 (Annotation Title)
+                temp_td = document.createElement('td');
+                temp_ipt = document.createElement('input');
+                temp_ipt.id = `[${obj_instance_part.id_inst}].id_edit_instance_input_pos_x`;
+                temp_ipt.name = `[${i}].pos_x`;
+                temp_ipt.type = "number";
+                temp_ipt.value = obj_instance_part.pos.x.toString();
+                temp_ipt.classList.add('form-control');
+                //data-val-required要るなあ・・・・・・
+
+                temp_td.appendChild(temp_ipt);
+
+                temp_tr.appendChild(temp_td);
+
+
+
+                // Colomn 05 (Check box for Display)
+                temp_td = document.createElement('td');
+                temp_ipt = document.createElement('input');
+                temp_ipt.id = `[${obj_instance_part.id_inst}].id_edit_instance_input_pos_y`;
+                temp_ipt.name = `[${i}].pos_y`;
+                temp_ipt.type = "number";
+                temp_ipt.value = obj_instance_part.pos.y.toString();
+                temp_ipt.classList.add('form-control');
+                //data-val-required要るなあ・・・・・・
+
+                temp_td.appendChild(temp_ipt);
+
+                temp_tr.appendChild(temp_td);
+
+                // Colomn 06 (Check box for Display Description)
+                temp_td = document.createElement('td');
+                temp_ipt = document.createElement('input');
+                temp_ipt.id = `[${obj_instance_part.id_inst}].id_edit_instance_input_pos_z`;
+                temp_ipt.name = `[${i}].pos_z`;
+                temp_ipt.type = "number";
+                temp_ipt.value = obj_instance_part.pos.z.toString();
+                temp_ipt.classList.add('form-control');
+                //data-val-required要るなあ・・・・・・
+
+                temp_td.appendChild(temp_ipt);
+
+
+                temp_tr.appendChild(temp_td);
+
+                tbody.appendChild(temp_tr);
+                i += 1;
+            }.bind(this));
+        }
+    }
+
 
     //Create AnnotationDisplay Editor
     DomSetupAnnotationDisplayEditor() {
@@ -2484,4 +2628,65 @@ export class TDArticle {
         }
     }
 
+    //Update AnnotationDisplay with Ajax
+    async DbUpdateInstance() {
+
+
+
+        if (confirm('Are you update Instance?')) {
+
+            let updObject: any[] = [];
+
+            let i = 0;
+            this.datacontainers.instance_part.forEach(function (this: TDArticle, obj_instance_part: InstancePart) {
+
+                updObject[i] = {
+                    
+                    id_assy:Number((<HTMLInputElement>document.getElementById(`[${obj_instance_part.id_inst}].id_edit_instance_input_id_assy`)).value),
+                    id_inst:Number((<HTMLInputElement>document.getElementById(`[${obj_instance_part.id_inst}].id_edit_instance_input_id_inst`)).value),
+                    id_part:Number((<HTMLInputElement>document.getElementById(`[${obj_instance_part.id_inst}].id_edit_instance_input_id_part`)).value),
+                    pos_x: Number((<HTMLInputElement>document.getElementById(`[${obj_instance_part.id_inst}].id_edit_instance_input_pos_x`)).value),
+                    pos_y: Number((<HTMLInputElement>document.getElementById(`[${obj_instance_part.id_inst}].id_edit_instance_input_pos_y`)).value),
+                    pos_z: Number((<HTMLInputElement>document.getElementById(`[${obj_instance_part.id_inst}].id_edit_instance_input_pos_z`)).value),
+                };
+
+
+                /*
+                updObject[i] = new InstancePart(
+                    Number((<HTMLInputElement>document.getElementById(`[${obj_instance_part.id_inst}].id_edit_instance_input_id_assy`)).value),
+                    Number((<HTMLInputElement>document.getElementById(`[${obj_instance_part.id_inst}].id_edit_instance_input_id_inst`)).value),
+                    Number((<HTMLInputElement>document.getElementById(`[${obj_instance_part.id_inst}].id_edit_instance_input_id_part`)).value),
+                    Number((<HTMLInputElement>document.getElementById(`[${obj_instance_part.id_inst}].id_edit_instance_input_pos_x`)).value),
+                    Number((<HTMLInputElement>document.getElementById(`[${obj_instance_part.id_inst}].id_edit_instance_input_pos_y`)).value),
+                    Number((<HTMLInputElement>document.getElementById(`[${obj_instance_part.id_inst}].id_edit_instance_input_pos_z`)).value),
+                    null
+                );*/
+                i += 1;
+            }.bind(this));
+
+
+            let token = (<HTMLInputElement>document.getElementsByName("__RequestVerificationToken").item(0)).value;
+
+            const data = await this.datacontainers.dbUpdEditProductInstanceApi(updObject, token);
+
+            if (data[0].updateresult == "Success") {
+                this.selected_annotation = data[0].id_annotation;
+
+                //remove scene
+                this.ObjRemoveObjectScene();
+
+                //データ更新
+                this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
+                    this.ComplexResetEnvironment();
+                    this.ComplexTransitionInstruction(this.selected_instruction);
+
+                    if (this.datacontainers.annotation.some((item: Annotation) => item.id_annotation === this.selected_annotation)) {
+                        this.DomUpdateAnnotationEditor(this.selected_annotation);
+                    }
+
+                    alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
+                }.bind(this));
+            }
+        }
+    }
 }
