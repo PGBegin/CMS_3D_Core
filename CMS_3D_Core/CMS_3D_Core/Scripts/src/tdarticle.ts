@@ -10,8 +10,6 @@ import { Lensflare, LensflareElement } from 'three/examples/jsm/objects/Lensflar
 
 
 import { Aarticle, Instruction, ViewObject, InstancePart, Annotation, AnnotationDisplay, Refelencematerial, Light } from './tdarticle/tdarticle_Aarticle';
-import { Vector3 } from 'three';
-import { Instance } from '@popperjs/core';
 
 
 /*
@@ -100,17 +98,6 @@ export class DataContainers {
         this.str_url_base_edit_product_light ="/ContentsOperatorForArticleApis/EditProductLightApi"
 
         this.str_url_base_edit_product_instance = "/ContentsOperatorForArticleApis/EditProductInstanceApi";
-
-
-
-        //Model Objects
-        //this.article;
-        //this.view_object = [];
-        //this.instruction_gp = [];
-        //this.instance_part = [];
-        //this.annotation = [];
-        //this.annotation_display = [];
-        //this.refelencematerial = [];
 
 
         this.id_article = 0;
@@ -566,6 +553,34 @@ export class DataContainers {
 }
 
 
+// The class for Helpers
+export class TDHelpers {
+    
+    fixedAxisHelper!: THREE.AxesHelper;
+    gridHelper!: THREE.GridHelper;
+    axisHelper!: THREE.AxesHelper;
+
+    constructor() {
+
+        this.fixedAxisHelper = new THREE.AxesHelper(100);
+        this.fixedAxisHelper.visible = false;
+
+        
+        this.gridHelper = new THREE.GridHelper(200, 200);
+        this.gridHelper.visible = false;
+
+        this.axisHelper = new THREE.AxesHelper(1000);
+        this.axisHelper.visible = false;
+
+    }
+    setAllHelpersVisibility(is_display_helper: boolean) {
+        this.fixedAxisHelper.visible = is_display_helper;
+        this.gridHelper.visible = is_display_helper;
+        this.axisHelper.visible = is_display_helper;
+
+    }
+}
+
 //---------------------------------------------------------------------------
 export class TDArticle {
 
@@ -580,16 +595,17 @@ export class TDArticle {
     controls!: OrbitControls;
     scene: THREE.Scene;
 
-    gridHelper!: THREE.GridHelper;
-    axisHelper!: THREE.AxesHelper;
-    lightHelper!: THREE.DirectionalLightHelper;
+    //gridHelper!: THREE.GridHelper;
+    //axisHelper!: THREE.AxesHelper;
+    //lightHelper!: THREE.DirectionalLightHelper;
+    tdHelpers = new TDHelpers();
 
 
     arrow_base: THREE.Vector3;
 
 
-    light!: THREE.DirectionalLight;
-    ambient!: THREE.AmbientLight;
+    //light!: THREE.DirectionalLight;
+    //ambient!: THREE.AmbientLight;
     renderer!: THREE.WebGLRenderer;
 
 
@@ -1101,8 +1117,9 @@ export class TDArticle {
     DomCngHelper() {
 
         this.is_display_helper = !this.is_display_helper;
-        this.gridHelper.visible = this.is_display_helper;
-        this.axisHelper.visible = this.is_display_helper;
+        //this.gridHelper.visible = this.is_display_helper;
+        //this.axisHelper.visible = this.is_display_helper;
+        this.tdHelpers.setAllHelpersVisibility(this.is_display_helper);
         this.DomSetupEditorBaseControls();
 
     }
@@ -1899,21 +1916,21 @@ export class TDArticle {
 
         //helper
 
-        this.gridHelper = new THREE.GridHelper(200, 200);
-        this.scene.add(this.gridHelper);
+        //this.gridHelper = new THREE.GridHelper(200, 200);
+        //this.scene.add(this.gridHelper);
 
 
         //型が存在しないというエラーになるので一時的にコメントアウト。
-        //this.axisHelper = new THREE.AxisHelper(1000);
+        //this.axisHelper = new THREE.AxesHelper(1000);
         //this.scene.add(this.axisHelper);
-        this.axisHelper = new THREE.AxesHelper(1000);
-        this.scene.add(this.axisHelper);
 
+        this.scene.add(this.tdHelpers.gridHelper);
+        this.scene.add(this.tdHelpers.axisHelper);
+        this.scene.add(this.tdHelpers.fixedAxisHelper);
 
-
-        this.gridHelper.visible = this.is_display_helper;
+        //this.gridHelper.visible = this.is_display_helper;
         //型が存在しないというエラーになるので一時的にコメントアウト。
-        this.axisHelper.visible = this.is_display_helper;
+        //this.axisHelper.visible = this.is_display_helper;
 
         //lightHelper = new THREE.DirectionalLightHelper(light, 20);
         //scene.add(lightHelper);
@@ -1923,14 +1940,6 @@ export class TDArticle {
     ComplexSetupRenderInitial(lint: number, lpx: number, lpy: number, lpz: number, anbint: number, _gammaOutput: boolean) {
 
         // light
-        //this.light = new THREE.DirectionalLight(0xffffff, lint);
-        //this.light.position.set(lpx, lpy, lpz);
-        //this.scene.add(this.light);
-
-
-        //this.ambient = new THREE.AmbientLight(0x404040, anbint);
-        //this.scene.add(this.ambient);
-
 
         this.setupLight();
 
@@ -1938,16 +1947,7 @@ export class TDArticle {
         this.camera_main = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 6350000);
 
         //background
-        //this.scene.background = new THREE.Color(0xffffff);
-        //        this.scene.background = new THREE.Color().setHSL(0.51, 0.4, 0.01);
-        //        this.scene.background = new THREE.Color().setHSL(this.datacontainers.article.bg_h, this.datacontainers.article.bg_s, this.datacontainers.article.bg_l);
         this.scene.background = new THREE.Color(this.datacontainers.article.bg_c);
-        //let xx = { h: 0, s: 0, l: 0 };
-        //new THREE.Color(0xffffff).getHSL(xx);
-        //console.log(xx);
-//        console.log(new THREE.Color(0xffffff).getHSL(xx));
-        //------------------------------------------------------------------------------------------------
-        //this.addLight(1, 1, 1, 0, 0, 149600);
 
         // renderer
         //renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -1994,20 +1994,22 @@ export class TDArticle {
 
             if (obj_light.light_type == "DirectionalLight") {
 
-//                obj_light.light_object = new THREE.DirectionalLight(obj_light.color, obj_light.intensity);
-                obj_light.light_object = new THREE.DirectionalLight(0xffffff, obj_light.intensity);
+                obj_light.light_object = new THREE.DirectionalLight(obj_light.color, obj_light.intensity);
+                //obj_light.light_object = new THREE.DirectionalLight(0xffffff, obj_light.intensity);
                 obj_light.light_object.position.set(obj_light.px, obj_light.py, obj_light.pz);
                 this.scene.add(obj_light.light_object);
 //                console.log(obj_light.light_object);
             }
             else if (obj_light.light_type == "AmbientLight") {
                 // light
-                obj_light.light_object = new THREE.AmbientLight(0x404040, obj_light.intensity);
+                obj_light.light_object = new THREE.AmbientLight(obj_light.color, obj_light.intensity);
+//                obj_light.light_object = new THREE.AmbientLight(0x404040, obj_light.intensity);
                 this.scene.add(obj_light.light_object);
             }
             else if (obj_light.light_type == "PointLight") {
                 // light
-                obj_light.light_object = new THREE.PointLight(0xffffff, obj_light.intensity, obj_light.distance, obj_light.decay);
+                obj_light.light_object = new THREE.PointLight(obj_light.color, obj_light.intensity, obj_light.distance, obj_light.decay);
+//                obj_light.light_object = new THREE.PointLight(0xffffff, obj_light.intensity, obj_light.distance, obj_light.decay);
                 obj_light.light_object.position.set(obj_light.px, obj_light.py, obj_light.pz);
                 this.scene.add(obj_light.light_object);
 
@@ -2437,6 +2439,7 @@ export class TDArticle {
         this.controls.update();
         this.renderer.render(this.scene, this.camera_main);
         this.DomUpdateAnnotationScreenPosition();
+        this.DomUpdateFixedAxisHelperScreenPosition();
     }
 
 
@@ -2497,7 +2500,23 @@ export class TDArticle {
     }
 
 
+    //Update Annotation Position
+    DomUpdateFixedAxisHelperScreenPosition() {
+        //this.tdHelpers.fixedAxisHelper.position.set(1, 1, 1);
 
+        /*
+        const canvas = this.renderer.domElement;
+        const cm = this.camera_main;
+
+        //const v = new Vector3(1, 1, 1);
+        const v = new Vector3(0, 0, 0,);
+        const x = new THREE.
+        v.unproject(cm);
+        this.tdHelpers.fixedAxisHelper.position.set(v.x, v.y, v.z);
+        console.log(v);
+        console.log(cm.position);*/
+
+    }
 
 
     //Update Instruction with Ajax

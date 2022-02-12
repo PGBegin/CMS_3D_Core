@@ -36,7 +36,6 @@
 
   <ItemGroup>
     <Folder Include="Scripts\src\tdpart\" />
-    <Folder Include="Views\Shared\Components\EditArticle\" />
     <Folder Include="Views\Shared\Components\EditInstance\" />
     <Folder Include="Views\Shared\Components\EditListProductView\" />
     <Folder Include="wwwroot\js\dist\" />
