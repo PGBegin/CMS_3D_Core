@@ -10,6 +10,7 @@
     <None Remove="Scripts\entry\index_tdarticle_wp.ts" />
     <None Remove="Scripts\src\GetScreenshot.ts" />
     <None Remove="Scripts\src\tdarticle\tdarticle_Aarticle.ts" />
+    <None Remove="Scripts\src\tdarticle\tdarticle_DataContainers.ts" />
     <None Remove="Scripts\src\tdarticle_test.ts" />
     <None Remove="Scripts\src\tdpart\tdpart.ts" />
   </ItemGroup>
@@ -31,6 +32,7 @@
     <TypeScriptCompile Include="Scripts\entry\index_tdarticle_wp.ts" />
     <TypeScriptCompile Include="Scripts\src\GetScreenshot.ts" />
     <TypeScriptCompile Include="Scripts\src\tdarticle\tdarticle_Aarticle.ts" />
+    <TypeScriptCompile Include="Scripts\src\tdarticle\tdarticle_DataContainers.ts" />
     <TypeScriptCompile Include="Scripts\src\tdpart.ts" />
   </ItemGroup>
 
