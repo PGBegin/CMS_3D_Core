@@ -1967,7 +1967,7 @@ export class TDArticle {
         let ofx = 0;// (<HTMLInputElement>document.getElementById('model_screen')).getBoundingClientRect().left;
         let ofy = 0;//(<HTMLInputElement>document.getElementById('model_screen')).getBoundingClientRect().top;
 
-        this.datacontainers.annotation.forEach(function (element : Annotation) {
+        this.datacontainers.annotation.forEach(function (this: TDArticle, element : Annotation) {
 
             const vector = element.pos_pointing.clone().sub(ab);
             vector.project(cm);
@@ -1979,12 +1979,24 @@ export class TDArticle {
             vector.x = vector.x + ofx;// + window.pageXOffset;
             vector.y = vector.y + ofy;// + window.pageYOffset;
             //console.log(window.pageYOffset);
+            //console.log(vector.x.toString() + "," + vector.y.toString());
 
             web_annotation = document.getElementById(element.web_id_annotation)!;
+
+            const annotation_display = this.datacontainers.annotation_display.find(item => item.id_instruct == this.selected_instruction && item.id_annotation == element.id_annotation);
+            const is_display = annotation_display!.is_display;
+
+
+            if (0 <= vector.x && vector.x <= this.width && 0 <= vector.y && vector.y <= this.height) {
+                web_annotation.hidden = false || !is_display;
+            } else {
+                web_annotation.hidden = true;
+            }
+
             web_annotation.style.top = `${vector.y}px`;
             web_annotation.style.left = `${vector.x}px`;
 
-        });
+        }.bind(this));
 
     }
 
