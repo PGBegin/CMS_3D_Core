@@ -48,6 +48,9 @@ export class TDHelpers {
         this.axisHelper.visible = false;
 
     }
+
+
+    //setLightHelper
     setLightHelper(lights: Light[], scene: THREE.Scene) {
 
 
@@ -61,10 +64,12 @@ export class TDHelpers {
             obj_helper.visible = false;
             scene.add(obj_helper);
         }.bind(this));
-
-
+                
 
     }
+
+    //setAnnotationAxisHelperPosUpd
+    //setAllHelpersVisibility
     setAllHelpersVisibility(is_display_helper: boolean) {
 
         this.fixedAxisHelper.visible = is_display_helper;
@@ -75,7 +80,6 @@ export class TDHelpers {
         this.lightHelper.forEach(function (this: TDHelpers, obj_helper: any) {
             obj_helper.visible = is_display_helper;
         }.bind(this));
-
     }
 }
 
@@ -448,6 +452,7 @@ export class TDArticle {
 
             this.scene.remove(obj_annotation.marker);
             this.scene.remove(obj_annotation.arrow);
+            this.scene.remove(obj_annotation.axisHelper);
 
         }.bind(this));
     }
@@ -510,8 +515,10 @@ export class TDArticle {
                 obj_annotation.arrow = new THREE.ArrowHelper(this.arrow_base.normalize(), obj_annotation.pos_pointing.clone().sub(this.arrow_base), this.arrow_base.length(), 0xff0000);
                 this.scene.add(obj_annotation.arrow);
 
+                this.scene.add(obj_annotation.axisHelper);
 
             }.bind(this));
+
 
         }
     }
@@ -1619,9 +1626,11 @@ export class TDArticle {
             this.datacontainers.annotation.forEach(function (this: TDArticle, obj_annotation: Annotation) {
 
                 (<HTMLInputElement>document.getElementById(obj_annotation.web_id_annotation)).classList.remove("annotation_editmode");
+                obj_annotation.axisHelper.visible = false;
 
             }.bind(this));
             (<HTMLInputElement>document.getElementById(this.datacontainers.annotation[index_annotation].web_id_annotation)).classList.add("annotation_editmode");
+            this.datacontainers.annotation[index_annotation].axisHelper.visible = true;
 
 
 
@@ -1730,6 +1739,7 @@ export class TDArticle {
 
             //this.datacontainers.annotation[index_annotation].marker.position.add(new THREE.Vector3(px, py, pz));
             this.datacontainers.annotation[index_annotation].arrow.position.add(new THREE.Vector3(px, py, pz));
+            this.datacontainers.annotation[index_annotation].axisHelper.position.copy(this.datacontainers.annotation[index_annotation].pos_pointing);
 
             //element.marker.position.set(element.pos_x, element.pos_y, element.pos_z);
 

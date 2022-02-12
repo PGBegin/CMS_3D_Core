@@ -1,6 +1,6 @@
 ﻿//
 
-import { Vector3 } from "three";
+import * as THREE from 'three';
 
 
 
@@ -161,7 +161,7 @@ export class InstancePart {
     id_assy: number;
     id_inst: number;
     id_part: number;
-    pos: Vector3 = new Vector3(0, 0, 0);
+    pos: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
     objectdata: any;
 
 
@@ -192,6 +192,7 @@ export class Annotation {
     web_id_annotation_description: string;
     marker!: THREE.Mesh;
     arrow!: THREE.ArrowHelper;
+    axisHelper!: THREE.AxesHelper;
 
     constructor(id_article: number, id_annotation: number,
         title: string, description1: string, description2: string, status: number,
@@ -205,10 +206,14 @@ export class Annotation {
         this.description2 = description2;
         this.status = status;
 
-        this.pos_pointing = new Vector3(pos_x, pos_y, pos_z);
+        this.pos_pointing = new THREE.Vector3(pos_x, pos_y, pos_z);
         this.web_id_annotation = web_id_annotation;
         this.web_id_annotation_description = web_id_annotation_description;
         //this.marker = null;
+
+        this.axisHelper = new THREE.AxesHelper(0.4);
+        this.axisHelper.position.copy(this.pos_pointing);
+        this.axisHelper.visible = false;
     }
 }
 
