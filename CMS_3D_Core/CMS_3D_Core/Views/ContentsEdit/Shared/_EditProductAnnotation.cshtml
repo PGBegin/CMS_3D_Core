@@ -1,0 +1,70 @@
+﻿
+
+<div id="edit_annotation_selection_panels">
+</div>
+
+<hr />
+
+<input type="hidden" id="id_edit_annotation_input_id_article" name="id_article" />
+
+<div class="form-group row ">
+    <div class="col-sm-3">
+        <label class="control-label" for="id_annotation">id_annotation</label>
+        <input class="form-control" id="id_edit_annotation_input_id_annotation" type="number" data-val="true" data-val-required="The id_annotation field is required." name="id_annotation" />
+        <span class="text-danger field-validation-valid" data-valmsg-for="id_annotation" data-valmsg-replace="true"></span>
+    </div>
+    <div class="col-sm-7">
+        <label class="control-label" for="title">title</label>
+        <input class="form-control" id="id_edit_annotation_input_title" type="text" name="title" />
+        <span class="text-danger field-validation-valid" data-valmsg-for="title" data-valmsg-replace="true"></span>
+    </div>
+    <div class="col-sm-2">
+        <label class="control-label" for="status">status</label>
+        <input class="form-control" id="id_edit_annotation_input_status" type="number" data-val="true" data-val-required="The status field is required." name="status" />
+        <span class="text-danger field-validation-valid" data-valmsg-for="status" data-valmsg-replace="true"></span>
+    </div>
+    <div class="col-sm-12">
+        <label class="control-label" for="description1">description1</label>
+        <textarea class="form-control" id="id_edit_annotation_input_description1" name="description1" rows="2"></textarea>
+        <span class="text-danger field-validation-valid" data-valmsg-for="description1" data-valmsg-replace="true"></span>
+    </div>
+    <div class="col-sm-12">
+        <div class="col-sm-12">
+            <label class="control-label" for="description2">description2</label>
+            <textarea class="form-control" id="id_edit_annotation_input_description2" name="description2" rows="2"></textarea>
+            <span class="text-danger field-validation-valid" data-valmsg-for="description2" data-valmsg-replace="true"></span>
+        </div>
+
+        <div class="col-sm-4">
+            <label class="control-label" for="pos_x">pos_x</label>
+            <input class="form-control" id="id_edit_annotation_input_pos_x" type="text" data-val="true" data-val-number="The field pos_x must be a number." name="pos_x" />
+            <span class="text-danger field-validation-valid" data-valmsg-for="pos_x" data-valmsg-replace="true"></span>
+        </div>
+        <div class="col-sm-4">
+            <label class="control-label" for="pos_y">pos_y</label>
+            <input class="form-control" id="id_edit_annotation_input_pos_y" type="text" data-val="true" data-val-number="The field pos_y must be a number." name="pos_y" />
+            <span class="text-danger field-validation-valid" data-valmsg-for="pos_y" data-valmsg-replace="true"></span>
+        </div>
+        <div class="col-sm-4">
+            <label class="control-label" for="pos_z">pos_z</label>
+            <input class="form-control" id="id_edit_annotation_input_pos_z" type="text" data-val="true" data-val-number="The field pos_z must be a number." name="pos_z" />
+            <span class="text-danger field-validation-valid" data-valmsg-for="pos_z" data-valmsg-replace="true"></span>
+        </div>
+    </div>
+</div>
+
+
+<div class="form-group row ">
+    <input type="hidden" id="id_delete_annotation_input_id_article" name="id_article" />
+    <input type="hidden" id="id_delete_annotation_input_id_annotation" name="id_annotation" />
+</div>
+
+
+<button class="btn btn-primary" id="DbUpdateAnnotation">Save</button>
+<button class="btn btn-danger" id="DbDeleteAnnotation">Delete</button>
+
+<hr />
+
+
+<div id="edit_annotation_position_panels">
+</div>

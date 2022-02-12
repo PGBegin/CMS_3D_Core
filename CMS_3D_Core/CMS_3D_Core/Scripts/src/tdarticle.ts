@@ -889,21 +889,24 @@ export class TDArticle {
                 // Colomn 03 (Pos X)
                 temp_td = document.createElement('td');
 
-                temp_td.innerText = obj_view.cam_pos_x.toString();
+                //temp_td.innerText = obj_view.cam_pos_x.toString();
+                temp_td.innerText = (Math.floor(obj_view.cam_pos_x * 1000) / 1000).toString();
 
                 temp_tr.appendChild(temp_td);
 
                 // Colomn 04 (Pos Y)
                 temp_td = document.createElement('td');
 
-                temp_td.innerText = obj_view.cam_pos_y.toString();
+                //temp_td.innerText = obj_view.cam_pos_y.toString();
+                temp_td.innerText = (Math.floor(obj_view.cam_pos_y * 1000) / 1000).toString();
 
                 temp_tr.appendChild(temp_td);
 
                 // Colomn 05 (Pos Z)
                 temp_td = document.createElement('td');
 
-                temp_td.innerText = obj_view.cam_pos_z.toString();
+                //temp_td.innerText = obj_view.cam_pos_z.toString();
+                temp_td.innerText = (Math.floor(obj_view.cam_pos_z * 1000) / 1000).toString();
 
                 temp_tr.appendChild(temp_td);
 
@@ -1715,7 +1718,7 @@ export class TDArticle {
 
             //Edit
 
-            this.datacontainers.annotation[index_annotation].marker.position.add(new THREE.Vector3(px, py, pz));
+            //this.datacontainers.annotation[index_annotation].marker.position.add(new THREE.Vector3(px, py, pz));
             this.datacontainers.annotation[index_annotation].arrow.position.add(new THREE.Vector3(px, py, pz));
 
             //element.marker.position.set(element.pos_x, element.pos_y, element.pos_z);
@@ -2261,7 +2264,8 @@ export class TDArticle {
         if (confirm('Are you update Annotation?')) {
 
             let updObject = {
-                id_article: (<HTMLInputElement>document.getElementById('id_edit_annotation_input_id_article')).value,
+                //id_article: (<HTMLInputElement>document.getElementById('id_edit_annotation_input_id_article')).value,
+                id_article: this.datacontainers.id_article,
                 id_annotation: (<HTMLInputElement>document.getElementById('id_edit_annotation_input_id_annotation')).value,
                 title: (<HTMLInputElement>document.getElementById('id_edit_annotation_input_title')).value,
                 description1: (<HTMLInputElement>document.getElementById('id_edit_annotation_input_description1')).value,
@@ -2306,7 +2310,8 @@ export class TDArticle {
         if (confirm('Are you delete Annotation?')) {
 
             let updObject = {
-                id_article: (<HTMLInputElement>document.getElementById('id_edit_annotation_input_id_article')).value,
+                //id_article: (<HTMLInputElement>document.getElementById('id_edit_annotation_input_id_article')).value,
+                id_article: this.datacontainers.id_article,
                 id_annotation: (<HTMLInputElement>document.getElementById('id_edit_annotation_input_id_annotation')).value,
             };
 

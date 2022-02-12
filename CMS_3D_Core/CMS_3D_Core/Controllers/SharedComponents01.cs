@@ -182,7 +182,7 @@ namespace CMS_3D_Core.Controllers
         }
     }
     */
-
+    /*
     /// <summary>
     /// Edit View
     /// </summary>
@@ -209,7 +209,8 @@ namespace CMS_3D_Core.Controllers
             return View("_EditProductView", t2);
         }
     }
-
+    */
+    /*
     /// <summary>
     /// Edit Annotation
     /// </summary>
@@ -234,7 +235,7 @@ namespace CMS_3D_Core.Controllers
             return View("_EditProductAnnotation", t);
         }
     }
-
+    */
     /// <summary>
     /// Detati Material View
     /// </summary>

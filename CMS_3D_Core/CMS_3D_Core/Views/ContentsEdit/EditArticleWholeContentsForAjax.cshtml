@@ -75,8 +75,8 @@
 
                 <h4> View Info and Edit</h4>
 
-                @await Component.InvokeAsync("EditProductView", new { id_article = (long)0, use_ajax = true })
-
+                @*@await Component.InvokeAsync("EditProductView", new { id_article = (long)0, use_ajax = true })*@
+                @await Html.PartialAsync("Shared/_EditProductView")
 
 
                 @*@await Component.InvokeAsync("EditListProductView")*@
@@ -89,7 +89,9 @@
 
                 <h4> Annotation Info and Edit</h4>
 
-                @await Component.InvokeAsync("EditProductAnnotation", new { id_article = (long)0, use_ajax = true  })
+
+                @*@await Component.InvokeAsync("EditProductAnnotation", new { id_article = (long)0, use_ajax = true })*@
+                @await Html.PartialAsync("Shared/_EditProductAnnotation")
 
                 <div id="id_view_operation_panel"></div>
             </div>

@@ -1,16 +1,43 @@
-﻿@model CMS_3D_Core.Models.EDM.t_article
+﻿@*
+    <div id="view_capture">
+    </div>
+
+
+    <button id="screenshot" type="button" class="btn btn-primary">Save...</button>
+    <div class="row">
+        <div class="col-md-4">
+            <form enctype="multipart/form-data" action="/ContentsEdit/UpdateThumbnail" method="post">
+
+
+                <input type="hidden" data-val="true" data-val-required="The id_article field is required." id="screenshot_id_article" name="id_article" />
+                <input type="hidden" name="imgfilebin" id="up_img_input" />
+
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" id="up_img_submit" disabled />
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+
+
+*@
+
+
+
+
+
+@model CMS_3D_Core.Models.EDM.t_article
 
 
 
 <div id="view_capture">
-    @*キャプチャーの表示領域*@
 </div>
 
 
-@*-----------------------------------------------------------------------------------------------------*@
-@*
-    <button id="screenshot" type="button" onclick="GetScreenshotForUpload('view_capture', 'getimage', 'up_img_input')" class="btn btn-primary">Save...</button>
-*@
+
 <button id="screenshot" type="button" class="btn btn-primary">Save...</button>
 <div class="row">
     <div class="col-md-4">
@@ -27,4 +54,3 @@
     </div>
 </div>
 
-@*----------------------------------------------------------------------------------------------------*@
