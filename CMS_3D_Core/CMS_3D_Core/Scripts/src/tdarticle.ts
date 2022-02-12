@@ -33,6 +33,7 @@ export class TDHelpers {
     fixedAxisHelper!: THREE.AxesHelper;
     gridHelper!: THREE.GridHelper;
     axisHelper!: THREE.AxesHelper;
+    lightHelper: any[] = [];
 
     constructor() {
 
@@ -47,11 +48,33 @@ export class TDHelpers {
         this.axisHelper.visible = false;
 
     }
+    setLightHelper(lights: Light[], scene: THREE.Scene) {
+
+
+        lights.forEach(function (this: TDHelpers, obj_light: Light) {
+            if (obj_light.light_type == "DirectionalLight") {
+                this.lightHelper.push(new THREE.DirectionalLightHelper(obj_light.light_object, 20));
+            }
+        }.bind(this));
+
+        this.lightHelper.forEach(function (this: TDHelpers, obj_helper: any) {
+            obj_helper.visible = false;
+            scene.add(obj_helper);
+        }.bind(this));
+
+
+
+    }
     setAllHelpersVisibility(is_display_helper: boolean) {
 
         this.fixedAxisHelper.visible = is_display_helper;
         this.gridHelper.visible = is_display_helper;
         this.axisHelper.visible = is_display_helper;
+
+
+        this.lightHelper.forEach(function (this: TDHelpers, obj_helper: any) {
+            obj_helper.visible = is_display_helper;
+        }.bind(this));
 
     }
 }
@@ -1389,32 +1412,19 @@ export class TDArticle {
 
         //helper
 
-        //this.gridHelper = new THREE.GridHelper(200, 200);
-        //this.scene.add(this.gridHelper);
-
-
-        //型が存在しないというエラーになるので一時的にコメントアウト。
-        //this.axisHelper = new THREE.AxesHelper(1000);
-        //this.scene.add(this.axisHelper);
-
         this.scene.add(this.tdHelpers.gridHelper);
         this.scene.add(this.tdHelpers.axisHelper);
         this.scene.add(this.tdHelpers.fixedAxisHelper);
 
-        //this.gridHelper.visible = this.is_display_helper;
-        //型が存在しないというエラーになるので一時的にコメントアウト。
-        //this.axisHelper.visible = this.is_display_helper;
-
-        //lightHelper = new THREE.DirectionalLightHelper(light, 20);
-        //scene.add(lightHelper);
     }
 
     //Initialize Render Objects and Setting for Optional (Like Helpers)
     ComplexSetupRenderInitial(lint: number, lpx: number, lpy: number, lpz: number, anbint: number, _gammaOutput: boolean) {
 
         // light
-
         this.setupLight();
+
+        this.tdHelpers.setLightHelper(this.datacontainers.light, this.scene);
 
         // main camara
         this.camera_main = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 6350000);
