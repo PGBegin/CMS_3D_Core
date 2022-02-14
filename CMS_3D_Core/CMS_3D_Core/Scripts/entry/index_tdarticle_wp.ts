@@ -66,7 +66,8 @@ function startup() {
 
     }
 
-    adarticle.ComplexSetupEnvironmentInitial();
+    //adarticle.ComplexSetupEnvironmentInitial();
+    adarticle.ComplexSetupEnvironment(true);
 
 
     function toBoolean(data: any) {
