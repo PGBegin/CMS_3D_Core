@@ -129,6 +129,7 @@ export class DataContainers {
         this.instance_part.length = 0;
         this.annotation.length = 0;
         this.annotation_display.length = 0;
+        this.light.length = 0;
         //let i: number;
 
         for (let i in data) {

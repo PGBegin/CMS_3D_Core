@@ -430,13 +430,13 @@ export class TDArticle {
     //Setup
     async ComplexSetupEnvironment(mode_initial: boolean) {
 
+        if (!mode_initial) {
+            this.ObjRemoveObjectScene();
+        }
 
         //DBからデータを取得する
         const ans = this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
 
-            if (!mode_initial) {
-                this.ObjRemoveObjectScene();
-            }
 
             //Loading Article
             this.ObjSetupAarticleDefault();
@@ -531,24 +531,7 @@ export class TDArticle {
 
 
                 if (typeof this.datacontainers.annotation.find(x => x.id_annotation == this.selected_annotation) === "undefined") {
-
-                    this.datacontainers.annotation.forEach(function (this: TDArticle, element: Annotation) {
-                        let id;
-                        let checked = false;
-                        id = element.id_annotation;
-
-                        if (typeof id === "undefined") {
-
-                        } else {
-                            if (checked) {
-
-                            } else {
-                                this.selected_annotation = id;
-                                checked = true;
-                            }
-                        }
-
-                    }.bind(this));
+                    this.selected_annotation = 0;
                 }
 
                 this.ComplexTransitionInstruction(this.selected_instruction);
