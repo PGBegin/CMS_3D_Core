@@ -1731,6 +1731,8 @@ export class TDArticle {
 
         if (this.is_edit_mode) {
 
+            this.DomUpdateAnnotationScreenDisplay(this.selected_instruction);
+
             this.selected_annotation = id_annotation;
             const index_annotation = this.datacontainers.annotation.findIndex(x => x.id_annotation == id_annotation);
 
@@ -1759,9 +1761,10 @@ export class TDArticle {
 
             }.bind(this));
             (<HTMLInputElement>document.getElementById(this.datacontainers.annotation[index_annotation].web_id_annotation)).classList.add("annotation_editmode");
+
             this.datacontainers.annotation[index_annotation].axisHelper.visible = true;
-
-
+            this.datacontainers.annotation[index_annotation].arrow.visible = true;
+            this.datacontainers.annotation[index_annotation].is_display_annotation = true;
 
 
             //Edit
@@ -1912,8 +1915,9 @@ export class TDArticle {
         {
             const annotation_display = this.datacontainers.annotation_display.find(item => item.id_instruct == id_instruct && item.id_annotation == element.id_annotation);
             const is_display = annotation_display!.is_display;
+            element.is_display_annotation = is_display;
 
-            (<HTMLInputElement>document.getElementById(element.web_id_annotation)).hidden = !is_display;
+            //(<HTMLInputElement>document.getElementById(element.web_id_annotation)).hidden = !is_display;
             //element.marker.visible = is_display;
             element.arrow.visible = is_display;
 
@@ -2113,9 +2117,10 @@ export class TDArticle {
             web_annotation = document.getElementById(element.web_id_annotation)!;
 
             const annotation_display = this.datacontainers.annotation_display.find(item => item.id_instruct == this.selected_instruction && item.id_annotation == element.id_annotation);
-            const is_display = annotation_display!.is_display;
-
-
+            //const is_display = annotation_display!.is_display;
+            const is_display = element.is_display_annotation;
+            
+            
             if (0 <= vector.x && vector.x <= this.width && 0 <= vector.y && vector.y <= this.height) {
                 web_annotation.hidden = false || !is_display;
             } else {

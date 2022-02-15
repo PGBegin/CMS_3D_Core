@@ -194,6 +194,8 @@ export class Annotation {
     arrow!: THREE.ArrowHelper;
     axisHelper!: THREE.AxesHelper;
 
+    is_display_annotation: boolean = true;
+
     constructor(id_article: number, id_annotation: number,
         title: string, description1: string, description2: string, status: number,
         pos_x: number, pos_y: number, pos_z: number, web_id_annotation: string, web_id_annotation_description: string) {
