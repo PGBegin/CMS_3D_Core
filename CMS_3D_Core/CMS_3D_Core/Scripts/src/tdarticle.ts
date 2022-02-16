@@ -684,7 +684,7 @@ export class TDArticle {
 
         }.bind(this));
     }
-
+    /*
     //Create Edit Annotation Selection Panels
     DomSetupAnnotationEditorSelectControls() {
 
@@ -710,7 +710,7 @@ export class TDArticle {
             }.bind(this));
         }
     }
-
+    */
     //Create Edit Annotation Selection Panels
     DomSetupEditorBaseControls() {
 
@@ -878,6 +878,7 @@ export class TDArticle {
                 tbody.removeChild(tbody.firstChild);
             }
 
+            let temp_bt;
             let temp_tr;
             let temp_td;
             let temp_ipt;
@@ -898,7 +899,7 @@ export class TDArticle {
                 //-------------------------------------------
                 temp_td = document.createElement('td');
 
-                const temp_bt = document.createElement('button');
+                temp_bt = document.createElement('button');
                 temp_bt.type = 'button';
                 temp_bt.onclick = this.DomUpdateAnnotationEditor.bind(this, obj_annotation.id_annotation);
                 temp_bt.id = "btn_annotation" + obj_annotation.id_annotation;
@@ -988,18 +989,18 @@ export class TDArticle {
 
 
                 //-------------------------------------------
-                /*temp_td = document.createElement('td');
+                temp_td = document.createElement('td');
 
-                const temp_bt = document.createElement('button');
+                temp_bt = document.createElement('button');
                 temp_bt.type = 'button';
-                temp_bt.onclick = this.DomUpdateAnnotationEditor.bind(this, obj_annotation.id_annotation);
-                temp_bt.id = "btn_annotation" + obj_annotation.id_annotation;
+                temp_bt.onclick = this.ScreenUpdataAnnotationCentering.bind(this, obj_annotation.id_annotation);
+                temp_bt.id = "btn_annotation_centoring" + obj_annotation.id_annotation;
                 temp_bt.classList.add('btn');
                 temp_bt.classList.add('btn-outline-primary');
-                temp_bt.textContent = "Edit";
+                temp_bt.textContent = "Centoring";
 
                 temp_td.appendChild(temp_bt);
-                temp_tr.appendChild(temp_td);*/
+                temp_tr.appendChild(temp_td);
                 //-------------------------------------------
 
 
@@ -1808,6 +1809,25 @@ export class TDArticle {
 
     }
 
+
+    //Change Annotation for Edit Window
+    ScreenUpdataAnnotationCentering(id_annotation: number) {
+
+
+        if (this.is_edit_mode) {
+            const target = this.datacontainers.annotation.find(x => x.id_annotation == id_annotation)!.pos_pointing;
+            let vector = new THREE.Vector3();
+
+            this.camera_main.getWorldDirection(vector);
+            const camera_pos = new THREE.Vector3();
+            camera_pos.copy(target);
+
+            camera_pos.sub(new THREE.Vector3(vector.x * 2, vector.y * 2, vector.z*2));
+            this.ScreenUpdateViewEditor(camera_pos, target);
+            //console.log(vector);
+        }
+
+    }
 
     //Change Annotation for Edit Window
     DomUpdateLightEditor(id_light: number) {
