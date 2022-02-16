@@ -466,7 +466,7 @@ export class TDArticle {
 
 
             //Create Edit Annotation Selection Panels
-            this.DomSetupAnnotationEditorSelectControls();
+            //this.DomSetupAnnotationEditorSelectControls();
 
             if (mode_initial) {
                 //Create Edit Annotation Position Panels
@@ -883,7 +883,7 @@ export class TDArticle {
             let temp_ipt;
             let i = 0;
 
-            this.datacontainers.annotation.forEach(function (obj_annotation: Annotation) {
+            this.datacontainers.annotation.forEach(function (this: TDArticle, obj_annotation: Annotation) {
 
                 temp_tr = document.createElement('tr');
 
@@ -892,8 +892,24 @@ export class TDArticle {
 
                 temp_td = document.createElement('td');
 
-                temp_td.innerText = (i + 1).toString();
+                //temp_td.innerText = (i + 1).toString();
 
+
+                //-------------------------------------------
+                temp_td = document.createElement('td');
+
+                const temp_bt = document.createElement('button');
+                temp_bt.type = 'button';
+                temp_bt.onclick = this.DomUpdateAnnotationEditor.bind(this, obj_annotation.id_annotation);
+                temp_bt.id = "btn_annotation" + obj_annotation.id_annotation;
+                temp_bt.classList.add('btn');
+                temp_bt.classList.add('btn-outline-primary');
+                //temp_bt.textContent = "Edit";
+                temp_bt.textContent =  (i + 1).toString();
+
+                temp_td.appendChild(temp_bt);
+                //temp_tr.appendChild(temp_td);
+                //-------------------------------------------
 
                 temp_ipt = document.createElement('input');
                 temp_ipt.id = `[${obj_annotation.id_annotation}].id_edit_annotation_display_input_id_article`; 
@@ -969,6 +985,24 @@ export class TDArticle {
 
 
                 temp_tr.appendChild(temp_td);
+
+
+                //-------------------------------------------
+                /*temp_td = document.createElement('td');
+
+                const temp_bt = document.createElement('button');
+                temp_bt.type = 'button';
+                temp_bt.onclick = this.DomUpdateAnnotationEditor.bind(this, obj_annotation.id_annotation);
+                temp_bt.id = "btn_annotation" + obj_annotation.id_annotation;
+                temp_bt.classList.add('btn');
+                temp_bt.classList.add('btn-outline-primary');
+                temp_bt.textContent = "Edit";
+
+                temp_td.appendChild(temp_bt);
+                temp_tr.appendChild(temp_td);*/
+                //-------------------------------------------
+
+
 
                 tbody.appendChild(temp_tr);
                 i += 1;
@@ -1736,31 +1770,18 @@ export class TDArticle {
             this.selected_annotation = id_annotation;
             const index_annotation = this.datacontainers.annotation.findIndex(x => x.id_annotation == id_annotation);
 
-            //Set Color of button
-            let children = document.getElementById('edit_annotation_selection_panels')!.children;
-            let buttunid = 'btn_annotation' + id_annotation;
-            for (var j = 0; j < children.length; j++) {
 
-                if ("button".localeCompare(children[j].tagName, undefined, { sensitivity: "base" }) == 0) {
-
-                    if (buttunid.localeCompare(children[j].id, undefined, { sensitivity: "base" }) == 0) {
-                        children[j].classList.replace('btn-outline-primary', 'btn-primary');
-
-                    } else {
-                        children[j].classList.replace('btn-primary', 'btn-outline-primary');
-                    }
-                }
-            }
-
-
-            //Hilighting Annotation
             this.datacontainers.annotation.forEach(function (this: TDArticle, obj_annotation: Annotation) {
+
+                const x = document.getElementById("btn_annotation" + obj_annotation.id_annotation)!;
+                x.classList.replace('btn-primary', 'btn-outline-primary');
 
                 (<HTMLInputElement>document.getElementById(obj_annotation.web_id_annotation)).classList.remove("annotation_editmode");
                 obj_annotation.axisHelper.visible = false;
 
             }.bind(this));
             (<HTMLInputElement>document.getElementById(this.datacontainers.annotation[index_annotation].web_id_annotation)).classList.add("annotation_editmode");
+            (<HTMLElement>document.getElementById("btn_annotation" + this.datacontainers.annotation[index_annotation].id_annotation)).classList.replace('btn-outline-primary', 'btn-primary');
 
             this.datacontainers.annotation[index_annotation].axisHelper.visible = true;
             this.datacontainers.annotation[index_annotation].arrow.visible = true;
