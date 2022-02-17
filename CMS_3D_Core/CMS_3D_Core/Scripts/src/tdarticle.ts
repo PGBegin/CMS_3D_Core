@@ -146,6 +146,7 @@ export class TDArticle {
 
     // Operation Mode
     is_edit_mode: boolean;
+    is_fullscreen_editmode: boolean = false;
     is_display_helper: boolean;
 
     // 1 : landscape, 0:Portrait
@@ -223,13 +224,24 @@ export class TDArticle {
 
         if (this.is_edit_mode) {
 
-            this.width = 0.95 * document.getElementById(this.id_div_row_article)!.clientWidth / 2;
-            this.height = this.width * 9 / 16;
+            if (this.is_fullscreen_editmode) {
+                this.width = 0.95 * document.getElementById(this.id_div_row_article)!.clientWidth;
+                this.height = this.width * 9 / 16;
 
-            document.getElementById('id_contents_models')!.setAttribute("class", "");
-            document.getElementById('id_contents_instructions')!.setAttribute("class", "");
-            document.getElementById('id_contents_models')!.classList.add('col-6');
-            document.getElementById('id_contents_instructions')!.classList.add('col-6');
+                document.getElementById('id_contents_models')!.setAttribute("class", "");
+                document.getElementById('id_contents_instructions')!.setAttribute("class", "");
+                document.getElementById('id_contents_models')!.classList.add('col-12');
+                document.getElementById('id_contents_instructions')!.classList.add('col-12');
+
+            } else {
+                this.width = 0.95 * document.getElementById(this.id_div_row_article)!.clientWidth / 2;
+                this.height = this.width * 9 / 16;
+
+                document.getElementById('id_contents_models')!.setAttribute("class", "");
+                document.getElementById('id_contents_instructions')!.setAttribute("class", "");
+                document.getElementById('id_contents_models')!.classList.add('col-6');
+                document.getElementById('id_contents_instructions')!.classList.add('col-6');
+            }
         } else {
 
             // chk displaymode
@@ -557,6 +569,22 @@ export class TDArticle {
             }
 
             pn.appendChild(temp_bt);
+
+            //--------------------------------------------------------
+            temp_bt = document.createElement('button');
+            temp_bt.type = 'button';
+            temp_bt.onclick = this.DomScreenEditMode.bind(this);
+            temp_bt.id = "btn_chg_sccreenmode";
+            temp_bt.classList.add('btn');
+            if (this.is_fullscreen_editmode) {
+                temp_bt.classList.add('btn-primary');
+                temp_bt.textContent = "Normal Screen";
+            } else {
+                temp_bt.classList.add('btn-outline-primary');
+                temp_bt.textContent = "FULL Screen";
+            }
+
+            pn.appendChild(temp_bt);
         }
     }
 
@@ -570,6 +598,15 @@ export class TDArticle {
         //this.axisHelper.visible = this.is_display_helper;
         this.tdHelpers.setAllHelpersVisibility(this.is_display_helper);
         this.DomSetupEditorBaseControls();
+
+    }
+
+    //Change Screen Mode
+    DomScreenEditMode() {
+
+        this.is_fullscreen_editmode = !this.is_fullscreen_editmode;
+        this.DomSetupEditorBaseControls();
+        this.onWindowResize();
 
     }
 
