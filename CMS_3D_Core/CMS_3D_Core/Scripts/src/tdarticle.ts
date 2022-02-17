@@ -224,7 +224,6 @@ export class TDArticle {
         if (this.is_edit_mode) {
 
             this.width = 0.95 * document.getElementById(this.id_div_row_article)!.clientWidth / 2;
-            //this.width = 0.95 * document.documentElement.clientWidth / 2;
             this.height = this.width * 9 / 16;
 
             document.getElementById('id_contents_models')!.setAttribute("class", "");
@@ -235,7 +234,6 @@ export class TDArticle {
 
             // chk displaymode
             if (document.getElementById(this.id_div_row_article)!.clientWidth / document.getElementById(this.id_div_row_article)!.clientHeight > 1) {
-//            if (document.documentElement.clientWidth / document.documentElement.clientHeight > 1) {
                 this.orientation_mode = 1;
             } else {
                 this.orientation_mode = 0;
@@ -245,7 +243,6 @@ export class TDArticle {
                 document.getElementById('id_contents_models')!.setAttribute("class", "");
                 document.getElementById('id_contents_instructions')!.setAttribute("class", "");
                 this.width = 0.95 * document.getElementById(this.id_div_row_article)!.clientWidth / 2;
-//                this.width = 0.95 * document.documentElement.clientWidth / 2;
                 this.height = this.width * 9 / 16;
                 document.getElementById('id_contents_models')!.classList.add('col-6');
                 document.getElementById('id_contents_instructions')!.classList.add('col-6');
@@ -253,7 +250,6 @@ export class TDArticle {
                 document.getElementById('id_contents_models')!.setAttribute("class", "");
                 document.getElementById('id_contents_instructions')!.setAttribute("class", "");
                 this.width = 0.95 * document.getElementById(this.id_div_row_article)!.clientWidth;
-//                this.width = 0.95 * document.documentElement.clientWidth;
                 this.height = this.width * 9 / 16;
                 document.getElementById('id_contents_models')!.classList.add('col-12');
                 document.getElementById('id_contents_instructions')!.classList.add('col-12');
@@ -278,155 +274,7 @@ export class TDArticle {
 
     // ↓ to DataContainers ---------------------------------------------------------------------------------------
     // ↑ to DataContainers ---------------------------------------------------------------------------------------
-    /*
-    //ReSetup
-    ComplexResetEnvironment() {
 
-
-        //------------------------------------------------------------------------
-        //Loading Article
-        this.ObjSetupAarticleDefault();
-
-        //Serup Article Editor
-        this.DomUpdateArticleEditor();
-
-
-        //Setup Instruction Selection Control Panels (for Display and Editor)
-        this.DomSetupInstructionControler();
-
-
-        //Setup Control Panel of Editor Base
-        this.DomSetupEditorBaseControls();
-
-
-        //setup view operation panel
-        //this.DomSetupLookingControler();
-
-
-        //DomSetupViewListEditor
-        this.DomSetupViewListEditor();
-
-        //------------------------------------------------------------------------
-
-        //Loading Annotations
-        this.DomSetupAnnotationScreen();
-
-
-        //Create Edit Annotation Selection Panels
-        this.DomSetupAnnotationEditorSelectControls();
-
-
-        //Create Edit Annotation Position Panels
-        //this.DomSetupAnnotationPositionEditButton();
-
-
-        //Annotation Display Edit Panel
-        this.DomSetupAnnotationDisplayEditor();
-
-        //Update Instance Editor
-        this.DomUpdateInstanceEditor();
-
-        //Update LightList Editor
-        this.DomUpdateLightListEditor();
-
-    }
-
-
-
-    //Setup
-    ComplexSetupEnvironmentInitial() {
-
-
-        //DBからデータを取得する
-        this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
-
-
-
-            //Loading Article
-            this.ObjSetupAarticleDefault();
-
-            //Serup Article Editor
-            this.DomUpdateArticleEditor();
-
-
-            //Setup Control Panel of Instruction
-            this.DomSetupInstructionControler();
-
-
-            //Setup Control Panel of Editor Base
-            this.DomSetupEditorBaseControls();
-
-            //setup view operation panel
-            this.DomSetupLookingControler();
-
-            //DomSetupViewListEditor
-            this.DomSetupViewListEditor();
-
-
-            //Loading Annotations
-            this.DomSetupAnnotationScreen();
-
-
-            //Create Edit Annotation Selection Panels
-            this.DomSetupAnnotationEditorSelectControls();
-
-            //Create Edit Annotation Position Panels
-            this.DomSetupAnnotationPositionEditButton();
-
-            //Annotation Display Edit Panel
-            this.DomSetupAnnotationDisplayEditor();
-
-            //Update Instance Editor
-            this.DomUpdateInstanceEditor();
-
-            //Update LightList Editor
-            this.DomUpdateLightListEditor();
-
-            //RefelencematerialView
-            this.DomSetupRefelencematerialView();
-
-            //表示領域を初期化する
-            this.ComplexSetupRenderOptionalInitial();
-
-
-            //Initialize render
-            this.ComplexSetupRenderInitial(
-                this.datacontainers.article.directional_light_intensity
-                , this.datacontainers.article.directional_light_px, this.datacontainers.article.directional_light_py, this.datacontainers.article.directional_light_pz
-                , this.datacontainers.article.ambient_light_intensity
-                , this.datacontainers.article.gammaOutput);
-
-
-            //データモデルを取得する
-            this.datacontainers.ObjSetupInstancePartModelFromDb(this.scene);
-
-
-            if (this.datacontainers.id_startinst == 0) {
-
-                this.camera_main.position.copy(this.camera_main_startpos);
-
-                this.controls.target.copy(this.controls_target_startpos);
-            }
-            else {
-                this.ComplexTransitionInstruction(this.datacontainers.id_startinst);
-            }
-
-            if (this.is_edit_mode != true && this.datacontainers.is_mode_assy != true) {
-                this.onWindowResize();
-            }
-
-
-            //orbitコントロールモードを有効にし、レンダリングを開始する
-            this.orbit_active = true;
-
-            this.ScreenControlOrbital();
-
-
-        }.bind(this));
-
-
-    }
-    */
     //Setup
     async ComplexSetupEnvironment(mode_initial: boolean) {
 
@@ -465,8 +313,6 @@ export class TDArticle {
             this.DomSetupAnnotationScreen();
 
 
-            //Create Edit Annotation Selection Panels
-            //this.DomSetupAnnotationEditorSelectControls();
 
             if (mode_initial) {
                 //Create Edit Annotation Position Panels
@@ -684,33 +530,7 @@ export class TDArticle {
 
         }.bind(this));
     }
-    /*
-    //Create Edit Annotation Selection Panels
-    DomSetupAnnotationEditorSelectControls() {
 
-        let pn = document.getElementById(this.id_edit_annotation_selection_panels)!;
-
-        if (pn != null) {
-            while (pn.firstChild) {
-                pn.removeChild(pn.firstChild);
-            }
-            let temp_bt;
-
-            this.datacontainers.annotation.forEach(function (this: TDArticle, obj_annotation: Annotation) {
-
-                temp_bt = document.createElement('button');
-                temp_bt.type = 'button';
-                temp_bt.onclick = this.DomUpdateAnnotationEditor.bind(this, obj_annotation.id_annotation);
-                temp_bt.id = "btn_annotation" + obj_annotation.id_annotation;
-                temp_bt.classList.add('btn');
-                temp_bt.classList.add('btn-outline-primary');
-                temp_bt.textContent = obj_annotation.title;
-
-                pn.appendChild(temp_bt);
-            }.bind(this));
-        }
-    }
-    */
     //Create Edit Annotation Selection Panels
     DomSetupEditorBaseControls() {
 
@@ -1015,7 +835,6 @@ export class TDArticle {
     //Create AnnotationDisplay Editor
     DomSetupViewListEditor() {
 
-        //this.id_edit_list_view_tbody = "id_edit_list_view_tbody";
         let tbody = document.getElementById(this.id_edit_list_view_tbody)!;
 
 
@@ -2305,49 +2124,6 @@ export class TDArticle {
 
                 alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
             }
-            /*
-            if (data[0].updateresult == "Success") {
-
-                //remove scene
-                this.ObjRemoveObjectScene();
-
-                //データ更新
-                this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
-
-
-                    let id;
-                    let checked = false;
-                    this.datacontainers.instruction_gp.forEach(function (this: TDArticle, element: Instruction) {
-                        id = element.id_instruct;
-                        //console.log(checked);
-                        if (typeof id === "undefined") {
-
-                        } else {
-                            if (checked) {
-
-                            } else {
-                                this.selected_instruction = id;
-                                checked = true;
-                            }
-                        }
-
-                    }.bind(this));
-
-
-
-                    this.ComplexResetEnvironment();
-                    this.ComplexTransitionInstruction(this.selected_instruction);
-
-                    if (this.datacontainers.annotation.some((item: Annotation) => item.id_annotation === this.selected_annotation)) {
-                        this.DomUpdateAnnotationEditor(this.selected_annotation);
-                    }
-
-
-                    alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
-                }.bind(this));
-
-            }
-            */
         }
     }
 
@@ -2430,7 +2206,6 @@ export class TDArticle {
         if (confirm('Are you update Annotation?')) {
 
             let updObject = {
-                //id_article: (<HTMLInputElement>document.getElementById('id_edit_annotation_input_id_article')).value,
                 id_article: this.datacontainers.id_article,
                 id_annotation: (<HTMLInputElement>document.getElementById('id_edit_annotation_input_id_annotation')).value,
                 title: (<HTMLInputElement>document.getElementById('id_edit_annotation_input_title')).value,
@@ -2463,7 +2238,6 @@ export class TDArticle {
         if (confirm('Are you delete Annotation?')) {
 
             let updObject = {
-                //id_article: (<HTMLInputElement>document.getElementById('id_edit_annotation_input_id_article')).value,
                 id_article: this.datacontainers.id_article,
                 id_annotation: (<HTMLInputElement>document.getElementById('id_edit_annotation_input_id_annotation')).value,
             };
@@ -2481,46 +2255,6 @@ export class TDArticle {
                 alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
             }
 
-            /*
-            if (data[0].updateresult == "Success") {
-
-                //remove scene
-                this.ObjRemoveObjectScene();
-
-                //データ更新
-                this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
-
-                    this.datacontainers.annotation.forEach(function (this: TDArticle, element: Annotation) {
-                        let id;
-                        let checked = false;
-                        id = element.id_annotation;
-
-                        if (typeof id === "undefined") {
-
-                        } else {
-                            if (checked) {
-
-                            } else {
-                                this.selected_annotation = id;
-                                checked = true;
-                            }
-                        }
-
-                    }.bind(this));
-
-
-                    this.ComplexResetEnvironment();
-                    this.ComplexTransitionInstruction(this.selected_instruction);
-
-                    if (this.datacontainers.annotation.some((item: Annotation) => item.id_annotation === this.selected_annotation)) {
-                        this.DomUpdateAnnotationEditor(this.selected_annotation);
-                    }
-
-
-                    alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
-                }.bind(this));
-
-            }  */
         }
     }
 
