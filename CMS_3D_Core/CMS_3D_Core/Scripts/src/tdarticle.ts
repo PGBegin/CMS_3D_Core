@@ -374,7 +374,7 @@ export class TDArticle {
                 this.ComplexTransitionInstruction(this.datacontainers.id_startinst);
             }
 
-            if (this.is_edit_mode != true && this.datacontainers.is_mode_assy != true) {
+            if (this.datacontainers.is_mode_assy != true) {
                 this.onWindowResize();
             }
 
@@ -1017,7 +1017,7 @@ export class TDArticle {
 
         let api_url = "/ContentsOperatorForArticleApis/testGetListForDropDownGeneral?" + new URLSearchParams({ id_article: this.datacontainers.id_article.toString() }).toString();
 
-        console.log(this.selected_instruction);
+        //console.log(this.selected_instruction);
 
         return UpdateDropdownListAjax(api_url, 'instruction_id_view', 1);
         

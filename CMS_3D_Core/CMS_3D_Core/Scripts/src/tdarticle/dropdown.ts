@@ -22,18 +22,21 @@ export async function UpdateDropdownListAjax(api_url: string, id_selectlist: str
             console.log(data);
             //選択肢クリア
             const parent_option: HTMLSelectElement = <HTMLSelectElement>document.getElementById(id_selectlist)!;
-            while (parent_option.lastChild) {
-                parent_option.removeChild(parent_option.lastChild);
-            }
 
-            //let optionitem;
+            if (parent_option != null) {
+                while (parent_option.lastChild) {
+                    parent_option.removeChild(parent_option.lastChild);
+                }
 
-            for (var i in data) {
-                const optionitem = parent_option.appendChild(document.createElement("option"));
-                optionitem.setAttribute("value", data[i]['value']);
-                optionitem.textContent = data[i]['text'];
+                //let optionitem;
+
+                for (var i in data) {
+                    const optionitem = parent_option.appendChild(document.createElement("option"));
+                    optionitem.setAttribute("value", data[i]['value']);
+                    optionitem.textContent = data[i]['text'];
+                }
+                parent_option.value = value_selected.toString();
             }
-            parent_option.value = value_selected.toString();
         });
 
 

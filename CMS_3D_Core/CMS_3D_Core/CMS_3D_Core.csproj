@@ -36,6 +36,7 @@
     <TypeScriptCompile Include="Scripts\src\tdarticle\tdarticle_Aarticle.ts" />
     <TypeScriptCompile Include="Scripts\src\tdarticle\tdarticle_DataContainers.ts" />
     <TypeScriptCompile Include="Scripts\src\tdpart.ts" />
+    <TypeScriptCompile Include="Scripts\src\tdarticle.ts" />
   </ItemGroup>
 
   <ItemGroup>
