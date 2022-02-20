@@ -11,6 +11,7 @@ import { Lensflare, LensflareElement } from 'three/examples/jsm/objects/Lensflar
 
 import { Aarticle, Instruction, ViewObject, InstancePart, Annotation, AnnotationDisplay, Refelencematerial, Light } from './tdarticle/tdarticle_Aarticle';
 import { DataContainers } from './tdarticle/tdarticle_DataContainers';
+import { UpdateDropdownListAjax } from './tdarticle/dropdown';
 
 
 /*
@@ -295,114 +296,115 @@ export class TDArticle {
         }
 
         //DBからデータを取得する
-        const ans = this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb().then(function (this: TDArticle, value: any) {
+        const ans = await this.datacontainers.ObjSetupAllObjectsWithoutInstanceModelFromDb();
 
 
-            //Loading Article
-            this.ObjSetupAarticleDefault();
+        //Loading Article
+        this.ObjSetupAarticleDefault();
 
-            //Serup Article Editor
-            this.DomUpdateArticleEditor();
-
-
-            //Setup Instruction Selection Control Panels (for Display and Editor)
-            this.DomSetupInstructionControler();
+        //Serup Article Editor
+        this.DomUpdateArticleEditor();
 
 
-            //Setup Control Panel of Editor Base
-            this.DomSetupEditorBaseControls();
+        //Setup Instruction Selection Control Panels (for Display and Editor)
+        this.DomSetupInstructionControler();
 
-            if (mode_initial) {
-                //setup view operation panel
-                this.DomSetupLookingControler();
+
+        //Setup Control Panel of Editor Base
+        this.DomSetupEditorBaseControls();
+
+        if (mode_initial) {
+            //setup view operation panel
+            this.DomSetupLookingControler();
+        }
+
+        //DomSetupViewListEditor
+        this.DomSetupViewListEditor();
+
+
+        //Loading Annotations
+        this.DomSetupAnnotationScreen();
+
+
+
+        if (mode_initial) {
+            //Create Edit Annotation Position Panels
+            this.DomSetupAnnotationPositionEditButton();
+        }
+
+        //Annotation Display Edit Panel
+        this.DomSetupAnnotationDisplayEditor();
+
+        //Update Instance Editor
+        this.DomUpdateInstanceEditor();
+
+        //Update LightList Editor
+        this.DomUpdateLightListEditor();
+
+        //Update Setup
+        await this.DomUpdateDropDownTest();
+
+        if (mode_initial) {
+            //RefelencematerialView
+            this.DomSetupRefelencematerialView();
+
+            //表示領域を初期化する
+            this.ComplexSetupRenderOptionalInitial();
+
+
+            //Initialize render
+            this.ComplexSetupRenderInitial(
+                this.datacontainers.article.directional_light_intensity
+                , this.datacontainers.article.directional_light_px, this.datacontainers.article.directional_light_py, this.datacontainers.article.directional_light_pz
+                , this.datacontainers.article.ambient_light_intensity
+                , this.datacontainers.article.gammaOutput);
+
+
+            //データモデルを取得する
+            this.datacontainers.ObjSetupInstancePartModelFromDb(this.scene);
+
+
+            if (this.datacontainers.id_startinst == 0) {
+
+                this.camera_main.position.copy(this.camera_main_startpos);
+
+                this.controls.target.copy(this.controls_target_startpos);
+            }
+            else {
+                this.ComplexTransitionInstruction(this.datacontainers.id_startinst);
             }
 
-            //DomSetupViewListEditor
-            this.DomSetupViewListEditor();
-
-
-            //Loading Annotations
-            this.DomSetupAnnotationScreen();
-
-
-
-            if (mode_initial) {
-                //Create Edit Annotation Position Panels
-                this.DomSetupAnnotationPositionEditButton();
+            if (this.is_edit_mode != true && this.datacontainers.is_mode_assy != true) {
+                this.onWindowResize();
             }
 
-            //Annotation Display Edit Panel
-            this.DomSetupAnnotationDisplayEditor();
+            //orbitコントロールモードを有効にし、レンダリングを開始する
+            this.orbit_active = true;
 
-            //Update Instance Editor
-            this.DomUpdateInstanceEditor();
+            this.ScreenControlOrbital();
+        }
 
-            //Update LightList Editor
-            this.DomUpdateLightListEditor();
+        if (!mode_initial) {
 
-
-            if (mode_initial) {
-                //RefelencematerialView
-                this.DomSetupRefelencematerialView();
-
-                //表示領域を初期化する
-                this.ComplexSetupRenderOptionalInitial();
-
-
-                //Initialize render
-                this.ComplexSetupRenderInitial(
-                    this.datacontainers.article.directional_light_intensity
-                    , this.datacontainers.article.directional_light_px, this.datacontainers.article.directional_light_py, this.datacontainers.article.directional_light_pz
-                    , this.datacontainers.article.ambient_light_intensity
-                    , this.datacontainers.article.gammaOutput);
-
-
-                //データモデルを取得する
-                this.datacontainers.ObjSetupInstancePartModelFromDb(this.scene);
-
-
-                if (this.datacontainers.id_startinst == 0) {
-
-                    this.camera_main.position.copy(this.camera_main_startpos);
-
-                    this.controls.target.copy(this.controls_target_startpos);
-                }
-                else {
-                    this.ComplexTransitionInstruction(this.datacontainers.id_startinst);
-                }
-
-                if (this.is_edit_mode != true && this.datacontainers.is_mode_assy != true) {
-                    this.onWindowResize();
-                }
-
-                //orbitコントロールモードを有効にし、レンダリングを開始する
-                this.orbit_active = true;
-
-                this.ScreenControlOrbital();
-            }
-
-            if (!mode_initial) {
-
-                if (typeof this.datacontainers.instruction_gp.find(x => x.id_instruct == this.selected_instruction) === "undefined") {
-                    this.selected_instruction = this.datacontainers.id_startinst;
-                }
-
-
-                if (typeof this.datacontainers.annotation.find(x => x.id_annotation == this.selected_annotation) === "undefined") {
-                    this.selected_annotation = 0;
-                }
-
-                this.ComplexTransitionInstruction(this.selected_instruction);
-
-                if (this.datacontainers.annotation.some((item: Annotation) => item.id_annotation === this.selected_annotation)) {
-                    this.DomUpdateAnnotationEditor(this.selected_annotation);
-                }
-
+            if (typeof this.datacontainers.instruction_gp.find(x => x.id_instruct == this.selected_instruction) === "undefined") {
+                this.selected_instruction = this.datacontainers.id_startinst;
             }
 
 
+            if (typeof this.datacontainers.annotation.find(x => x.id_annotation == this.selected_annotation) === "undefined") {
+                this.selected_annotation = 0;
+            }
 
-        }.bind(this));
+            this.ComplexTransitionInstruction(this.selected_instruction);
+
+            if (this.datacontainers.annotation.some((item: Annotation) => item.id_annotation === this.selected_annotation)) {
+                this.DomUpdateAnnotationEditor(this.selected_annotation);
+            }
+
+        }
+
+
+
 
         return ans;
     }
@@ -1007,6 +1009,19 @@ export class TDArticle {
         }
     }
 
+
+
+    //Update Setup
+    async DomUpdateDropDownTest() {
+
+
+        let api_url = "/ContentsOperatorForArticleApis/testGetListForDropDownGeneral?" + new URLSearchParams({ id_article: this.datacontainers.id_article.toString() }).toString();
+
+        console.log(this.selected_instruction);
+
+        return UpdateDropdownListAjax(api_url, 'instruction_id_view', 1);
+        
+    }
 
 
     //Create LightList Editor Panel
@@ -1898,7 +1913,8 @@ export class TDArticle {
 
         //Update Instruction for Edit
         (<HTMLInputElement>document.getElementById('instruction_title')).value = this.datacontainers.instruction_gp[index_inst].title.toString();
-        (<HTMLInputElement>document.getElementById('instruction_id_view')).value = this.datacontainers.instruction_gp[index_inst].id_view.toString();
+        (<HTMLSelectElement>document.getElementById('instruction_id_view')).value = this.datacontainers.instruction_gp[index_inst].id_view.toString();
+//        (<HTMLSelectElement>document.getElementById('instruction_id_view2')).value = this.datacontainers.instruction_gp[index_inst].id_view.toString();
         (<HTMLInputElement>document.getElementById('instruction_short_description')).value = this.datacontainers.instruction_gp[index_inst].short_description;
         (<HTMLInputElement>document.getElementById('instruction_id_article')).value = this.datacontainers.instruction_gp[index_inst].id_article.toString();
         (<HTMLInputElement>document.getElementById('instruction_id_instruct')).value = this.datacontainers.instruction_gp[index_inst].id_instruct.toString();
@@ -2113,7 +2129,7 @@ export class TDArticle {
             let updInstrruction = {
                 id_article: (<HTMLInputElement>document.getElementById('id_article')).value,
                 id_instruct: (<HTMLInputElement>document.getElementById('instruction_id_instruct')).value,
-                id_view: (<HTMLInputElement>document.getElementById('instruction_id_view')).value,
+                id_view: (<HTMLSelectElement>document.getElementById('instruction_id_view')).value,
                 title: (<HTMLInputElement>document.getElementById('instruction_title')).value,
                 short_description: (<HTMLInputElement>document.getElementById('instruction_short_description')).value,
                 memo: (<HTMLInputElement>document.getElementById('instruction_memo')).value,

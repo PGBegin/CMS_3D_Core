@@ -1471,7 +1471,44 @@ namespace CMS_3D_Core.Controllers
 
         }
 
+        //===============================================================================================
+        // Methods for dropdownlist
 
+        /// <summary>GET: サブプロジェクト一覧をJSONで返す(p_idで絞り込み)</summary>
+        /// <param name="p_id">p_id(プロジェクトのid)</param>
+        /// <returns>結果のJSON</returns>
+        /// 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="_t_light"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        //        [ValidateAntiForgeryToken]
+        //public async Task<IList<object>> testGetListForDropDownGeneral([FromBody] long id_article)
+        public async Task<IList<object>> testGetListForDropDownGeneral(long id_article)
+        {
+            //long id_article = 1;
+
+            IList<object> ListForDropDownGeneral = new List<object>();
+
+
+            var t_views = _context.t_views
+                                  .Where(x => x.id_article == id_article)
+                                  .OrderBy(x => x.id_article)
+                                  .ToList();
+
+
+            foreach (var item in t_views)
+            {
+                ListForDropDownGeneral.Add(new { value = item.id_view, text = "ID:[" + item.id_view + "]" + item.title });
+            }
+
+            return ListForDropDownGeneral;
+        }
+
+        //===============================================================================================
         /// <summary>
         /// return object with t_article
         /// </summary>
