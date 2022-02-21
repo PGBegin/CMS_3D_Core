@@ -47,6 +47,10 @@ function startup() {
                 adarticle.DbDeleteInstruction();
             });
 
+            document.getElementById("DbRegistInstruction")!.addEventListener('click', function () {
+                adarticle.DbRegistInstruction();
+            });
+
             document.getElementById("DbUpdateView")!.addEventListener('click', function () {
                 adarticle.DbUpdateView();
             });

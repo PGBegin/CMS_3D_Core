@@ -2180,6 +2180,51 @@ export class TDArticle {
         }
     }
 
+    //
+    //Regist Instruction with Ajax
+    async DbRegistInstruction() {
+
+        let max_inst: number = 0;
+
+        if (confirm('Are you Regist Instruction?')) {
+
+            if (0 < this.datacontainers.instruction_gp.length) {
+                max_inst = Math.max(...this.datacontainers.instruction_gp.map((x: Instruction) => x.id_instruct));
+            }
+            //console.log(max_inst);
+
+            if (isFinite(max_inst)) {
+                max_inst += 1;
+            }
+
+            let updInstrruction = {
+                id_article: this.datacontainers.id_article,
+                id_instruct: max_inst,
+                id_view: (<HTMLSelectElement>document.getElementById('instruction_id_view')).value,
+                title: (<HTMLInputElement>document.getElementById('instruction_title')).value,
+                short_description: (<HTMLInputElement>document.getElementById('instruction_short_description')).value,
+                memo: (<HTMLInputElement>document.getElementById('instruction_memo')).value,
+                display_order: (<HTMLInputElement>document.getElementById('instruction_display_order')).value
+            };
+            //console.log(updInstrruction);
+
+            this.selected_instruction = max_inst;
+
+            let token = (<HTMLInputElement>document.getElementsByName("__RequestVerificationToken").item(0)).value;
+
+
+
+            const data = await this.datacontainers.dbUpdEditProductInstructionApi(updInstrruction, token);
+
+            if (data[0].updateresult == "Success") {
+
+                const ans = await this.ComplexSetupEnvironment(false);
+
+                alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
+            }
+
+        }
+    }
 
     //Update View with Ajax
     async DbUpdateView() {
