@@ -55,6 +55,10 @@ function startup() {
                 adarticle.DbUpdateView();
             });
 
+            document.getElementById("DbRegistView")!.addEventListener('click', function () {
+                adarticle.DbRegistView();
+            });
+
             document.getElementById("DbUpdateAnnotation")!.addEventListener('click', function () {
                 adarticle.DbUpdateAnnotation();
             });

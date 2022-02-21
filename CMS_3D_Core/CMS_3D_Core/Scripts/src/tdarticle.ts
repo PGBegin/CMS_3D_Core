@@ -2297,6 +2297,58 @@ export class TDArticle {
         }
     }
 
+    //Update View with Ajax
+    async DbRegistView() {
+
+
+        let max_view: number = 0;
+
+        if (confirm('Are you update View?')) {
+
+
+
+            if (0 < this.datacontainers.view_object.length) {
+                max_view = Math.max(...this.datacontainers.view_object.map((x: ViewObject) => x.id_view));
+            }
+            //console.log(max_inst);
+
+            if (isFinite(max_view)) {
+                max_view += 1;
+            }
+
+            let updObject = {
+                id_article: this.datacontainers.id_article,
+                id_view: max_view,
+                title: (<HTMLInputElement>document.getElementById('id_edit_view_input_title')).value,
+                cam_pos_x: (<HTMLInputElement>document.getElementById('id_edit_view_input_cam_pos_x')).value,
+                cam_pos_y: (<HTMLInputElement>document.getElementById('id_edit_view_input_cam_pos_y')).value,
+                cam_pos_z: (<HTMLInputElement>document.getElementById('id_edit_view_input_cam_pos_z')).value,
+                cam_lookat_x: (<HTMLInputElement>document.getElementById('id_edit_view_input_cam_lookat_x')).value,
+                cam_lookat_y: (<HTMLInputElement>document.getElementById('id_edit_view_input_cam_lookat_y')).value,
+                cam_lookat_z: (<HTMLInputElement>document.getElementById('id_edit_view_input_cam_lookat_z')).value,
+                cam_quat_x: (<HTMLInputElement>document.getElementById('id_edit_view_input_cam_quat_x')).value,
+                cam_quat_y: (<HTMLInputElement>document.getElementById('id_edit_view_input_cam_quat_y')).value,
+                cam_quat_z: (<HTMLInputElement>document.getElementById('id_edit_view_input_cam_quat_z')).value,
+                cam_quat_w: (<HTMLInputElement>document.getElementById('id_edit_view_input_cam_quat_w')).value,
+                obt_target_x: (<HTMLInputElement>document.getElementById('id_edit_view_input_obt_target_x')).value,
+                obt_target_y: (<HTMLInputElement>document.getElementById('id_edit_view_input_obt_target_y')).value,
+                obt_target_z: (<HTMLInputElement>document.getElementById('id_edit_view_input_obt_target_z')).value
+            };
+
+            let token = (<HTMLInputElement>document.getElementsByName("__RequestVerificationToken").item(0)).value;
+
+
+            const data = await this.datacontainers.dbUpdEditProductViewApi(updObject, token);
+
+            if (data[0].updateresult == "Success") {
+
+                const ans = await this.ComplexSetupEnvironment(false);
+
+                alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
+            }
+        }
+    }
+
 
     //Update Annotation with Ajax
     async DbUpdateAnnotation() {
