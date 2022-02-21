@@ -2409,6 +2409,51 @@ export class TDArticle {
     }
 
 
+    //Update Annotation with Ajax
+    async DbRegistAnnotation() {
+
+
+        let max_annotation: number = 0;
+
+        if (confirm('Are you update Annotation?')) {
+
+
+            if (0 < this.datacontainers.annotation.length) {
+                max_annotation = Math.max(...this.datacontainers.annotation.map((x: Annotation) => x.id_annotation));
+            }
+            //console.log(max_inst);
+
+            if (isFinite(max_annotation)) {
+                max_annotation += 1;
+            }
+
+            let updObject = {
+                id_article: this.datacontainers.id_article,
+                id_annotation: max_annotation,
+                title: (<HTMLInputElement>document.getElementById('id_edit_annotation_input_title')).value,
+                description1: (<HTMLInputElement>document.getElementById('id_edit_annotation_input_description1')).value,
+                description2: (<HTMLInputElement>document.getElementById('id_edit_annotation_input_description2')).value,
+                status: (<HTMLInputElement>document.getElementById('id_edit_annotation_input_status')).value,
+                pos_x: (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_x')).value,
+                pos_y: (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_y')).value,
+                pos_z: (<HTMLInputElement>document.getElementById('id_edit_annotation_input_pos_z')).value
+            };
+
+            let token = (<HTMLInputElement>document.getElementsByName("__RequestVerificationToken").item(0)).value;
+
+            const data = await this.datacontainers.dbUpdEditProductAnnotationApi(updObject, token);
+
+            if (data[0].updateresult == "Success") {
+
+                const ans = await this.ComplexSetupEnvironment(false);
+
+                alert('Result : ' + data[0].updatemode + ' ' + data[0].updateresult);
+            }
+
+        }
+    }
+
+
     //Update AnnotationDisplay with Ajax
     async DbUpdateAnnotationDisplay() {
 

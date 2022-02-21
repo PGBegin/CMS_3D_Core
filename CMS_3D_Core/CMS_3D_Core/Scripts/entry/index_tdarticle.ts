@@ -67,6 +67,10 @@ function startup() {
                 adarticle.DbDeleteAnnotation();
             });
 
+            document.getElementById("DbRegistAnnotation")!.addEventListener('click', function () {
+                adarticle.DbRegistAnnotation();
+            });
+
             document.getElementById("DbUpdateAnnotationDisplay")!.addEventListener('click', function () {
                 adarticle.DbUpdateAnnotationDisplay();
             });
