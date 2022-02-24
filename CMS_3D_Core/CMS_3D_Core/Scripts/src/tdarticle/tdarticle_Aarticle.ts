@@ -34,11 +34,12 @@ export class Aarticle {
     bg_h: number;
     bg_s: number;
     bg_l: number;
+    isStarrySky: boolean;
 
     constructor(id_article: number, id_assy: number, title: string, short_description: string, long_description: string, meta_description: string, meta_category: string, status: number
         , directional_light_color: number, directional_light_intensity: number, directional_light_px: number, directional_light_py: number, directional_light_pz: number
         , ambient_light_color: number, ambient_light_intensity: number, gammaOutput: boolean, id_attachment_for_eye_catch: number,
-        bg_c: number, bg_h: number, bg_s: number, bg_l: number
+        bg_c: number, bg_h: number, bg_s: number, bg_l: number, isStarrySky: boolean
     ) {
 
         this.id_article = id_article;
@@ -68,6 +69,8 @@ export class Aarticle {
         this.bg_h = bg_h;
         this.bg_s = bg_s;
         this.bg_l = bg_l;
+        this.isStarrySky = isStarrySky;
+        console.log(isStarrySky);
 
     }
 }

@@ -417,6 +417,7 @@ namespace CMS_3D_Core.Controllers
                         t_article.bg_h = _t_article.bg_h;
                         t_article.bg_s = _t_article.bg_s;
                         t_article.bg_l = _t_article.bg_l;
+                        t_article.isStarrySky = _t_article.isStarrySky;
 
 
                         t_article.create_user = User.Identity.Name;
@@ -452,6 +453,7 @@ namespace CMS_3D_Core.Controllers
                         target.bg_h = _t_article.bg_h;
                         target.bg_s = _t_article.bg_s;
                         target.bg_l = _t_article.bg_l;
+                        target.isStarrySky = _t_article.isStarrySky;
 
 
 
@@ -1543,7 +1545,8 @@ namespace CMS_3D_Core.Controllers
                 bg_s = t.bg_s,
                 bg_l = t.bg_l,
 
-                id_attachment_for_eye_catch = t.id_attachment_for_eye_catch
+                id_attachment_for_eye_catch = t.id_attachment_for_eye_catch,
+                isStarrySky = t.isStarrySky
             };
 
 

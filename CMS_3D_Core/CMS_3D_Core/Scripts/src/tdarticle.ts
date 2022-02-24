@@ -430,6 +430,7 @@ export class TDArticle {
                 , 0
                 , 0
                 , 0
+                ,false
             );
         }
     }
@@ -1497,6 +1498,11 @@ export class TDArticle {
         this.controls.target.y = 0;
         this.controls.target.z = 0;
 
+        //Starry Sky Mode
+        if (this.datacontainers.article.isStarrySky) {
+            this.setStarrySky();
+        }
+
 
         //Setting gammaOutput
         //In order to reduce darkening of some items with truee.js
@@ -1512,7 +1518,27 @@ export class TDArticle {
 
     }
 
+
     //Lightを設定する。
+    setStarrySky() {
+        const geometry = new THREE.BufferGeometry();
+        const vertices = [];
+
+        for (let i = 0; i < 10000; i++) {
+
+            vertices.push(THREE.MathUtils.randFloatSpread(2000)); // x
+            vertices.push(THREE.MathUtils.randFloatSpread(2000)); // y
+            vertices.push(THREE.MathUtils.randFloatSpread(2000)); // z
+
+        }
+
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+
+        const particles = new THREE.Points(geometry, new THREE.PointsMaterial({ color: 0x888888 }));
+        this.scene.add(particles);
+    }
+
+    //Serup Light
     setupLight() {
 
         this.datacontainers.light.forEach(function (this: TDArticle, obj_light: Light) {
@@ -1583,6 +1609,7 @@ export class TDArticle {
 
 
             (<HTMLInputElement>document.getElementById('article_id_gammaOutput')).checked = this.datacontainers.article.gammaOutput;
+            (<HTMLInputElement>document.getElementById('article_id_isStarrySky')).checked = this.datacontainers.article.isStarrySky;
 
             (<HTMLInputElement>document.getElementById('article_id_bg_c')).value = this.datacontainers.article.bg_c.toString();
             (<HTMLInputElement>document.getElementById('article_id_bg_h')).value = this.datacontainers.article.bg_h.toString();
@@ -2089,7 +2116,9 @@ export class TDArticle {
                 bg_c: (<HTMLInputElement>document.getElementById('article_id_bg_c')).value,
                 bg_h: (<HTMLInputElement>document.getElementById('article_id_bg_h')).value,
                 bg_s: (<HTMLInputElement>document.getElementById('article_id_bg_s')).value,
-                bg_l: (<HTMLInputElement>document.getElementById('article_id_bg_l')).value
+                bg_l: (<HTMLInputElement>document.getElementById('article_id_bg_l')).value,
+
+                isStarrySky: (<HTMLInputElement>document.getElementById('article_id_isStarrySky')).checked
 
             };
             this.selected_instruction = Number((<HTMLInputElement>document.getElementById('instruction_id_instruct')).value);

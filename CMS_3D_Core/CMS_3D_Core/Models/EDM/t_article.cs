@@ -40,6 +40,7 @@ namespace CMS_3D_Core.Models.EDM
         public double bg_h { get; set; }
         public double bg_s { get; set; }
         public double bg_l { get; set; }
+        public bool? isStarrySky { get; set; }
 
         public virtual t_assembly id_assyNavigation { get; set; }
         public virtual m_status_article statusNavigation { get; set; }

@@ -111,8 +111,9 @@ export class DataContainers {
 
             })
             .then(data => { // 処理が成功した場合に取得されるJSONデータ
-                //console.log(data);
+                console.log(data);
                 this.ObjSetupAllObjectsWithoutInstanceModelFromJson(data);
+                console.log(this.article);
 
                 //return Promise.resolve();
             });
@@ -157,8 +158,10 @@ export class DataContainers {
                     data[i].bg_c,
                     data[i].bg_h,
                     data[i].bg_s,
-                    data[i].bg_l
+                    data[i].bg_l,
+                    data[i].isStarrySky
                 );
+                //console.log(data[i]);
             }
 
             if (data[i].type == "view") {
