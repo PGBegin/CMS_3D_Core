@@ -399,6 +399,8 @@ namespace CMS_3D_Core.Controllers
 
 
                         t_article.id_article = _t_article.id_article;
+                        t_article.id_assy = _t_article.id_assy;
+
                         t_article.title = _t_article.title;
                         t_article.short_description = _t_article.short_description;
 
@@ -435,6 +437,8 @@ namespace CMS_3D_Core.Controllers
                     {
                         // if object is in table
                         // do update new item acrion
+                        target.id_assy = _t_article.id_assy;
+
                         target.title = _t_article.title;
                         target.short_description = _t_article.short_description;
 
