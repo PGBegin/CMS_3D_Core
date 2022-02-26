@@ -1609,7 +1609,7 @@ export class TDArticle {
 
 
             (<HTMLInputElement>document.getElementById('article_id_gammaOutput')).checked = this.datacontainers.article.gammaOutput;
-            (<HTMLInputElement>document.getElementById('article_id_id_attachment_for_eye_catch')).value = this.datacontainers.article.id_attachment_for_eye_catch.toString();
+            (<HTMLInputElement>document.getElementById('article_id_id_attachment_for_eye_catch')).value = (this.datacontainers.article.id_attachment_for_eye_catch ?? "").toString();
             (<HTMLInputElement>document.getElementById('article_id_isStarrySky')).checked = this.datacontainers.article.isStarrySky;
 
             (<HTMLInputElement>document.getElementById('article_id_bg_c')).value = this.datacontainers.article.bg_c.toString();
