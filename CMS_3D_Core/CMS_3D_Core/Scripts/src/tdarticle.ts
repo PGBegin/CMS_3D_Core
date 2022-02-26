@@ -1592,7 +1592,7 @@ export class TDArticle {
         if (this.is_edit_mode) {
 
 
-            console.log(this.datacontainers.article.title.toString());
+            console.log(this.datacontainers.article);
             //Edit
             (<HTMLInputElement>document.getElementById('article_id_id_article')).value = this.datacontainers.article.id_article.toString();
             (<HTMLInputElement>document.getElementById('article_id_id_assy')).value = this.datacontainers.article.id_assy.toString();
@@ -1609,6 +1609,7 @@ export class TDArticle {
 
 
             (<HTMLInputElement>document.getElementById('article_id_gammaOutput')).checked = this.datacontainers.article.gammaOutput;
+            (<HTMLInputElement>document.getElementById('article_id_id_attachment_for_eye_catch')).value = this.datacontainers.article.id_attachment_for_eye_catch.toString();
             (<HTMLInputElement>document.getElementById('article_id_isStarrySky')).checked = this.datacontainers.article.isStarrySky;
 
             (<HTMLInputElement>document.getElementById('article_id_bg_c')).value = this.datacontainers.article.bg_c.toString();
@@ -2112,6 +2113,8 @@ export class TDArticle {
                 status: (<HTMLInputElement>document.getElementById('article_id_status')).value,
 
                 gammaOutput: (<HTMLInputElement>document.getElementById('article_id_gammaOutput')).checked,
+
+                id_attachment_for_eye_catch: (<HTMLInputElement>document.getElementById('article_id_id_attachment_for_eye_catch')).value,
                 
                 bg_c: (<HTMLInputElement>document.getElementById('article_id_bg_c')).value,
                 bg_h: (<HTMLInputElement>document.getElementById('article_id_bg_h')).value,
