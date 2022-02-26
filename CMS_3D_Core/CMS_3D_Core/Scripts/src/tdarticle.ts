@@ -341,9 +341,10 @@ export class TDArticle {
         //Update LightList Editor
         this.DomUpdateLightListEditor();
 
-        //Update Setup
-        await this.DomUpdateDropDownTest();
-
+        if (this.is_edit_mode) {
+            //Update Setup
+            await this.DomUpdateDropDownTest();
+        }
         if (mode_initial) {
             //RefelencematerialView
             this.DomSetupRefelencematerialView();
