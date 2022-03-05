@@ -1,6 +1,6 @@
 ﻿//
 
-import { Vector3 } from "three";
+import * as THREE from 'three';
 
 
 
@@ -29,9 +29,18 @@ export class Aarticle {
     gammaOutput: boolean;
 
     id_attachment_for_eye_catch: number;
+
+    bg_c: number;
+    bg_h: number;
+    bg_s: number;
+    bg_l: number;
+    isStarrySky: boolean;
+
     constructor(id_article: number, id_assy: number, title: string, short_description: string, long_description: string, meta_description: string, meta_category: string, status: number
         , directional_light_color: number, directional_light_intensity: number, directional_light_px: number, directional_light_py: number, directional_light_pz: number
-        , ambient_light_color: number, ambient_light_intensity: number, gammaOutput: boolean, id_attachment_for_eye_catch: number) {
+        , ambient_light_color: number, ambient_light_intensity: number, gammaOutput: boolean, id_attachment_for_eye_catch: number,
+        bg_c: number, bg_h: number, bg_s: number, bg_l: number, isStarrySky: boolean
+    ) {
 
         this.id_article = id_article;
         this.id_assy = id_assy;
@@ -54,7 +63,15 @@ export class Aarticle {
         this.ambient_light_intensity = ambient_light_intensity;
         this.gammaOutput = gammaOutput;
 
-        this.id_attachment_for_eye_catch = id_attachment_for_eye_catch
+        this.id_attachment_for_eye_catch = id_attachment_for_eye_catch;
+
+        this.bg_c = bg_c;
+        this.bg_h = bg_h;
+        this.bg_s = bg_s;
+        this.bg_l = bg_l;
+        this.isStarrySky = isStarrySky;
+        console.log(isStarrySky);
+
     }
 }
 
@@ -147,12 +164,17 @@ export class InstancePart {
     id_assy: number;
     id_inst: number;
     id_part: number;
+    pos: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
     objectdata: any;
 
-    constructor(id_assy: number, id_inst: number, id_part: number, objectdata: any) {
+
+    constructor(id_assy: number, id_inst: number, id_part: number, pos_x: number, pos_y: number, pos_z: number, objectdata: any) {
         this.id_assy = id_assy;
         this.id_inst = id_inst;
         this.id_part = id_part;
+
+        this.pos.set(pos_x, pos_y, pos_z);
+
         this.objectdata = objectdata;
     }
 }
@@ -173,6 +195,9 @@ export class Annotation {
     web_id_annotation_description: string;
     marker!: THREE.Mesh;
     arrow!: THREE.ArrowHelper;
+    axisHelper!: THREE.AxesHelper;
+
+    is_display_annotation: boolean = true;
 
     constructor(id_article: number, id_annotation: number,
         title: string, description1: string, description2: string, status: number,
@@ -186,10 +211,14 @@ export class Annotation {
         this.description2 = description2;
         this.status = status;
 
-        this.pos_pointing = new Vector3(pos_x, pos_y, pos_z);
+        this.pos_pointing = new THREE.Vector3(pos_x, pos_y, pos_z);
         this.web_id_annotation = web_id_annotation;
         this.web_id_annotation_description = web_id_annotation_description;
         //this.marker = null;
+
+        this.axisHelper = new THREE.AxesHelper(0.4);
+        this.axisHelper.position.copy(this.pos_pointing);
+        this.axisHelper.visible = false;
     }
 }
 
@@ -212,6 +241,85 @@ export class AnnotationDisplay {
     }
 }
 
+
+export class Light {
+    id_article: number;
+    id_light: number;
+    light_type: string;
+    title!: string;
+    short_description!: string;
+    color!: number;
+    intensity!: number;
+    px!: number;
+    py!: number;
+    pz!: number;
+    distance!: number;
+    decay!: number;
+    power!: number;
+    shadow!: number;
+    tx!: number;
+    ty!: number;
+    tz!: number;
+    skycolor!: number;
+    groundcolor!: number;
+    is_lensflare: boolean;
+    lfsize!: number;
+    file_data!: any;
+
+    light_object!: any;
+
+
+
+    constructor(
+        id_article: number,
+        id_light: number,
+        light_type: string,
+        title: string,
+        short_description: string,
+        color: number,
+        intensity: number,
+        px: number,
+        py: number,
+        pz: number,
+        distance: number,
+        decay: number,
+        power: number,
+        shadow: number,
+        tx: number,
+        ty: number,
+        tz: number,
+        skycolor: number,
+        groundcolor: number,
+        is_lensflare: boolean,
+        lfsize: number) {
+
+        this.id_article = id_article;
+        this.id_light = id_light;
+        this.light_type = light_type;
+
+
+        this.light_type = light_type;
+        this.title = title;
+        this.short_description = short_description;
+        this.color = color;
+        this.intensity = intensity;
+        this.px = px;
+        this.py=py;
+        this.pz=pz;
+        this.distance = distance;
+        this.decay = decay;
+        this.power = power;
+        this.shadow = shadow;
+        this.tx = tx;
+        this.ty=ty;
+        this.tz=tz;
+        this.skycolor = skycolor;
+        this.groundcolor = groundcolor;
+        this.is_lensflare = is_lensflare;
+        this.lfsize = lfsize;
+        //this.file_data!: any;
+    }
+}
 
 
 

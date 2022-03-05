@@ -44,6 +44,7 @@ namespace CMS_3D_Core.Controllers
                         .Include(x => x.t_views)
                         .Include(x => x.id_assyNavigation).ThenInclude(x => x.t_instance_parts)
                         .Include(x => x.t_annotations)
+                        .Include(x => x.t_lights)
                         .FirstOrDefaultAsync(x => x.id_article == id_article);
 
             IList<object> objCollection = new List<object>();
@@ -88,6 +89,11 @@ namespace CMS_3D_Core.Controllers
             }
 
 
+            //light
+            foreach (var item in t.t_lights)
+            {
+                objCollection.Add(object_from_t_light(item));
+            }
 
 
 
@@ -349,6 +355,152 @@ namespace CMS_3D_Core.Controllers
             
             return objCollection;
         }
+
+
+
+
+
+        /// <summary>
+        /// Update AnnotationDisplay for Ajax
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns>Result of Api Action with Json</returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IList<object>> EditProductArticleApi([FromBody] t_article _t_article)
+        {
+            /*
+            if (id_article == null | id_instruct == null)
+            {
+                return NotFound();
+            }*/
+
+            string updatemode = "Undefined";
+            string updateresult = "Failed";
+            string updateresult_msg = "Failed";
+
+
+
+
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    updatemode = "undefined";
+                    var target = await _context.t_articles.FindAsync(_t_article.id_article);
+
+
+                    if (target == null)
+                    {
+                        // if object is not in table
+                        // do add new item acrion
+                        t_article t_article = new t_article();
+
+
+                        t_article.id_article = _t_article.id_article;
+                        t_article.id_assy = _t_article.id_assy;
+
+                        t_article.title = _t_article.title;
+                        t_article.short_description = _t_article.short_description;
+
+
+                        t_article.long_description = _t_article.long_description;
+                        t_article.meta_description = _t_article.meta_description;
+                        t_article.meta_category = _t_article.meta_category;
+
+                        t_article.status = _t_article.status;
+
+                        t_article.gammaOutput = _t_article.gammaOutput;
+                        t_article.id_attachment_for_eye_catch = _t_article.id_attachment_for_eye_catch;
+
+
+                        t_article.bg_c = _t_article.bg_c;
+                        t_article.bg_h = _t_article.bg_h;
+                        t_article.bg_s = _t_article.bg_s;
+                        t_article.bg_l = _t_article.bg_l;
+                        t_article.isStarrySky = _t_article.isStarrySky;
+
+
+                        t_article.create_user = User.Identity.Name;
+                        t_article.create_datetime = DateTime.Now;
+
+                        await _context.AddAsync(t_article);
+
+                        await _context.SaveChangesAsync();
+
+                        updatemode = "AddNew";
+                        updateresult = "Success";
+                        updateresult_msg = "AddNew Success";
+                    }
+                    else
+                    {
+                        // if object is in table
+                        // do update new item acrion
+                        target.id_assy = _t_article.id_assy;
+
+                        target.title = _t_article.title;
+                        target.short_description = _t_article.short_description;
+
+
+                        target.long_description = _t_article.long_description;
+                        target.meta_description = _t_article.meta_description;
+                        target.meta_category = _t_article.meta_category;
+
+                        target.status = _t_article.status;
+
+                        target.gammaOutput = _t_article.gammaOutput;
+                        target.id_attachment_for_eye_catch = _t_article.id_attachment_for_eye_catch;
+
+
+                        target.bg_c = _t_article.bg_c;
+                        target.bg_h = _t_article.bg_h;
+                        target.bg_s = _t_article.bg_s;
+                        target.bg_l = _t_article.bg_l;
+                        target.isStarrySky = _t_article.isStarrySky;
+
+
+
+                        target.latest_update_user = User.Identity.Name;
+                        target.latest_update_datetime = DateTime.Now;
+
+                        // Update Db
+                        await _context.SaveChangesAsync();
+
+
+                        updatemode = "Update";
+                        updateresult = "Success";
+                        updateresult_msg = "Update Success";
+                    }
+
+
+                }
+                catch (Exception e)
+                {
+                    updateresult = "Failed";
+                    updateresult_msg = "Failed";
+#if DEBUG
+                    updateresult_msg = e.Message;
+#endif
+                }
+            }
+
+
+            IList<object> objCollection = new List<object>();
+
+
+            objCollection.Add(
+                new
+                {
+                    updatemode = updatemode,
+                    updateresult = updateresult,
+                    updateresult_msg = updateresult_msg
+                });
+
+            return objCollection;
+        }
+
+
 
 
 
@@ -1073,6 +1225,297 @@ namespace CMS_3D_Core.Controllers
 
 
         /// <summary>
+        /// Update Instance for Ajax
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns>Result of Api Action with Json</returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IList<object>> EditProductInstanceApi([FromBody] IList<t_instance_part> List)
+        {
+            /*
+            if (id_article == null | id_instruct == null)
+            {
+                return NotFound();
+            }*/
+
+            string updatemode = "undefined";
+            string updateresult = "Failed";
+            string updateresult_msg = "Failed";
+
+            if (ModelState.IsValid)
+            {
+                updatemode = "undefined";
+                try
+                {
+                    var t_assembly = await _context.t_assemblies.FindAsync(List.FirstOrDefault().id_assy);
+
+                    foreach (var m in List)
+                    {
+                        var target = await _context.t_instance_parts.FindAsync(m.id_assy, m.id_inst);
+                        target.pos_x = m.pos_x;
+                        target.pos_y = m.pos_y;
+                        target.pos_z = m.pos_z;
+                        target.latest_update_user = User.Identity.Name;
+                        target.latest_update_datetime = DateTime.Now;
+                    }
+
+
+
+                    t_assembly.latest_update_user = User.Identity.Name;
+                    t_assembly.latest_update_datetime = DateTime.Now;
+
+                    // Update Db
+                    await _context.SaveChangesAsync();
+
+
+                    updatemode = "Update";
+                    updateresult = "Success";
+                    updateresult_msg = "Update Success";
+
+
+                }
+                catch (Exception e)
+                {
+                    updateresult = "Failed";
+                    updateresult_msg = "Failed";
+#if DEBUG
+                    updateresult_msg = e.Message;
+#endif
+                }
+            }
+
+            IList<object> objCollection = new List<object>();
+
+
+            objCollection.Add(
+                new
+                {
+                    updatemode = updatemode,
+                    updateresult = updateresult,
+                    updateresult_msg = updateresult_msg
+                });
+
+            return objCollection;
+        }
+
+
+        /// <summary>
+        /// Update or Add Light for Ajax
+        /// </summary>
+        /// <param name="_t_light"></param>
+        /// <returns>Result of Api Action with Json</returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IList<object>> EditProductLightApi([FromBody] t_light _t_light)
+        {
+
+
+
+            string updatemode = "";
+            string updateresult = "";
+            string updateresult_msg = "";
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var target = await _context.t_lights.FindAsync(_t_light.id_article, _t_light.id_light);
+
+                    var t_article = await _context.t_articles.FindAsync(_t_light.id_article);
+
+                    if (target == null)
+                    {
+                        //if target does not find, update new item
+
+                        t_light t_light = new t_light();
+
+                        // Key data
+                        t_light.id_article = _t_light.id_article;
+                        t_light.id_light = _t_light.id_light;
+                        t_light.light_type = _t_light.light_type;
+                        t_light.title = _t_light.title;
+                        t_light.short_description = _t_light.short_description;
+
+                        //Camera Position
+
+                        t_light.color = _t_light.color;
+                        t_light.intensity = _t_light.intensity;
+
+                        t_light.px = _t_light.px;
+                        t_light.py = _t_light.py;
+                        t_light.pz = _t_light.pz;
+
+
+                        t_light.distance = _t_light.distance;
+                        t_light.decay = _t_light.decay;
+                        t_light.power = _t_light.power;
+                        t_light.shadow = _t_light.shadow;
+
+                        t_light.tx = _t_light.tx;
+                        t_light.ty = _t_light.ty;
+                        t_light.tz = _t_light.tz;
+
+                        t_light.skycolor = _t_light.skycolor;
+                        t_light.groundcolor = _t_light.groundcolor;
+
+                        t_light.is_lensflare = _t_light.is_lensflare;
+                        t_light.lfsize = _t_light.lfsize;
+                        t_light.file_data = _t_light.file_data;
+
+
+
+                        t_light.create_user = User.Identity.Name;
+                        t_light.create_datetime = DateTime.Now;
+
+
+                        // Update DB
+
+                        await _context.AddAsync(t_light);
+
+
+
+                        //Update Article User / datetime
+                        t_article.latest_update_user = User.Identity.Name;
+                        t_article.latest_update_datetime = DateTime.Now;
+
+
+                        await _context.SaveChangesAsync();
+
+
+                        updatemode = "AddNew";
+                        updateresult = "Success";
+                        updateresult_msg = "AddNew Success";
+
+                    }
+                    else
+                    {
+
+                        target.light_type = _t_light.light_type;
+                        target.title = _t_light.title;
+                        target.short_description = _t_light.short_description;
+
+                        //Camera Position
+
+                        target.color = _t_light.color;
+                        target.intensity = _t_light.intensity;
+
+                        target.px = _t_light.px;
+                        target.py = _t_light.py;
+                        target.pz = _t_light.pz;
+
+
+                        target.distance = _t_light.distance;
+                        target.decay = _t_light.decay;
+                        target.power = _t_light.power;
+                        target.shadow = _t_light.shadow;
+
+                        target.tx = _t_light.tx;
+                        target.ty = _t_light.ty;
+                        target.tz = _t_light.tz;
+
+                        target.skycolor = _t_light.skycolor;
+                        target.groundcolor = _t_light.groundcolor;
+
+                        target.is_lensflare = _t_light.is_lensflare;
+                        target.lfsize = _t_light.lfsize;
+                        target.file_data = _t_light.file_data;
+
+
+
+                        target.latest_update_user = User.Identity.Name;
+                        target.latest_update_datetime = DateTime.Now;
+
+                        //Update Article User / datetime
+                        t_article.latest_update_user = User.Identity.Name;
+                        t_article.latest_update_datetime = DateTime.Now;
+
+
+                        // DBに更新を反映
+                        await _context.SaveChangesAsync();
+
+                        updatemode = "Update";
+                        updateresult = "Success";
+                        updateresult_msg = "Update Success";
+
+
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    updateresult = "Failed";
+                    updateresult_msg = "Update Failed";
+                    //TempData["ResultMsg"] = "Update Failed";
+                }
+            }
+
+            // 更新に失敗した場合、編集画面を再描画
+            // return View(id_article);
+
+
+            IList<object> objCollection = new List<object>();
+
+
+
+
+
+
+
+            objCollection.Add(
+                new
+                {
+                    updatemode = updatemode,
+                    updateresult = updateresult,
+                    updateresult_msg = updateresult_msg,
+
+                });
+
+            return objCollection;
+
+
+
+        }
+
+        //===============================================================================================
+        // Methods for dropdownlist
+
+        /// <summary>GET: サブプロジェクト一覧をJSONで返す(p_idで絞り込み)</summary>
+        /// <param name="p_id">p_id(プロジェクトのid)</param>
+        /// <returns>結果のJSON</returns>
+        /// 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="_t_light"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        //        [ValidateAntiForgeryToken]
+        //public async Task<IList<object>> testGetListForDropDownGeneral([FromBody] long id_article)
+        public async Task<IList<object>> testGetListForDropDownGeneral(long id_article)
+        {
+            //long id_article = 1;
+
+            IList<object> ListForDropDownGeneral = new List<object>();
+
+
+            var t_views = _context.t_views
+                                  .Where(x => x.id_article == id_article)
+                                  .OrderBy(x => x.id_article)
+                                  .ToList();
+
+
+            foreach (var item in t_views)
+            {
+                ListForDropDownGeneral.Add(new { value = item.id_view, text = "ID:[" + item.id_view + "]" + item.title });
+            }
+
+            return ListForDropDownGeneral;
+        }
+
+        //===============================================================================================
+        /// <summary>
         /// return object with t_article
         /// </summary>
         /// <param name="t"></param>
@@ -1100,7 +1543,14 @@ namespace CMS_3D_Core.Controllers
                 ambient_light_intensity = t.ambient_light_intensity,
                 gammaOutput = t.gammaOutput,
 
-                id_attachment_for_eye_catch = t.id_attachment_for_eye_catch
+
+                bg_c = t.bg_c,
+                bg_h = t.bg_h,
+                bg_s = t.bg_s,
+                bg_l = t.bg_l,
+
+                id_attachment_for_eye_catch = t.id_attachment_for_eye_catch,
+                isStarrySky = t.isStarrySky
             };
 
 
@@ -1204,7 +1654,47 @@ namespace CMS_3D_Core.Controllers
                 type = "instance_part",
                 id_assy = item.id_assy,
                 id_inst = item.id_inst,
-                id_part = item.id_part
+                id_part = item.id_part,
+                pos_x = item.pos_x,
+                pos_y = item.pos_y,
+                pos_z = item.pos_z
+
+            };
+
+        /// <summary>
+        /// return object from t_instance_part for material list
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private static object object_from_t_light(t_light item) =>
+            new
+            {
+                type = "light",
+                model_name = "Model Name",
+
+
+                id_article = item.id_article,
+                id_light = item.id_light,
+                light_type = item.light_type,
+                title = item.title,
+                short_description = item.short_description,
+                color = item.color,
+                intensity = item.intensity,
+                px = item.px,
+                py = item.py,
+                pz = item.pz,
+                distance = item.distance,
+                decay = item.decay,
+                power = item.power,
+                shadow = item.shadow,
+                tx = item.tx,
+                ty = item.ty,
+                tz = item.tz,
+                skycolor = item.groundcolor,
+                groundcolor = item.groundcolor,
+                is_lensflare = item.is_lensflare,
+                lfsize = item.lfsize,
+                file_data = item.file_data
 
             };
 
@@ -1227,20 +1717,9 @@ namespace CMS_3D_Core.Controllers
                 author = item.id_partNavigation.author,
                 license = item.id_partNavigation.license
             };
-
     }
 
 
-    /*
-    public class vm_instruction
-    {
-        public long id_article { get; set; }
-        public long id_instruct { get; set; }
-        public int id_view { get; set; }
-        public string title { get; set; }
-        public string short_description { get; set; }
-        public string memo { get; set; }
-        public long display_order { get; set; }
-    }
-    */
+
 }
+ 

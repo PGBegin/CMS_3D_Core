@@ -34,6 +34,7 @@ namespace CMS_3D_Core.Models.EDM
         public virtual DbSet<t_instance_part> t_instance_parts { get; set; }
         public virtual DbSet<t_instruction> t_instructions { get; set; }
         public virtual DbSet<t_instruction_display> t_instruction_displays { get; set; }
+        public virtual DbSet<t_light> t_lights { get; set; }
         public virtual DbSet<t_part> t_parts { get; set; }
         public virtual DbSet<t_part_display> t_part_displays { get; set; }
         public virtual DbSet<t_view> t_views { get; set; }
@@ -361,6 +362,29 @@ namespace CMS_3D_Core.Models.EDM
                 entity.Property(e => e.create_user).HasMaxLength(50);
 
                 entity.Property(e => e.latest_update_user).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<t_light>(entity =>
+            {
+                entity.HasKey(e => new { e.id_article, e.id_light });
+
+                entity.ToTable("t_light");
+
+                entity.Property(e => e.create_user).HasMaxLength(50);
+
+                entity.Property(e => e.latest_update_user).HasMaxLength(50);
+
+                entity.Property(e => e.light_type).HasMaxLength(250);
+
+                entity.Property(e => e.short_description).HasMaxLength(550);
+
+                entity.Property(e => e.title).HasMaxLength(550);
+
+                entity.HasOne(d => d.id_articleNavigation)
+                    .WithMany(p => p.t_lights)
+                    .HasForeignKey(d => d.id_article)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_t_light_t_article");
             });
 
             modelBuilder.Entity<t_part>(entity =>

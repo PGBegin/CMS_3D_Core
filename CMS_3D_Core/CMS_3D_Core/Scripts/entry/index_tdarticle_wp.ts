@@ -18,6 +18,7 @@ function startup() {
 
     adarticle.datacontainers.str_url_partapi_base = "https://aptdaerospacemuseumproduction.azurewebsites.net/ContentsOperatorForArticleApis/GetPartObjectFile?";
     adarticle.datacontainers.str_url_base_prodobjectapi_articlemode = "https://aptdaerospacemuseumproduction.azurewebsites.net/ContentsOperatorForArticleApis/GetArticleObjectWholeData?";
+    adarticle.path_lf_png = "https://aptdaerospacemuseumproduction.azurewebsites.net/ContentsEditAttachment/GetAttachmentFile/28";
 
     if (is_mode_assy) {
         adarticle.datacontainers.is_mode_assy = is_mode_assy;
@@ -65,7 +66,8 @@ function startup() {
 
     }
 
-    adarticle.ComplexSetupEnvironmentInitial();
+    //adarticle.ComplexSetupEnvironmentInitial();
+    adarticle.ComplexSetupEnvironment(true);
 
 
     function toBoolean(data: any) {

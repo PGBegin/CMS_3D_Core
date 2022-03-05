@@ -11,6 +11,7 @@ namespace CMS_3D_Core.Models.EDM
         {
             t_annotations = new HashSet<t_annotation>();
             t_instructions = new HashSet<t_instruction>();
+            t_lights = new HashSet<t_light>();
             t_views = new HashSet<t_view>();
         }
 
@@ -35,11 +36,17 @@ namespace CMS_3D_Core.Models.EDM
         public string latest_update_user { get; set; }
         public DateTime? latest_update_datetime { get; set; }
         public long? id_attachment_for_eye_catch { get; set; }
+        public long bg_c { get; set; }
+        public double bg_h { get; set; }
+        public double bg_s { get; set; }
+        public double bg_l { get; set; }
+        public bool? isStarrySky { get; set; }
 
         public virtual t_assembly id_assyNavigation { get; set; }
         public virtual m_status_article statusNavigation { get; set; }
         public virtual ICollection<t_annotation> t_annotations { get; set; }
         public virtual ICollection<t_instruction> t_instructions { get; set; }
+        public virtual ICollection<t_light> t_lights { get; set; }
         public virtual ICollection<t_view> t_views { get; set; }
     }
 }

@@ -132,7 +132,7 @@ function initial_optional01() {
 
     //helper
 
-    gridHelper = new THREE.GridHelper(200, 50);
+    gridHelper = new THREE.GridHelper(200, 200);
     scene.add(gridHelper);
 
 

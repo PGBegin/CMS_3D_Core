@@ -27,9 +27,14 @@ function startup() {
         adarticle.is_edit_mode = is_edit_mode;
 
 
+
+
         window.addEventListener("resize", function () { adarticle.onWindowResize(); }, false);
 
         if (adarticle.is_edit_mode) {
+
+            adarticle.is_display_helper = true;
+
             document.getElementById("screenshot")!.addEventListener('click', function () {
                 GetScreenshotForUpload(adarticle, 'view_capture', 'getimage', 'up_img_input');
             });
@@ -42,8 +47,16 @@ function startup() {
                 adarticle.DbDeleteInstruction();
             });
 
+            document.getElementById("DbRegistInstruction")!.addEventListener('click', function () {
+                adarticle.DbRegistInstruction();
+            });
+
             document.getElementById("DbUpdateView")!.addEventListener('click', function () {
                 adarticle.DbUpdateView();
+            });
+
+            document.getElementById("DbRegistView")!.addEventListener('click', function () {
+                adarticle.DbRegistView();
             });
 
             document.getElementById("DbUpdateAnnotation")!.addEventListener('click', function () {
@@ -54,15 +67,32 @@ function startup() {
                 adarticle.DbDeleteAnnotation();
             });
 
+            document.getElementById("DbRegistAnnotation")!.addEventListener('click', function () {
+                adarticle.DbRegistAnnotation();
+            });
+
             document.getElementById("DbUpdateAnnotationDisplay")!.addEventListener('click', function () {
                 adarticle.DbUpdateAnnotationDisplay();
+            });
+
+            document.getElementById("DbUpdateArticle")!.addEventListener('click', function () {
+                adarticle.DbUpdateArticle();
+            });
+
+            document.getElementById("DbUpdateInstance")!.addEventListener('click', function () {
+                adarticle.DbUpdateInstance();
+            });
+
+            document.getElementById("DbUpdateLight")!.addEventListener('click', function () {
+                adarticle.DbUpdateLight();
             });
 
         }
 
     }
 
-    adarticle.ComplexSetupEnvironmentInitial();
+    //adarticle.ComplexSetupEnvironmentInitial();
+    adarticle.ComplexSetupEnvironment(true);
 
 
     function toBoolean(data: any) {

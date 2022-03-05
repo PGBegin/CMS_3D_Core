@@ -89,3 +89,110 @@
 
 
 </div>
+
+
+
+
+
+
+
+
+
+
+@*
+
+    @model CMS_3D_Core.Models.EDM.t_instruction
+
+
+    <div id="instruction_data">
+
+        <form asp-controller="ContentsEdit" asp-action="EditProductInstruction">
+            <div class="form-group row ">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <input type="hidden" asp-for="id_article" id="instruction_id_article" />
+
+                <div class="col-sm-3">
+                    <label asp-for="id_instruct" class="control-label font-weight-bold"></label>
+                    <div class="px-3">
+                        <input asp-for="id_instruct" class="form-control" id="instruction_id_instruct" />
+                        <span asp-validation-for="id_instruct" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <label asp-for="title" class="control-label font-weight-bold"></label>
+                    <div class="px-3">
+                        <input asp-for="title" class="form-control" id="instruction_title" />
+                        <span asp-validation-for="title" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                    <label asp-for="id_view" class="control-label font-weight-bold" ></label>
+                    <div class="px-3">
+                        <input asp-for="id_view" class="form-control" id="instruction_id_view" />
+                        <span asp-validation-for="id_view" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <label asp-for="display_order" class="control-label font-weight-bold"></label>
+                    <div class="px-3">
+                        <input asp-for="display_order" class="form-control" id="instruction_display_order" />
+                        <span asp-validation-for="display_order" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="form-group row ">
+                <div class="col-sm-12">
+                    <label asp-for="short_description" class="control-label font-weight-bold"></label>
+                    <div class="px-3">
+                        <textarea asp-for="short_description" class="form-control" id="instruction_short_description" rows="10"></textarea>
+                        <p id="instruction_short_description_length"></p>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <label asp-for="memo" class="control-label font-weight-bold"></label>
+                    <div class="px-3">
+                        <textarea asp-for="memo" class="form-control" id="instruction_memo" rows="10"></textarea>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-8">
+                    <label class="control-label font-weight-bold"></label>
+                    <div class="px-3">
+                        <input type="submit" value="Save" class="btn btn-primary" onclick="return confirm('Are you update Instruction?')" />
+                    </div>
+                </div>
+
+            </div>
+        </form>
+
+
+        <form asp-action="DeleteProductInstruction">
+            <div class="form-group row ">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="id_article" id="instruction_id_article_delete" />
+                <input type="hidden" asp-for="id_instruct" id="instruction_id_instruct_delete" />
+
+                <div class="col-sm-8">
+                    <label class="control-label font-weight-bold"></label>
+                    <div class="px-3">
+                        <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Are you sure delete Instruction?')" />
+                    </div>
+                </div>
+
+            </div>
+        </form>
+
+
+    </div>
+
+
+*@

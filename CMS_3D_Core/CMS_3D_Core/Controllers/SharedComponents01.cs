@@ -85,6 +85,7 @@ namespace CMS_3D_Core.Controllers
         }
     }
 
+    /*
     /// <summary>
     /// t_viewsの中身(視点一覧)を表示する(編集用)
     /// </summary>
@@ -99,17 +100,19 @@ namespace CMS_3D_Core.Controllers
 
         public async Task<IViewComponentResult> InvokeAsync()// long id_article)
         {
-        /*
-            var t = await _context.t_views
-                                .Include(x => x.id_articleNavigation)
-                                .Include(x => x.t_instructions)
-                                .Where(x => x.id_article == id_article)
-                                .ToListAsync();*/
+        
+        //    var t = await _context.t_views
+        //                        .Include(x => x.id_articleNavigation)
+        //                        .Include(x => x.t_instructions)
+        //                        .Where(x => x.id_article == id_article)
+        //                        .ToListAsync();
 
             return View("_EditListProductView");//, t);
         }
     }
+    */
 
+    /*
     /// <summary>
     /// t_articlesの中身を表示する(編集画面用)
     /// </summary>
@@ -151,7 +154,9 @@ namespace CMS_3D_Core.Controllers
             return View("_EditArticle", t_article);
         }
     }
+    */
 
+    /*
     /// <summary>
     /// Edit Instruction
     /// </summary>
@@ -176,8 +181,8 @@ namespace CMS_3D_Core.Controllers
             return View("_EditProductInstruction", t);
         }
     }
-
-
+    */
+    /*
     /// <summary>
     /// Edit View
     /// </summary>
@@ -204,7 +209,8 @@ namespace CMS_3D_Core.Controllers
             return View("_EditProductView", t2);
         }
     }
-
+    */
+    /*
     /// <summary>
     /// Edit Annotation
     /// </summary>
@@ -229,9 +235,9 @@ namespace CMS_3D_Core.Controllers
             return View("_EditProductAnnotation", t);
         }
     }
-
+    */
     /// <summary>
-    /// Edit Instruction
+    /// Detati Material View
     /// </summary>
     public class DetatiMaterialViewComponent : ViewComponent
     {
@@ -278,7 +284,7 @@ namespace CMS_3D_Core.Controllers
     }
 
 
-
+    /*
     /// <summary>
     /// Show AnnotationDisplay view
     /// </summary>
@@ -315,7 +321,7 @@ namespace CMS_3D_Core.Controllers
 
 
     }
-
+    */
 
 
     /// <summary>

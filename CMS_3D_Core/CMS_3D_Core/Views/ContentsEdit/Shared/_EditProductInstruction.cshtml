@@ -1,0 +1,75 @@
+﻿
+<div id="instruction_data">
+
+    <div class="form-group row ">
+
+
+        <input type="hidden" id="instruction_id_article" data-val="true" data-val-required="The id_article field is required." name="id_article" />
+
+        <div class="col-sm-2">
+            <label class="control-label font-weight-bold" for="id_instruct">id_instruct</label>
+            <div class="px-2">
+                <input class="form-control" id="instruction_id_instruct" type="number" data-val="true" data-val-required="The id_instruct field is required." name="id_instruct" />
+                <span class="text-danger field-validation-valid" data-valmsg-for="id_instruct" data-valmsg-replace="true"></span>
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <label class="control-label font-weight-bold" for="title">title</label>
+            <div class="px-3">
+                <input class="form-control" id="instruction_title" type="text" name="title" />
+                <span class="text-danger field-validation-valid" data-valmsg-for="title" data-valmsg-replace="true"></span>
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <label class="control-label font-weight-bold" for="id_view">id_view</label>
+            <div class="px-3">
+                <select class="form-control" id="instruction_id_view" type="number" data-val="true" data-val-required="The id_view field is required." name="id_view"></select>
+                <span class="text-danger field-validation-valid" data-valmsg-for="id_view" data-valmsg-replace="true"></span>
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            <label class="control-label font-weight-bold" for="display_order">display_order</label>
+            <div class="px-2">
+                <input class="form-control" id="instruction_display_order" type="number" data-val="true" data-val-required="The display_order field is required." name="display_order" />
+                <span class="text-danger field-validation-valid" data-valmsg-for="display_order" data-valmsg-replace="true"></span>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="form-group row ">
+        <div class="col-sm-12">
+            <label class="control-label font-weight-bold" for="short_description">short_description</label>
+            <div class="px-3">
+                <textarea class="form-control" id="instruction_short_description" rows="10" name="short_description"></textarea>
+                <p id="instruction_short_description_length"></p>
+            </div>
+        </div>
+
+        <div class="col-sm-12">
+            <label class="control-label font-weight-bold" for="memo">memo</label>
+            <div class="px-3">
+                <textarea class="form-control" id="instruction_memo" rows="10" name="memo"></textarea>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="form-group row ">
+
+        <input type="hidden" id="instruction_id_article_delete" data-val="true" data-val-required="The id_article field is required." name="id_article" />
+        <input type="hidden" id="instruction_id_instruct_delete" data-val="true" data-val-required="The id_instruct field is required." name="id_instruct" />
+
+    </div>
+
+
+</div>
+
+<button class="btn btn-primary" id="DbUpdateInstruction">Save</button>
+<button class="btn btn-danger" id="DbDeleteInstruction">Delete</button>
+<button class="btn btn-info" id="DbRegistInstruction">New</button>
