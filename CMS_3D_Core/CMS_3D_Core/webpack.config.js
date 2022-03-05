@@ -9,6 +9,7 @@ module.exports = {
         testthree: './Scripts/entry/index_testthree.ts',
         testthree2: './Scripts/entry/index_testthree2.ts',
         tdarticle_wp: './Scripts/entry/index_tdarticle_wp.ts',
+        edit_tdarticle_index: './Scripts/entry/index_edit_tdarticle_index',
     },
     output: {
         path: __dirname + '/wwwroot/js/dist',

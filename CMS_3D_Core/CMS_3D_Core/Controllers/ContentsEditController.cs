@@ -52,6 +52,10 @@ namespace CMS_3D_Core.Controllers
                                         .ToListAsync();
             return View(assys);
         }
+        public async Task<IActionResult> Index2()
+        {
+            return View();
+        }
 
         /// <summary>
         /// 

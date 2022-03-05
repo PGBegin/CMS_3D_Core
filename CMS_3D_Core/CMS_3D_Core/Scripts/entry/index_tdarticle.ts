@@ -2,12 +2,6 @@
 //import { TDArticle } from '../src/tdarticle.js';
 import { TDArticle } from '../src/tdarticle';
 import { GetScreenshotForUpload } from '../src/GetScreenshot';
-import { LikeButton } from '../src/like_button';
-
-
-
-import * as React from "react";
-import * as ReactDOM from 'react-dom'
 
 
 
@@ -108,9 +102,6 @@ function startup() {
     }
 
 
-//    const e = React.createElement;
-    const domContainer = document.querySelector('#like_button_container');
-    ReactDOM.render(React.createElement(LikeButton), domContainer);
 }
 
 
