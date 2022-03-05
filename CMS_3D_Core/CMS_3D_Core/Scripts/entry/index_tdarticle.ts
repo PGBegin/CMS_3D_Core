@@ -2,6 +2,13 @@
 //import { TDArticle } from '../src/tdarticle.js';
 import { TDArticle } from '../src/tdarticle';
 import { GetScreenshotForUpload } from '../src/GetScreenshot';
+import { LikeButton } from '../src/like_button';
+
+
+
+import * as React from "react";
+import * as ReactDOM from 'react-dom'
+
 
 
 
@@ -10,6 +17,7 @@ var adarticle = new TDArticle();
 
 // ロード後に実行される処理
 function startup() {
+
 
 
     const is_mode_assy = toBoolean((<HTMLInputElement>document.getElementById("is_mode_assy")).value);
@@ -98,6 +106,11 @@ function startup() {
     function toBoolean(data: any) {
         return data.toLowerCase() === 'true';
     }
+
+
+//    const e = React.createElement;
+    const domContainer = document.querySelector('#like_button_container');
+    ReactDOM.render(React.createElement(LikeButton), domContainer);
 }
 
 

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <None Remove="Scripts\entry\index_tdarticle_wp.ts" />
+    <None Remove="Scripts\entry\like_button.ts" />
     <None Remove="Scripts\src\GetScreenshot.ts" />
     <None Remove="Scripts\src\tdarticle\dropdown.ts" />
     <None Remove="Scripts\src\tdarticle\tdarticle_Aarticle.ts" />
@@ -31,6 +32,7 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\entry\index_tdarticle_wp.ts" />
+    <TypeScriptCompile Include="Scripts\src\like_button.ts" />
     <TypeScriptCompile Include="Scripts\src\GetScreenshot.ts" />
     <TypeScriptCompile Include="Scripts\src\tdarticle\dropdown.ts" />
     <TypeScriptCompile Include="Scripts\src\tdarticle\tdarticle_Aarticle.ts" />

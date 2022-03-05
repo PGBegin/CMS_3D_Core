@@ -6,7 +6,7 @@ module.exports = {
         layout: './Scripts/entry/index_layout.js',
         tdpart: './Scripts/entry/index_tdpart.js',
         tdarticle: './Scripts/entry/index_tdarticle.ts',
-        testthree: './Scripts/entry/index_testthree.js',
+        testthree: './Scripts/entry/index_testthree.ts',
         testthree2: './Scripts/entry/index_testthree2.ts',
         tdarticle_wp: './Scripts/entry/index_tdarticle_wp.ts',
     },
