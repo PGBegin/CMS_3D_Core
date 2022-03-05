@@ -7,10 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Scripts\entry\index_edit_tdarticle_index.ts" />
+    <None Remove="Scripts\entry\index_edit_tdarticle_index.tsx" />
     <None Remove="Scripts\entry\index_tdarticle_wp.ts" />
     <None Remove="Scripts\entry\like_button.ts" />
-    <None Remove="Scripts\src\articleIndex\FetchData.tsx" />
+    <None Remove="Scripts\src\ContentsIndexing\articleIndex.tsx" />
     <None Remove="Scripts\src\GetScreenshot.ts" />
     <None Remove="Scripts\src\tdarticle\dropdown.ts" />
     <None Remove="Scripts\src\tdarticle\tdarticle_Aarticle.ts" />
@@ -33,10 +33,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="Scripts\entry\index_edit_tdarticle_index.ts" />
+    <TypeScriptCompile Include="Scripts\entry\index_edit_tdarticle_index.tsx" />
     <TypeScriptCompile Include="Scripts\entry\index_tdarticle_wp.ts" />
-    <TypeScriptCompile Include="Scripts\src\articleIndex\FetchData.tsx" />
-    <TypeScriptCompile Include="Scripts\src\like_button.ts" />
+    <TypeScriptCompile Include="Scripts\src\ContentsIndexing\ArticleIndex.tsx" />
     <TypeScriptCompile Include="Scripts\src\GetScreenshot.ts" />
     <TypeScriptCompile Include="Scripts\src\tdarticle\dropdown.ts" />
     <TypeScriptCompile Include="Scripts\src\tdarticle\tdarticle_Aarticle.ts" />
