@@ -43,7 +43,7 @@ namespace CMS_3D_Core.Controllers
         /// Show Index of Edit Items Of Articles
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Indexold()
         {
             var assys = await _context.t_articles
                                         .Include(t => t.id_assyNavigation)
@@ -52,7 +52,7 @@ namespace CMS_3D_Core.Controllers
                                         .ToListAsync();
             return View(assys);
         }
-        public async Task<IActionResult> Index2()
+        public async Task<IActionResult> Index()
         {
             return View();
         }

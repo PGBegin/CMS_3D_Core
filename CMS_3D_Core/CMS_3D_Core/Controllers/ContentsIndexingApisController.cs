@@ -31,9 +31,8 @@ namespace CMS_3D_Core.Controllers
 
 
         /// <summary>
-        /// Return a set of related Data of article object in JSON
+        /// Return a list of articles in JSON
         /// </summary>
-        /// <param name="id_article"></param>
         /// <returns></returns>
         [Authorize]
         [HttpGet]
@@ -60,8 +59,34 @@ namespace CMS_3D_Core.Controllers
             return objCollection;
         }
 
+
         /// <summary>
-        /// return object with t_instruction
+        /// Return a list of articles in JSON
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet]
+        public async Task<IList<object>> GetAssyIndex()
+        {
+
+            var t = await _context.t_assemblies
+                                .Include(x => x.t_articles)
+                                .ToListAsync();
+
+            IList<object> objCollection = new List<object>();
+
+            foreach (var item in t)
+            {
+                objCollection.Add(object_from_t_assembly(item));
+            }
+
+
+
+            return objCollection;
+        }
+
+        /// <summary>
+        /// return object with t_article
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
@@ -79,5 +104,18 @@ namespace CMS_3D_Core.Controllers
                 status_name = item.statusNavigation.name,
             };
 
+        /// <summary>
+        /// return object with t_article
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private static object object_from_t_assembly(t_assembly item) =>
+            new
+            {
+                type = "assembly",
+                id_assy = item.id_assy,
+                assy_name = item.assy_name,
+                t_articles_ref_Count = item.t_articles.Count,
+            };
     }
 }

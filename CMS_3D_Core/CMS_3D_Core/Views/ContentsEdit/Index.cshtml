@@ -1,124 +1,12 @@
-﻿@model IEnumerable<CMS_3D_Core.Models.EDM.t_article>
+﻿
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Index2";
 }
 
 <h2>Edit Articles</h2>
 
 
+<div id="root"></div>
 
-<div class="row">
-    <div class="col-md-3"></div>
-
-
-    <div class="col-md-6">
-
-
-        <h4>Articles</h4>
-
-        <p>
-            <a asp-action="Create" asp-controller="t_article">Create New Article</a>
-        </p>
-        <p>
-            <a asp-action="CreateArticle">Create New Article2</a>
-        </p>
-
-
-        <table class="table">
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.id_assy)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.title)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.status)
-                </th>
-                <th>
-                    Assy
-                </th>
-                <th>
-                    Delete Operation
-                </th>
-                <th>
-                    Link
-                </th>
-                <th>
-                    Length<br />(First Instruction)
-                </th>
-            </tr>
-            @{
-                foreach (var item in Model)
-                {
-
-                    <tr>
-                        <td>
-                            <a asp-action="EditArticleWholeContents" asp-controller="ContentsEdit" asp-route-id_article="@item.id_article">@item.id_article</a>
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.title)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.statusNavigation.name)
-                        </td>
-                        <td>
-                            @if (item.id_assy == null)
-                            {
-                                <p>null</p>
-                            }
-                            else
-                            {
-                                <a asp-action="Edit" asp-controller="t_assembly" asp-route-id_assy="@item.id_assy">[@item.id_assy]@item.id_assyNavigation.assy_name</a>
-                            }
-
-                        </td>
-                        <td>
-                            @Html.ActionLink("Delete", "Delete", "t_article", new { id_article = item.id_article })
-                        </td>
-                        <td>
-                            @Html.ActionLink("View", "DetailProductInstruction", "ContentsView", new { id_article = item.id_article })
-                        </td>
-                        <td>
-                            @((item.t_instructions.OrderBy(m => m.display_order).Sum(m => m.short_description.Length)))
-                            (
-                            @((item.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction { short_description="" }).short_description.Length)
-                            )
-                        </td>
-                    </tr>
-                }
-            }
-
-        </table>
-
-        <hr />
-
-        <h4>Assy</h4>
-        <p>
-            <a asp-action="CreateAssembly">Create New Assembly</a>
-        </p>
-        @await Component.InvokeAsync("AssyList", null)
-
-
-        <hr />
-
-        <h4>Model Management</h4>
-
-
-        <a asp-action="Index" asp-controller="ContentsEditFile">File Management</a>
-
-        <hr />
-
-        <h4>Attachment Management</h4>
-
-
-        <a asp-action="Index" asp-controller="ContentsEditAttachment">Attachment Management</a>
-
-    </div>
-
-</div>
-
-
-
-
+<script type="module" src="~/js/dist/edit_tdarticle_index.bundle.js"></script>
