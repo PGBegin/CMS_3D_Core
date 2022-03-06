@@ -44,6 +44,7 @@ export class ArticleIndex extends React.Component<any, State> {
         this.state = { articledata: [], loading: true };
     }
 
+
     componentDidMount() {
         this.populateWeatherData();
     }
