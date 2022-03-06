@@ -8,8 +8,11 @@ class ArticleData {
     id_assy: number;
     id_assy_name: string;
     status_name: string;
+    id_attachment_for_eye_catch!: number;
     instructions_description_Length: number;
     instructions_description_Length_first: number;
+
+
     constructor() {
         this.id_article = 0;
         this.title = "";
@@ -30,9 +33,6 @@ class State {
         this.loading = false;
     }
 }
-
-
-
 
 
 
@@ -73,6 +73,9 @@ export class ArticleIndex extends React.Component<any, State> {
                             </td>
                             <td><a className="btn btn-danger" href={`/t_article/Delete?id_article=${articledata.id_article}`}>Delete</a></td>
                             <td>{articledata.instructions_description_Length}({articledata.instructions_description_Length_first})</td>
+                            <td>
+                                {articledata.id_attachment_for_eye_catch && <img className="img-thumbnail mb-3" src={`/ContentsEditAttachment/GetAttachmentFile/${articledata.id_attachment_for_eye_catch}`} alt="" width="240" height="135" loading="lazy"></img>}
+                            </td>
                         </tr>
                     )}
                 </tbody>

@@ -86,6 +86,29 @@ namespace CMS_3D_Core.Controllers
         }
 
         /// <summary>
+        /// Return a list of articles in JSON
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet]
+        public async Task<IList<object>> GetAttachmentFilesIndex()
+        {
+
+            var t = await _context.t_attachments.ToListAsync();
+
+            IList<object> objCollection = new List<object>();
+
+            foreach (var item in t)
+            {
+                objCollection.Add(object_from_t_attachment(item));
+            }
+
+
+
+            return objCollection;
+        }
+
+        /// <summary>
         /// return object with t_article
         /// </summary>
         /// <param name="item"></param>
@@ -99,6 +122,7 @@ namespace CMS_3D_Core.Controllers
                 id_assy_name = item.id_assyNavigation.assy_name,
                 title = item.title,
                 status = item.status,
+                id_attachment_for_eye_catch = item.id_attachment_for_eye_catch,
                 instructions_description_Length = item.t_instructions.OrderBy(m => m.display_order).Sum(m => m.short_description.Length),
                 instructions_description_Length_first = (item.t_instructions.OrderBy(m => m.display_order).FirstOrDefault() ?? new CMS_3D_Core.Models.EDM.t_instruction { short_description = "" }).short_description.Length,
                 status_name = item.statusNavigation.name,
@@ -116,6 +140,27 @@ namespace CMS_3D_Core.Controllers
                 id_assy = item.id_assy,
                 assy_name = item.assy_name,
                 t_articles_ref_Count = item.t_articles.Count,
+            };
+
+        /// <summary>
+        /// return object with t_article
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private static object object_from_t_attachment(t_attachment item) =>
+            new
+            {
+                type = "attachment",
+                id_file = item.id_file,
+                isActive = item.isActive,
+                file_name = item.file_name,
+                type_data = item.type_data,
+                file_length = item.file_length,
+                itemlink = item.itemlink,
+                license = item.license,
+                create_datetime = item.create_datetime,
+                latest_update_datetime = item.latest_update_datetime,
+                target_article_id = item.target_article_id,
             };
     }
 }

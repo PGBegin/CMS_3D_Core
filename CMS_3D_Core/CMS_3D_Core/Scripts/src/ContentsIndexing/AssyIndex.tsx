@@ -16,7 +16,6 @@ class AssyData {
 
 class State {
     loading: boolean;
-    //    forecasts: Forecast[];
     assydata: AssyData[] = [];
     constructor() {
         this.loading = false;
