@@ -19,6 +19,7 @@
     <None Remove="Scripts\src\ContentsIndexing\AttachmentFileIndex.tsx" />
     <None Remove="Scripts\src\ContentsIndexing\ContentsEditIndex.tsx" />
     <None Remove="Scripts\src\ContentsIndexing\GetVerificationToken.ts" />
+    <None Remove="Scripts\src\ContentsIndexing\ModelFileIndex.tsx" />
     <None Remove="Scripts\src\General\FetchPostApi.tsx" />
     <None Remove="Scripts\src\GetScreenshot.ts" />
     <None Remove="Scripts\src\tdarticle\dropdown.ts" />
@@ -52,6 +53,7 @@
     <TypeScriptCompile Include="Scripts\src\ContentsIndexing\AttachmentFileEdit.tsx" />
     <TypeScriptCompile Include="Scripts\src\ContentsIndexing\AttachmentFileIndex.tsx" />
     <TypeScriptCompile Include="Scripts\src\ContentsIndexing\ContentsEditIndex.tsx" />
+    <TypeScriptCompile Include="Scripts\src\ContentsIndexing\ModelFileIndex.tsx" />
     <TypeScriptCompile Include="Scripts\src\General\GetVerificationToken.ts" />
     <TypeScriptCompile Include="Scripts\src\General\FetchPostApi.tsx" />
     <TypeScriptCompile Include="Scripts\src\GetScreenshot.ts" />

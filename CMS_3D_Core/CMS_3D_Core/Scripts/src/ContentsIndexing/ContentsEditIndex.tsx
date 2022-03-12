@@ -10,6 +10,9 @@ import { FAttachmentFileEdit } from './AttachmentFileEdit';
 import { FAttachmentFileCreate } from './AttachmentFileCreate';
 
 
+import { ModelFileIndex } from './ModelFileIndex';
+
+
 import { BrowserRouter, Route, Routes, Link, useParams } from 'react-router-dom';
 
 export function ContentsEditIndex() {
@@ -17,6 +20,12 @@ export function ContentsEditIndex() {
         <BrowserRouter>
             <Routes>
                 <Route path="/ContentsEdit" element={<ContentsEditHome />} />
+
+
+
+                <Route path="/ContentsEdit/ContentsModelFile" element={<ModelFileIndex />} />
+
+
                 <Route path="/ContentsEdit/AttachmentFileIndex" element={<AttachmentFileIndex />} />
                 <Route path="/ContentsEdit/FAttachmentFileCreate" element={<FAttachmentFileCreate />} />
                 <Route path="/ContentsEdit/AttachmentFileDetails/:id" element={<FAttachmentFileDetails />} />
@@ -60,7 +69,11 @@ function ContentsEditHome() {
 
                 <h4>Model Management</h4>
 
-                <a href="/ContentsEditFile">File Management</a>
+                <a href="/ContentsEditFile">File Management(Old)</a>
+
+                <br />
+
+                <Link to="/ContentsEdit/ContentsModelFile">File Management</Link>
 
                 <hr />
 
