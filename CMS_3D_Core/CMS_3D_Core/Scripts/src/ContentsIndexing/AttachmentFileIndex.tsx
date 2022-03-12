@@ -60,6 +60,8 @@ export class AttachmentFileIndex extends React.Component<any, State> {
                     <h4>Attachment Management</h4>
 
                     <Link to="/ContentsEdit">Return ContentsEdit</Link>
+                    <br />
+                    <Link to="/ContentsEdit/FAttachmentFileCreate">Create</Link>
 
                     <table className='table' aria-labelledby="tabelLabel">
                         <thead>

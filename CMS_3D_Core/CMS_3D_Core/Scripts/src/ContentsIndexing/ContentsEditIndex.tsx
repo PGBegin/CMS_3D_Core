@@ -7,6 +7,7 @@ import { AttachmentFileIndex } from './AttachmentFileIndex';
 import { FAttachmentFileDetails } from './AttachmentFileDetails';
 import { FAttachmentFileDelete } from './AttachmentFileDelete';
 import { FAttachmentFileEdit } from './AttachmentFileEdit';
+import { FAttachmentFileCreate } from './AttachmentFileCreate';
 
 
 import { BrowserRouter, Route, Routes, Link, useParams } from 'react-router-dom';
@@ -17,6 +18,7 @@ export function ContentsEditIndex() {
             <Routes>
                 <Route path="/ContentsEdit" element={<ContentsEditHome />} />
                 <Route path="/ContentsEdit/AttachmentFileIndex" element={<AttachmentFileIndex />} />
+                <Route path="/ContentsEdit/FAttachmentFileCreate" element={<FAttachmentFileCreate />} />
                 <Route path="/ContentsEdit/AttachmentFileDetails/:id" element={<FAttachmentFileDetails />} />
                 <Route path="/ContentsEdit/AttachmentFileDelete/:id" element={<FAttachmentFileDelete />} />
                 <Route path="/ContentsEdit/AttachmentFileEdit/:id" element={<FAttachmentFileEdit />} />

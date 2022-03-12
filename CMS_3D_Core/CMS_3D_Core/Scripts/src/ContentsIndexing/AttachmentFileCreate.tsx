@@ -13,6 +13,7 @@ class State {
     str_url_getapi!: string;
     str_url_postapi!: string;
 
+    file_object!: any;
     name!: string;
     file_name!: string;
     format_data!: string;
@@ -35,12 +36,13 @@ class AttachmentFileCreate extends React.Component<any, State> {
         super(props);
         this.state = {
             loading: true,
-            id_file: props.id_file,
+            //id_file: props.id_file,
+            id_file: 0,
 
             str_url_getapi: props.str_url_getapi,
             str_url_postapi: props.str_url_postapi,
 
-
+            file_object: undefined,
             name: "",
             file_name: "",
             format_data: "",
@@ -61,28 +63,57 @@ class AttachmentFileCreate extends React.Component<any, State> {
         // @ts-ignore
         this.setState({ [event.target.name]: event.target.value });
     }
+
+    handleChangeF = (event: any) => {
+
+        let input = event.target;
+        
+        this.setState({ file_object: input.files[0] });
+        //console.log(input.files[0]);
+    }
+
     async handleSubmit(event: any) {
-
-
-        const updObject = {
-            id_file: this.props.id_file,
-            name: this.state.name,
-            file_name: this.state.file_name,
-            format_data: this.state.format_data,
-            file_length: 0,
-            itemlink: this.state.itemlink,
-            license: this.state.license,
-            memo: this.state.memo,
-        };
-
 
         const token = GetVerificationToken();
 
         event.preventDefault();
-        const ans = await FetchPostApi(this.state.str_url_postapi, token, updObject)
 
-        alert('submitted: ');
-        event.preventDefault();
+        //-------------------------------------------------
+        // Set Data Objects
+        //-------------------------------------------------
+
+        const formData = new FormData();
+        //formData.append("MAX_FILE_SIZE", MAX_FILE_SIZE);  
+        formData.append("name", this.state.name);
+        formData.append("format_data", this.state.format_data);
+        formData.append("itemlink", this.state.itemlink);
+        formData.append("license", this.state.license);
+        formData.append("memo", this.state.memo);
+        formData.append("formFile", this.state.file_object);
+
+
+        const param = {
+            method: "POST",  // or "PUT",
+            headers: {
+                "RequestVerificationToken": token
+            },
+            body: formData
+        }
+
+
+        //-------------------------------------------------
+        // サーバへ送信する
+        //-------------------------------------------------
+        const response = await fetch(this.state.str_url_postapi,
+            param
+        );
+
+        const ans = await response.json();
+
+
+        alert(ans[0].updateresult_msg);
+
+
     }
     renderTable() {
         return (
@@ -103,6 +134,7 @@ class AttachmentFileCreate extends React.Component<any, State> {
 
                         <dl className="row">
 
+
                             <dt className="col-sm-2">
                                 Name
                             </dt>
@@ -110,22 +142,10 @@ class AttachmentFileCreate extends React.Component<any, State> {
                                 <input type="text" className="form-control" name="name" defaultValue={this.state.name} onChange={this.handleChange} />
                             </dd>
                             <dt className="col-sm-2">
-                                File Name
-                            </dt>
-                            <dd className="col-sm-10">
-                                <input type="text" className="form-control" name="file_name" defaultValue={this.state.file_name} onChange={this.handleChange} />
-                            </dd>
-                            <dt className="col-sm-2">
                                 DATA TYPE
                             </dt>
                             <dd className="col-sm-10">
                                 <input type="text" className="form-control" name="format_data" defaultValue={this.state.format_data} onChange={this.handleChange} />
-                            </dd>
-                            <dt className="col-sm-2">
-                                FileSize[KB]
-                            </dt>
-                            <dd className="col-sm-10">
-                                {this.state.file_length / 1000}
                             </dd>
                             <dt className="col-sm-2">
                                 Item Link
@@ -145,8 +165,16 @@ class AttachmentFileCreate extends React.Component<any, State> {
                             <dd className="col-sm-10">
                                 <input type="text" className="form-control" name="memo" defaultValue={this.state.memo} onChange={this.handleChange} />
                             </dd>
+
+                            <dt className="col-sm-2">
+                                File
+                            </dt>
+                            <dd className="col-sm-10">
+                                <input type="file" name="formFile" className="custom-file-input" onChange={this.handleChangeF} />
+                            </dd>
+
                         </dl>
-                        <input type="submit" value="Submit" />
+                        <input type="submit" value="Submit" className="btn btn-primary"/>
                     </form>
                     <hr />
 
@@ -177,18 +205,18 @@ class AttachmentFileCreate extends React.Component<any, State> {
     }
 
     async populateWeatherData() {
-        const response = await fetch(`/ContentsAttachmentFile/GetAttachmentFileDetails/${this.props.id_file}`);
-        const data = await response.json();
+        //const response = await fetch(`/ContentsAttachmentFile/GetAttachmentFileDetails/${this.props.id_file}`);
+        //const data = await response.json();
         this.setState({
             loading: false,
-            id_file: this.props.id_file,
+         /*   id_file: this.props.id_file,
             name: data.name,
             file_name: data.file_name,
             format_data: data.format_data,
             file_length: data.file_length,
             itemlink: data.itemlink,
             license: data.license,
-            memo: data.memo,
+            memo: data.memo,*/
         });
     }
 }
@@ -196,7 +224,9 @@ class AttachmentFileCreate extends React.Component<any, State> {
 
 
 export function FAttachmentFileCreate() {
-    const { id } = useParams();
-    return (<AttachmentFileCreate id_file={id} str_url_getapi={"str_url_getapi"} str_url_postapi={"/ContentsAttachmentFile/EditAttachmentFileEdit"} />);
+    //const { id } = useParams();
+    return (<AttachmentFileCreate
+        //id_file={id} 
+        str_url_getapi={"str_url_getapi"} str_url_postapi={"/ContentsAttachmentFile/Create"} />);
 }
 

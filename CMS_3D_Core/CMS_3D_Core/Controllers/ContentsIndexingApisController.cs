@@ -85,46 +85,6 @@ namespace CMS_3D_Core.Controllers
             return objCollection;
         }
 
-        /*
-        /// <summary>
-        /// Return a list of articles in JSON
-        /// </summary>
-        /// <returns></returns>
-        [Authorize]
-        [HttpGet]
-        public async Task<IList<object>> GetAttachmentFilesIndex()
-        {
-
-            var t = await _context.t_attachments.ToListAsync();
-
-            IList<object> objCollection = new List<object>();
-
-            foreach (var item in t)
-            {
-                objCollection.Add(object_from_t_attachment(item));
-            }
-
-
-
-            return objCollection;
-        }
-
-        /// <summary>
-        /// Return a list of articles in JSON
-        /// </summary>
-        /// <returns></returns>
-        [Authorize]
-        [HttpGet]
-        public async Task<object> GetAttachmentFilesDetails(long id)
-        {
-
-            var t = await _context.t_attachments.Where(x=>x.id_file== id).FirstOrDefaultAsync();
-
-            object objCollection = object_from_t_attachment(t);
-
-            return objCollection;
-        }
-        */
 
         /// <summary>
         /// return object with t_article
@@ -160,27 +120,5 @@ namespace CMS_3D_Core.Controllers
                 t_articles_ref_Count = item.t_articles.Count,
             };
 
-        /*
-        /// <summary>
-        /// return object with t_article
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        private static object object_from_t_attachment(t_attachment item) =>
-            new
-            {
-                type = "attachment",
-                id_file = item.id_file,
-                isActive = item.isActive,
-                file_name = item.file_name,
-                type_data = item.type_data,
-                file_length = item.file_length,
-                itemlink = item.itemlink,
-                license = item.license,
-                create_datetime = item.create_datetime,
-                latest_update_datetime = item.latest_update_datetime,
-                target_article_id = item.target_article_id,
-            };
-        */
     }
 }

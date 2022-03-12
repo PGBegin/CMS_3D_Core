@@ -61,7 +61,7 @@ class AttachmentFileDetails extends React.Component<any, State> {
 
                     <h4>Attachment Management</h4>
 
-                    <Link to="/ContentsEdit/AttachmentFilesIndex">Return Index</Link>
+                    <Link to="/ContentsEdit/AttachmentFileIndex">Return Index</Link>
 
 
                     <dl className="row">

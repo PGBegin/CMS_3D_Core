@@ -151,7 +151,7 @@ class AttachmentFileEdit extends React.Component<any, State> {
                                 <input type="text" className="form-control" name="memo" defaultValue={this.state.memo} onChange={this.handleChange} />
                             </dd>
                         </dl>
-                        <input type="submit" value="Submit" />
+                        <input type="submit" value="Submit" className="btn btn-primary" />
                     </form>
                     <hr />
 

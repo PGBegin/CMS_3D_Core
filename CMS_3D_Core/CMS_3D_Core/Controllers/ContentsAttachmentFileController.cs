@@ -8,6 +8,12 @@ using CMS_3D_Core.Models.EDM;
 
 
 
+using Microsoft.AspNetCore.Http;
+
+
+
+using System.IO;
+
 using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -50,17 +56,38 @@ namespace CMS_3D_Core.Controllers
             return objCollection;
         }
 
-        /*
+
+        public static byte[] GetByteArrayFromStream(Stream sm)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                sm.CopyTo(ms);
+                return ms.ToArray();
+            }
+        }
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IList<object>> Create(string name, string format_data, string itemlink, string license, string memo, [FromForm] IFormFile formFile)
         {
+
+
+            string updatemode = "Create";
+            string updateresult = "";
+            string updateresult_msg = "";
+
+            IList<object> objCollection = new List<object>();
+
             if (formFile == null)
             {
-                TempData["ResultMsg"] = "New File Attach Failed";
-                ViewBag.ResultMsg = TempData["ResultMsg"];
-                return View();
+                objCollection.Add(
+                    new
+                    {
+                        updateresult = "Failed",
+                        updateresult_msg = "Update Failed",
+                        updatemode = "New File Attach Failed",
+                    });
+                return objCollection;
             }
 
             try
@@ -95,8 +122,8 @@ namespace CMS_3D_Core.Controllers
                 _context.Add(t_attachment);
                 _context.SaveChanges();
 
-                TempData["ResultMsg"] = "New File Attach Success";
-                return RedirectToAction(nameof(Details), new { id = t_attachment.id_file });
+                updateresult = "Success";
+                updateresult_msg = "Update Success ID : " + t_attachment.id_file;
 
             }
 
@@ -104,17 +131,26 @@ namespace CMS_3D_Core.Controllers
 
             catch (Exception e)
             {
-                TempData["ResultMsg"] = "New File Attach Failed";
+                updateresult = "Failed";
+                updateresult_msg = "Create Failed";
 #if DEBUG
-                TempData["ResultMsg"] = e.Message;
 #endif
             }
 
-            ViewBag.ResultMsg = TempData["ResultMsg"];
-            return View();
+
+
+            objCollection.Add(
+                new
+                {
+                    updatemode = updatemode,
+                    updateresult = updateresult,
+                    updateresult_msg = updateresult_msg,
+                });
+
+            return objCollection;
         }
 
-        */
+        
 
         /// <summary>
         /// Return a list of articles in JSON
