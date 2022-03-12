@@ -3,21 +3,28 @@ import * as ReactDOM from 'react-dom'
 
 import { ArticleIndex } from './ArticleIndex';
 import { AssyIndex } from './AssyIndex';
-import { AttachmentFilesIndex } from './AttachmentFilesIndex';
-import { BrowserRouter, Route, Routes, Link } from 'react-router-dom';
+import { AttachmentFileIndex } from './AttachmentFileIndex';
+import { FAttachmentFileDetails } from './AttachmentFileDetails';
+import { FAttachmentFileDelete } from './AttachmentFileDelete';
+import { FAttachmentFileEdit } from './AttachmentFileEdit';
+
+
+import { BrowserRouter, Route, Routes, Link, useParams } from 'react-router-dom';
 
 export function ContentsEditIndex() {
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/ContentsEdit" element={<ContentsEditHome />} />
-                <Route path="/ContentsEdit/AttachmentFilesIndex" element={<AttachmentFilesIndex />} />
+                <Route path="/ContentsEdit/AttachmentFileIndex" element={<AttachmentFileIndex />} />
+                <Route path="/ContentsEdit/AttachmentFileDetails/:id" element={<FAttachmentFileDetails />} />
+                <Route path="/ContentsEdit/AttachmentFileDelete/:id" element={<FAttachmentFileDelete />} />
+                <Route path="/ContentsEdit/AttachmentFileEdit/:id" element={<FAttachmentFileEdit />} />
             </Routes>
 
         </BrowserRouter>
     );
 }
-
 function ContentsEditHome() {
     return (
         <div className="row">
@@ -57,7 +64,7 @@ function ContentsEditHome() {
 
                 <h4>Attachment Management</h4>
 
-                <Link to="/ContentsEdit/AttachmentFilesIndex">Attachment Management</Link>
+                <Link to="/ContentsEdit/AttachmentFileIndex">Attachment Management</Link>
 
 
             </div>

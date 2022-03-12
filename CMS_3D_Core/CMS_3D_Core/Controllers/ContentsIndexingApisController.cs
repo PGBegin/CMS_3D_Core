@@ -85,6 +85,7 @@ namespace CMS_3D_Core.Controllers
             return objCollection;
         }
 
+        /*
         /// <summary>
         /// Return a list of articles in JSON
         /// </summary>
@@ -107,6 +108,23 @@ namespace CMS_3D_Core.Controllers
 
             return objCollection;
         }
+
+        /// <summary>
+        /// Return a list of articles in JSON
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet]
+        public async Task<object> GetAttachmentFilesDetails(long id)
+        {
+
+            var t = await _context.t_attachments.Where(x=>x.id_file== id).FirstOrDefaultAsync();
+
+            object objCollection = object_from_t_attachment(t);
+
+            return objCollection;
+        }
+        */
 
         /// <summary>
         /// return object with t_article
@@ -142,6 +160,7 @@ namespace CMS_3D_Core.Controllers
                 t_articles_ref_Count = item.t_articles.Count,
             };
 
+        /*
         /// <summary>
         /// return object with t_article
         /// </summary>
@@ -162,5 +181,6 @@ namespace CMS_3D_Core.Controllers
                 latest_update_datetime = item.latest_update_datetime,
                 target_article_id = item.target_article_id,
             };
+        */
     }
 }

@@ -34,8 +34,8 @@ class State {
 
 
 
-export class AttachmentFilesIndex extends React.Component<any, State> {
-    static displayName = AttachmentFilesIndex.name;
+export class AttachmentFileIndex extends React.Component<any, State> {
+    static displayName = AttachmentFileIndex.name;
 
     constructor(props: any) {
         super(props);
@@ -76,9 +76,14 @@ export class AttachmentFilesIndex extends React.Component<any, State> {
                         <tbody>
                             {attachmentfiledata.map(attachmentfiledata =>
                                 <tr key={attachmentfiledata.id_file}>
-                                    <td><a href={`/ContentsEditAttachment/Details/${attachmentfiledata.id_file}`}>{attachmentfiledata.id_file}</a></td>
                                     <td>
-                                        {attachmentfiledata.id_file && <img className="img-thumbnail mb-3" src={`/ContentsEditAttachment/GetAttachmentFile/${attachmentfiledata.id_file}`} alt="" width="240" height="135" loading="lazy"></img>}
+                                        <Link to={`/ContentsEdit/AttachmentFileDetails/${attachmentfiledata.id_file}`}>{attachmentfiledata.id_file}</Link>
+                                    </td>
+                                    <td>
+                                        {attachmentfiledata.id_file &&
+                                        <Link to={`/ContentsEdit/AttachmentFileDetails/${attachmentfiledata.id_file}`}>
+                                            <img className="img-thumbnail mb-3" src={`/ContentsEditAttachment/GetAttachmentFile/${attachmentfiledata.id_file}`} alt="" width="240" height="135" loading="lazy"></img>
+                                        </Link>}
                                     </td>
                                     <td>{attachmentfiledata.file_name}</td>
                                     <td>{attachmentfiledata.type_data}</td>
@@ -100,7 +105,7 @@ export class AttachmentFilesIndex extends React.Component<any, State> {
     render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : AttachmentFilesIndex.renderTable(this.state.attachmentfiledata);
+            : AttachmentFileIndex.renderTable(this.state.attachmentfiledata);
 
         return (
             <div>
@@ -110,7 +115,7 @@ export class AttachmentFilesIndex extends React.Component<any, State> {
     }
 
     async populateWeatherData() {
-        const response = await fetch('/ContentsIndexingApis/GetAttachmentFilesIndex');
+        const response = await fetch('/ContentsAttachmentFile/GetAttachmentFileIndex');
         const data = await response.json();
         this.setState({ attachmentfiledata: data, loading: false });
     }
