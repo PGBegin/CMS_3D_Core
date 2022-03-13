@@ -19,6 +19,10 @@
     <None Remove="Scripts\src\ContentsIndexing\AttachmentFileIndex.tsx" />
     <None Remove="Scripts\src\ContentsIndexing\ContentsEditIndex.tsx" />
     <None Remove="Scripts\src\ContentsIndexing\GetVerificationToken.ts" />
+    <None Remove="Scripts\src\ContentsIndexing\ModelFileCreate.tsx" />
+    <None Remove="Scripts\src\ContentsIndexing\ModelFileDelete.tsx" />
+    <None Remove="Scripts\src\ContentsIndexing\ModelFileDetails.tsx" />
+    <None Remove="Scripts\src\ContentsIndexing\ModelFileEdit.tsx" />
     <None Remove="Scripts\src\ContentsIndexing\ModelFileIndex.tsx" />
     <None Remove="Scripts\src\General\FetchPostApi.tsx" />
     <None Remove="Scripts\src\GetScreenshot.ts" />
@@ -26,6 +30,7 @@
     <None Remove="Scripts\src\tdarticle\tdarticle_Aarticle.ts" />
     <None Remove="Scripts\src\tdarticle\tdarticle_DataContainers.ts" />
     <None Remove="Scripts\src\tdarticle_test.ts" />
+    <None Remove="Scripts\src\TDOperating\ModelFileView.ts" />
     <None Remove="Scripts\src\tdpart\tdpart.ts" />
   </ItemGroup>
 
@@ -53,6 +58,10 @@
     <TypeScriptCompile Include="Scripts\src\ContentsIndexing\AttachmentFileEdit.tsx" />
     <TypeScriptCompile Include="Scripts\src\ContentsIndexing\AttachmentFileIndex.tsx" />
     <TypeScriptCompile Include="Scripts\src\ContentsIndexing\ContentsEditIndex.tsx" />
+    <TypeScriptCompile Include="Scripts\src\ContentsIndexing\ModelFileCreate.tsx" />
+    <TypeScriptCompile Include="Scripts\src\ContentsIndexing\ModelFileDelete.tsx" />
+    <TypeScriptCompile Include="Scripts\src\ContentsIndexing\ModelFileDetails.tsx" />
+    <TypeScriptCompile Include="Scripts\src\ContentsIndexing\ModelFileEdit.tsx" />
     <TypeScriptCompile Include="Scripts\src\ContentsIndexing\ModelFileIndex.tsx" />
     <TypeScriptCompile Include="Scripts\src\General\GetVerificationToken.ts" />
     <TypeScriptCompile Include="Scripts\src\General\FetchPostApi.tsx" />
@@ -60,6 +69,7 @@
     <TypeScriptCompile Include="Scripts\src\tdarticle\dropdown.ts" />
     <TypeScriptCompile Include="Scripts\src\tdarticle\tdarticle_Aarticle.ts" />
     <TypeScriptCompile Include="Scripts\src\tdarticle\tdarticle_DataContainers.ts" />
+    <TypeScriptCompile Include="Scripts\src\TDOperating\ModelFileView.ts" />
     <TypeScriptCompile Include="Scripts\src\tdpart.ts" />
     <TypeScriptCompile Include="Scripts\src\tdarticle.ts" />
   </ItemGroup>

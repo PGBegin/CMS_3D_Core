@@ -67,6 +67,43 @@ namespace CMS_3D_Core.Controllers
         }
 
 
+
+        /// <summary>
+        /// Return a list of articles in JSON
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet]
+        public async Task<object> GetDetails(long id)
+        {
+
+            //var t = await _context.t_parts.Where(x => x.id_part == id).FirstOrDefaultAsync();
+
+            var t = await _context.t_parts
+                    .Select(x => new t_part()
+                    {
+                        id_part = x.id_part,
+                        part_number = x.part_number,
+                        version = x.version,
+                        type_data = x.type_data,
+                        file_name = x.file_name,
+                        format_data = x.format_data,
+                        file_length = x.file_length,
+                        license = x.license,
+                        author = x.author,
+                        itemlink = x.itemlink,
+                        memo = x.memo,
+                        create_datetime = x.create_datetime,
+                        latest_update_datetime = x.latest_update_datetime,
+                    })
+                    .Where(x => x.id_part == id)
+                    .FirstOrDefaultAsync();
+
+            object objCollection = object_from_t_part(t);
+
+            return objCollection;
+        }
+
         /// <summary>
         /// object_from_t_part
         /// </summary>

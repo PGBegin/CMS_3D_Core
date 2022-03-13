@@ -58,11 +58,11 @@ export class ModelFileIndexComponent extends React.Component<any, State> {
 
                 <div className="col-md-6">
 
-                    <h4>Attachment Management</h4>
+                    <h4>Model File Management</h4>
 
                     <Link to="/ContentsEdit">Return ContentsEdit</Link>
                     <br />
-                    <Link to="/ContentsEdit/FAttachmentFileCreate">Create</Link>
+                    <Link to="/ContentsEdit/ModelFileCreate">Create</Link>
 
                     <table className='table' aria-labelledby="tabelLabel">
                         <thead>
@@ -79,7 +79,7 @@ export class ModelFileIndexComponent extends React.Component<any, State> {
                             {objectdata.map(objectdata =>
                                 <tr key={objectdata.id_part}>
                                     <td>
-                                        <Link to={`/ContentsEdit/AttachmentFileDetails/${objectdata.id_part}`}>{objectdata.id_part}</Link>
+                                        <Link to={`/ContentsEdit/ModelFileDetails/${objectdata.id_part}`}>{objectdata.id_part}</Link>
                                     </td>
                                     <td>{objectdata.file_name}</td>
                                     <td>{objectdata.type_data}</td>

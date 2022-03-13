@@ -12,6 +12,11 @@ import { FAttachmentFileCreate } from './AttachmentFileCreate';
 
 import { ModelFileIndex } from './ModelFileIndex';
 
+import { ModelFileCreate } from './ModelFileCreate';
+import { ModelFileEdit } from './ModelFileEdit';
+import { ModelFileDetails } from './ModelFileDetails';
+import { ModelFileDelete } from './ModelFileDelete';
+
 
 import { BrowserRouter, Route, Routes, Link, useParams } from 'react-router-dom';
 
@@ -24,8 +29,14 @@ export function ContentsEditIndex() {
 
 
                 <Route path="/ContentsEdit/ContentsModelFile" element={<ModelFileIndex />} />
+                <Route path="/ContentsEdit/ModelFileCreate" element={<ModelFileCreate />} />
+                <Route path="/ContentsEdit/ModelFileEdit/:id" element={<ModelFileEdit />} />
+                <Route path="/ContentsEdit/ModelFileDetails/:id" element={<ModelFileDetails />} />
+                <Route path="/ContentsEdit/ModelFileDelete/:id" element={<ModelFileDelete />} />
 
-
+                {
+                    // Attachment
+                }
                 <Route path="/ContentsEdit/AttachmentFileIndex" element={<AttachmentFileIndex />} />
                 <Route path="/ContentsEdit/FAttachmentFileCreate" element={<FAttachmentFileCreate />} />
                 <Route path="/ContentsEdit/AttachmentFileDetails/:id" element={<FAttachmentFileDetails />} />
