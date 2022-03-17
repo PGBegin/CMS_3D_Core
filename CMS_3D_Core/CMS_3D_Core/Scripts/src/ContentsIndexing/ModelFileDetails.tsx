@@ -4,6 +4,8 @@ import * as ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Routes, Link, useParams } from 'react-router-dom';
 import { GetVerificationToken } from '../General/GetVerificationToken';
 import {  ModelViewing } from '../TDOperating/ModelFileView';
+import { MeshTest } from "../test/MeshTest";
+import { OrbitControlsTest } from "../test/OrbitControlsTest";
 
 
 class State {
@@ -146,7 +148,6 @@ class CModelFileDetails extends React.Component<any, State> {
 
                     <div className="row">
                         <div className="col-md-6">
-
                             <div id="model_screen">
                                 <div className="progress" id="div_progressbar_modeldl">
                                 </div>
@@ -381,9 +382,20 @@ class CModelFileDetails extends React.Component<any, State> {
 
 export function ModelFileDetails() {
     const { id } = useParams();
-    return (<CModelFileDetails
-        id_part={id}
-        str_url_getapi={"/ContentsModelFileApi/GetDetails/"}
-        str_url_postapi={"/ContentsAttachmentFile/Create"} 
-    />);
+    return (
+        <React.StrictMode>
+
+            <MeshTest />
+            <OrbitControlsTest />
+            
+            <CModelFileDetails
+                id_part={id}
+                str_url_getapi={"/ContentsModelFileApi/GetDetails/"}
+                str_url_postapi={"/ContentsAttachmentFile/Create"}
+            />
+
+
+        </React.StrictMode>
+
+    );
 }

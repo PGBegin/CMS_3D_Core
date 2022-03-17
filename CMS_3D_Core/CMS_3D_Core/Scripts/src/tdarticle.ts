@@ -1480,7 +1480,7 @@ export class TDArticle {
         //renderer = new THREE.WebGLRenderer({ antialias: true });
 
         this.renderer = new THREE.WebGLRenderer({
-            canvas: document.querySelector('#model_screen'), antialias: true,  alpha: true 
+            canvas: document.querySelector('#model_screen')!, antialias: true, alpha: true 
         });
 
         this.renderer.setSize(this.width, this.height);
