@@ -1,10 +1,9 @@
-﻿import { useRef } from 'react';
-import * as React from 'react';
+﻿import * as React from 'react';
+import { useRef } from 'react';
 import { ReactThreeFiber, extend, useThree, useFrame, Canvas, useLoader } from '@react-three/fiber';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Color } from 'three';
 
-//import { Canvas, useLoader } from 'react-three-fiber'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
 extend({ OrbitControls });
@@ -49,59 +48,48 @@ export const Controls: React.FC<ControlProps> = (props) => {
     );
 }
 
-
-export function OrbitControlsTest() {
+type Props = {
+    id_part?: number;
+}
+export const ModelFileView: React.VFC<Props> = ({ id_part}) => {
     return (
         <div>
             <Canvas>
                 <ambientLight intensity={1.0} color={new Color(0xffffff)} />
                 <Controls isControl={true} />
                 <mesh>
-                    <boxBufferGeometry attach="geometry" args={[1, 1, 1]} />
-                    <meshNormalMaterial attach="material" />
-
                     {
-                        <UseModel />
+                        //<boxBufferGeometry attach="geometry" args={[1, 1, 1]} />
+                        //<meshNormalMaterial attach="material" />
+                    }
+
+                    {   
+                        <UseModel id_part={id_part}  />
                     }
                 </mesh>
-                </Canvas>
+            </Canvas>
         </div>
     );
 }
 
-const UseModel = () => {
+const UseModel: React.VFC<Props> = ({ id_part }) => {
     return (
         <React.Suspense fallback={null}>
-            <LoadModel />
-        </React.Suspense>  
+            <LoadModel id_part={id_part} />
+        </React.Suspense>
     )
 }
 
 
-//        var str_url_partapi_base = "/ContentsOperatorForArticleApis/GetPartObjectFile?";
-const LoadModel = () => {
+const LoadModel: React.VFC<Props> = ({ id_part }) => {
 
     const str_url_partapi_base = "/ContentsOperatorForArticleApis/GetPartObjectFile?";
-    const str_url_partapi = str_url_partapi_base + new URLSearchParams({ id_part: "3" }).toString();
+    const str_url_partapi = str_url_partapi_base + new URLSearchParams({ id_part: id_part!.toString() }).toString();
     console.log(str_url_partapi);
 
     const gltf = useLoader(GLTFLoader, str_url_partapi);
-//    const gltf = useLoader(GLTFLoader, "/ContentsOperatorForArticleApis/GetPartObjectFile?id_part=3")
-//    const gltf = useLoader(GLTFLoader, "/sample.glb")
     return (
         <primitive object={gltf.scene} dispose={null} />
     )
 }
 
-
-export function OrbitControlsTest2() {
-    return React.createElement("div", { style: { width: 720, height: 720 } }
-        , React.createElement(Canvas, null, React.createElement("ambientLight", { intensity: 1.0, color: new Color(0xffffff) }), React.createElement(Controls, {
-        isControl: true
-    }), React.createElement("mesh", null, React.createElement("boxBufferGeometry", {
-        attach: "geometry",
-        args: [1, 1, 1]
-    }), React.createElement("meshNormalMaterial", {
-        attach: "material"
-    }))));
-}

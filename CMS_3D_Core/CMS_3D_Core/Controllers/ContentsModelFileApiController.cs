@@ -104,6 +104,50 @@ namespace CMS_3D_Core.Controllers
             return objCollection;
         }
 
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IList<object>> Delete([FromBody] t_part t_part)
+        {
+
+            string updatemode = "Delete";
+            string updateresult = "";
+            string updateresult_msg = "";
+
+
+            try
+            {
+                _context.t_parts.Remove(t_part);
+                await _context.SaveChangesAsync();
+
+                updateresult = "Success";
+                updateresult_msg = "Delete Success";
+
+
+            }
+            catch (Exception e)
+            {
+                updateresult = "Failed";
+                updateresult_msg = "Delete Failed";
+#if DEBUG
+                updateresult_msg = e.Message;
+#endif
+            }
+
+
+            IList<object> objCollection = new List<object>();
+            objCollection.Add(
+                new
+                {
+                    updatemode = updatemode,
+                    updateresult = updateresult,
+                    updateresult_msg = updateresult_msg
+                });
+
+            return objCollection;
+        }
+
         /// <summary>
         /// object_from_t_part
         /// </summary>

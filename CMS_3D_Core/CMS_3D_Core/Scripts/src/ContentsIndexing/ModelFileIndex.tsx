@@ -124,7 +124,6 @@ export class ModelFileIndexComponent extends React.Component<any, State> {
 
 
 export function ModelFileIndex() {
-    //const { id } = useParams();
     return (<ModelFileIndexComponent />);
 }
 

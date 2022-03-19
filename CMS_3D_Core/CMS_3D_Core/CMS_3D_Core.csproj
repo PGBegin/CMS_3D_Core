@@ -30,7 +30,7 @@
     <None Remove="Scripts\src\tdarticle\tdarticle_Aarticle.ts" />
     <None Remove="Scripts\src\tdarticle\tdarticle_DataContainers.ts" />
     <None Remove="Scripts\src\tdarticle_test.ts" />
-    <None Remove="Scripts\src\TDOperating\ModelFileView.ts" />
+    <None Remove="Scripts\src\TDOperating\ModelFileView.tsx" />
     <None Remove="Scripts\src\tdpart\tdpart.ts" />
     <None Remove="Scripts\src\test\OrbitControlsTest.tsx" />
   </ItemGroup>
@@ -70,7 +70,7 @@
     <TypeScriptCompile Include="Scripts\src\tdarticle\dropdown.ts" />
     <TypeScriptCompile Include="Scripts\src\tdarticle\tdarticle_Aarticle.ts" />
     <TypeScriptCompile Include="Scripts\src\tdarticle\tdarticle_DataContainers.ts" />
-    <TypeScriptCompile Include="Scripts\src\TDOperating\ModelFileView.ts" />
+    <TypeScriptCompile Include="Scripts\src\TDOperating\ModelFileView.tsx" />
     <TypeScriptCompile Include="Scripts\src\tdpart.ts" />
     <TypeScriptCompile Include="Scripts\src\tdarticle.ts" />
     <TypeScriptCompile Include="Scripts\src\test\OrbitControlsTest.tsx" />

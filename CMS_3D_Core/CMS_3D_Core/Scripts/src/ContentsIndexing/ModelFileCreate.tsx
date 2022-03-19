@@ -9,24 +9,6 @@ import { GetVerificationToken } from '../General/GetVerificationToken'
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 export function ModelFileCreate() {
     //const { id } = useParams();
     return (
