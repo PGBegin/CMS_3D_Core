@@ -87,13 +87,13 @@ function ContentsEditHome() {
 
                 <br />
 
-                <Link to="/ContentsEdit/ContentsModelFile">File Management</Link>
+                <Link to="/ContentsEdit/ContentsModelFile">Model File Management</Link>
 
                 <hr />
 
                 <h4>Attachment Management</h4>
 
-                <Link to="/ContentsEdit/AttachmentFileIndex">Attachment Management</Link>
+                <Link to="/ContentsEdit/AttachmentFileIndex">Attachment File Management</Link>
 
 
             </div>

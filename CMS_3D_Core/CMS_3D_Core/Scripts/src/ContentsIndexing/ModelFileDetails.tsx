@@ -75,7 +75,7 @@ export const ModelFileDetails = () => {
 
                         <Link to="/ContentsEdit/ContentsModelFile">Return Index</Link>
 
-                        <div className="row" id="model_screen" style={{ width: 700, height : 400 }}>
+                        <div className="row" id="model_screen" style={{ width: 640, height : 360 }}>
                             <ModelFileView id_part={Number(id)} />
                         </div>
 
