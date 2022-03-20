@@ -20,7 +20,9 @@ type Props = {
 export const ModelFileView: React.VFC<Props> = ({ id_part}) => {
     return (
         <div>
-            <Canvas>
+            <Canvas camera={{
+                position: [20, 5, 5]
+            }}>
                 <ambientLight intensity={1.0} color={new Color(0xffffff)} />
                 <directionalLight intensity={0.6} position={[0, 2, 2]}   />
                 <mesh>
