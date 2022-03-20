@@ -1,9 +1,11 @@
 ﻿import * as React from 'react';
 import { useRef } from 'react';
+
 import { ReactThreeFiber, extend, useThree, useFrame, Canvas, useLoader } from '@react-three/fiber';
-import { Color } from 'three';
 import { OrbitControls, useHelper } from '@react-three/drei'
 
+import { Color } from 'three';
+import { DirectionalLightHelper } from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
 
@@ -13,12 +15,14 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 type Props = {
     id_part?: number;
 }
+
+
 export const ModelFileView: React.VFC<Props> = ({ id_part}) => {
     return (
         <div>
             <Canvas>
                 <ambientLight intensity={1.0} color={new Color(0xffffff)} />
-
+                <directionalLight intensity={0.6} position={[0, 2, 2]}   />
                 <mesh>
 
 
@@ -53,3 +57,20 @@ const LoadModel: React.VFC<Props> = ({ id_part }) => {
     )
 }
 
+const Light = () => {
+    const ref = useRef()
+    useHelper(ref, DirectionalLightHelper, 1)
+
+    return (
+        <>
+            <directionalLight
+                ref={ref}
+                intensity={0.6}
+                position={[0, 2, 2]}
+                shadow-mapSize-width={2048}
+                shadow-mapSize-height={2048}
+                castShadow
+            />
+        </>
+    )
+}
