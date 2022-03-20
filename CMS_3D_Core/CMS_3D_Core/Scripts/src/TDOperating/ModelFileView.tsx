@@ -32,6 +32,7 @@ export const ModelFileView: React.VFC<Props> = ({ id_part}) => {
                         <UseModel id_part={id_part}  />
                     }
                 </mesh>
+                <gridHelper args={[200, 200, `white`, `gray`]} />
                 <OrbitControls />
             </Canvas>
         </div>
