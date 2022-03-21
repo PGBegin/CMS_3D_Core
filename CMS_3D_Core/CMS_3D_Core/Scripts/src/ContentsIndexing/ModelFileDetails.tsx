@@ -4,17 +4,14 @@ import { useState, useEffect } from "react";
 import * as ReactDOM from 'react-dom'
 
 import { BrowserRouter, Route, Routes, Link, useParams } from 'react-router-dom';
-import { GetVerificationToken } from '../General/GetVerificationToken'
 
-import { MeshTest } from "../test/MeshTest";
-import { OrbitControlsTest } from "../test/OrbitControlsTest";
 import { ModelFileView } from "../TDOperating/ModelFileView";
 
 export const ModelFileDetails = () => {
 
     const { id } = useParams();
 
-    const [str_url_getapi, setStr_url_getapi] = useState("/ContentsModelFileApi/GetDetails/");
+    const [str_url_getapi, setStr_url_getapi] = useState("/ContentsModelFileApi/Details/");
 
     const [loading, setLoading] = useState(true);
     const [part_number, setPart_number] = useState("");

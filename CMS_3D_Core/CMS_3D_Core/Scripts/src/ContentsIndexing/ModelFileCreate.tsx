@@ -12,7 +12,7 @@ export const ModelFileCreate = () => {
 
     //const { id } = useParams();
 
-    //const [str_url_getapi, setStr_url_getapi] = useState("/ContentsModelFileApi/GetDetails/");
+    //const [str_url_getapi, setStr_url_getapi] = useState("/ContentsModelFileApi/Details/");
     const [str_url_postapi, setStr_url_postapi] = useState("/ContentsModelFileApi/Create/");
 
     const [loading, setLoading] = useState(true);

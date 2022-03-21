@@ -33,7 +33,7 @@ namespace CMS_3D_Core.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpGet]
-        public async Task<IList<object>> GetIndex()
+        public async Task<IList<object>> Index()
         {
 
             var t = await _context.t_parts
@@ -192,7 +192,7 @@ namespace CMS_3D_Core.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpGet]
-        public async Task<object> GetDetails(long id)
+        public async Task<object> Details(long id)
         {
 
             //var t = await _context.t_parts.Where(x => x.id_part == id).FirstOrDefaultAsync();

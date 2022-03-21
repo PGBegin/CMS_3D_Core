@@ -111,7 +111,7 @@ export class ModelFileIndexComponent extends React.Component<any, State> {
     }
 
     async populateWeatherData() {
-        const response = await fetch('/ContentsModelFileApi/GetIndex');
+        const response = await fetch('/ContentsModelFileApi/Index');
         const data = await response.json();
         this.setState({ objectdata: data, loading: false });
     }
