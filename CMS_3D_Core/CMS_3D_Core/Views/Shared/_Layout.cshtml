@@ -11,11 +11,11 @@
     <script src="~/js/dist/layout.bundle.js" defer></script>
     <meta name="description" content="@ViewData["MetaDescription"]" />
 
-    @await Component.InvokeAsync("GoogleAnalyticsSettings", null)
+    @await Component.InvokeAsync("ShowHtmlTag", new { title = "GoogleAnalyticsSettings" })
 
     @if (ViewData["ShowGoogleAdSenseAdvertisement"] == "ON")
     {
-        @await Component.InvokeAsync("GoogleAdSenseAdvertisement", null);
+        @await Component.InvokeAsync("ShowHtmlTag", new { title = "GoogleAdSenseAdvertisement" })
     }
 
 </head>
@@ -52,7 +52,6 @@
         <main role="main" class="pb-3">
 
             @RenderBody()
-
         </main>
     </div>
 

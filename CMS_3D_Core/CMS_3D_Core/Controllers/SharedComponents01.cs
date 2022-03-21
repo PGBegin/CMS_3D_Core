@@ -397,6 +397,31 @@ namespace CMS_3D_Core.Controllers
     }
 
     /// <summary>
+    /// Google AdSense Advertisementを表示する
+    /// </summary>
+    public class ShowHtmlTagViewComponent : ViewComponent
+    {
+        private readonly db_data_coreContext _context;
+
+        public ShowHtmlTagViewComponent(db_data_coreContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IViewComponentResult> InvokeAsync(string title)
+        {
+
+            var t = await _context.t_website_settings
+                                .Where(x => x.title == title)
+                                .FirstOrDefaultAsync() ?? new t_website_setting() { data = "" };
+
+            //var ans = t ?? new t_website_setting() { data = "" };
+
+            return View("_ShowHtmlTag", t);
+        }
+    }
+
+    /// <summary>
     /// Google Analytics情報を表示する
     /// </summary>
     public class PrivacyPolicyViewComponent : ViewComponent

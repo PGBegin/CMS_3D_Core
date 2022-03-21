@@ -43,6 +43,10 @@
 
         <hr />
 
+        @if (ViewData["ShowGoogleAdSenseAdvertisement"] == "ON")
+        {
+            @await Component.InvokeAsync("ShowHtmlTag", new { title = "GoogleAdSenseAdvertisementUnit01" })
+        }
 
     </div>
 

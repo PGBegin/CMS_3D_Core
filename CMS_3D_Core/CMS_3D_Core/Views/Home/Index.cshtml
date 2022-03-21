@@ -62,6 +62,11 @@
         @await Component.InvokeAsync("ContentsList", null)
 
 
+        @if (ViewData["ShowGoogleAdSenseAdvertisement"] == "ON")
+        {
+            @await Component.InvokeAsync("ShowHtmlTag", new { title = "GoogleAdSenseAdvertisementUnit01" })
+        }
+
     </div>
 
 </div>
