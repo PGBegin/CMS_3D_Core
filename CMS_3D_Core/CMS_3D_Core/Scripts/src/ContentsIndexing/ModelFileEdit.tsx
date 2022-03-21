@@ -13,60 +13,79 @@ export const ModelFileEdit = () => {
     const { id } = useParams();
 
     const [str_url_getapi, setStr_url_getapi] = useState("/ContentsModelFileApi/GetDetails/");
-    const [str_url_postapi, setStr_url_postapi] = useState("/ContentsModelFileApi/Delete/");
+    const [str_url_postapi, setStr_url_postapi] = useState("/ContentsModelFileApi/Edit/");
 
     const [loading, setLoading] = useState(true);
-    const [part_number, setPart_number] = useState("");
-    const [version, setVersion] = useState(0);
-    const [type_data, setType_data] = useState("");
 
-    const [file_name, setFile_name] = useState("");
-    const [format_data, setFormat_data] = useState("");
+    //----------------------------------------------------------------------
+    const [values, setValues] = useState({
+        part_number: '',
+        version: 0,
+        type_data: '',
+        file_name: '',
+        format_data: '',
+        file_length: 0,
 
-
-    const [file_length, setFile_length] = useState(0);
-    const [author, setAuthor] = useState("");
-    const [itemlink, setItemlink] = useState("");
-    const [license, setLicense] = useState("");
-    const [memo, setMemo] = useState("");
-
-    const [create_datetime, setCreate_datetime] = useState(null);
-    const [latest_update_datetime, setLatest_update_datetime] = useState(null);
+        author: '',
+        itemlink: '',
+        license: '',
+        memo: '',
+        create_datetime: null,
+        latest_update_datetime: null,
+    });
 
 
 
     useEffect(() => {
         const DataLoading = async () => {
+
             const response = await fetch(`${str_url_getapi}${id}`);
             const data = await response.json();
 
-            setPart_number(data.part_number);
-            setVersion(data.version);
-            setType_data(data.type_data);
-
-            setFile_name(data.file_name);
-
-            setFormat_data(data.format_data);
-            setFile_length(data.file_length);
-            setAuthor(data.author);
-            setItemlink(data.itemlink);
-            setLicense(data.license);
-            setMemo(data.memo);
-
-            setCreate_datetime(data.create_datetime);
-            setLatest_update_datetime(data.latest_update_datetime);
+            setValues({
+                part_number: data.part_number,
+                version: data.version,
+                type_data: data.type_data,
+                file_name: data.file_name,
+                format_data: data.format_data,
+                file_length: data.file_length,
+                author: data.author,
+                itemlink: data.itemlink,
+                license: data.license,
+                memo: data.memo,
+                create_datetime: data.create_datetime,
+                latest_update_datetime: data.latest_update_datetime
+            });
 
             setLoading(false);
         };
         DataLoading();
-    }
+        console.log("called");
+    },[]
     );
 
+    function handleInputChange(e: any) {
+        const target = e.target;
+        const value = target.value;
+        const name = target.name;
+
+        setValues({ ...values, [name]: value });
+        console.log(values);
+    }
 
     const handleSubmit = (event: any) => {
 
         const updObject = {
             id_part: id,
+            part_number: values.part_number,
+            version: values.version,
+            type_data: values.type_data,
+            file_name: values.file_name,
+            format_data: values.format_data,
+            author: values.author,
+            itemlink: values.itemlink,
+            license: values.license,
+            memo: values.memo,
         };
 
 
@@ -106,68 +125,68 @@ export const ModelFileEdit = () => {
                         <dt className="col-sm-2">
                             Part Number
                         </dt>
-                        <dd className="col-sm-10">
-                            {part_number}
+                        <dd className="col-sm-10">{values.part_number} 
+                            <input type="text" className="form-control" name="part_number" defaultValue={values.part_number} onChange={handleInputChange} />
                         </dd>
                         <dt className="col-sm-2">
                             Version
                         </dt>
                         <dd className="col-sm-10">
-                            {version}
+                            <input type="number" className="form-control" name="version" defaultValue={values.version} onChange={handleInputChange} />
                         </dd>
                         <dt className="col-sm-2">
                             Create Datetime
                         </dt>
                         <dd className="col-sm-10">
-                            {create_datetime}
+                            {values.create_datetime}
                         </dd>
                         <dt className="col-sm-2">
                             DATA TYPE
                         </dt>
                         <dd className="col-sm-10">
-                            {type_data}
+                            <input type="text" className="form-control" name="type_data" defaultValue={values.type_data} onChange={handleInputChange} />
                         </dd>
                         <dt className="col-sm-2">
                             Format
                         </dt>
                         <dd className="col-sm-10">
-                            {format_data}
+                            <input type="text" className="form-control" name="format_data" defaultValue={values.format_data} onChange={handleInputChange} />
                         </dd>
                         <dt className="col-sm-2">
                             FileSize[KB]
                         </dt>
                         <dd className="col-sm-10">
-                            {file_length / 1000}
+                            {values.file_length / 1000}
                         </dd>
                         <dt className="col-sm-2">
                             Item Link
                         </dt>
                         <dd className="col-sm-10">
-                            <a href={itemlink} target="_blank" rel="noopener noreferrer">{itemlink}</a>
+                            <input type="text" className="form-control" name="itemlink" defaultValue={values.itemlink} onChange={handleInputChange} />
                         </dd>
                         <dt className="col-sm-2">
                             License
                         </dt>
                         <dd className="col-sm-10">
-                            {license}
+                            <input type="text" className="form-control" name="license" defaultValue={values.license} onChange={handleInputChange} />
                         </dd>
                         <dt className="col-sm-2">
                             Author
                         </dt>
                         <dd className="col-sm-10">
-                            {author}
+                            <input type="text" className="form-control" name="author" defaultValue={values.author} onChange={handleInputChange} />
                         </dd>
                         <dt className="col-sm-2">
                             Memo
                         </dt>
                         <dd className="col-sm-10">
-                            {memo}
+                            <input type="text" className="form-control" name="memo" defaultValue={values.memo} onChange={handleInputChange} />
                         </dd>
                     </dl>
                     <hr />
 
                     <form onSubmit={handleSubmit}>
-                        <input type="submit" value="Save function is under construction" className="btn btn-primary" disabled />
+                        <input type="submit" value="Save" className="btn btn-primary" />
                     </form>
 
                     <hr />

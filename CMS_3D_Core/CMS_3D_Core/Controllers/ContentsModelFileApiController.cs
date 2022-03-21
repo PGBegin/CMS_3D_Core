@@ -67,6 +67,124 @@ namespace CMS_3D_Core.Controllers
         }
 
 
+        public static byte[] GetByteArrayFromStream(Stream sm)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                sm.CopyTo(ms);
+                return ms.ToArray();
+            }
+        }
+
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IList<object>> Create(string part_number, int version, string format_data, string itemlink, string license, string author, string memo, [FromForm] IFormFile formFile)
+        {
+
+
+            string updatemode = "Create";
+            string updateresult = "";
+            string updateresult_msg = "";
+
+            IList<object> objCollection = new List<object>();
+
+            if (formFile == null)
+            {
+                updateresult = "Failed";
+                updateresult_msg = "New Model File Attach Failed";
+
+                objCollection.Add(
+                    new
+                    {
+                        updatemode = updatemode,
+                        updateresult = updateresult,
+                        updateresult_msg = updateresult_msg,
+                    });
+                return objCollection;
+            }
+
+            try
+            {
+
+
+                t_part t_part = new t_part();
+
+
+                t_part.part_number = part_number;
+                t_part.file_data = GetByteArrayFromStream(formFile.OpenReadStream());
+                t_part.type_data = formFile.ContentType;
+                t_part.file_name = formFile.FileName;
+                t_part.file_length = formFile.Length;
+                t_part.format_data = format_data;
+
+
+                t_part.itemlink = itemlink;
+                t_part.license = license;
+                t_part.author = author;
+                t_part.memo = memo;
+
+
+
+                t_part.create_user = User.Identity.Name;
+                t_part.create_datetime = DateTime.Now;
+                t_part.latest_update_user = User.Identity.Name;
+                t_part.latest_update_datetime = DateTime.Now;
+
+                t_part.id_part = 1 + (await _context.t_parts
+                                            .Where(t => t.id_part == t.id_part)
+                                            .MaxAsync(t => (long?)t.id_part) ?? 0);
+
+
+
+
+                ModelState.ClearValidationState(nameof(t_part));
+                if (!TryValidateModel(t_part, nameof(t_part)))
+                {
+                    updateresult = "Failed";
+                    updateresult_msg = "Update Failed";
+
+                    objCollection.Add(
+                        new
+                        {
+                            updatemode = updatemode,
+                            updateresult = updateresult,
+                            updateresult_msg = updateresult_msg,
+                        });
+                    return objCollection;
+                }
+
+
+                await _context.AddAsync(t_part);
+                await _context.SaveChangesAsync();
+
+
+                updateresult = "Success";
+                updateresult_msg = "Update Success ID : " + t_part.id_part;
+
+            }
+            catch (Exception e)
+            {
+                updateresult = "Failed";
+                updateresult_msg = "Create Failed";
+#if DEBUG
+#endif
+            }
+
+
+
+            objCollection.Add(
+                new
+                {
+                    updatemode = updatemode,
+                    updateresult = updateresult,
+                    updateresult_msg = updateresult_msg,
+                });
+
+            return objCollection;
+        }
+
 
         /// <summary>
         /// Return a list of articles in JSON
@@ -104,6 +222,61 @@ namespace CMS_3D_Core.Controllers
             return objCollection;
         }
 
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IList<object>> Edit([FromBody] t_part t_part)
+        {
+            string updatemode = "Update";
+            string updateresult = "";
+            string updateresult_msg = "";
+
+            try
+            {
+                var target = await _context.t_parts.FindAsync(t_part.id_part);
+                target.part_number = t_part.part_number;
+                target.version = t_part.version;
+                target.type_data = t_part.type_data;
+                target.format_data = t_part.format_data;
+                target.file_name = t_part.file_name;
+                target.itemlink = t_part.itemlink;
+                target.license = t_part.license;
+                target.author = t_part.author;
+                target.memo = t_part.memo;
+
+
+                target.latest_update_user = User.Identity.Name;
+                target.latest_update_datetime = DateTime.Now;
+
+
+                await _context.SaveChangesAsync();
+
+                updateresult = "Success";
+                updateresult_msg = "Update Success";
+            }
+            catch (Exception e)
+            {
+                updateresult = "Failed";
+                updateresult_msg = "Update Failed";
+#if DEBUG
+                updateresult_msg = e.Message;
+#endif
+            }
+
+
+            IList<object> objCollection = new List<object>();
+
+
+            objCollection.Add(
+                new
+                {
+                    updatemode = updatemode,
+                    updateresult = updateresult,
+                    updateresult_msg = updateresult_msg,
+                });
+
+            return objCollection;
+        }
 
 
         [HttpPost]
