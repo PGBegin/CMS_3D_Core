@@ -6,121 +6,119 @@ import { GetVerificationToken } from '../General/GetVerificationToken'
 import { FetchPostApi } from '../General/FetchPostApi'
 
 
-class State {
-    loading: boolean;
-    id_file: number;
 
-    str_url_getapi!: string;
-    str_url_postapi!: string;
 
-    file_object!: any;
-    name!: string;
-    file_name!: string;
-    format_data!: string;
-    file_length!: number;
-    itemlink!: string;
-    license!: string;
-    memo!: string;
-    constructor() {
-        this.loading = false;
-        this.id_file = 0;
-    }
-}
+import { useState, useEffect } from "react";
 
 
 
-class AttachmentFileCreate extends React.Component<any, State> {
-    static displayName = AttachmentFileCreate.name;
+export const AttachmentFileCreate = () => {
 
-    constructor(props: any) {
-        super(props);
-        this.state = {
-            loading: true,
-            //id_file: props.id_file,
-            id_file: 0,
+    const { id } = useParams();
 
-            str_url_getapi: props.str_url_getapi,
-            str_url_postapi: props.str_url_postapi,
-
-            file_object: undefined,
-            name: "",
-            file_name: "",
-            format_data: "",
-            file_length: 0,
-            itemlink: "",
-            license: "",
-            memo: "",
-        };
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
+    const [str_url_getapi, setStr_url_getapi] = useState("/ContentsAttachmentFile/GetAttachmentFileDetails/");
+    const [str_url_postapi, setStr_url_postapi] = useState("/ContentsAttachmentFile/Create/");
 
 
-    componentDidMount() {
-        this.populateWeatherData();
-    }
+    const [loading, setLoading] = useState(true);
 
-    handleChange = (event: any) => {
-        // @ts-ignore
-        this.setState({ [event.target.name]: event.target.value });
+    //----------------------------------------------------------------------
+    const [values, setValues] = useState({
+
+        name: '',
+        type_data: '',
+        format_data: '',
+        file_name: '',
+        file_length: 0,
+        itemlink: '',
+        license: '',
+        memo: '',
+        isActive: false,
+        create_datetime: null,
+        latest_update_datetime: null,
+        target_article_id: "",
+    });
+
+    const [file_object, setFile_object] = useState(undefined);
+
+
+
+    useEffect(() => {
+
+        setLoading(false);
+
+    }, []
+    );
+
+
+    function handleInputChange(e: any) {
+        const target = e.target;
+        const value = target.value;
+        const name = target.name;
+
+        setValues({ ...values, [name]: value });
+        console.log(values);
     }
 
-    handleChangeF = (event: any) => {
+    const handleChangeF = (event: any) => {
 
         let input = event.target;
-        
-        this.setState({ file_object: input.files[0] });
-        //console.log(input.files[0]);
+        setFile_object(input.files[0]);
     }
+    const handleSubmit = (event: any) => {
 
-    async handleSubmit(event: any) {
 
-        const token = GetVerificationToken();
+
 
         event.preventDefault();
-
-        //-------------------------------------------------
-        // Set Data Objects
-        //-------------------------------------------------
-
-        const formData = new FormData();
-        //formData.append("MAX_FILE_SIZE", MAX_FILE_SIZE);  
-        formData.append("name", this.state.name);
-        formData.append("format_data", this.state.format_data);
-        formData.append("itemlink", this.state.itemlink);
-        formData.append("license", this.state.license);
-        formData.append("memo", this.state.memo);
-        formData.append("formFile", this.state.file_object);
+        const CreateUpdating = async () => {
 
 
-        const param = {
-            method: "POST",  // or "PUT",
-            headers: {
-                "RequestVerificationToken": token
-            },
-            body: formData
-        }
+            const token = GetVerificationToken();
 
 
-        //-------------------------------------------------
-        // サーバへ送信する
-        //-------------------------------------------------
-        const response = await fetch(this.state.str_url_postapi,
-            param
-        );
+            const formData = new FormData();
+            //formData.append("MAX_FILE_SIZE", MAX_FILE_SIZE);  
+            formData.append("name", values.name);
+            formData.append("format_data", values.format_data);
+            formData.append("itemlink", values.itemlink);
+            formData.append("license", values.license);
+            formData.append("memo", values.memo);
+            formData.append("formFile", file_object!);
 
-        const ans = await response.json();
+            const param = {
+                method: "POST",  // or "PUT",
+                headers: {
+                    "RequestVerificationToken": token
+                },
+                body: formData
+            }
 
 
-        alert(ans[0].updateresult_msg);
+
+            //-------------------------------------------------
+            // Send Server
+            //-------------------------------------------------
+            const response = await fetch(str_url_postapi,
+                param
+            );
+
+            const ans = await response.json();
 
 
-    }
-    renderTable() {
+            alert(ans[0].updateresult_msg);
+
+
+        };
+
+        CreateUpdating();
+
+    };
+    const renderBlock = () => {
         return (
-
-
             <div className="row">
                 <div className="col-md-3"></div>
+
 
 
                 <div className="col-md-6">
@@ -130,103 +128,70 @@ class AttachmentFileCreate extends React.Component<any, State> {
                     <Link to="/ContentsEdit/AttachmentFileIndex">Return Index</Link>
 
 
-                    <form onSubmit={this.handleSubmit}>
+                    <form onSubmit={handleSubmit}>
 
                         <dl className="row">
-
-
                             <dt className="col-sm-2">
                                 Name
                             </dt>
                             <dd className="col-sm-10">
-                                <input type="text" className="form-control" name="name" defaultValue={this.state.name} onChange={this.handleChange} />
+                                <input type="text" className="form-control" name="name" defaultValue={values.name} onChange={handleInputChange} />
                             </dd>
                             <dt className="col-sm-2">
-                                DATA TYPE
+                                FORMAT DATA
                             </dt>
                             <dd className="col-sm-10">
-                                <input type="text" className="form-control" name="format_data" defaultValue={this.state.format_data} onChange={this.handleChange} />
+                                <input type="text" className="form-control" name="format_data" defaultValue={values.format_data} onChange={handleInputChange} />
                             </dd>
                             <dt className="col-sm-2">
                                 Item Link
                             </dt>
                             <dd className="col-sm-10">
-                                <input type="text" className="form-control" name="itemlink" defaultValue={this.state.itemlink} onChange={this.handleChange} />
+                                <input type="text" className="form-control" name="itemlink" defaultValue={values.itemlink} onChange={handleInputChange} />
                             </dd>
                             <dt className="col-sm-2">
                                 license
                             </dt>
                             <dd className="col-sm-10">
-                                <input type="text" className="form-control" name="license" defaultValue={this.state.license} onChange={this.handleChange} />
+                                <input type="text" className="form-control" name="license" defaultValue={values.license} onChange={handleInputChange} />
                             </dd>
                             <dt className="col-sm-2">
                                 memo
                             </dt>
                             <dd className="col-sm-10">
-                                <input type="text" className="form-control" name="memo" defaultValue={this.state.memo} onChange={this.handleChange} />
+                                <input type="text" className="form-control" name="memo" defaultValue={values.memo} onChange={handleInputChange} />
                             </dd>
 
                             <dt className="col-sm-2">
                                 File
                             </dt>
                             <dd className="col-sm-10">
-                                <input type="file" name="formFile" className="custom-file-input" onChange={this.handleChangeF} />
+                                <input type="file" name="formFile" className="custom-file-input" onChange={handleChangeF} />
                             </dd>
-
                         </dl>
-                        <input type="submit" value="Submit" className="btn btn-primary"/>
+                        <input type="submit" value="Save" className="btn btn-primary" />
                     </form>
                     <hr />
-
 
                     <hr />
 
                     <div>
                         <Link to="/ContentsEdit/AttachmentFileIndex">Return Index</Link> |
-                        <a href={`/ContentsEditAttachment/Edit/${this.state.id_file}`}>Edit</a> |
-                        <a href={`/ContentsEditAttachment/Delete/${this.state.id_file}`}>Delete</a>
+                        <Link to={`/ContentsEdit/AttachmentFileDetails/${id}`}>Details</Link>|
+                        <Link to={`/ContentsEdit/AttachmentFileDelete/${id}`}>Delete</Link>
                     </div>
                 </div>
 
             </div>
         );
-    }
 
-    render() {
-        let contents = this.state.loading
+
+    };
+    return (
+        loading
             ? <p><em>Loading...</em></p>
-            : this.renderTable();
+            : renderBlock()
 
-        return (
-            <div>
-                {contents}
-            </div>
-        );
-    }
-
-    async populateWeatherData() {
-        //const response = await fetch(`/ContentsAttachmentFile/GetAttachmentFileDetails/${this.props.id_file}`);
-        //const data = await response.json();
-        this.setState({
-            loading: false,
-         /*   id_file: this.props.id_file,
-            name: data.name,
-            file_name: data.file_name,
-            format_data: data.format_data,
-            file_length: data.file_length,
-            itemlink: data.itemlink,
-            license: data.license,
-            memo: data.memo,*/
-        });
-    }
-}
-
-
-
-export function FAttachmentFileCreate() {
-    //const { id } = useParams();
-    return (<AttachmentFileCreate
-        //id_file={id} 
-        str_url_getapi={"str_url_getapi"} str_url_postapi={"/ContentsAttachmentFile/Create"} />);
+    );
 }
 
