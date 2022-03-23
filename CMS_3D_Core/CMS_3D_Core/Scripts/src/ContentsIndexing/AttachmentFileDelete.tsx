@@ -160,7 +160,7 @@ export const FAttachmentFileDelete = () => {
 
                     <div>
                         <Link to="/ContentsEdit/AttachmentFileIndex">Return Index</Link> |
-                        <Link to={`/ContentsEdit/AttachmentFileDetail/${id}`}>Detail</Link>|
+                        <Link to={`/ContentsEdit/AttachmentFileDetails/${id}`}>Details</Link>|
                         <Link to={`/ContentsEdit/AttachmentFileEdit/${id}`}>Edit</Link>|
                         <a href={`/ContentsEditAttachment/Edit/${id}`}>Edit(Old)</a> |
                         <a href={`/ContentsEditAttachment/Delete/${id}`}>Delete(Old)</a>

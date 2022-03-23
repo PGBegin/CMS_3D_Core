@@ -6,7 +6,7 @@ import { AssyIndex } from './AssyIndex';
 import { AttachmentFileIndex } from './AttachmentFileIndex';
 import { FAttachmentFileDetails } from './AttachmentFileDetails';
 import { FAttachmentFileDelete } from './AttachmentFileDelete';
-import { FAttachmentFileEdit } from './AttachmentFileEdit';
+import { AttachmentFileEdit } from './AttachmentFileEdit';
 import { FAttachmentFileCreate } from './AttachmentFileCreate';
 
 
@@ -44,7 +44,7 @@ export function ContentsEditIndex() {
                 <Route path="/ContentsEdit/FAttachmentFileCreate" element={<FAttachmentFileCreate />} />
                 <Route path="/ContentsEdit/AttachmentFileDetails/:id" element={<FAttachmentFileDetails />} />
                 <Route path="/ContentsEdit/AttachmentFileDelete/:id" element={<FAttachmentFileDelete />} />
-                <Route path="/ContentsEdit/AttachmentFileEdit/:id" element={<FAttachmentFileEdit />} />
+                <Route path="/ContentsEdit/AttachmentFileEdit/:id" element={<AttachmentFileEdit />} />
             </Routes>
 
         </BrowserRouter>

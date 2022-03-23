@@ -202,9 +202,7 @@ namespace CMS_3D_Core.Controllers
             {
                 var target = await _context.t_attachments.FindAsync(t_attachment.id_file);
                 target.name = t_attachment.name;
-                target.file_name = t_attachment.file_name;
                 target.format_data = t_attachment.format_data;
-                target.file_name = t_attachment.file_name;
                 target.itemlink = t_attachment.itemlink;
                 target.license = t_attachment.license;
                 target.memo = t_attachment.memo;
