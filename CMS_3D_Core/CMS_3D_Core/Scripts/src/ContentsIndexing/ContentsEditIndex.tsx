@@ -4,8 +4,8 @@ import * as ReactDOM from 'react-dom'
 import { ArticleIndex } from './ArticleIndex';
 import { AssyIndex } from './AssyIndex';
 import { AttachmentFileIndex } from './AttachmentFileIndex';
-import { FAttachmentFileDetails } from './AttachmentFileDetails';
-import { FAttachmentFileDelete } from './AttachmentFileDelete';
+import { AttachmentFileDetails } from './AttachmentFileDetails';
+import { AttachmentFileDelete } from './AttachmentFileDelete';
 import { AttachmentFileEdit } from './AttachmentFileEdit';
 import { AttachmentFileCreate } from './AttachmentFileCreate';
 
@@ -42,8 +42,8 @@ export function ContentsEditIndex() {
                 }
                 <Route path="/ContentsEdit/AttachmentFileIndex" element={<AttachmentFileIndex />} />
                 <Route path="/ContentsEdit/FAttachmentFileCreate" element={<AttachmentFileCreate />} />
-                <Route path="/ContentsEdit/AttachmentFileDetails/:id" element={<FAttachmentFileDetails />} />
-                <Route path="/ContentsEdit/AttachmentFileDelete/:id" element={<FAttachmentFileDelete />} />
+                <Route path="/ContentsEdit/AttachmentFileDetails/:id" element={<AttachmentFileDetails />} />
+                <Route path="/ContentsEdit/AttachmentFileDelete/:id" element={<AttachmentFileDelete />} />
                 <Route path="/ContentsEdit/AttachmentFileEdit/:id" element={<AttachmentFileEdit />} />
             </Routes>
 
