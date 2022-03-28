@@ -1,6 +1,7 @@
 ﻿import * as React from "react";
 import * as ReactDOM from 'react-dom'
 
+import { BrowserRouter, Route, Routes, Link, useParams } from 'react-router-dom';
 
 class ArticleData {
     id_article: number;
@@ -65,7 +66,10 @@ export class ArticleIndex extends React.Component<any, State> {
                 <tbody>
                     {articledata.map(articledata =>
                         <tr key={articledata.id_article}>
-                            <td><a href={`/ContentsEdit/EditArticleWholeContents?id_article=${articledata.id_article}`}>{articledata.id_article}</a></td>
+                            <td>
+                                <a href={`/ContentsEdit/EditArticleWholeContents?id_article=${articledata.id_article}`}>{articledata.id_article}</a>|
+                                {<Link to={`/ContentsEdit/ArticleDetails/${articledata.id_article}`}>articledata.id_article</Link>}
+                            </td>
                             <td>{articledata.title}</td>
                             <td>{articledata.status_name}</td>
                             <td>

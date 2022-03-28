@@ -10,6 +10,7 @@
     <None Remove="Scripts\entry\index_edit_tdarticle_index.tsx" />
     <None Remove="Scripts\entry\index_tdarticle_wp.ts" />
     <None Remove="Scripts\entry\like_button.ts" />
+    <None Remove="Scripts\src\ContentsIndexing\ArticleDetails.tsx" />
     <None Remove="Scripts\src\ContentsIndexing\articleIndex.tsx" />
     <None Remove="Scripts\src\ContentsIndexing\AssyIndex.tsx" />
     <None Remove="Scripts\src\ContentsIndexing\AttachmentFileCreate.tsx" />
@@ -30,8 +31,11 @@
     <None Remove="Scripts\src\tdarticle\tdarticle_Aarticle.ts" />
     <None Remove="Scripts\src\tdarticle\tdarticle_DataContainers.ts" />
     <None Remove="Scripts\src\tdarticle_test.ts" />
+    <None Remove="Scripts\src\TDOperating\ArticleModelView.tsx" />
     <None Remove="Scripts\src\TDOperating\ModelFileView.tsx" />
+    <None Remove="Scripts\src\TDOperating\UseLight.tsx" />
     <None Remove="Scripts\src\tdpart\tdpart.ts" />
+    <None Remove="Scripts\src\test\AnimationTest.tsx" />
     <None Remove="Scripts\src\test\OrbitControlsTest.tsx" />
   </ItemGroup>
 
@@ -51,6 +55,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\entry\index_edit_tdarticle_index.tsx" />
     <TypeScriptCompile Include="Scripts\entry\index_tdarticle_wp.ts" />
+    <TypeScriptCompile Include="Scripts\src\ContentsIndexing\ArticleDetails.tsx" />
     <TypeScriptCompile Include="Scripts\src\ContentsIndexing\ArticleIndex.tsx" />
     <TypeScriptCompile Include="Scripts\src\ContentsIndexing\AssyIndex.tsx" />
     <TypeScriptCompile Include="Scripts\src\ContentsIndexing\AttachmentFileCreate.tsx" />
@@ -70,9 +75,12 @@
     <TypeScriptCompile Include="Scripts\src\tdarticle\dropdown.ts" />
     <TypeScriptCompile Include="Scripts\src\tdarticle\tdarticle_Aarticle.ts" />
     <TypeScriptCompile Include="Scripts\src\tdarticle\tdarticle_DataContainers.ts" />
+    <TypeScriptCompile Include="Scripts\src\TDOperating\ArticleModelView.tsx" />
     <TypeScriptCompile Include="Scripts\src\TDOperating\ModelFileView.tsx" />
+    <TypeScriptCompile Include="Scripts\src\TDOperating\UseLight.tsx" />
     <TypeScriptCompile Include="Scripts\src\tdpart.ts" />
     <TypeScriptCompile Include="Scripts\src\tdarticle.ts" />
+    <TypeScriptCompile Include="Scripts\src\test\AnimationTest.tsx" />
     <TypeScriptCompile Include="Scripts\src\test\OrbitControlsTest.tsx" />
   </ItemGroup>
 

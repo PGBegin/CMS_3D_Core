@@ -6,6 +6,7 @@ import * as ReactDOM from 'react-dom'
 import { BrowserRouter, Route, Routes, Link, useParams } from 'react-router-dom';
 
 import { ModelFileView } from "../TDOperating/ModelFileView";
+import { ModelFileView2 } from "../test/AnimationTest";
 
 export const ModelFileDetails = () => {
 
@@ -73,7 +74,7 @@ export const ModelFileDetails = () => {
                         <Link to="/ContentsEdit/ContentsModelFile">Return Index</Link>
 
                         <div className="row" id="model_screen" style={{ width: 640, height : 360 }}>
-                            <ModelFileView id_part={Number(id)} />
+                            <ModelFileView2 id_part={Number(id)} />
                         </div>
 
                         <hr />

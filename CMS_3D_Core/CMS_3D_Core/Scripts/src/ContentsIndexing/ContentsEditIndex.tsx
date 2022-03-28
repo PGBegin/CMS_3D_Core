@@ -18,6 +18,11 @@ import { ModelFileDetails } from './ModelFileDetails';
 import { ModelFileDelete } from './ModelFileDelete';
 
 
+
+import { ArticleDetails } from './ArticleDetails';
+
+
+
 import { BrowserRouter, Route, Routes, Link, useParams } from 'react-router-dom';
 
 export function ContentsEditIndex() {
@@ -27,6 +32,11 @@ export function ContentsEditIndex() {
                 <Route path="/ContentsEdit" element={<ContentsEditHome />} />
 
 
+
+                {
+                    // Article
+                }
+                <Route path="/ContentsEdit/ArticleDetails/:id" element={<ArticleDetails />} />
 
                 {
                     // Model
