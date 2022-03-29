@@ -2,7 +2,7 @@
 import { useRef } from 'react';
 
 import { ReactThreeFiber, extend, useThree, useFrame, Canvas, useLoader } from '@react-three/fiber';
-import { OrbitControls, useHelper } from '@react-three/drei'
+import { OrbitControls, PerspectiveCamera, useHelper } from '@react-three/drei'
 
 import { Color } from 'three';
 import { DirectionalLightHelper } from 'three'
@@ -11,6 +11,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
 import { Aarticle, Instruction, ViewObject, InstancePart, Annotation, AnnotationDisplay, Light as TdLight, Refelencematerial } from '../tdarticle/tdarticle_Aarticle';
 import { UseLight } from '../TDOperating/UseLight';
+import { LensflareElement } from 'three/examples/jsm/objects/Lensflare';
 
 
 
@@ -25,16 +26,21 @@ type Props = {
 
 //this.camera_main = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 6350000);
 
-export const ArticleModelView: React.VFC<Props> = ({ article, instruction, instancepart, light }) => {
-    return (
-        <div>
-            <Canvas camera={{
+/*
+  camera={{
                 position: [20, 5, 5],
                 fov: 45,
                 aspect: 16 / 9,
                 far: 6350000,
                 zoom:1
-            }}>
+            }}
+            
+            */
+export const ArticleModelView: React.VFC<Props> = ({ article, instruction, instancepart, light }) => {
+    return (
+        <div>
+            <Canvas>
+                <PerspectiveCamera makeDefault fov={45} aspect={16 / 9} position={[20, 5, 5]} far={6350000} zoom={5} />
                 <mesh>
                     {
                         instancepart.map(instancepart => <UseModel instancepart={instancepart} />)
