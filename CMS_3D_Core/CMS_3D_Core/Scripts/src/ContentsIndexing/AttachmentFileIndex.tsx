@@ -1,7 +1,10 @@
 ﻿import * as React from "react";
 import * as ReactDOM from 'react-dom'
 
+import { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes, Link } from 'react-router-dom';
+
+
 
 class AttachmentFileData {
     id_file: number;
@@ -24,101 +27,97 @@ class AttachmentFileData {
 }
 
 
-class State {
-    loading: boolean;
-    attachmentfiledata: AttachmentFileData[] = [];
-    constructor() {
-        this.loading = false;
-    }
-}
+export const AttachmentFileIndex = () => {
 
 
+    const [str_url_getapi, setStr_url_getapi] = useState("/ContentsAttachmentFile/GetAttachmentFileIndex");
 
-export class AttachmentFileIndex extends React.Component<any, State> {
-    static displayName = AttachmentFileIndex.name;
+    const [loading, setLoading] = useState(true);
 
-    constructor(props: any) {
-        super(props);
-        this.state = { attachmentfiledata: [], loading: true };
-    }
+    const [attachments, setAttachments] = useState<AttachmentFileData[]>([]);
+
+    useEffect(() => {
+        const DataLoading = async () => {
+            const response = await fetch(str_url_getapi);
+            const data = await response.json();
+
+            //console.log(data);
+
+            setAttachments(data!);
+
+            setLoading(false);
+        };
+        DataLoading();
+    }, []
+    );
 
 
-    componentDidMount() {
-        this.populateWeatherData();
-    }
-
-    static renderTable(attachmentfiledata: AttachmentFileData[]) {
+    const renderBlock = () => {
         return (
-
-            <div className="row">
-
-                <div className="col-md-3"></div>
+            <>
 
 
-                <div className="col-md-6">
+                <div className="row">
 
-                    <h4>Attachment Management</h4>
+                    <div className="col-md-3"></div>
 
-                    <Link to="/ContentsEdit">Return ContentsEdit</Link>
-                    <br />
-                    <Link to="/ContentsEdit/FAttachmentFileCreate">Create</Link>
 
-                    <table className='table' aria-labelledby="tabelLabel">
-                        <thead>
-                            <tr>
-                                <th>ID File</th>
-                                <th>Thumbnail</th>
-                                <th>Name</th>
-                                <th>type_data</th>
-                                <th>FileSize[KB]</th>
-                                <th>Item Link</th>
-                                <th>license</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {attachmentfiledata.map(attachmentfiledata =>
-                                <tr key={attachmentfiledata.id_file}>
-                                    <td>
-                                        <Link to={`/ContentsEdit/AttachmentFileDetails/${attachmentfiledata.id_file}`}>{attachmentfiledata.id_file}</Link>
-                                    </td>
-                                    <td>
-                                        {attachmentfiledata.id_file &&
-                                        <Link to={`/ContentsEdit/AttachmentFileDetails/${attachmentfiledata.id_file}`}>
-                                            <img className="img-thumbnail mb-3" src={`/ContentsEditAttachment/GetAttachmentFile/${attachmentfiledata.id_file}`} alt="" width="240" height="135" loading="lazy"></img>
-                                        </Link>}
-                                    </td>
-                                    <td>{attachmentfiledata.file_name}</td>
-                                    <td>{attachmentfiledata.type_data}</td>
-                                    <td>{attachmentfiledata.file_length / 1000}</td>
-                                    <td>{attachmentfiledata.itemlink}</td>
-                                    <td>{attachmentfiledata.license}</td>
+                    <div className="col-md-6">
+
+                        <h4>Attachment Management</h4>
+
+                        <Link to="/ContentsEdit">Return ContentsEdit</Link>
+                        <br />
+                        <Link to="/ContentsEdit/FAttachmentFileCreate">Create</Link>
+
+                        <table className='table' aria-labelledby="tabelLabel">
+                            <thead>
+                                <tr>
+                                    <th>ID File</th>
+                                    <th>Thumbnail</th>
+                                    <th>Name</th>
+                                    <th>type_data</th>
+                                    <th>FileSize[KB]</th>
+                                    <th>Item Link</th>
+                                    <th>license</th>
                                 </tr>
-                            )}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {attachments.map(attachments =>
+                                    <tr key={attachments.id_file}>
+                                        <td>
+                                            <Link to={`/ContentsEdit/AttachmentFileDetails/${attachments.id_file}`}>{attachments.id_file}</Link>
+                                        </td>
+                                        <td>
+                                            {attachments.id_file &&
+                                                <Link to={`/ContentsEdit/AttachmentFileDetails/${attachments.id_file}`}>
+                                                    <img className="img-thumbnail mb-3" src={`/ContentsEditAttachment/GetAttachmentFile/${attachments.id_file}`} alt="" width="240" height="135" loading="lazy"></img>
+                                                </Link>}
+                                        </td>
+                                        <td>{attachments.file_name}</td>
+                                        <td>{attachments.type_data}</td>
+                                        <td>{attachments.file_length / 1000}</td>
+                                        <td>{attachments.itemlink}</td>
+                                        <td>{attachments.license}</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
 
+
+                    </div>
 
                 </div>
 
-            </div>
+            </>
         );
-    }
 
-    render() {
-        let contents = this.state.loading
+
+    };
+    return (
+        loading
             ? <p><em>Loading...</em></p>
-            : AttachmentFileIndex.renderTable(this.state.attachmentfiledata);
+            : renderBlock()
 
-        return (
-            <div>
-                {contents}
-            </div>
-        );
-    }
-
-    async populateWeatherData() {
-        const response = await fetch('/ContentsAttachmentFile/GetAttachmentFileIndex');
-        const data = await response.json();
-        this.setState({ attachmentfiledata: data, loading: false });
-    }
+    );
 }
