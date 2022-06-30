@@ -3,6 +3,15 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+
+
+
+
+CMS_3D_Core/CMS_3D_Core/Properties
+!CMS_3D_Core/CMS_3D_Core/Properties/launchSettings.json
+
+
+
 # User-specific files
 *.rsuser
 *.suo
